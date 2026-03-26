@@ -1,0 +1,124 @@
+@import "tailwindcss";
+@source "../../node_modules/@jokuh/gooey/src/**/*.tsx";
+@source "../**/*.tsx";
+@import "@jokuh/gooey/styles/globals.css";
+
+@theme inline {
+  /* Two layout steps: phone < tablet < desktop (Tailwind md / lg). */
+  --breakpoint-md: 800px;
+  --breakpoint-lg: 1200px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input,
+textarea,
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.landing-cinema {
+  text-rendering: optimizeLegibility;
+}
+
+.landing-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* Top bar: no border; blur strongest in upper ~15%, fades to clear by bottom of band (dark → light / transparent). */
+.nav-topbar-glass {
+  position: relative;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.nav-topbar-glass::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 15vh;
+  min-height: 5rem;
+  z-index: 0;
+  pointer-events: none;
+  backdrop-filter: blur(28px) saturate(1.15);
+  -webkit-backdrop-filter: blur(28px) saturate(1.15);
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 15%,
+    rgba(0, 0, 0, 0.5) 52%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 15%,
+    rgba(0, 0, 0, 0.5) 52%,
+    transparent 100%
+  );
+}
+
+.nav-topbar-glass::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 15vh;
+  min-height: 5rem;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.42) 35%,
+    rgba(0, 0, 0, 0.14) 65%,
+    transparent 100%
+  );
+}
+
+.light .nav-topbar-glass::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.82) 0%,
+    rgba(255, 255, 255, 0.4) 40%,
+    rgba(255, 255, 255, 0.08) 70%,
+    transparent 100%
+  );
+}
+
+.nav-topbar-mega {
+  position: relative;
+  z-index: 1;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, #000 52%, transparent) 0%,
+    color-mix(in srgb, #000 22%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.light .nav-topbar-mega {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, #fff 55%, transparent) 0%,
+    color-mix(in srgb, #fff 20%, transparent) 55%,
+    transparent 100%
+  );
+}
