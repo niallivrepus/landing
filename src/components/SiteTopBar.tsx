@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TopNavAnchor } from "./TopNavAnchor";
+import { RIGID_NAV_COLUMNS } from "../data/rigid-sitemap";
 
 type MegaLink = { label: string; href: string };
 type MegaColumn = { heading: string; links: MegaLink[] };
@@ -16,159 +17,14 @@ type MegaGroup = {
   secondary?: MegaColumn[];
 };
 
-const NAV_GROUPS: MegaGroup[] = [
-  {
-    id: "products",
-    label: "Products",
-    primary: [
-      { label: "Pods", href: "/pods" },
-      { label: "Blurbs", href: "/blurbs" },
-      { label: "Spine", href: "/spine" },
-      { label: "Vortex", href: "/vortex" },
-    ],
-    secondary: [
-      {
-        heading: "Explore",
-        links: [
-          { label: "Prompt bar", href: "/#prompt" },
-          { label: "Waitlist", href: "/#start" },
-          { label: "Identity", href: "/#identity" },
-        ],
-      },
-      {
-        heading: "Learn",
-        links: [
-          { label: "Overview", href: "/#journal" },
-          { label: "Journal", href: "/#journal" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "platform",
-    label: "Platform",
-    primary: [
-      { label: "Identity", href: "/#identity" },
-      { label: "Gooey", href: "/#journal" },
-      { label: "Prompt bar", href: "/#prompt" },
-    ],
-    secondary: [
-      {
-        heading: "Product",
-        links: [
-          { label: "Pods", href: "/pods" },
-          { label: "Spine", href: "/spine" },
-          { label: "Blurbs", href: "/blurbs" },
-        ],
-      },
-      {
-        heading: "More",
-        links: [
-          { label: "Journal", href: "/#journal" },
-          { label: "Privacy", href: "#" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "ecosystem",
-    label: "Ecosystem",
-    primary: [
-      { label: "V1llains", href: "/#identity" },
-      { label: "Waitlist", href: "/#start" },
-    ],
-    secondary: [
-      {
-        heading: "Discover",
-        links: [
-          { label: "Overview", href: "/#journal" },
-          { label: "Pods", href: "/pods" },
-          { label: "Journal", href: "/#journal" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "company",
-    label: "Company",
-    primary: [
-      { label: "Overview", href: "/#journal" },
-      { label: "Journal", href: "/#journal" },
-    ],
-    secondary: [
-      {
-        heading: "Legal",
-        links: [
-          { label: "Privacy", href: "#" },
-          { label: "Terms", href: "#" },
-        ],
-      },
-      {
-        heading: "Product",
-        links: [
-          { label: "Waitlist", href: "/#start" },
-          { label: "Contact", href: "#" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "developers",
-    label: "Developers",
-    primary: [
-      { label: "Documentation", href: "#" },
-      { label: "SDK & API integrations", href: "#" },
-      { label: "Gooey", href: "/#journal" },
-      { label: "Accessibility", href: "#" },
-    ],
-    secondary: [
-      {
-        heading: "Get help",
-        links: [
-          { label: "Community", href: "#" },
-          { label: "Self-service", href: "#" },
-          { label: "Genius Bar", href: "#" },
-          { label: "Repair", href: "#" },
-        ],
-      },
-      {
-        heading: "Helpful topics",
-        links: [
-          { label: "Jokuh Care", href: "#" },
-          { label: "Jokuh account & password", href: "#" },
-          { label: "Billing & subscriptions", href: "#" },
-          { label: "GitHub", href: "#" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "foundation",
-    label: "Foundation",
-    primary: [
-      { label: "Mission", href: "/#journal" },
-      { label: "Privacy & security", href: "#" },
-      { label: "Research", href: "/#journal" },
-      { label: "Contact", href: "#" },
-    ],
-    secondary: [
-      {
-        heading: "Read",
-        links: [
-          { label: "Journal", href: "/#journal" },
-          { label: "Company overview", href: "/#journal" },
-        ],
-      },
-      {
-        heading: "Product",
-        links: [
-          { label: "Waitlist", href: "/#start" },
-          { label: "Identity", href: "/#identity" },
-        ],
-      },
-    ],
-  },
-];
+const NAV_GROUPS: MegaGroup[] = RIGID_NAV_COLUMNS.map((col) => ({
+  id: col.id,
+  label: col.heading,
+  primary: [...col.links],
+  secondary: col.support
+    ? [{ heading: col.support.heading, links: [...col.support.links] }]
+    : undefined,
+}));
 
 function NavSearchButton({ className }: { className?: string }) {
   const { pathname } = useLocation();
@@ -178,7 +34,7 @@ function NavSearchButton({ className }: { className?: string }) {
     if (pathname === "/") {
       document.getElementById("prompt")?.scrollIntoView({ behavior: "smooth", block: "center" });
     } else {
-      navigate("/#prompt");
+      navigate("/prompt");
     }
   }, [navigate, pathname]);
 
@@ -285,7 +141,7 @@ export function SiteTopBar() {
             <div className="flex min-w-0 max-w-[calc(50%-2.75rem)] flex-1 items-center justify-end gap-3 pl-2">
               <NavSearchButton />
               <Button variant="primary-neutral" size="xl" className="shrink-0 px-8" asChild>
-                <a href="/#start">Try Jokuh</a>
+                <Link to="/waitlist">Try Jokuh</Link>
               </Button>
             </div>
           </div>
@@ -387,9 +243,9 @@ export function SiteTopBar() {
           </div>
           <div className="overflow-y-auto px-5 py-6">
             <Button variant="primary-neutral" size="xl" className="mb-8 w-full" asChild>
-              <a href="/#start" onClick={() => setMobileOpen(false)}>
+              <Link to="/waitlist" onClick={() => setMobileOpen(false)}>
                 Try Jokuh
-              </a>
+              </Link>
             </Button>
             {NAV_GROUPS.map((g) => (
               <div key={g.id} className="mb-10">

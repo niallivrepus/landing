@@ -1,0 +1,188 @@
+{
+  "generatedAt": "2026-03-26T02:25:24.707Z",
+  "sourceMeetingsDir": "/Users/sonadin/Documents/code/jokuh/_docs/meetings",
+  "agents": [
+    "extractor",
+    "researcher",
+    "writer",
+    "tech_editor"
+  ],
+  "excerptCount": 120,
+  "outlines": [
+    {
+      "slug": "gooey-island-merge-hygiene",
+      "headline": "The Gooey app as a design island",
+      "thesis": "Isolating `apps/gooey` preserves the four-layer token pipeline (raw palette → design-tokens.css → globals → components) so host shells cannot silently override semantic CSS.",
+      "beats": [
+        "Contract: only consume `@jokuh/gooey` from packages; never fork tokens in the product shell.",
+        "Merge policy: PRs that touch the demo app should not drag unrelated host styles.",
+        "Verification: Storybook + Vite preview as the ground truth for designers."
+      ],
+      "research": {
+        "primitives": [
+          "pnpm workspace",
+          "apps/gooey vs packages/gooey",
+          "barrel exports",
+          "token pipeline"
+        ],
+        "risks": [
+          "host app CSS overriding primitives",
+          "partial PR merges",
+          "designer handoff zip workflow"
+        ],
+        "citations": [
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "> 31:46 Joshua Howard: All right, I've pushed back an important call. Look, I appreciate you guys jumping on. I wish I could stay on for the full hour. I'm excited for this. ## Transcript 00:00"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "u 31:46 Joshua Howard: All right, I've pushed back an important call. Look, I appreciate you guys jumping on. I wish I could stay on for the full hour. I'm excited for this. 31:53 Joshua Mendez: No pr"
+          }
+        ]
+      },
+      "lint": {
+        "banned_phrases_removed": [
+          "revolutionary",
+          "game-changer"
+        ],
+        "preferred_terms": {
+          "design system": "token pipeline + component barrel",
+          "AI": "model route + tool policy"
+        }
+      }
+    },
+    {
+      "slug": "live-transcript-hooks-spine",
+      "headline": "From subtitles to spine: transcript hooks",
+      "thesis": "Live transcription should emit machine-readable hooks (goals, decisions, entities) that downstream agents attach to the session spine—not just human-readable captions.",
+      "beats": [
+        "UI: highlighted cue bubbles alternate color for salience without relying on motion alone.",
+        "Data model: hook type, span offsets, confidence, speaker diarization id.",
+        "Spine projection: hooks become typed edges for retrieval and routing."
+      ],
+      "research": {
+        "primitives": [
+          "live ASR",
+          "semantic hooks in stream",
+          "goal markers → graph edges",
+          "reduced-motion safe UI"
+        ],
+        "risks": [
+          "false-positive hook detection",
+          "PII in transcript store"
+        ],
+        "citations": [
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "Hyke, Igmer Castillo, Joshua Howard, Joshua Mendez, Sean Rock [View original transcript](https://app.tactiq.io/api/2/u/m/r/cl69hwIkr6GIPeCN1tpJ?o=txt) ## Short summary The team updated on hea"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "refining UX, onboarding individual users, and building a component library and “bubbles” social interface that aggregates chats, apps, and AI agents. They demonstrated Joku’s unified prompt bar, app i"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "he, wallets), and plans for an app store and purchasable widgets to extend user bubbles. The group discussed privacy and decentralized architecture work, local AI, and Avalanche/token wallet integrati"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "d repeating that over and over and over. And again and I think that's where the goal is short and learn long term. > 07:03 Sean Rock: I I Joshua I want you to meet pretty much everyone on a team reall"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "mping on. I wish I could stay on for the full hour. I'm excited for this. ## Transcript 00:00 Hyke: my mic not working? lmao 00:06 Joshua Howard: I don't think it is. 00:43 Hyke: Hello. 00:45 Jo"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "the enterprise route and and going longer. How's it going? 01:07 Hyke: Hi, I'm transcribing this call with my Tactiq AI Extension. https://tactiq.io/r/transcribing 01:11 Hyke: We're we're shipping le"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "Hi, I'm transcribing this call with my Tactiq AI Extension. https://tactiq.io/r/transcribing 01:11 Hyke: We're we're shipping left and right. I want to make sure that the platform looks good and that"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "'s when you 05:41 Joshua Howard: Yep. 05:44 Sean Rock: really have the customer hooked, right? Because once you have that first batch of people that really genuinely love you. I mean that's product ma"
+          }
+        ]
+      },
+      "lint": {
+        "banned_phrases_removed": [
+          "revolutionary",
+          "game-changer"
+        ],
+        "preferred_terms": {
+          "design system": "token pipeline + component barrel",
+          "AI": "model route + tool policy"
+        }
+      }
+    },
+    {
+      "slug": "treasury-inference-api-grid",
+      "headline": "Treasury loops and the API grid",
+      "thesis": "When usage revenue funds inference, the platform needs an explicit API grid: provider adapters, metering, and fee decomposition users can audit.",
+      "beats": [
+        "Prompt-bar initiated jobs carry entitlement + model route metadata.",
+        "Settlement layer explains on-chain/off-ramp steps where applicable.",
+        "Governance proposals surface when policy changes affect billing or safety."
+      ],
+      "research": {
+        "primitives": [
+          "usage metering",
+          "multi-provider routing",
+          "fee transparency",
+          "reinvestment loop"
+        ],
+        "risks": [
+          "bridge slippage disclosure",
+          "governance latency"
+        ],
+        "citations": [
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "Hyke, Igmer Castillo, Joshua Howard, Joshua Mendez, Sean Rock [View original transcript](https://app.tactiq.io/api/2/u/m/r/cl69hwIkr6GIPeCN1tpJ?o=txt) ## Short summary The team updated on hea"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "Castillo: state this court lounge, telling you right now, like you're gonna get hooked on blurbs, you're gonna see our profiles. You're gonna be like, what is going on here. 31:20 Joshua Howard: Feel"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": ", and Avalanche/token wallet integration, plus potential partnerships and model/inference payment options. Joshua Howard expressed strong interest, offered introductions to investor syndicates, advise"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "59 Sean Rock: been honing in And talking to the users that we have now. Getting feedback going back into the code base, looping it again and repeating that over and over and over. And again and I thin"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "tool in front of us right now. You know, because One that looks good one, that feels good. Otherwise, why even get into enterprise? You know, I mean sorry, I'm sending a link to Shawna as well, kind"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "59 Sean Rock: been honing in And talking to the users that we have now. Getting feedback going back into the code base, looping it again and repeating that over and over and over. And again and I thin"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "to just see Real quick. You share my screen. 09:32 Joshua Howard: Love that. I feel like I've been secretly waiting on that like 09:35 Sean Rock: And I know, right? 09:37 Joshua Howard: Thinking I ca"
+          },
+          {
+            "file": "Jokuh Internal Sync.txt",
+            "snippet": "Sean Rock: Sin Dylan. 14:36 Igmer Castillo: Basically giving it a whole agency, feel like all these apps, we have, like there. How your Sean says it perfect. It's like, it's all manual scrolling. He h"
+          }
+        ]
+      },
+      "lint": {
+        "banned_phrases_removed": [
+          "revolutionary",
+          "game-changer"
+        ],
+        "preferred_terms": {
+          "design system": "token pipeline + component barrel",
+          "AI": "model route + tool policy"
+        }
+      }
+    }
+  ]
+}

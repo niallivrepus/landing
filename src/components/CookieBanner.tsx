@@ -81,7 +81,7 @@ export function CookieBanner() {
         <p className="relative z-[1] flex flex-wrap items-baseline gap-x-2 font-sans text-base leading-[1.4] font-bold whitespace-normal md:whitespace-nowrap">
           <span className="text-white/40">They got</span>
           <a
-            href="/#journal"
+            href="/journal"
             className="text-white underline decoration-solid [text-decoration-skip-ink:none]"
           >
             cookies

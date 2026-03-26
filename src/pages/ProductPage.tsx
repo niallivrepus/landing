@@ -1,5 +1,6 @@
 import { MegaFooter } from "../components/MegaFooter";
 import { SiteTopBar } from "../components/SiteTopBar";
+import { VortexMindMap } from "../components/VortexMindMap";
 import { PRODUCT_PAGES } from "../data/product-pages";
 import { PRODUCTS, type ProductId } from "../data/products";
 import { PillWheel, cn, sampleAvatar } from "@jokuh/gooey";
@@ -163,9 +164,22 @@ export function ProductPage({ productId }: { productId: ProductId }) {
 
           <div className={cn(SHELL, "mt-14 md:mt-20")}>
             <div className="relative overflow-hidden rounded-[32px] border border-white/[0.08] bg-gradient-to-b from-white/[0.06] to-black shadow-[0_40px_120px_rgba(0,0,0,0.55)]">
-              <div className="aspect-[1086/1153] max-h-[70vh] w-full bg-gradient-to-br from-[#1a1530] via-black to-[#0a1a12]" />
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(103,41,236,0.18),transparent_55%)]" />
-              <div className="pointer-events-none absolute inset-x-[18%] bottom-[8%] top-[14%] rounded-[2.5rem] border border-white/10 bg-black/40 shadow-[0_0_80px_rgba(103,41,236,0.15)] backdrop-blur-sm" />
+              <div className="relative aspect-[1086/1153] max-h-[70vh] w-full overflow-hidden">
+                {productId === "vortex" ? (
+                  <VortexMindMap className="h-full min-h-[320px]" />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-[#1a1530] via-black to-[#0a1a12]" />
+                )}
+                <div
+                  className={cn(
+                    "pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(103,41,236,0.18),transparent_55%)]",
+                    productId === "vortex" && "opacity-70",
+                  )}
+                />
+                {productId !== "vortex" ? (
+                  <div className="pointer-events-none absolute inset-x-[18%] bottom-[8%] top-[14%] rounded-[2.5rem] border border-white/10 bg-black/40 shadow-[0_0_80px_rgba(103,41,236,0.15)] backdrop-blur-sm" />
+                ) : null}
+              </div>
             </div>
           </div>
         </section>
@@ -402,7 +416,7 @@ export function ProductPage({ productId }: { productId: ProductId }) {
             On the home overview
           </Link>
           <span className="text-white/20"> · </span>
-          <Link to="/#journal" className="underline-offset-4 hover:text-white hover:underline">
+          <Link to="/about" className="underline-offset-4 hover:text-white hover:underline">
             What Jokuh is building
           </Link>
         </div>

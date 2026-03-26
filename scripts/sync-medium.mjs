@@ -11,11 +11,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dirname, "../src/data/medium-feed.json");
 
 const PRESETS = [
-  "linear-gradient(135deg, #6b5cff 0%, #c4b5fd 45%, #fde68a 100%)",
-  "linear-gradient(145deg, #f472b6 0%, #fb923c 50%, #38bdf8 100%)",
-  "linear-gradient(160deg, #22d3ee 0%, #818cf8 55%, #e9d5ff 100%)",
-  "linear-gradient(135deg, #34d399 0%, #2dd4bf 50%, #a78bfa 100%)",
-  "linear-gradient(120deg, #fcd34d 0%, #f97316 40%, #7c3aed 100%)",
+  "linear-gradient(160deg, #020617 0%, #0f172a 45%, #1e3a5f 100%)",
+  "linear-gradient(145deg, #020617 0%, #1e1b4b 50%, #312e81 100%)",
+  "linear-gradient(135deg, #020617 0%, #0c4a6e 55%, #164e63 100%)",
+  "linear-gradient(150deg, #020617 0%, #1e293b 40%, #334155 100%)",
+  "linear-gradient(135deg, #020617 0%, #172554 50%, #0c4a6e 100%)",
 ];
 
 function stripHtml(html) {

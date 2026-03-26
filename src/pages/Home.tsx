@@ -18,6 +18,9 @@ import {
 } from "react";
 import { Link } from "react-router-dom";
 import { CookieBanner } from "../components/CookieBanner";
+import { ExplainerTriad } from "../components/ExplainerTriad";
+import { NewsCardArt } from "../components/NewsCardArt";
+import { FUNDERS } from "../data/funders";
 import { HOME_STORIES } from "../data/home-stories";
 import { DEFAULT_NEWS_CARD_GRADIENT, NEWS_ITEMS, formatNewsDate } from "../data/news";
 const IDENTITY_WHEEL_FACE =
@@ -111,9 +114,9 @@ const HERO_QUICK_LINKS: { label: string; href: string }[] = [
   { label: "Search with Jokuh", href: "/#prompt" },
   { label: "Talk with Jokuh", href: "/#prompt" },
   { label: "Explore the Spine", href: "/spine" },
-  { label: "Research", href: "/#journal" },
-  { label: "V1llains lab", href: "/#identity" },
-  { label: "More", href: "/#journal" },
+  { label: "Research", href: "/research" },
+  { label: "V1llains lab", href: "/ecosystem/v1llains" },
+  { label: "More", href: "/journal" },
 ];
 
 /** Single-row pills with horizontal scroll + edge fades (gooey PromptCategories pattern). */
@@ -226,56 +229,91 @@ function Hero() {
   );
 }
 
-const STORIES_CARD_3D = [
-  "max-sm:[transform:none] sm:origin-[50%_100%] sm:[transform-style:preserve-3d] sm:[transform:rotateY(13deg)_translateX(6px)_translateZ(-12px)] sm:transition-[transform,box-shadow] sm:duration-500 sm:ease-out sm:group-hover:[transform:rotateY(0deg)_translateX(0)_translateZ(28px)_translateY(-10px)]",
-  "max-sm:[transform:none] sm:origin-[50%_100%] sm:[transform-style:preserve-3d] sm:[transform:rotateY(0deg)_translateZ(32px)] sm:transition-[transform,box-shadow] sm:duration-500 sm:ease-out sm:group-hover:[transform:rotateY(0deg)_translateZ(48px)_translateY(-10px)]",
-  "max-sm:[transform:none] sm:origin-[50%_100%] sm:[transform-style:preserve-3d] sm:[transform:rotateY(-13deg)_translateX(-6px)_translateZ(-12px)] sm:transition-[transform,box-shadow] sm:duration-500 sm:ease-out sm:group-hover:[transform:rotateY(0deg)_translateX(0)_translateZ(28px)_translateY(-10px)]",
-] as const;
+function FundersStrip() {
+  return (
+    <section
+      className="border-t border-white/[0.07] bg-black px-5 py-10 md:px-8 md:py-12"
+      aria-label="Backed by"
+    >
+      <div className="mx-auto max-w-[1380px]">
+        <p className="mb-6 text-center font-mono text-[11px] tracking-[0.28em] text-light-space/35 uppercase md:text-left">
+          Backed by
+        </p>
+        <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 md:justify-start">
+          {FUNDERS.map((f) => (
+            <li key={f.name}>
+              <a
+                href={f.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-sans text-sm font-medium text-white/60 transition-colors hover:text-white/90 md:text-[15px]"
+              >
+                {f.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function StoryTileImage({
+  primary,
+  fallback,
+}: {
+  primary: string;
+  fallback?: string;
+}) {
+  const [src, setSrc] = useState(primary);
+  return (
+    <img
+      src={src}
+      alt=""
+      className="size-full object-cover brightness-[0.82] contrast-[1.06] saturate-[0.72] transition-[transform,filter] duration-300 ease-out group-hover:scale-[1.03] group-hover:brightness-[0.88] group-hover:saturate-[0.78]"
+      loading="lazy"
+      decoding="async"
+      onError={() => {
+        if (fallback && src !== fallback) setSrc(fallback);
+      }}
+    />
+  );
+}
 
 function StoriesSection() {
   return (
     <section
       id="stories"
-      className="scroll-mt-24 border-t border-white/10 bg-black px-5 py-16 md:px-8 md:py-20"
+      className="scroll-mt-24 border-t border-white/[0.07] bg-black px-5 py-16 md:px-8 md:py-20"
     >
       <div className="mx-auto max-w-[1380px]">
-        <div className="mb-10 flex items-end justify-between gap-4">
-          <h2 className="font-sans text-lg font-normal tracking-tight text-white md:text-xl">Stories</h2>
+        <div className="mb-10 flex items-baseline justify-between gap-6 md:mb-12">
+          <h2 className="font-sans text-lg font-normal tracking-tight text-white/90 md:text-xl">Stories</h2>
           <Link
-            to="/news"
-            className="shrink-0 font-sans text-sm font-normal text-white transition-opacity hover:opacity-70"
+            to="/journal"
+            className="shrink-0 font-sans text-sm text-white/50 transition-colors hover:text-white/80"
           >
             View all
           </Link>
         </div>
-        <div
-          className="mx-auto flex max-w-[1100px] flex-col items-center gap-12 py-4 sm:flex-row sm:items-end sm:justify-center sm:gap-2 md:gap-6 lg:gap-10"
-          style={{ perspective: "1400px" }}
-        >
-          {HOME_STORIES.map((story, i) => (
-            <TopNavAnchor
-              key={story.caption}
-              href={story.href}
-              className="group block w-full max-w-[min(100%,380px)] sm:max-w-[min(30vw,300px)] md:max-w-[min(28vw,340px)]"
-            >
-              <div className={cn(STORIES_CARD_3D[i] ?? STORIES_CARD_3D[1])}>
+        <div className="flex gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+          {HOME_STORIES.map((story) => (
+            <TopNavAnchor key={story.title} href={story.href} className="group flex min-w-0 flex-1 flex-col">
+              <div
+                className={cn(
+                  "relative aspect-square w-full shrink-0 overflow-hidden rounded-[2px] bg-zinc-950",
+                  "ring-1 ring-white/[0.05] transition-[box-shadow,ring-color] duration-300 ease-out",
+                  "group-hover:ring-white/[0.1] group-hover:shadow-[0_24px_48px_-20px_rgba(0,0,0,0.75)]",
+                )}
+              >
+                <StoryTileImage primary={story.image} fallback={story.imageFallback} />
                 <div
-                  className={cn(
-                    "relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-white/[0.12] bg-zinc-900 shadow-[0_4px_0_0_rgba(255,255,255,0.06)_inset,0_28px_56px_-8px_rgba(0,0,0,0.85),0_12px_24px_-12px_rgba(0,0,0,0.6)]",
-                    "transition-[box-shadow] duration-500 sm:group-hover:shadow-[0_4px_0_0_rgba(255,255,255,0.1)_inset,0_40px_80px_-12px_rgba(0,0,0,0.9),0_24px_48px_-16px_rgba(0,0,0,0.65)]",
-                  )}
-                >
-                  <img
-                    src={story.image}
-                    alt=""
-                    className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/25"
+                  aria-hidden
+                />
               </div>
-              <p className="mt-4 text-center font-sans text-[15px] font-normal leading-snug tracking-tight text-white md:text-base">
-                {story.caption}
+              <p className="mt-3 text-left font-sans text-[13px] font-normal leading-snug tracking-wide text-white/50 md:text-[0.9375rem] md:tracking-normal md:text-white/55">
+                {story.title}
               </p>
             </TopNavAnchor>
           ))}
@@ -288,12 +326,11 @@ function StoriesSection() {
 type NewsRow = {
   id: string;
   title: string;
-  excerpt?: string;
   category: string;
   date: string;
   href: string;
   gradient: string;
-  readMinutes: number;
+  image?: string;
 };
 
 function RecentNewsBentoCompact({
@@ -307,21 +344,21 @@ function RecentNewsBentoCompact({
     <TopNavAnchor
       href={row.href}
       className={cn(
-        "group flex gap-3 rounded-xl border border-white/[0.08] bg-white/[0.02] p-3 backdrop-blur-sm transition-colors hover:border-white/[0.12] hover:bg-white/[0.04] sm:gap-4 sm:p-4",
+        "group flex w-full max-w-[320px] flex-col overflow-hidden rounded-xl bg-white/[0.02] backdrop-blur-sm transition-colors hover:bg-white/[0.04] lg:max-w-none",
         className,
       )}
     >
-      <div
-        className="aspect-square size-[min(28vw,96px)] shrink-0 overflow-hidden rounded-[6px] sm:size-[100px] lg:size-[92px]"
-        style={{ background: row.gradient }}
-        aria-hidden
-      />
-      <div className="flex min-w-0 flex-col justify-center gap-1">
-        <h3 className="font-sans text-[14px] font-medium leading-snug tracking-tight text-white transition-opacity group-hover:opacity-80 sm:text-[15px] lg:text-[16px]">
+      <div className="aspect-square w-full shrink-0" aria-hidden>
+        <NewsCardArt gradient={row.gradient} image={row.image} />
+      </div>
+      <div className="flex flex-col gap-2 p-4 sm:p-4 sm:pt-3">
+        <h3 className="line-clamp-3 font-sans text-[15px] font-semibold leading-snug tracking-tight text-white transition-opacity group-hover:opacity-90 sm:text-[15px]">
           {row.title}
         </h3>
-        <p className="font-sans text-xs leading-snug text-smoke-4 sm:text-sm">
-          {row.category} · {row.date}
+        <p className="font-sans text-[13px] leading-snug">
+          <span className="text-white">{row.category}</span>
+          <span className="text-white/30"> · </span>
+          <span className="text-white/45">{row.date}</span>
         </p>
       </div>
     </TopNavAnchor>
@@ -341,12 +378,11 @@ function RecentNewsSection() {
         .map((n) => ({
           id: n.id,
           title: n.title,
-          excerpt: n.excerpt,
           category: n.category,
           date: formatNewsDate(n.publishedAt),
-          href: n.externalUrl ?? n.internalHref ?? "/news",
+          href: n.externalUrl ?? n.internalHref ?? "/journal",
           gradient: n.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT,
-          readMinutes: n.readMinutes,
+          image: n.cardImage,
         })),
     [],
   );
@@ -355,49 +391,40 @@ function RecentNewsSection() {
   const rest = rows.slice(1);
 
   return (
-    <section id="journal" className="scroll-mt-24 border-t border-white/10 bg-black px-5 py-16 md:px-8 md:py-20">
+    <section id="journal" className="scroll-mt-24 bg-black px-5 py-16 md:px-8 md:py-20">
       <div className="mx-auto max-w-[1380px]">
         <div className="mb-10 flex items-end justify-between gap-4">
-          <h2 className="font-sans text-lg font-normal tracking-tight text-white md:text-xl">Recent news</h2>
+          <h2 className="font-sans text-lg font-normal tracking-tight text-white md:text-xl">Journal</h2>
           <Link
-            to="/news"
+            to="/journal"
             className="shrink-0 font-sans text-sm font-normal text-white transition-opacity hover:opacity-70"
           >
             View more
           </Link>
         </div>
         {featured ? (
-          <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-2 lg:items-start lg:gap-5">
-            <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-6 xl:gap-8">
+            <div className="min-w-0 lg:sticky lg:top-24 lg:self-start">
               <TopNavAnchor
                 href={featured.href}
-                className="group flex min-h-[280px] flex-col overflow-hidden rounded-2xl border border-white/[0.1] bg-zinc-950/60 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.9)] transition-[border-color,transform] duration-300 hover:border-white/[0.14] hover:-translate-y-0.5 lg:min-h-[320px]"
+                className="group flex flex-col overflow-hidden rounded-2xl bg-zinc-950/60 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.9)] transition-transform duration-300 hover:-translate-y-0.5"
               >
-                <div className="shrink-0 p-5 pb-0 sm:p-6 sm:pb-0">
-                  <div
-                    className="aspect-square w-full overflow-hidden rounded-[6px]"
-                    style={{ background: featured.gradient }}
-                    aria-hidden
-                  />
+                <div className="aspect-square w-full shrink-0" aria-hidden>
+                  <NewsCardArt gradient={featured.gradient} image={featured.image} />
                 </div>
-                <div className="flex min-h-[140px] flex-1 flex-col gap-2 p-5 pt-4 sm:p-6 sm:pt-5 lg:justify-end">
-                  <p className="font-mono text-[10px] tracking-[0.2em] text-light-space/45 uppercase">Featured</p>
-                  <h3 className="font-sans text-xl font-medium leading-[1.15] tracking-tight text-white transition-opacity group-hover:opacity-90 sm:text-2xl lg:text-[1.65rem] lg:leading-snug">
+                <div className="flex flex-col gap-3 p-5 sm:p-6 sm:pt-5">
+                  <h3 className="font-sans text-xl font-semibold leading-[1.15] tracking-tight text-white transition-opacity group-hover:opacity-90 sm:text-2xl lg:text-[1.65rem] lg:leading-snug">
                     {featured.title}
                   </h3>
-                  {featured.excerpt ? (
-                    <p className="line-clamp-2 font-sans text-sm leading-relaxed text-light-space/65 sm:line-clamp-3 sm:text-[15px]">
-                      {featured.excerpt}
-                    </p>
-                  ) : null}
-                  <p className="mt-1 font-sans text-sm text-smoke-4">
-                    {featured.category} · {featured.date}
-                    <span className="text-light-space/35"> · {featured.readMinutes} min</span>
+                  <p className="font-sans text-sm leading-snug sm:text-[15px]">
+                    <span className="text-white">{featured.category}</span>
+                    <span className="text-white/30"> · </span>
+                    <span className="text-white/45">{featured.date}</span>
                   </p>
                 </div>
               </TopNavAnchor>
             </div>
-            <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-col items-center gap-4 sm:gap-4 lg:w-[320px] lg:shrink-0 lg:items-stretch">
               {rest.slice(0, 5).map((row) => (
                 <RecentNewsBentoCompact key={row.id} row={row} />
               ))}
@@ -436,7 +463,7 @@ function IdentityBlock() {
           Small batches keep the graph human, claim a pass and go from anonymous to unmistakably you.
         </p>
         <div className="mt-9 flex w-full max-w-sm justify-center md:max-w-none">
-          <ClaimIdentityCta href="#start" className="w-full justify-center md:w-auto" />
+          <ClaimIdentityCta href="/platform/identity" className="w-full justify-center md:w-auto" />
         </div>
       </div>
     </section>
@@ -509,6 +536,8 @@ export default function Home() {
       <SiteTopBar />
       <main>
         <Hero />
+        <ExplainerTriad />
+        <FundersStrip />
         <RecentNewsSection />
         <StoriesSection />
         <IdentityBlock />

@@ -11,6 +11,8 @@ import {
 } from "../data/news";
 import { ChevronDown, LayoutGrid, List, SlidersHorizontal, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { NewsCardArt } from "../components/NewsCardArt";
+import { MegaFooter } from "../components/MegaFooter";
 import { SiteTopBar } from "../components/SiteTopBar";
 import { Link } from "react-router-dom";
 
@@ -22,7 +24,7 @@ function yearOf(iso: string) {
 }
 
 function NewsTitleLink({ item, className }: { item: NewsItem; className?: string }) {
-  const href = item.externalUrl ?? item.internalHref ?? "/news";
+  const href = item.externalUrl ?? item.internalHref ?? "/journal";
   if (item.externalUrl) {
     return (
       <a href={href} className={className} target="_blank" rel="noopener noreferrer">
@@ -137,7 +139,7 @@ export function NewsPage() {
 
       <main className="mx-auto max-w-[1380px] px-4 pb-24 pt-24 md:px-6 md:pt-28">
         <h1 className="text-[2rem] font-semibold tracking-tight md:text-5xl md:font-semibold">
-          Recent news
+          Journal
         </h1>
 
         <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -322,23 +324,15 @@ export function NewsPage() {
             {filtered.map((item) => (
               <li key={item.id} className="py-8 first:pt-2 md:py-10">
                 <article className="grid gap-4 md:grid-cols-[minmax(0,200px)_1fr] md:gap-10">
-                  <div className="text-[13px] text-white/45">
-                    <p>{item.category}</p>
-                    <p className="mt-1">
-                      {formatNewsDate(item.publishedAt)}
-                      <span className="text-white/25"> · </span>
-                      {item.readMinutes} min read
-                    </p>
+                  <div className="text-[13px] leading-snug">
+                    <span className="text-white">{item.category}</span>
+                    <span className="text-white/30"> · </span>
+                    <span className="text-white/45">{formatNewsDate(item.publishedAt)}</span>
                   </div>
                   <div>
                     <h2 className="text-[1.25rem] font-semibold leading-snug tracking-tight text-white md:text-xl">
                       <NewsTitleLink item={item} className="hover:text-white/85" />
                     </h2>
-                    {item.excerpt ? (
-                      <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-white/50">
-                        {item.excerpt}
-                      </p>
-                    ) : null}
                   </div>
                 </article>
               </li>
@@ -348,27 +342,22 @@ export function NewsPage() {
           <ul className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
             {filtered.map((item) => (
               <li key={item.id}>
-                <article className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0a0a] transition-colors hover:border-white/[0.14]">
-                  <div className="p-5 pb-0">
-                    <div
-                      className="aspect-square w-full overflow-hidden rounded-[6px]"
-                      style={{
-                        background: item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT,
-                      }}
+                <article className="group overflow-hidden rounded-2xl bg-[#0a0a0a]">
+                  <div className="aspect-square w-full">
+                    <NewsCardArt
+                      gradient={item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT}
+                      image={item.cardImage}
                     />
                   </div>
-                  <div className="p-5 pt-4">
-                    <p className="text-[12px] text-white/45">
-                      {item.category}
-                      <span className="text-white/25"> · </span>
-                      {item.readMinutes} min read
-                    </p>
-                    <h2 className="mt-2 text-[1.1rem] font-semibold leading-snug group-hover:text-white/90">
+                  <div className="flex flex-col gap-2 p-5 pt-4">
+                    <h2 className="text-[1.1rem] font-semibold leading-snug tracking-tight text-white group-hover:text-white/90">
                       <NewsTitleLink item={item} />
                     </h2>
-                    {item.excerpt ? (
-                      <p className="mt-2 line-clamp-2 text-[14px] text-white/45">{item.excerpt}</p>
-                    ) : null}
+                    <p className="text-[13px] leading-snug">
+                      <span className="text-white">{item.category}</span>
+                      <span className="text-white/30"> · </span>
+                      <span className="text-white/45">{formatNewsDate(item.publishedAt)}</span>
+                    </p>
                   </div>
                 </article>
               </li>
@@ -376,6 +365,8 @@ export function NewsPage() {
           </ul>
         )}
       </main>
+
+      <MegaFooter />
     </div>
   );
 }
