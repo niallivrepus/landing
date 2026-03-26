@@ -1,13 +1,19 @@
-import { Button, Logo, cn } from "@jokuh/gooey";
+import { Logo, cn } from "@jokuh/gooey";
 import { Menu01Icon, Cancel01Icon } from "hugeicons-react";
-import { Search } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { Link } from "react-router-dom";
+import { useSiteSearch } from "../context/SiteSearchContext";
+import { resolveRigidNavColumns } from "../config/site-subdomains";
+import { showOffSiteNavGlyph } from "../lib/off-site-href";
+import { useGentleHoverSound } from "../hooks/useGentleHoverSound";
+import { OffSiteGlyph } from "./OffSiteGlyph";
+import { SearchPanelToggleGlyph } from "./SearchPanelToggleGlyph";
 import { TopNavAnchor } from "./TopNavAnchor";
-import { RIGID_NAV_COLUMNS } from "../data/rigid-sitemap";
+import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
 
-type MegaLink = { label: string; href: string };
+type MegaLink = Pick<RigidLink, "label" | "href" | "navGlyph">;
 type MegaColumn = { heading: string; links: MegaLink[] };
 type MegaGroup = {
   id: string;
@@ -17,43 +23,87 @@ type MegaGroup = {
   secondary?: MegaColumn[];
 };
 
-const NAV_GROUPS: MegaGroup[] = RIGID_NAV_COLUMNS.map((col) => ({
-  id: col.id,
-  label: col.heading,
-  primary: [...col.links],
-  secondary: col.support
-    ? [{ heading: col.support.heading, links: [...col.support.links] }]
-    : undefined,
-}));
+function buildNavGroups(cols: ReturnType<typeof resolveRigidNavColumns>): MegaGroup[] {
+  return cols.map((col) => ({
+    id: col.id,
+    label: col.heading,
+    primaryHeading: col.sections[0]?.heading,
+    primary: [...col.sections[0].links],
+    secondary:
+      col.sections.length > 1
+        ? col.sections.slice(1).map((s) => ({ heading: s.heading, links: [...s.links] }))
+        : undefined,
+  }));
+}
 
-function NavSearchButton({ className }: { className?: string }) {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-
-  const goPrompt = useCallback(() => {
-    if (pathname === "/") {
-      document.getElementById("prompt")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    } else {
-      navigate("/prompt");
-    }
-  }, [navigate, pathname]);
+function NavSearchButton({
+  className,
+  beforeOpen,
+  style,
+}: {
+  className?: string;
+  beforeOpen?: () => void;
+  style?: CSSProperties;
+}) {
+  const { isOpen, toggle } = useSiteSearch();
 
   return (
     <button
       type="button"
-      aria-label="Search"
-      onClick={goPrompt}
+      aria-label={isOpen ? "Close search" : "Open search"}
+      onClick={() => {
+        beforeOpen?.();
+        toggle();
+      }}
       className={cn(
-        "inline-flex size-10 shrink-0 items-center justify-center rounded-full text-smoke-4 transition-colors hover:text-light-space focus-visible:ring-2 focus-visible:ring-light-space/30 focus-visible:outline-none md:size-[50px]",
+        "premium-soft-button inline-flex size-10 shrink-0 items-center justify-center rounded-full text-light-space/55",
+        "hover:bg-white/[0.05] hover:text-light-space/92 focus-visible:ring-2 focus-visible:ring-light-space/30 focus-visible:outline-none",
+        "light:text-zinc-500 light:hover:bg-black/[0.05] light:hover:text-zinc-950",
         className,
       )}
+      style={style}
     >
-      <Search className="size-[22px] md:size-6" strokeWidth={1.75} aria-hidden />
+      <SearchPanelToggleGlyph open={isOpen} />
     </button>
   );
 }
 
+export function TryJokuhCta({
+  className,
+  onNavigate,
+  style,
+}: {
+  className?: string;
+  onNavigate?: () => void;
+  style?: CSSProperties;
+}) {
+  const hoverSoundProps = useGentleHoverSound();
+
+  return (
+    <Link
+      to="/waitlist"
+      onClick={onNavigate}
+      style={style}
+      {...hoverSoundProps}
+      className={cn(
+        "inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 font-sans text-[12px] font-semibold tracking-tight text-white",
+        "premium-soft-button shadow-[0_10px_30px_-22px_rgba(0,0,0,0.72)] hover:bg-zinc-900 hover:shadow-[0_18px_36px_-24px_rgba(0,0,0,0.72)] active:translate-y-px",
+        "light:bg-black light:hover:bg-zinc-900 light:hover:shadow-[0_16px_34px_-26px_rgba(0,0,0,0.32)]",
+        "focus-visible:ring-2 focus-visible:ring-white/35 focus-visible:outline-none light:focus-visible:ring-black/25",
+        className,
+      )}
+    >
+      Try Jokuh
+      <ArrowUpRight className="size-[15px] shrink-0 opacity-95" strokeWidth={2} aria-hidden />
+    </Link>
+  );
+}
+
 export function SiteTopBar() {
+  const navGroups = useMemo(
+    () => buildNavGroups(resolveRigidNavColumns(RIGID_NAV_COLUMNS, "primary")),
+    [],
+  );
   const [openId, setOpenId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [primaryHoverKey, setPrimaryHoverKey] = useState<string | null>(null);
@@ -81,7 +131,7 @@ export function SiteTopBar() {
     if (!mobileOpen) setPrimaryHoverKey(null);
   }, [mobileOpen]);
 
-  const openGroup = NAV_GROUPS.find((g) => g.id === openId);
+  const openGroup = navGroups.find((g) => g.id === openId);
 
   return (
     <div
@@ -92,14 +142,14 @@ export function SiteTopBar() {
       <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="nav-topbar-glass overflow-visible text-light-space"
+        transition={{ duration: 0.68, ease: [0.22, 1, 0.36, 1] }}
+        className="nav-topbar-glass overflow-visible text-light-space light:text-zinc-950"
       >
-        <div className="relative z-[1] mx-auto h-14 max-w-[1380px] px-5 md:h-[56px] md:px-8">
+        <div className="relative z-[1] mx-auto h-14 w-full max-w-[1240px] px-4 md:h-[60px] md:px-5 lg:h-16 lg:pl-[48px] lg:pr-[56px]">
           <div className="grid h-full w-full grid-cols-[2.5rem_1fr_2.5rem] items-center md:hidden">
             <button
               type="button"
-              className="flex size-10 items-center justify-center text-white"
+              className="premium-soft-button flex size-10 items-center justify-center rounded-full text-light-space hover:bg-white/[0.05]"
               aria-label="Open menu"
               onClick={() => setMobileOpen(true)}
             >
@@ -109,40 +159,62 @@ export function SiteTopBar() {
               <Logo width={34} height={20} />
             </Link>
             <div className="flex justify-end">
-              <NavSearchButton />
+              <NavSearchButton beforeOpen={() => setMobileOpen(false)} />
             </div>
           </div>
 
-          <div className="hidden h-full items-center md:flex">
-            <nav className="flex min-w-0 max-w-[calc(50%-2.75rem)] flex-1 items-stretch gap-0 overflow-x-auto pr-2">
-              {NAV_GROUPS.map((g) => (
-                <div key={g.id} className="relative flex shrink-0 items-center">
-                  <button
-                    type="button"
-                    className={cn(
-                      "flex h-14 items-center px-3 font-sans text-[13px] font-normal tracking-tight whitespace-nowrap transition-colors md:h-[56px] lg:px-3.5",
-                      openId === g.id ? "text-white" : "text-white/60 hover:text-white",
-                    )}
-                    onMouseEnter={() => setOpenId(g.id)}
-                    aria-expanded={openId === g.id}
+          <div className="hidden h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-2 md:grid md:gap-x-3 lg:gap-x-4">
+            <nav
+              className="flex min-w-0 items-stretch gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              aria-label="Primary"
+            >
+              {navGroups.map((g, index) => {
+                const hasOpenGroup = openId !== null;
+                const isActive = openId === g.id;
+                const isDimmed = hasOpenGroup && !isActive;
+
+                return (
+                  <div
+                    key={g.id}
+                    className="nav-fade-item relative flex shrink-0 items-center"
+                    style={{ "--item-index": index } as CSSProperties}
                   >
-                    {g.label}
-                  </button>
-                </div>
-              ))}
+                    <button
+                      type="button"
+                      className={cn(
+                        "premium-soft-fade flex h-11 items-center rounded-full bg-transparent px-2.5 font-sans text-[11px] font-semibold tracking-tight whitespace-nowrap sm:text-[12px] md:h-[48px] md:px-3 lg:h-[52px] lg:px-3.5 xl:px-4",
+                        isActive
+                          ? "text-light-space light:text-black"
+                          : "text-light-space/60 hover:text-light-space/86 light:text-zinc-700 light:hover:text-black",
+                        isDimmed && "text-light-space/38 light:text-zinc-600",
+                      )}
+                      onMouseEnter={() => setOpenId(g.id)}
+                      aria-expanded={openId === g.id}
+                    >
+                      {g.label}
+                    </button>
+                  </div>
+                );
+              })}
             </nav>
             <Link
               to="/"
-              className="pointer-events-auto absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
+              className="pointer-events-auto nav-fade-item flex shrink-0 justify-center justify-self-center"
               aria-label="Jokuh home"
+              style={{ "--item-index": navGroups.length } as CSSProperties}
             >
               <Logo width={36} height={22} />
             </Link>
-            <div className="flex min-w-0 max-w-[calc(50%-2.75rem)] flex-1 items-center justify-end gap-3 pl-2">
-              <NavSearchButton />
-              <Button variant="primary-neutral" size="xl" className="shrink-0 px-8" asChild>
-                <Link to="/waitlist">Try Jokuh</Link>
-              </Button>
+            <div className="flex min-w-0 items-center justify-end justify-self-end gap-1.5 md:gap-2">
+              <NavSearchButton
+                beforeOpen={() => setMobileOpen(false)}
+                className="nav-fade-item shrink-0"
+                style={{ "--item-index": navGroups.length + 1 } as CSSProperties}
+              />
+              <TryJokuhCta
+                className="nav-fade-item shrink-0"
+                style={{ "--item-index": navGroups.length + 2 } as CSSProperties}
+              />
             </div>
           </div>
         </div>
@@ -155,12 +227,12 @@ export function SiteTopBar() {
               aria-label={`${openGroup.label} menu`}
               initial={{ opacity: 0, y: -14 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.68, ease: [0.22, 1, 0.36, 1] }}
               className="nav-topbar-mega"
               onMouseEnter={cancelClose}
             >
-              <div className="mx-auto max-w-[1380px] px-5 py-12 md:px-8">
+              <div className="mx-auto w-full max-w-[1240px] px-4 pb-12 md:px-5 lg:pl-[48px] lg:pr-[56px]">
                 <div
                   className={cn(
                     "grid gap-10",
@@ -171,54 +243,88 @@ export function SiteTopBar() {
                   )}
                 >
                   <div>
-                    <p className="mb-3 font-sans text-[11px] font-normal tracking-[0.06em] text-light-space/40 uppercase">
+                    <p
+                      className="nav-fade-item mb-3 font-sans text-[11px] font-normal tracking-[0.06em] text-light-space/40 uppercase light:text-zinc-500"
+                      style={{ "--item-index": 0 } as CSSProperties}
+                    >
                       {openGroup.primaryHeading ?? openGroup.label}
                     </p>
                     <ul
                       className="flex flex-col"
                       onMouseLeave={() => setPrimaryHoverKey(null)}
                     >
-                      {openGroup.primary.map((item) => {
+                      {openGroup.primary.map((item, index) => {
                         const pk = `${openGroup.id}:${item.label}`;
                         const dim = primaryHoverKey !== null && primaryHoverKey !== pk;
                         return (
-                          <li key={item.label}>
+                          <li
+                            key={item.label}
+                            className="nav-fade-item"
+                            style={{ "--item-index": index + 1 } as CSSProperties}
+                          >
                             <TopNavAnchor
                               href={item.href}
                               className={cn(
-                                "block rounded-md py-1.5 font-sans text-[1.375rem] leading-snug font-semibold tracking-[-0.02em] text-light-space transition-[color,opacity] duration-200 first:pt-0 hover:text-white md:text-[1.5rem] md:leading-[1.2]",
+                                "premium-soft-fade block rounded-md py-1.5 font-sans text-[1.375rem] leading-snug font-semibold tracking-[-0.02em] text-light-space first:pt-0 hover:text-light-space/96 light:text-zinc-950 light:hover:text-zinc-700 md:text-[1.5rem] md:leading-[1.2]",
                                 dim && "opacity-[0.28]",
                               )}
                               onMouseEnter={() => setPrimaryHoverKey(pk)}
                               onClick={() => setOpenId(null)}
                             >
-                              {item.label}
+                              <span className="inline-flex items-center gap-1.5">
+                                {item.label}
+                                {showOffSiteNavGlyph(item) ? <OffSiteGlyph className="translate-y-px" /> : null}
+                              </span>
                             </TopNavAnchor>
                           </li>
                         );
                       })}
                     </ul>
                   </div>
-                  {openGroup.secondary?.map((col) => (
-                    <div key={col.heading}>
-                      <p className="mb-3 font-sans text-[11px] font-normal tracking-[0.06em] text-light-space/40 uppercase">
-                        {col.heading}
-                      </p>
-                      <ul className="flex flex-col gap-0.5">
-                        {col.links.map((link) => (
-                          <li key={link.label}>
-                            <TopNavAnchor
-                              href={link.href}
-                              className="block rounded-md py-2 font-sans text-[15px] font-medium text-light-space/80 transition-colors hover:text-white"
-                              onClick={() => setOpenId(null)}
+                  {(openGroup.secondary ?? []).map((col, colIndex) => {
+                    const isCompactResources = col.heading === "Resources";
+                    const columnOffset =
+                      openGroup.primary.length +
+                      2 +
+                      (openGroup.secondary ?? [])
+                        .slice(0, colIndex)
+                        .reduce((sum, prev) => sum + prev.links.length + 1, 0);
+                    return (
+                      <div key={col.heading}>
+                        <p
+                          className="nav-fade-item mb-3 font-sans text-[11px] font-normal tracking-[0.06em] text-light-space/40 uppercase light:text-zinc-500"
+                          style={{ "--item-index": columnOffset } as CSSProperties}
+                        >
+                          {col.heading}
+                        </p>
+                        <ul className={cn("flex flex-col", isCompactResources ? "gap-y-2" : "gap-0.5")}>
+                          {col.links.map((link, linkIndex) => (
+                            <li
+                              key={link.label}
+                              className="nav-fade-item"
+                              style={{ "--item-index": columnOffset + linkIndex + 1 } as CSSProperties}
                             >
-                              {link.label}
-                            </TopNavAnchor>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+                              <TopNavAnchor
+                                href={link.href}
+                                className={cn(
+                                  "premium-soft-fade block rounded-md font-sans text-[15px] hover:text-light-space/96 light:hover:text-zinc-900",
+                                  isCompactResources
+                                    ? "py-0 font-medium text-light-space light:text-zinc-900"
+                                    : "py-2 font-semibold text-light-space/80 light:text-zinc-600",
+                                )}
+                                onClick={() => setOpenId(null)}
+                              >
+                                <span className="inline-flex items-center gap-1.5">
+                                  {link.label}
+                                  {showOffSiteNavGlyph(link) ? <OffSiteGlyph className="translate-y-px" /> : null}
+                                </span>
+                              </TopNavAnchor>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>
@@ -227,72 +333,95 @@ export function SiteTopBar() {
       </motion.header>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-[110] bg-black md:hidden">
-          <div className="flex h-14 items-center justify-between border-b border-white/10 px-5">
+        <div className="fixed inset-0 z-[110] bg-dark-space light:bg-white md:hidden">
+          <div className="flex h-14 items-center justify-between border-b border-light-space/10 px-4 light:border-black/[0.08]">
             <Link to="/" aria-label="Jokuh home">
               <Logo width={32} height={20} />
             </Link>
             <button
               type="button"
-              className="flex size-10 items-center justify-center text-white"
+              className="premium-soft-button flex size-10 items-center justify-center rounded-full text-light-space hover:bg-white/[0.05] light:text-zinc-950 light:hover:bg-zinc-100"
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
             >
               <Cancel01Icon size={22} />
             </button>
           </div>
-          <div className="overflow-y-auto px-5 py-6">
-            <Button variant="primary-neutral" size="xl" className="mb-8 w-full" asChild>
-              <Link to="/waitlist" onClick={() => setMobileOpen(false)}>
-                Try Jokuh
-              </Link>
-            </Button>
-            {NAV_GROUPS.map((g) => (
-              <div key={g.id} className="mb-10">
-                <p className="mb-2 font-sans text-[11px] font-normal tracking-[0.06em] text-white/40 uppercase">
+          <div className="overflow-y-auto px-4 py-6">
+            <TryJokuhCta
+              className="nav-fade-item mb-8 w-full"
+              onNavigate={() => setMobileOpen(false)}
+            />
+            {navGroups.map((g, groupIndex) => (
+              <div
+                key={g.id}
+                className="mb-10"
+              >
+                <p
+                  className="nav-fade-item mb-2 font-sans text-[11px] font-normal tracking-[0.06em] text-light-space/40 uppercase light:text-zinc-500"
+                  style={{ "--item-index": groupIndex + 1 } as CSSProperties}
+                >
                   {g.label}
                 </p>
                 <ul className="space-y-0.5" onMouseLeave={() => setPrimaryHoverKey(null)}>
-                  {g.primary.map((item) => {
+                  {g.primary.map((item, index) => {
                     const pk = `${g.id}:${item.label}`;
                     const dim = primaryHoverKey !== null && primaryHoverKey !== pk;
                     return (
-                      <li key={item.label}>
+                      <li
+                        key={item.label}
+                        className="nav-fade-item"
+                        style={{ "--item-index": groupIndex + index + 2 } as CSSProperties}
+                      >
                         <TopNavAnchor
                           href={item.href}
                           className={cn(
-                            "block rounded-md py-2 font-sans text-lg font-semibold tracking-tight text-white transition-opacity duration-200",
+                            "premium-soft-fade block rounded-md py-2 font-sans text-lg font-semibold tracking-tight text-light-space light:text-zinc-950",
                             dim && "opacity-[0.28]",
                           )}
                           onMouseEnter={() => setPrimaryHoverKey(pk)}
                           onClick={() => setMobileOpen(false)}
                         >
-                          {item.label}
+                          <span className="inline-flex items-center gap-1.5">
+                            {item.label}
+                            {showOffSiteNavGlyph(item) ? <OffSiteGlyph className="translate-y-px" /> : null}
+                          </span>
                         </TopNavAnchor>
                       </li>
                     );
                   })}
                 </ul>
-                {g.secondary?.map((col) => (
-                  <div key={col.heading} className="mt-6">
-                    <p className="mb-2 font-sans text-[11px] font-normal tracking-[0.06em] text-white/40 uppercase">
-                      {col.heading}
-                    </p>
-                    <ul className="space-y-0.5">
-                      {col.links.map((link) => (
-                        <li key={link.label}>
-                          <TopNavAnchor
-                            href={link.href}
-                            className="block rounded-md py-2 font-sans text-[15px] font-medium text-white/75"
-                            onClick={() => setMobileOpen(false)}
-                          >
-                            {link.label}
-                          </TopNavAnchor>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                {g.secondary?.map((col) => {
+                  const isCompactResources = col.heading === "Resources";
+                  return (
+                    <div key={col.heading} className="mt-6">
+                      <p className="premium-soft-fade mb-2 font-sans text-[11px] font-normal tracking-[0.06em] text-light-space/40 uppercase light:text-zinc-500">
+                        {col.heading}
+                      </p>
+                      <ul className={isCompactResources ? "space-y-2" : "space-y-0.5"}>
+                        {col.links.map((link) => (
+                          <li key={link.label}>
+                            <TopNavAnchor
+                              href={link.href}
+                              className={cn(
+                                "premium-soft-fade block rounded-md font-sans text-[15px]",
+                                isCompactResources
+                                  ? "py-0 font-medium text-light-space light:text-zinc-900"
+                                  : "py-2 font-semibold text-light-space/75 light:text-zinc-600",
+                              )}
+                              onClick={() => setMobileOpen(false)}
+                            >
+                              <span className="inline-flex items-center gap-1.5">
+                                {link.label}
+                                {showOffSiteNavGlyph(link) ? <OffSiteGlyph className="translate-y-px" /> : null}
+                              </span>
+                            </TopNavAnchor>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>

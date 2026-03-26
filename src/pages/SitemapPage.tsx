@@ -1,22 +1,20 @@
 import type { ReactNode } from "react";
+import { cn } from "@jokuh/gooey";
 import { useLayoutEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { SiteTopBar } from "../components/SiteTopBar";
-import { MegaFooter } from "../components/MegaFooter";
+import { useLocation } from "react-router-dom";
+import { MarketingPageFrame } from "../components/system";
+import { CONTENT_SHELL_COMPANY, PAGE_TOP_PAD_DENSE } from "../components/system/shells";
+import { OffSiteGlyph } from "../components/OffSiteGlyph";
+import { SiteLink } from "../components/SiteLink";
+import { showOffSiteNavGlyph } from "../lib/off-site-href";
+import { resolveRigidNavColumns } from "../config/site-subdomains";
 import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
+
+const SITEMAP_NAV_COLUMNS = resolveRigidNavColumns(RIGID_NAV_COLUMNS, "sitemap");
 
 function SitemapLink({ href, children }: { href: string; children: ReactNode }) {
-  if (href.startsWith("http://") || href.startsWith("https://")) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
-        {children}
-      </a>
-    );
-  }
-  if (href.startsWith("/")) {
-    return <Link to={href}>{children}</Link>;
-  }
-  return <a href={href}>{children}</a>;
+  return <SiteLink href={href}>{children}</SiteLink>;
 }
 
 const linkClass =
@@ -28,7 +26,10 @@ function SitemapLinkList({ links }: { links: RigidLink[] }) {
       {links.map((link) => (
         <li key={link.label + link.href}>
           <SitemapLink href={link.href}>
-            <span className={linkClass}>{link.label}</span>
+            <span className={`inline-flex items-center gap-1.5 ${linkClass}`}>
+              {link.label}
+              {showOffSiteNavGlyph(link) ? <OffSiteGlyph className="translate-y-px" /> : null}
+            </span>
           </SitemapLink>
         </li>
       ))}
@@ -37,6 +38,7 @@ function SitemapLinkList({ links }: { links: RigidLink[] }) {
 }
 
 export function SitemapPage() {
+  useDocumentTitle("Site map — Jokuh");
   const location = useLocation();
 
   useLayoutEffect(() => {
@@ -45,21 +47,20 @@ export function SitemapPage() {
   }, [location.pathname, location.hash, location.key]);
 
   return (
-    <div className="landing-cinema min-h-screen bg-black text-light-space">
-      <SiteTopBar />
-
-      <main
-        id="sitemap-top"
-        tabIndex={-1}
-        className="mx-auto max-w-[980px] scroll-mt-20 px-4 pt-24 pb-10 md:px-6 md:pt-28 md:pb-20"
-      >
+    <MarketingPageFrame
+      mainProps={{
+        id: "sitemap-top",
+        tabIndex: -1,
+        className: cn(CONTENT_SHELL_COMPANY, PAGE_TOP_PAD_DENSE, "scroll-mt-20"),
+      }}
+    >
         <h1 className="font-sans text-[32px] font-semibold leading-tight tracking-tight text-light-space md:text-[40px]">
           Site map
         </h1>
         <div className="mt-4 h-px w-full bg-light-glass-10" aria-hidden />
 
         <div className="mt-14 space-y-12 md:space-y-16">
-          {RIGID_NAV_COLUMNS.map((col) => (
+          {SITEMAP_NAV_COLUMNS.map((col) => (
             <section key={col.id} aria-labelledby={`sitemap-${col.id}`}>
               <h2
                 id={`sitemap-${col.id}`}
@@ -67,13 +68,18 @@ export function SitemapPage() {
               >
                 {col.heading}
               </h2>
-              <SitemapLinkList links={col.links} />
-              {col.support ? (
-                <div className="mt-10">
-                  <h3 className="font-sans text-[15px] font-semibold text-light-space">{col.support.heading}</h3>
-                  <SitemapLinkList links={col.support.links} />
-                </div>
-              ) : null}
+              {col.sections.map((sec, i) => {
+                const showSubheading =
+                  col.sections.length > 1 && !(i === 0 && sec.heading === col.heading);
+                return (
+                  <div key={sec.heading} className={i === 0 ? "mt-4" : "mt-10"}>
+                    {showSubheading ? (
+                      <h3 className="font-sans text-[15px] font-semibold text-light-space">{sec.heading}</h3>
+                    ) : null}
+                    <SitemapLinkList links={sec.links} />
+                  </div>
+                );
+              })}
             </section>
           ))}
 
@@ -95,9 +101,6 @@ export function SitemapPage() {
             />
           </section>
         </div>
-      </main>
-
-      <MegaFooter />
-    </div>
+    </MarketingPageFrame>
   );
 }

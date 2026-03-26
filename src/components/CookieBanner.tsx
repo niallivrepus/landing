@@ -1,19 +1,42 @@
 import { cn } from "@jokuh/gooey";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
-import allowBlob from "../assets/cookie/allow-blob.svg";
-import allowCheck from "../assets/cookie/allow-check.svg";
-import charPixelA from "../assets/cookie/character-1.svg";
-import charPixelB from "../assets/cookie/character-2.svg";
-import charAstro from "../assets/cookie/character-astro.svg";
-import nahBlob from "../assets/cookie/nah-blob.svg";
-import nahX from "../assets/cookie/nah-x.svg";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const STORAGE_KEY = "jokuh.cookieConsent";
+const PREFS_KEY = "jokuh.cookiePreferences";
+
+type Prefs = { analytics: boolean; marketing: boolean };
+
+function readPrefs(): Prefs {
+  try {
+    const raw = localStorage.getItem(PREFS_KEY);
+    if (raw) {
+      const p = JSON.parse(raw) as Partial<Prefs>;
+      return {
+        analytics: typeof p.analytics === "boolean" ? p.analytics : true,
+        marketing: typeof p.marketing === "boolean" ? p.marketing : true,
+      };
+    }
+    const legacy = localStorage.getItem(STORAGE_KEY);
+    if (legacy === "accepted") return { analytics: true, marketing: true };
+    if (legacy === "declined") return { analytics: false, marketing: false };
+  } catch {
+    /* ignore */
+  }
+  return { analytics: true, marketing: true };
+}
 
 export function CookieBanner() {
   const [open, setOpen] = useState(false);
-  const [allowHovered, setAllowHovered] = useState(false);
+  const [analytics, setAnalytics] = useState(true);
+  const [marketing, setMarketing] = useState(true);
+
+  const syncTogglesFromStorage = useCallback(() => {
+    const p = readPrefs();
+    setAnalytics(p.analytics);
+    setMarketing(p.marketing);
+  }, []);
 
   useEffect(() => {
     try {
@@ -23,11 +46,49 @@ export function CookieBanner() {
     }
   }, []);
 
-  const save = (value: "accepted" | "declined") => {
+  useEffect(() => {
+    const onManage = () => {
+      syncTogglesFromStorage();
+      setOpen(true);
+    };
+    window.addEventListener("jokuh-open-cookies", onManage);
+    return () => window.removeEventListener("jokuh-open-cookies", onManage);
+  }, [syncTogglesFromStorage]);
+
+  useEffect(() => {
+    if (open) syncTogglesFromStorage();
+  }, [open, syncTogglesFromStorage]);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      try {
+        if (localStorage.getItem(STORAGE_KEY)) setOpen(false);
+      } catch {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const saveDone = () => {
+    const prefs: Prefs = { analytics, marketing };
     try {
-      localStorage.setItem(STORAGE_KEY, value);
+      localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+      localStorage.setItem(STORAGE_KEY, "custom");
     } catch {
-      /* ignore quota / private mode */
+      /* ignore */
     }
     setOpen(false);
   };
@@ -37,139 +98,107 @@ export function CookieBanner() {
   return (
     <motion.div
       role="dialog"
-      aria-label="Cookies"
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="pointer-events-auto fixed bottom-4 left-4 z-[90] flex max-w-[calc(100vw-2rem)] flex-col items-end md:bottom-8 md:left-8"
+      aria-modal="true"
+      aria-labelledby="cookie-preferences-title"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6"
     >
-      <motion.div
-        aria-hidden
-        className="relative z-[1] mb-[-22px] w-full shrink-0 pr-6 md:mb-[-30px] md:pr-8"
-        animate={
-          allowHovered ? { y: 64, opacity: 0 } : { y: 0, opacity: 1 }
-        }
-        transition={{
-          y: { type: "spring", stiffness: 380, damping: 26 },
-          opacity: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
-        }}
-      >
-        <div className="flex -translate-y-[calc(1.75rem-24px)] items-end justify-end gap-1 md:-translate-y-[calc(2.5rem-24px)]">
-          <img src={charPixelA} alt="" className="h-7 w-auto max-w-none [image-rendering:pixelated]" />
-          <img src={charPixelB} alt="" className="h-7 w-auto max-w-none [image-rendering:pixelated]" />
-          <img src={charAstro} alt="" className="h-8 w-auto max-w-none md:h-9 [image-rendering:pixelated]" />
-        </div>
-      </motion.div>
-
       <div
-        className={cn(
-          "relative z-[2] flex min-h-[72px] w-full min-w-0 flex-wrap items-center gap-3 rounded-[72px] border border-white/10 py-2 pl-5 pr-2.5 md:gap-3 md:pl-6 md:pr-3",
-          "shadow-[0px_10px_20px_rgba(0,0,0,0.1)]",
-        )}
-        style={{
-          background:
-            "radial-gradient(ellipse 1150px 140px at 0% 0%, #0a0a0a 0%, #000 100%)",
-        }}
-      >
-        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-[72px]">
-          <div
-            className="landing-grain absolute inset-0 opacity-[0.12]"
-            style={{ mixBlendMode: "color-dodge" }}
-          />
-        </div>
+        className="absolute inset-0 bg-black/50 backdrop-blur-[32px] light:bg-black/[0.35]"
+        aria-hidden
+      />
 
-        <p className="relative z-[1] flex flex-wrap items-baseline gap-x-2 font-sans text-base leading-[1.4] font-bold whitespace-normal md:whitespace-nowrap">
-          <span className="text-white/40">They got</span>
-          <a
-            href="/journal"
-            className="text-white underline decoration-solid [text-decoration-skip-ink:none]"
-          >
-            cookies
-          </a>
-          <span className="text-white/40">we shipping brownies</span>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className={cn(
+          "relative z-[1] w-full max-w-[440px] rounded-2xl bg-white px-8 py-9 shadow-[0_24px_80px_rgba(0,0,0,0.14)] sm:px-10 sm:py-10",
+          "text-zinc-900",
+        )}
+      >
+        <h2
+          id="cookie-preferences-title"
+          className="font-sans text-xl font-semibold leading-tight tracking-tight text-zinc-950"
+        >
+          Cookie preferences center
+        </h2>
+
+        <p className="mt-4 font-sans text-[13px] leading-relaxed text-zinc-600">
+          We use cookies to run the site, understand usage, and improve your experience. You can change optional
+          categories anytime.{" "}
+          <Link to="/privacy" className="font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-[3px] hover:decoration-zinc-500">
+            Learn more
+          </Link>
         </p>
 
-        <div className="relative z-[1] flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => save("declined")}
-            className="relative flex h-[50px] shrink-0 items-center gap-2.5 rounded-full border-[1.5px] border-white/[0.05] bg-black/40 py-2 pr-3 pl-2 backdrop-blur-[10px]"
-          >
-            <span className="pointer-events-none absolute inset-0 rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),inset_0_2px_3px_rgba(255,255,255,0.15)]" />
-            <span className="relative flex h-9 w-10 shrink-0 items-center justify-center">
-              <img src={nahBlob} alt="" className="absolute inset-0 size-full max-w-none object-contain" />
-              <img src={nahX} alt="" className="relative z-[1] size-[22px] max-w-none object-contain" />
-              <span className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_0.9px_0.9px_rgba(255,255,255,0.15)]" />
-            </span>
-            <span className="font-sans text-base font-bold text-white/40">Nah</span>
-          </button>
+        <ul className="mt-8 space-y-0 divide-y divide-zinc-100 border-t border-zinc-100">
+          <li className="flex gap-3 py-5">
+            <input
+              type="checkbox"
+              checked
+              readOnly
+              disabled
+              tabIndex={-1}
+              className="mt-0.5 size-[18px] shrink-0 cursor-not-allowed rounded border border-zinc-200 bg-zinc-100 accent-zinc-900"
+              aria-label="Strictly necessary cookies, always active"
+            />
+            <div className="min-w-0">
+              <p className="font-sans text-[14px] font-semibold text-zinc-950">
+                Strictly necessary cookies{" "}
+                <span className="font-normal text-zinc-500">(always active)</span>
+              </p>
+              <p className="mt-1 font-sans text-[12px] leading-relaxed text-zinc-500">
+                Required for security, sign-in, and basic site function. These cannot be turned off.
+              </p>
+            </div>
+          </li>
 
-          <button
-            type="button"
-            onClick={() => save("accepted")}
-            onMouseEnter={() => setAllowHovered(true)}
-            onMouseLeave={() => setAllowHovered(false)}
-            className="relative flex h-[50px] shrink-0 items-center gap-2.5 rounded-full border-[1.5px] border-white/[0.05] bg-black/40 py-2 pr-4 pl-2 backdrop-blur-[10px]"
-          >
-            <span className="pointer-events-none absolute inset-0 rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),inset_0_2px_3px_rgba(255,255,255,0.15)]" />
-            <motion.span
-              className="relative flex h-9 w-10 shrink-0 items-center justify-center"
-              style={{
-                filter:
-                  "drop-shadow(0 0 5.5px rgba(135,40,255,0.6)) drop-shadow(0 0 23px rgba(177,140,255,0.15))",
-                transformOrigin: "45% 55%",
-              }}
-              animate={
-                allowHovered
-                  ? {
-                      scaleX: 1.36,
-                      scaleY: 0.8,
-                      rotate: [-4, 4.5],
-                      x: [0, 2.5, -1.5, 0],
-                      y: [0, -1.5, 1, 0],
-                    }
-                  : {
-                      scaleX: 1,
-                      scaleY: 1,
-                      rotate: 0,
-                      x: 0,
-                      y: 0,
-                    }
-              }
-              transition={
-                allowHovered
-                  ? {
-                      scaleX: { type: "spring", stiffness: 260, damping: 11 },
-                      scaleY: { type: "spring", stiffness: 260, damping: 11 },
-                      rotate: {
-                        duration: 0.42,
-                        repeat: Infinity,
-                        repeatType: "mirror",
-                        ease: "easeInOut",
-                      },
-                      x: {
-                        duration: 0.38,
-                        repeat: Infinity,
-                        repeatType: "mirror",
-                        ease: "easeInOut",
-                      },
-                      y: {
-                        duration: 0.33,
-                        repeat: Infinity,
-                        repeatType: "mirror",
-                        ease: "easeInOut",
-                      },
-                    }
-                  : { type: "spring", stiffness: 440, damping: 30 }
-              }
-            >
-              <img src={allowBlob} alt="" className="absolute inset-0 size-full max-w-none object-contain" />
-              <img src={allowCheck} alt="" className="relative z-[1] size-[14px] max-w-none object-contain" />
-            </motion.span>
-            <span className="font-sans text-base font-bold text-white/85">Allow</span>
-          </button>
-        </div>
-      </div>
+          <li className="flex gap-3 py-5">
+            <input
+              type="checkbox"
+              checked={analytics}
+              onChange={(e) => setAnalytics(e.target.checked)}
+              className="mt-0.5 size-[18px] shrink-0 cursor-pointer rounded border-zinc-300 accent-zinc-900"
+              aria-label="Analytics cookies"
+            />
+            <div className="min-w-0">
+              <p className="font-sans text-[14px] font-semibold text-zinc-950">Analytics cookies</p>
+              <p className="mt-1 font-sans text-[12px] leading-relaxed text-zinc-500">
+                Help us measure traffic and improve performance in aggregate.
+              </p>
+            </div>
+          </li>
+
+          <li className="flex gap-3 py-5">
+            <input
+              type="checkbox"
+              checked={marketing}
+              onChange={(e) => setMarketing(e.target.checked)}
+              className="mt-0.5 size-[18px] shrink-0 cursor-pointer rounded border-zinc-300 accent-zinc-900"
+              aria-label="Marketing and performance cookies"
+            />
+            <div className="min-w-0">
+              <p className="font-sans text-[14px] font-semibold text-zinc-950">
+                Marketing &amp; performance cookies
+              </p>
+              <p className="mt-1 font-sans text-[12px] leading-relaxed text-zinc-500">
+                Used to deliver relevant content and measure campaigns where we run them.
+              </p>
+            </div>
+          </li>
+        </ul>
+
+        <button
+          type="button"
+          onClick={saveDone}
+          className="mt-8 flex h-11 w-full items-center justify-center rounded-full bg-zinc-950 font-sans text-[14px] font-semibold text-white transition-colors hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-zinc-950/30 focus-visible:outline-none"
+        >
+          Done
+        </button>
+      </motion.div>
     </motion.div>
   );
 }

@@ -18,6 +18,28 @@
     <title>Jokuh</title>
   </head>
   <body>
+    <script>
+      (function () {
+        var k = "jokuh-landing-theme-v2";
+        var stored = null;
+        try {
+          stored = localStorage.getItem(k);
+        } catch (e) {}
+        var resolved =
+          stored === "dark" || stored === "light"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        var root = document.documentElement;
+        root.classList.remove("light", "dark");
+        root.classList.add(resolved);
+        root.setAttribute("data-theme", resolved);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta)
+          meta.setAttribute("content", resolved === "dark" ? "#000000" : "#ffffff");
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

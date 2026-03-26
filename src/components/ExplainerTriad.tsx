@@ -14,7 +14,7 @@ function IllustrationLayers() {
       viewBox="0 0 200 160"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="mx-auto h-[min(140px,28vw)] w-full max-w-[200px] text-white/35"
+      className="mx-auto h-[min(140px,28vw)] w-full max-w-[200px] text-light-space/35"
       aria-hidden
     >
       <g stroke="currentColor" strokeWidth="0.9" strokeLinejoin="round">
@@ -34,7 +34,7 @@ function IllustrationCubes() {
       viewBox="0 0 200 160"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="mx-auto h-[min(140px,28vw)] w-full max-w-[200px] text-white/35"
+      className="mx-auto h-[min(140px,28vw)] w-full max-w-[200px] text-light-space/35"
       aria-hidden
     >
       <g stroke="currentColor" strokeWidth="0.9" strokeLinejoin="round">
@@ -58,7 +58,7 @@ function IllustrationStairs() {
       viewBox="0 0 200 160"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="mx-auto h-[min(140px,28vw)] w-full max-w-[200px] text-white/35"
+      className="mx-auto h-[min(140px,28vw)] w-full max-w-[200px] text-light-space/35"
       aria-hidden
     >
       <g stroke="currentColor" strokeWidth="0.9" strokeLinejoin="round">
@@ -99,7 +99,7 @@ export function ExplainerTriad({ className }: { className?: string }) {
   return (
     <section
       className={cn(
-        "bg-black px-5 py-16 md:px-8 md:py-20",
+        "bg-dark-space px-4 py-16 md:px-8 md:py-20",
         className,
       )}
       aria-labelledby="explainer-triad-heading"
@@ -113,14 +113,14 @@ export function ExplainerTriad({ className }: { className?: string }) {
             key={item.fig}
             className="flex flex-col md:px-2 lg:px-6"
           >
-            <p className="font-mono text-[11px] tracking-[0.12em] text-white/40">{item.fig}</p>
+            <p className="font-mono text-[11px] tracking-[0.12em] text-light-space/40">{item.fig}</p>
             <div className="mt-8 flex min-h-[min(160px,32vw)] flex-1 items-center justify-center md:mt-10">
               {item.illustration}
             </div>
-            <h3 className="mt-10 font-sans text-lg font-semibold tracking-tight text-white md:mt-12 md:text-xl">
+            <h3 className="mt-10 font-sans text-lg font-semibold tracking-tight text-light-space md:mt-12 md:text-xl">
               {item.title}
             </h3>
-            <p className="mt-3 max-w-sm font-sans text-[15px] leading-relaxed text-white/55 md:text-[15px]">
+            <p className="mt-3 max-w-sm font-sans text-[15px] leading-relaxed text-light-space/55 md:text-[15px]">
               {item.body}
             </p>
           </div>

@@ -1,3 +1,5 @@
+import { STORY_CARD_IMAGE_BY_SLUG, STORY_CARD_IMAGE_FALLBACK_BY_SLUG } from "./editorial-art";
+
 /** Homepage Stories: square tiles + one title each. */
 export type HomeStory = {
   slug: string;
@@ -8,44 +10,41 @@ export type HomeStory = {
   title: string;
 };
 
-const IMG = (id: string) =>
-  `https://images.unsplash.com/${id}?auto=format&w=800&h=800&fit=crop&q=80`;
-
 const RAW_STORIES = [
   {
     slug: "treasury-inference-api-grid",
-    image: IMG("photo-1558494949-ef010cbdcc31"),
-    imageFallback: IMG("photo-1544197150-b99a580bb7a8"),
+    image: STORY_CARD_IMAGE_BY_SLUG["treasury-inference-api-grid"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["treasury-inference-api-grid"],
     title: "Treasury loops and the API grid",
   },
   {
     slug: "live-transcript-hooks-spine",
-    image: IMG("photo-1516321318423-f06f85e504b3"),
-    imageFallback: IMG("photo-1451187580459-43490279c0fa"),
+    image: STORY_CARD_IMAGE_BY_SLUG["live-transcript-hooks-spine"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["live-transcript-hooks-spine"],
     title: "Live transcript hooks on the spine",
   },
   {
     slug: "gooey-island-merge-hygiene",
-    image: IMG("photo-1555066931-4365d14bab8c"),
-    imageFallback: IMG("photo-1633356122544-f134324a6cee"),
+    image: STORY_CARD_IMAGE_BY_SLUG["gooey-island-merge-hygiene"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["gooey-island-merge-hygiene"],
     title: "The Gooey app as a design island",
   },
   {
     slug: "salvage-yard-nevada",
-    image: IMG("photo-1504917595217-d4dc5ebe6122"),
-    imageFallback: IMG("photo-1565193566173-7a0ee3dbe261"),
+    image: STORY_CARD_IMAGE_BY_SLUG["salvage-yard-nevada"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["salvage-yard-nevada"],
     title: "A salvage yard in Nevada",
   },
   {
     slug: "seed-farm-south-carolina",
-    image: IMG("photo-1416339306562-f3d12fefd36f"),
-    imageFallback: IMG("photo-1595855759920-86582396756a"),
+    image: STORY_CARD_IMAGE_BY_SLUG["seed-farm-south-carolina"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["seed-farm-south-carolina"],
     title: "A seed farm in South Carolina",
   },
   {
     slug: "tamale-shop-california",
-    image: IMG("photo-1556910103-1c02745aae4d"),
-    imageFallback: IMG("photo-1522071820081-009f0129c71c"),
+    image: STORY_CARD_IMAGE_BY_SLUG["tamale-shop-california"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["tamale-shop-california"],
     title: "A tamale shop in California",
   },
 ] as const;

@@ -3,6 +3,7 @@ import { AppWindow, Cloud, Headphones, Lock, Scale, Smartphone } from "lucide-re
 import { Link } from "react-router-dom";
 import { LegalLayout, legalLink } from "../../components/legal/LegalLayout";
 import { JokuhMark } from "../../components/legal/JokuhMark";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const cta = `inline-flex items-center gap-0.5 font-sans text-[14px] font-normal ${legalLink}`;
 
@@ -13,18 +14,20 @@ function SectionIcon({ children }: { children: ReactNode }) {
 }
 
 export function LegalHomePage() {
+  useDocumentTitle("Legal — Jokuh");
+
   return (
     <LegalLayout>
-      <section className="relative overflow-hidden border-b border-light-glass-10 bg-gradient-to-b from-[#0a1628] via-[#050a12] to-black">
+      <section className="relative overflow-hidden border-b border-light-glass-10 bg-gradient-to-b from-[#0a1628] via-[#050a12] to-black light:from-slate-100 light:via-white light:to-zinc-100">
         <div
-          className="pointer-events-none absolute inset-0 opacity-50"
+          className="pointer-events-none absolute inset-0 opacity-50 light:opacity-[0.35]"
           style={{
             background:
               "radial-gradient(ellipse 90% 60% at 50% -20%, rgba(33,220,17,0.12), transparent 50%), radial-gradient(ellipse 70% 50% at 100% 50%, rgba(100,180,255,0.08), transparent 45%)",
           }}
           aria-hidden
         />
-        <div className="relative mx-auto max-w-[1024px] px-4 py-20 text-center md:px-6 md:py-28">
+        <div className="relative mx-auto max-w-[1024px] px-4 py-20 text-center md:px-8 md:py-28">
           <div className="mb-6 flex justify-center">
             <JokuhMark className="h-10 w-[68px] text-light-space" />
           </div>
@@ -37,7 +40,7 @@ export function LegalHomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1024px] px-4 py-16 md:px-6 md:py-20">
+      <div className="mx-auto max-w-[1024px] px-4 py-16 md:px-8 md:py-20">
         <div className="grid gap-16 md:grid-cols-2 md:gap-x-12 md:gap-y-20">
           <section id="hardware">
             <SectionIcon>

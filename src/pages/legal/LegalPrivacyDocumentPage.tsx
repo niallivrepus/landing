@@ -2,6 +2,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { LegalBreadcrumb, LegalLayout, legalLink, legalMuted } from "../../components/legal/LegalLayout";
 import { localeFromCode } from "../../data/legal-locales";
 import { isPrivacyDocKey, PRIVACY_DOCS, type PrivacyDocKey, type PrivacySection } from "../../data/privacy-docs";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 function sectionDomId(sec: PrivacySection, index: number) {
   return sec.anchor ?? `privacy-section-${index}`;
@@ -20,6 +21,7 @@ export function LegalPrivacyDocumentPage() {
   }
 
   const doc = PRIVACY_DOCS[docKey as PrivacyDocKey];
+  useDocumentTitle(`${doc.documentH1} — Jokuh`);
 
   return (
     <LegalLayout
@@ -35,7 +37,7 @@ export function LegalPrivacyDocumentPage() {
         />
       }
     >
-      <article className="mx-auto max-w-[820px] px-4 py-12 md:px-6 md:py-16">
+      <article className="mx-auto max-w-[820px] px-4 py-12 md:px-8 md:py-16">
         <div id="print-policy" className="scroll-mt-28" tabIndex={-1} aria-hidden />
         <h1 className="font-sans text-[32px] font-semibold leading-tight tracking-tight text-light-space md:text-[40px]">
           {doc.documentH1}

@@ -2,6 +2,8 @@
  * Long-form on-site news articles (benchmark tables, charts, testimonials).
  */
 
+import { formatNewsDate, NEWS_ITEMS, type NewsItem } from "./news";
+
 export type BenchmarkRow = { label: string; values: [string, string, string] };
 
 export type TestimonialEntry = {
@@ -15,7 +17,8 @@ export type TestimonialEntry = {
   sparkline: { step: number; cortex: number; prior: number }[];
 };
 
-export type NewsDetailDocument = {
+export type NewsFeatureDetailDocument = {
+  kind: "feature";
   slug: string;
   metaLine: string;
   title: string;
@@ -40,8 +43,22 @@ export type NewsDetailDocument = {
   testimonials: TestimonialEntry[];
 };
 
-export const NEWS_DETAIL_BY_SLUG: Record<string, NewsDetailDocument> = {
+export type NewsBriefDetailDocument = {
+  kind: "brief";
+  slug: string;
+  metaLine: string;
+  title: string;
+  subtitle: string;
+  introParagraphs: string[];
+  bodyTitle: string;
+  bodyParagraphs: string[];
+};
+
+export type NewsDetailDocument = NewsFeatureDetailDocument | NewsBriefDetailDocument;
+
+export const NEWS_DETAIL_BY_SLUG: Record<string, NewsFeatureDetailDocument> = {
   "introducing-jokuh-cortex": {
+    kind: "feature",
     slug: "introducing-jokuh-cortex",
     metaLine: "March 5, 2026 · Product · Release",
     title: "Introducing Jokuh Cortex",
@@ -139,9 +156,148 @@ export const NEWS_DETAIL_BY_SLUG: Record<string, NewsDetailDocument> = {
   },
 };
 
+const NEWSROOM_BRIEF_BY_SLUG: Record<
+  string,
+  Omit<NewsBriefDetailDocument, "kind" | "slug" | "metaLine" | "title">
+> = {
+  "jokuh-spine-tighter-sync": {
+    subtitle: "Lower latency handoff when you move between pods on desktop and web.",
+    introParagraphs: [
+      "This release tightens how active context follows people between pods. Session state, tool permissions, and in-progress timelines now reconcile faster when a user moves from one surface to another.",
+      "The goal is simple: fewer moments where the interface feels like it forgot what you were doing. That means quicker sync on pod handoff, less duplicate setup, and cleaner recovery when multiple devices are involved.",
+    ],
+    bodyTitle: "Why it matters",
+    bodyParagraphs: [
+      "Cross-pod work only feels professional if the handoff stays intact. We focused on reducing the gap between local state, shared state, and what the receiving pod sees first so context arrives in the right order.",
+      "Teams testing the update saw less friction when bouncing between focused tasks and shared review. This is part of the larger effort to make Jokuh feel like one continuous workspace rather than a collection of separate screens.",
+    ],
+  },
+  "waitlist-regional-rollout-next-quarter": {
+    subtitle: "We are sequencing the next invite wave by region, support coverage, and onboarding readiness.",
+    introParagraphs: [
+      "The next waitlist rollout is being staged by support capacity, language readiness, and local infrastructure constraints. We would rather invite fewer people well than open a region before the product and support paths are ready.",
+      "That sequencing also helps the team monitor activation quality. We can see where onboarding stalls, where latency varies by geography, and where policy or billing setup needs to be clearer before expanding access.",
+    ],
+    bodyTitle: "What changes next quarter",
+    bodyParagraphs: [
+      "Priority will go to regions where onboarding, support windows, and compliance review are already in place. Users in later waves will continue to receive updates as the schedule firms up.",
+      "This is an operations decision as much as a growth decision. We want regional launches to feel stable on day one, not like a preview that leaves people guessing about availability or follow-up.",
+    ],
+  },
+  "gooey-accessible-focus-rings-motion-prefs": {
+    subtitle: "Gooey 0.9 improves keyboard clarity, respects motion preferences, and tightens default accessibility behavior across primitives.",
+    introParagraphs: [
+      "Gooey 0.9 focuses on interaction details that are easy to miss until a UI is under real pressure: visible focus treatment, calmer transitions, and more predictable fallback behavior when motion needs to be reduced.",
+      "The update brings keyboard states closer to first-class design tokens instead of one-off overrides. That means product teams inherit better defaults instead of patching accessibility later in the build.",
+    ],
+    bodyTitle: "What shipped",
+    bodyParagraphs: [
+      "Focus rings are more legible across dark and light surfaces, especially on dense panels and glass treatments. Motion-sensitive transitions now step down more consistently when the system asks for reduced motion.",
+      "For engineering teams, the change is mostly about trust in the base layer. If the component library behaves well out of the box, product teams can spend more energy on workflow quality instead of repairing interaction debt.",
+    ],
+  },
+  "responsible-use-guidelines-v1llains-lab": {
+    subtitle: "We tightened sandbox language, escalation rules, and disclosure expectations for experimental agents.",
+    introParagraphs: [
+      "The latest V1llains lab guidance clarifies what experimental agent work is allowed to do, how it should disclose uncertainty, and when a workflow must stop for a human review instead of pushing ahead.",
+      "These changes are meant to keep the lab useful without treating novelty as a license for vague boundaries. The more agentic a system becomes, the more explicit the operating rules need to be.",
+    ],
+    bodyTitle: "Policy direction",
+    bodyParagraphs: [
+      "The updated guidance sharpens escalation thresholds for destructive actions, external access, and ambiguous user intent. It also makes disclosure expectations clearer when the system is operating on partial evidence or inferred goals.",
+      "We treat responsible-use rules as product behavior, not just documentation. Clearer policy language helps shape interfaces, default settings, and review steps across the broader Jokuh ecosystem.",
+    ],
+  },
+  "blurbs-composer-markdown-tables-paste-cleanup": {
+    subtitle: "Composer paste now normalizes tables, strips inline cruft, and keeps formatting safer across exports.",
+    introParagraphs: [
+      "The Blurbs composer now does a better job cleaning pasted content before it enters the editing surface. Tables keep their structure more reliably, and messy inline markup is less likely to survive the trip from other tools.",
+      "This update is about protecting flow. People should be able to paste quickly from docs, email, or shared notes without needing a cleanup pass before they can start shaping the final output.",
+    ],
+    bodyTitle: "Editing quality",
+    bodyParagraphs: [
+      "We focused on the places where paste handling tends to erode trust: broken tables, duplicated styles, and export mismatches. The new logic normalizes those cases earlier so the editor stays calmer under mixed input.",
+      "It is a small feature on the surface, but it makes the writing loop feel more professional. Better paste behavior turns into fewer formatting surprises and less manual repair downstream.",
+    ],
+  },
+  "open-office-hours-identity-claim-flow": {
+    subtitle: "We are opening product office hours around identity verification, claims, and account portability.",
+    introParagraphs: [
+      "The identity team is starting a regular office-hours format for questions about claim flows, verification edge cases, and how portability should work across Jokuh surfaces.",
+      "A lot of the hardest issues in identity products show up at the edges: disputed claims, region-specific documents, shared organizational ownership, and the moments where people need clear next steps instead of policy jargon.",
+    ],
+    bodyTitle: "What to expect",
+    bodyParagraphs: [
+      "These sessions are meant to create a tighter loop between the people building the flow and the people blocked by it. Product and support teams can bring repeated friction points directly into the discussion.",
+      "We expect the office-hours format to shape both UX copy and escalation design. It is easier to improve trust flows when the confusing cases are visible early instead of buried inside support volume.",
+    ],
+  },
+  "hiring-design-systems-realtime-infra": {
+    subtitle: "We are growing the teams behind Gooey, realtime transcription, and the infra that keeps them reliable.",
+    introParagraphs: [
+      "Jokuh is hiring across design systems and realtime infrastructure as the product surface and platform load both expand. The work spans component quality, streaming systems, and the tooling that keeps both shippable.",
+      "These are not isolated functions. The design system influences how quickly product teams move, and realtime infrastructure determines whether those workflows hold up under actual usage.",
+    ],
+    bodyTitle: "Where we are investing",
+    bodyParagraphs: [
+      "On the design-systems side, we want people who care about durable primitives, accessibility, and integration discipline. On the realtime side, we are focused on latency, reliability, and the shape of speech data as it moves through the stack.",
+      "This hiring push reflects where we think the product earns trust. The interface and the infrastructure have to mature together if Jokuh is going to feel coherent at scale.",
+    ],
+  },
+  "pod-encryption-at-rest-what-changed": {
+    subtitle: "We rotated key handling, narrowed access paths, and tightened how encrypted pod state moves through storage.",
+    introParagraphs: [
+      "We have updated how encrypted pod state is stored and accessed, with changes to key handling, service boundaries, and the paths through which sensitive state can be decrypted for legitimate use.",
+      "Security improvements like this matter most when they reduce both exposure and ambiguity. The goal is not just stronger protection in theory, but a smaller and more reviewable surface in practice.",
+    ],
+    bodyTitle: "Security changes",
+    bodyParagraphs: [
+      "The update narrows which services can touch decrypted state and improves the auditability of those paths. We also tightened assumptions around storage lifecycle so encrypted state is handled more consistently during backup and recovery.",
+      "This kind of work is not always visible to end users, but it is foundational. Durable privacy depends on the boring parts being explicit, tested, and easy for engineering teams to reason about later.",
+    ],
+  },
+};
+
+function fallbackBrief(item: NewsItem): NewsBriefDetailDocument {
+  return {
+    kind: "brief",
+    slug: item.slug!,
+    metaLine: `${formatNewsDate(item.publishedAt)} · ${item.category} · Newsroom`,
+    title: item.title,
+    subtitle: item.excerpt ?? "Latest update from Jokuh's newsroom.",
+    introParagraphs: [
+      item.excerpt ?? "This update covers the latest change from Jokuh's product, company, and platform teams.",
+      `The work touches ${item.topics.join(", ").toLowerCase()} and is part of the broader effort to keep Jokuh dependable as the surface grows.`,
+    ],
+    bodyTitle: "Why this matters",
+    bodyParagraphs: [
+      "We publish these updates so the product narrative and the implementation narrative stay closer together. People should be able to understand what changed without hunting through unrelated pages.",
+      "This article is using the standard newsroom template so updates remain separate from stories, product marketing pages, and other parts of the site architecture.",
+    ],
+  };
+}
+
 export function getNewsDetail(slug: string | undefined): NewsDetailDocument | undefined {
   if (!slug) return undefined;
-  return NEWS_DETAIL_BY_SLUG[slug];
+  const feature = NEWS_DETAIL_BY_SLUG[slug];
+  if (feature) return feature;
+
+  const item = NEWS_ITEMS.find((entry) => entry.slug === slug && entry.internalHref && !entry.externalUrl);
+  if (!item || !item.slug) return undefined;
+
+  const brief = NEWSROOM_BRIEF_BY_SLUG[item.slug];
+  if (!brief) return fallbackBrief(item);
+
+  return {
+    kind: "brief",
+    slug: item.slug,
+    metaLine: `${formatNewsDate(item.publishedAt)} · ${item.category} · Newsroom`,
+    title: item.title,
+    subtitle: brief.subtitle,
+    introParagraphs: brief.introParagraphs,
+    bodyTitle: brief.bodyTitle,
+    bodyParagraphs: brief.bodyParagraphs,
+  };
 }
 
 /** ~160 words/min for TTS pacing */

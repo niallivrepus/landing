@@ -16,7 +16,7 @@ function MiniTip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded border border-white/10 bg-zinc-950 px-2 py-1.5 text-[11px]">
+    <div className="rounded border border-light-space/10 bg-smoke-2 px-2 py-1.5 text-[11px] light:border-black/10 light:bg-zinc-100">
       {payload.map((p) => (
         <p key={String(p.name)} className="tabular-nums">
           <span style={{ color: p.color }}>{p.name}</span>: {p.value}%
@@ -33,7 +33,7 @@ export function TestimonialPanels({ entries }: { entries: TestimonialEntry[] }) 
   return (
     <div className="space-y-10 md:space-y-12">
       <div
-        className="flex flex-wrap gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.03] p-1.5"
+        className="flex flex-wrap gap-1.5 rounded-full border border-light-space/[0.1] bg-white/[0.03] p-1.5"
         role="tablist"
         aria-label="Customer stories"
       >
@@ -46,7 +46,7 @@ export function TestimonialPanels({ entries }: { entries: TestimonialEntry[] }) 
             onClick={() => setActive(i)}
             className={cn(
               "rounded-full px-4 py-2.5 font-sans text-sm transition-colors",
-              i === active ? "bg-white/[0.14] text-white" : "text-white/50 hover:text-white/75",
+              i === active ? "bg-white/[0.14] text-light-space" : "text-light-space/50 hover:text-light-space/75",
             )}
           >
             {e.company}
@@ -55,14 +55,14 @@ export function TestimonialPanels({ entries }: { entries: TestimonialEntry[] }) 
       </div>
 
       <blockquote className="mx-auto w-full max-w-[min(100%,720px)] text-center">
-        <p className="font-sans text-xl font-medium leading-[1.45] tracking-[-0.02em] text-white md:text-2xl md:leading-snug lg:text-[1.65rem]">
+        <p className="font-sans text-xl font-medium leading-[1.45] tracking-[-0.02em] text-light-space md:text-2xl md:leading-snug lg:text-[1.65rem]">
           “{t.quote}”
         </p>
-        <footer className="mt-6 font-sans text-sm text-white/50 md:text-base">— {t.attribution}</footer>
+        <footer className="mt-6 font-sans text-sm text-light-space/50 md:text-base">— {t.attribution}</footer>
       </blockquote>
 
       <div className="mx-auto w-full max-w-[min(100%,720px)]">
-        <RichParagraph className="font-sans text-[1.0625rem] leading-[1.75] text-white/72 md:text-lg">
+        <RichParagraph className="font-sans text-[1.0625rem] leading-[1.75] text-light-space/72 md:text-lg">
           {t.followUp}
         </RichParagraph>
       </div>

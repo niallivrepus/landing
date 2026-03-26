@@ -4,6 +4,7 @@ import { DocumentTopicCard } from "../../components/legal/DocumentTopicCard";
 import { LegalBreadcrumb, LegalLayout, legalLink } from "../../components/legal/LegalLayout";
 import { LEGAL_PRIVACY_LOCALES } from "../../data/legal-locales";
 import { isPrivacyDocKey, PRIVACY_DOCS, PRIVACY_TOPIC_ROWS, type PrivacyDocKey } from "../../data/privacy-docs";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function LegalPrivacySelectPage() {
   const { docKey = "" } = useParams<{ docKey: string }>();
@@ -13,6 +14,7 @@ export function LegalPrivacySelectPage() {
   }
 
   const meta = PRIVACY_DOCS[docKey as PrivacyDocKey];
+  useDocumentTitle(`${meta.selectTitle} — Jokuh`);
 
   return (
     <LegalLayout
@@ -27,7 +29,7 @@ export function LegalPrivacySelectPage() {
         />
       }
     >
-      <div className="mx-auto max-w-[1024px] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1024px] px-4 py-12 md:px-8 md:py-16">
         <h1 className="font-sans text-[32px] font-semibold leading-tight tracking-tight text-light-space md:text-[40px]">
           {meta.selectTitle}
         </h1>

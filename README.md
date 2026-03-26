@@ -84,16 +84,35 @@ Preview uses the same port settings as dev.
 
 ## Environment
 
-Copy `.env.example` to `.env` for local Medium sync:
+Copy `.env.example` to `.env` for local development:
 
 | Variable           | Purpose |
 | ------------------ | ------- |
-| `MEDIUM_RSS_URL`   | Public RSS URL, e.g. `https://medium.com/feed/@yourhandle` (no API key). |
+| `GROQ_API_KEY` | Used by the dev/preview site-search middleware at `POST /api/site-search`. |
+| `CONTACT_SALES_WEBHOOK_URL` | Optional server-side webhook target for `POST /api/contact-sales` during dev/preview. |
+| `VITE_CONTACT_SALES_ENDPOINT` | Optional client-side override for the contact sales form endpoint. Defaults to `/api/contact-sales`. |
+| `VITE_ORIGIN_DEVELOPERS` | Optional absolute origin for the developer portal, e.g. `https://developers.jokuh.com`. |
+| `VITE_ORIGIN_HELP` | Optional absolute origin for the help center, e.g. `https://help.jokuh.com`. |
+| `VITE_ORIGIN_STATUS` | Optional absolute origin for the status portal, e.g. `https://status.jokuh.com`. |
 
-Then:
+If you also need Medium sync in your local setup, use the script-specific environment expected by `scripts/sync-medium.mjs`.
+
+## Domain Topology
+
+This repo currently assumes:
+
+- main marketing host on `jokuh.com` or `www.jokuh.com`
+- developer portal on `developers.jokuh.com`
+- status portal on `status.jokuh.com`
+- a planned standalone V1llains property on `v1llains.com`
+- a future dedicated V1llains purchase host under `v1llains.com`
+
+See [docs/domain-topology.md](/Users/sonadin/Documents/code/jokuh/landing/docs/domain-topology.md) for the canonical host map and rollout notes.
+
+Then, for local verification:
 
 ```bash
-pnpm sync:medium
+pnpm dev
 ```
 
 ---

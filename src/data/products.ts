@@ -13,11 +13,11 @@ export const PRODUCTS: Record<ProductId, Product> = {
     id: "pods",
     title: "Pods",
     summary:
-      "Building blocks on your profile—music, files, crypto, resumes—authored with the same Gooey glass system. Edit inline, keep layout consistent from phone to desktop.",
+      "Building blocks on your profile: music, files, crypto, resumes, authored with the same Gooey glass system. Edit inline, keep layout consistent from phone to desktop.",
     body: [
-      "Pods are composable surfaces on your identity: the pieces of life you want visible—audio, documents, on-chain badges, CVs—without breaking the visual language of Jokuh.",
+      "Pods are composable surfaces on your identity: the pieces of life you want visible (audio, documents, on-chain badges, CVs) without breaking the visual language of Jokuh.",
       "They are authored with the same Gooey glass system as the rest of the app, so you can edit inline and keep layout consistent from phone to desktop.",
-      "Together, pods turn a profile from a static bio into a living workspace visitors can actually use—not just scroll past.",
+      "Together, pods turn a profile from a static bio into a living workspace visitors can actually use, not just scroll past.",
     ],
   },
   blurbs: {

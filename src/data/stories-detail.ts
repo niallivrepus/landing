@@ -158,7 +158,7 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
         title: "Shipping realtime features?",
         body: "We are hiring engineers who care about streaming protocols, graph stores, and honest accessibility—not just demo polish.",
         buttonLabel: "View careers",
-        buttonHref: "/journal",
+        buttonHref: "/careers",
       },
     ],
   },

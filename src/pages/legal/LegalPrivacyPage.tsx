@@ -3,8 +3,11 @@ import { DocumentTopicCard } from "../../components/legal/DocumentTopicCard";
 import { LegalBreadcrumb, LegalLayout, legalLink, legalMuted } from "../../components/legal/LegalLayout";
 import { JokuhMark } from "../../components/legal/JokuhMark";
 import { PRIVACY_TOPIC_ROWS } from "../../data/privacy-docs";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function LegalPrivacyPage() {
+  useDocumentTitle("Privacy Policy — Jokuh");
+
   return (
     <LegalLayout
       breadcrumb={
@@ -17,16 +20,16 @@ export function LegalPrivacyPage() {
         />
       }
     >
-      <div className="relative overflow-hidden border-b border-light-glass-10 bg-gradient-to-b from-[#0a1628] via-[#050a12] to-black">
+      <div className="relative overflow-hidden border-b border-light-glass-10 bg-gradient-to-b from-[#0a1628] via-[#050a12] to-black light:from-slate-100 light:via-white light:to-zinc-100">
         <div
-          className="pointer-events-none absolute inset-0 opacity-45"
+          className="pointer-events-none absolute inset-0 opacity-45 light:opacity-[0.32]"
           style={{
             background:
               "radial-gradient(ellipse 80% 50% at 20% 0%, rgba(33,220,17,0.1), transparent 55%), radial-gradient(ellipse 60% 40% at 100% 20%, rgba(100,180,255,0.06), transparent 50%)",
           }}
           aria-hidden
         />
-        <div className="relative mx-auto max-w-[1024px] px-4 py-14 md:px-6 md:py-20">
+        <div className="relative mx-auto max-w-[1024px] px-4 py-14 md:px-8 md:py-20">
           <div className="mb-5 flex justify-center md:justify-start">
             <JokuhMark className="h-9 w-[58px] text-light-space" />
           </div>
@@ -55,7 +58,7 @@ export function LegalPrivacyPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1024px] px-4 py-14 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1024px] px-4 py-14 md:px-8 md:py-16">
         <h2 className="font-sans text-[24px] font-semibold tracking-tight text-light-space md:text-[28px]">
           Choose a Topic
         </h2>

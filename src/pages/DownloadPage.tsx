@@ -1,6 +1,8 @@
-import { OO } from "@jokuh/gooey";
+import { OO, cn } from "@jokuh/gooey";
+import { MarketingPageFrame } from "../components/system";
+import { CONTENT_SHELL_COMPANY } from "../components/system/shells";
 import { SecondaryLink } from "../components/SecondaryLink";
-import { SiteTopBar } from "../components/SiteTopBar";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 function HandPhoneIcon({ className }: { className?: string }) {
   return (
@@ -98,40 +100,40 @@ function GooglePlayGlyph({ className }: { className?: string }) {
 function MobileAppSection() {
   return (
     <section
-      className="bg-[#1a1a1a] px-5 py-20 text-white md:px-8 md:py-28"
+      className="bg-smoke-2 px-4 py-20 text-light-space md:px-8 md:py-28"
       aria-labelledby="mobile-download-heading"
     >
       <div className="mx-auto flex max-w-[920px] flex-col items-center text-center">
-        <HandPhoneIcon className="mb-10 text-white md:mb-12" />
+        <HandPhoneIcon className="mb-10 text-light-space md:mb-12" />
 
         <h2
           id="mobile-download-heading"
-          className="max-w-xl font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-white md:text-[2.25rem]"
+          className="max-w-xl font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-light-space md:text-[2.25rem]"
         >
           Take Jokuh on the go
         </h2>
-        <p className="mt-5 max-w-md font-sans text-[15px] leading-relaxed text-[#999999] md:text-base">
+        <p className="mt-5 max-w-md font-sans text-[15px] leading-relaxed text-light-space/55 md:text-base">
           Start a thought here, finish anywhere. Jokuh remembers across your phone, desktop, and the
           web.
         </p>
 
         <div className="mt-14 grid w-full max-w-[640px] grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5 md:mt-16">
-          <article className="flex flex-col items-center rounded-[24px] border border-white/[0.08] bg-[#222222] px-6 pb-8 pt-8 md:px-8 md:pb-10 md:pt-10">
+          <article className="flex flex-col items-center rounded-[24px] border border-light-space/[0.08] bg-smoke-2 px-6 pb-8 pt-8 md:px-8 md:pb-10 md:pt-10 light:border-black/[0.1] light:bg-white light:shadow-[0_16px_48px_-20px_rgba(0,0,0,0.08)]">
             <FakeQr seed={0x9e3779b9} className="aspect-square w-[min(72vw,200px)]" />
             <a
               href="#"
-              className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/35 px-5 py-2.5 font-sans text-sm font-medium text-white transition-colors hover:border-white/55 hover:bg-white/[0.04]"
+              className="mt-8 inline-flex items-center gap-2 rounded-full border border-light-space/35 px-5 py-2.5 font-sans text-sm font-medium text-light-space transition-colors hover:border-light-space/55 hover:bg-white/[0.04] light:border-black/20 light:hover:bg-black/[0.04]"
             >
               <AppleGlyph className="shrink-0" />
               Apple
             </a>
           </article>
 
-          <article className="flex flex-col items-center rounded-[24px] border border-white/[0.08] bg-[#222222] px-6 pb-8 pt-8 md:px-8 md:pb-10 md:pt-10">
+          <article className="flex flex-col items-center rounded-[24px] border border-light-space/[0.08] bg-smoke-2 px-6 pb-8 pt-8 md:px-8 md:pb-10 md:pt-10 light:border-black/[0.1] light:bg-white light:shadow-[0_16px_48px_-20px_rgba(0,0,0,0.08)]">
             <FakeQr seed={0x6c078965} className="aspect-square w-[min(72vw,200px)]" />
             <a
               href="#"
-              className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/35 px-5 py-2.5 font-sans text-sm font-medium text-white transition-colors hover:border-white/55 hover:bg-white/[0.04]"
+              className="mt-8 inline-flex items-center gap-2 rounded-full border border-light-space/35 px-5 py-2.5 font-sans text-sm font-medium text-light-space transition-colors hover:border-light-space/55 hover:bg-white/[0.04] light:border-black/20 light:hover:bg-black/[0.04]"
             >
               <GooglePlayGlyph className="shrink-0" />
               Google Play
@@ -144,13 +146,17 @@ function MobileAppSection() {
 }
 
 export function DownloadPage() {
-  return (
-    <div className="landing-cinema bg-[#f4effc] font-sans text-[#402060]">
-      <SiteTopBar />
+  useDocumentTitle("Download — Jokuh");
 
-      <main>
-        <div className="mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-[980px] flex-col items-center justify-center px-6 pt-24 pb-16 md:pt-28">
-          <h1 className="text-center text-3xl font-bold tracking-tight md:text-4xl">
+  return (
+    <MarketingPageFrame footer={null} className="bg-[#f4effc] text-[#402060]" withFontSans>
+      <div
+        className={cn(
+          CONTENT_SHELL_COMPANY,
+          "flex min-h-[calc(100dvh-3.5rem)] flex-col items-center justify-center pt-24 pb-16 md:pt-28",
+        )}
+      >
+          <h1 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
             <span className="block">Download</span>
             <span className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 md:mt-6 md:gap-x-3">
               <span className="text-2xl md:text-3xl">for</span>
@@ -175,10 +181,9 @@ export function DownloadPage() {
           <SecondaryLink href="#" className="mt-10 text-[15px]">
             System requirements & coverage
           </SecondaryLink>
-        </div>
+      </div>
 
-        <MobileAppSection />
-      </main>
-    </div>
+      <MobileAppSection />
+    </MarketingPageFrame>
   );
 }

@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { LegalBreadcrumb, LegalLayout, legalLink, legalMuted } from "../../components/legal/LegalLayout";
 import { TERMS_SECTIONS } from "../../data/terms-sections";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function LegalTermsPage() {
+  useDocumentTitle("Website Terms of Use — Jokuh");
+
   return (
     <LegalLayout
       breadcrumb={
@@ -16,8 +19,8 @@ export function LegalTermsPage() {
         />
       }
     >
-      <div className="border-b border-light-glass-10 bg-gradient-to-b from-[#0a1628]/90 via-black to-black">
-        <div className="mx-auto max-w-[1024px] px-4 py-10 md:px-6 md:py-14">
+      <div className="border-b border-light-glass-10 bg-gradient-to-b from-[#0a1628]/90 via-black to-black light:from-slate-100 light:via-white light:to-zinc-100">
+        <div className="mx-auto max-w-[1024px] px-4 py-10 md:px-8 md:py-14">
           <p className={`font-sans text-[12px] font-medium uppercase tracking-[0.08em] ${legalMuted}`}>
             Legal information & notices
           </p>
@@ -31,7 +34,7 @@ export function LegalTermsPage() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-[1100px] gap-10 px-4 py-12 md:grid-cols-[minmax(0,220px)_1fr] md:gap-14 md:px-6 md:py-16 lg:grid-cols-[240px_1fr]">
+      <div className="mx-auto grid max-w-[1100px] gap-10 px-4 py-12 md:grid-cols-[minmax(0,220px)_1fr] md:gap-14 md:px-8 md:py-16 lg:grid-cols-[240px_1fr]">
         <aside className="md:sticky md:top-[72px] md:self-start">
           <nav
             className="rounded-xl border border-light-glass-20 bg-white/[0.04] p-4 font-sans shadow-none backdrop-blur-sm"

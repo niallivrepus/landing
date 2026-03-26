@@ -1,7 +1,7 @@
 import { cn } from "@jokuh/gooey";
 import { Link } from "react-router-dom";
 
-const shell = "mx-auto w-full max-w-[1380px] px-5 md:px-8";
+const shell = "mx-auto w-full max-w-[1380px] px-4 md:px-8";
 /** Use inside a padded shell (e.g. news article column); matches `read` on NewsDetailPage */
 const articleMeasure = "mx-auto w-full max-w-[min(100%,720px)]";
 
@@ -24,7 +24,7 @@ const CARDS: [SealCard, SealCard] = [
     role: "VP Engineering",
     company: "Northline",
     panelClass:
-      "relative overflow-hidden bg-gradient-to-br from-[#c4b5fd]/25 via-[#a5b4fc]/20 to-[#93c5fd]/15 ring-1 ring-white/[0.08]",
+      "relative overflow-hidden bg-gradient-to-br from-[#c4b5fd]/25 via-[#a5b4fc]/20 to-[#93c5fd]/15 ring-1 ring-light-space/[0.1]",
     quoteClass: "text-[#1c1535]/95",
     metaClass: "text-[#1c1535]/80",
     logoClass: "bg-[#1c1535]/90 text-white",
@@ -37,7 +37,7 @@ const CARDS: [SealCard, SealCard] = [
     panelClass: "bg-[#b8e600] ring-1 ring-black/[0.06]",
     quoteClass: "text-black/90",
     metaClass: "text-black/75",
-    logoClass: "bg-black text-[#b8e600]",
+    logoClass: "bg-dark-space text-[#b8e600]",
   },
 ];
 
@@ -68,7 +68,7 @@ function SealCardView({ card, wide }: { card: SealCard; wide: boolean }) {
     >
       {wide && (
         <div
-          className="pointer-events-none absolute -right-8 -top-8 font-sans text-[140px] font-semibold leading-none text-white/[0.07] md:text-[180px]"
+          className="pointer-events-none absolute -right-8 -top-8 font-sans text-[140px] font-semibold leading-none text-light-space/[0.07] md:text-[180px]"
           aria-hidden
         >
           {letter}
@@ -97,7 +97,7 @@ function SealCardView({ card, wide }: { card: SealCard; wide: boolean }) {
 
 export function EndorsementSeal({
   className,
-  storiesHref = "/journal",
+  storiesHref = "/stories",
   articleMeasure: useArticleMeasure,
 }: {
   className?: string;
@@ -119,12 +119,12 @@ export function EndorsementSeal({
         <SealCardView card={b} wide={false} />
       </div>
       <div className="mt-8 flex flex-col gap-4 md:mt-10 md:flex-row md:items-center md:justify-between">
-        <p className="font-sans text-sm leading-relaxed text-white/45 md:text-[0.9375rem]">
+        <p className="font-sans text-sm leading-relaxed text-light-space/45 md:text-[0.9375rem]">
           Jokuh powers product and platform teams—from ambitious startups to major enterprises.
         </p>
         <Link
           to={storiesHref}
-          className="inline-flex w-fit items-center gap-1 font-sans text-sm text-white/45 transition-colors hover:text-white/75 md:text-[0.9375rem]"
+          className="inline-flex w-fit items-center gap-1 font-sans text-sm text-light-space/45 transition-colors hover:text-light-space/75 md:text-[0.9375rem]"
         >
           Customer stories
           <span aria-hidden>→</span>

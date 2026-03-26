@@ -1,11 +1,14 @@
 {
   "name": "jokuh-landing",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "sync:medium": "node scripts/sync-medium.mjs",
+    "ecosystem:agents": "node scripts/ecosystem-agents.mjs",
     "build": "vite build",
+    "build:landing": "VITE_SITE_ENTRY=landing vite build",
     "preview": "vite preview"
   },
   "dependencies": {

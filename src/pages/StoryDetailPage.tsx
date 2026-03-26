@@ -1,8 +1,7 @@
 import { cn } from "@jokuh/gooey";
 import { CookieBanner } from "../components/CookieBanner";
-import { MegaFooter } from "../components/MegaFooter";
-import { EndorsementSeal } from "../components/EndorsementSeal";
-import { SiteTopBar } from "../components/SiteTopBar";
+import { EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
+import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { TopNavAnchor } from "../components/TopNavAnchor";
 import { HOME_STORIES } from "../data/home-stories";
 import {
@@ -11,48 +10,96 @@ import {
   type StoryImageCaptioned,
   type StorySection,
 } from "../data/stories-detail";
-import { Navigate, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Link, Navigate, useParams } from "react-router-dom";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
-const shell = "mx-auto w-full max-w-[1380px] px-5 md:px-8";
+const articleColumn = "mx-auto w-full max-w-[min(100%,40rem)]";
 
-const articleColumn = "mx-auto w-full max-w-[min(100%,36rem)]";
+function StoryNavigator({ currentSlug }: { currentSlug: string }) {
+  return (
+    <div className={`${CONTENT_SHELL_WIDE} pb-10 md:pb-14`}>
+      <div className="border-y border-light-space/[0.08] py-4">
+        <div className="flex flex-wrap gap-x-5 gap-y-2 md:gap-x-6">
+          {HOME_STORIES.map((story) => {
+            const detail = getStoryDetail(story.slug);
+            const active = story.slug === currentSlug;
+
+            return (
+              <TopNavAnchor
+                key={story.slug}
+                href={story.href}
+                className={cn(
+                  "font-sans text-[13px] leading-snug tracking-tight transition-colors md:text-[0.9375rem]",
+                  active ? "text-light-space" : "text-light-space/42 hover:text-light-space/72",
+                )}
+              >
+                {detail?.title ?? story.title}
+              </TopNavAnchor>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function StoryHero({ story }: { story: StoryDetail }) {
   return (
-    <header className={`${shell} pt-28 pb-12 text-center md:pt-32 md:pb-16`}>
-      <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-white/45 md:text-xs">
-        {story.metaLine}
-      </p>
-      <h1 className="mx-auto mt-6 max-w-[min(100%,20ch)] font-sans text-[2.25rem] font-medium leading-[1.08] tracking-[-0.03em] text-white sm:max-w-[min(100%,24ch)] sm:text-5xl md:text-6xl lg:text-[3.5rem] lg:leading-[1.05]">
-        {story.title}
-      </h1>
-      <p
-        className={`${articleColumn} mt-8 font-sans text-lg font-normal leading-[1.55] tracking-tight text-white/72 md:mt-10 md:text-xl md:leading-[1.5]`}
-      >
-        {story.dek}
-      </p>
+    <header className={`${CONTENT_SHELL_WIDE} pt-28 pb-8 md:pt-32 md:pb-10`}>
+      <div className={articleColumn}>
+        <Link
+          to="/stories"
+          className="inline-flex items-center gap-2 font-sans text-sm text-light-space/48 transition-colors hover:text-light-space/75"
+        >
+          <ArrowLeft className="size-4" aria-hidden />
+          Stories
+        </Link>
+        <p className="mt-8 font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-light-space/42 md:text-xs">
+          {story.metaLine}
+        </p>
+        <h1 className="mt-5 max-w-[20ch] font-sans text-[2.3rem] font-semibold leading-[1.06] tracking-[-0.035em] text-light-space sm:text-5xl md:text-6xl lg:text-[4rem] lg:leading-[1.02]">
+          {story.title}
+        </h1>
+        <p className="news-detail-reading mt-7 max-w-[34rem] text-[1.22rem] font-normal leading-[1.56] text-light-space/72 md:mt-8 md:text-[1.34rem] md:leading-[1.54]">
+          {story.dek}
+        </p>
+      </div>
     </header>
   );
 }
 
 function StoryGallery({ images }: { images: StoryDetail["heroGallery"] }) {
+  const [lead, ...supporting] = images;
+  if (!lead) return null;
+
   return (
-    <div className={`${shell} pb-16 md:pb-20`}>
-      <div className="flex gap-3 md:gap-4 lg:gap-5">
-        {images.map((img) => (
-          <div
-            key={img.src}
-            className="relative min-w-0 flex-1 overflow-hidden rounded-xl"
-          >
-            <img
-              src={img.src}
-              alt={img.alt}
-              className="aspect-[4/3] w-full object-cover md:aspect-[5/4]"
-              loading="lazy"
-              decoding="async"
-            />
+    <div className={`${CONTENT_SHELL_WIDE} pb-16 md:pb-20`}>
+      <div className="space-y-4 md:space-y-5">
+        <div className={cn("overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
+          <img
+            src={lead.src}
+            alt={lead.alt}
+            className="aspect-[16/9] w-full object-cover md:aspect-[16/8.5]"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        {supporting.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+            {supporting.map((img) => (
+              <div key={img.src} className={cn("overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="aspect-[4/3] w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        ) : null}
       </div>
     </div>
   );
@@ -60,12 +107,12 @@ function StoryGallery({ images }: { images: StoryDetail["heroGallery"] }) {
 
 function ProseBlock({ paragraphs }: { paragraphs: string[] }) {
   return (
-    <div className={`${shell} py-10 md:py-14`}>
-      <div className={`${articleColumn} space-y-6`}>
+    <div className={`${CONTENT_SHELL_WIDE} py-8 md:py-10`}>
+      <div className={`${articleColumn} space-y-6 md:space-y-7`}>
         {paragraphs.map((p, i) => (
           <p
             key={i}
-            className="font-sans text-[1.0625rem] font-normal leading-[1.75] tracking-[-0.01em] text-white/78 md:text-lg md:leading-[1.72]"
+            className="news-detail-reading text-[1.1rem] font-normal leading-[1.8] tracking-[0.002em] text-light-space/82 md:text-[1.18rem] md:leading-[1.82]"
           >
             {p}
           </p>
@@ -77,10 +124,8 @@ function ProseBlock({ paragraphs }: { paragraphs: string[] }) {
 
 function SubheadBlock({ text }: { text: string }) {
   return (
-    <div className={`${shell} pt-4 pb-2 md:pt-8 md:pb-4`}>
-      <h2
-        className={`${articleColumn} font-sans text-2xl font-medium leading-snug tracking-[-0.02em] text-white md:text-[1.75rem]`}
-      >
+    <div className={`${CONTENT_SHELL_WIDE} pt-8 pb-1 md:pt-10 md:pb-2`}>
+      <h2 className={`${articleColumn} font-sans text-[1.55rem] font-semibold leading-[1.18] tracking-[-0.025em] text-light-space md:text-[1.9rem]`}>
         {text}
       </h2>
     </div>
@@ -89,10 +134,10 @@ function SubheadBlock({ text }: { text: string }) {
 
 function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; small: StoryImageCaptioned }) {
   return (
-    <div className={`${shell} py-12 md:py-16`}>
-      <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-6 xl:gap-8">
+    <div className={`${CONTENT_SHELL_WIDE} py-14 md:py-20`}>
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-6 xl:gap-8">
         <div className="lg:col-span-8">
-          <div className="overflow-hidden rounded-xl">
+          <div className={cn("overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
             <img
               src={large.src}
               alt={large.alt}
@@ -101,10 +146,12 @@ function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; s
               decoding="async"
             />
           </div>
-          <p className="mt-3 font-sans text-sm leading-snug text-white/55">{large.caption}</p>
+          <p className="mt-3 max-w-[42rem] font-sans text-[13px] leading-snug text-light-space/48 md:text-sm">
+            {large.caption}
+          </p>
         </div>
         <div className="lg:col-span-4">
-          <div className="overflow-hidden rounded-xl">
+          <div className={cn("overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
             <img
               src={small.src}
               alt={small.alt}
@@ -113,7 +160,9 @@ function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; s
               decoding="async"
             />
           </div>
-          <p className="mt-3 font-sans text-sm leading-snug text-white/55">{small.caption}</p>
+          <p className="mt-3 font-sans text-[13px] leading-snug text-light-space/48 md:text-sm">
+            {small.caption}
+          </p>
         </div>
       </div>
     </div>
@@ -122,12 +171,12 @@ function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; s
 
 function QuoteBlock({ text, attribution }: { text: string; attribution: string }) {
   return (
-    <div className={`${shell} py-16 md:py-24`}>
-      <blockquote className="mx-auto max-w-[min(100%,40rem)] text-center">
-        <p className="font-sans text-2xl font-medium leading-[1.35] tracking-[-0.02em] text-white md:text-3xl md:leading-[1.3] lg:text-[2.125rem]">
+    <div className={`${CONTENT_SHELL_WIDE} py-14 md:py-20`}>
+      <blockquote className={`${articleColumn} border-t border-light-space/[0.1] pt-8 md:pt-10`}>
+        <p className="news-detail-reading text-[1.55rem] font-normal leading-[1.5] tracking-[0.002em] text-light-space md:text-[1.9rem] md:leading-[1.48]">
           “{text}”
         </p>
-        <footer className="mt-8 font-sans text-sm font-normal text-white/50 md:text-base">
+        <footer className="mt-6 font-sans text-[13px] font-medium uppercase tracking-[0.08em] text-light-space/46 md:text-sm">
           {attribution}
         </footer>
       </blockquote>
@@ -147,22 +196,25 @@ function CtaBlock({
   buttonHref: string;
 }) {
   return (
-    <div className={`${shell} py-12 md:py-16`}>
-      <div className="flex flex-col items-center justify-center rounded-2xl bg-[#1a1a1a] px-6 py-16 text-center md:px-12 md:py-20">
-        <h2 className="max-w-xl font-sans text-2xl font-medium tracking-tight text-white md:text-3xl">
+    <div className={`${CONTENT_SHELL_WIDE} py-14 md:py-20`}>
+      <div className={`${articleColumn} border-t border-light-space/[0.1] pt-8 md:pt-10`}>
+        <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/38">
+          Further reading
+        </p>
+        <h2 className="mt-4 max-w-[28rem] font-sans text-[1.55rem] font-semibold leading-[1.16] tracking-[-0.025em] text-light-space md:text-[1.9rem]">
           {title}
         </h2>
-        <p className="mx-auto mt-5 max-w-lg font-sans text-[15px] leading-relaxed text-white/72 md:text-base md:leading-relaxed">
+        <p className="news-detail-reading mt-5 max-w-[34rem] text-[1.06rem] leading-[1.76] text-light-space/74 md:text-[1.12rem]">
           {body}
         </p>
         <a
           href={buttonHref}
           className={cn(
-            "mt-9 inline-flex h-12 min-w-[10rem] items-center justify-center rounded-full bg-white px-8",
-            "font-sans text-sm font-medium text-black transition-[transform,background-color] hover:bg-zinc-100 active:scale-[0.98]",
+            "mt-6 inline-flex items-center gap-2 font-sans text-[13px] font-medium uppercase tracking-[0.08em] text-light-space/56 transition-colors hover:text-light-space",
           )}
         >
           {buttonLabel}
+          <span aria-hidden>→</span>
         </a>
       </div>
     </div>
@@ -174,40 +226,32 @@ function MoreStories({ currentSlug }: { currentSlug: string }) {
   if (others.length === 0) return null;
 
   return (
-    <section className="border-t border-white/10 bg-black px-5 py-16 md:px-8 md:py-20" aria-labelledby="more-stories-heading">
-      <div className="mx-auto max-w-[1380px]">
-        <h2 id="more-stories-heading" className="font-sans text-lg font-normal tracking-tight text-white md:text-xl">
-          More stories
-        </h2>
-        <div
-          className={cn(
-            "mt-10 grid grid-cols-1 gap-12 sm:mt-12 sm:gap-8 md:gap-10 lg:gap-12",
-            others.length >= 3 ? "sm:grid-cols-2 md:grid-cols-3" : "sm:grid-cols-2",
-          )}
-        >
-          {others.map((story) => (
-            <TopNavAnchor key={story.slug} href={story.href} className="group flex min-w-0 flex-col">
-              <div
-                className={cn(
-                  "relative aspect-square w-full shrink-0 overflow-hidden rounded-[4px] bg-zinc-900",
-                  "ring-1 ring-white/[0.08] transition-[box-shadow,ring-color] duration-300",
-                  "group-hover:ring-white/[0.14] group-hover:shadow-[0_20px_40px_-16px_rgba(0,0,0,0.55)]",
-                )}
-              >
-                <img
-                  src={story.image}
-                  alt=""
-                  className="size-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <p className="mt-3 text-left font-sans text-[0.9375rem] font-medium leading-snug tracking-tight text-white md:text-base">
-                {story.title}
-              </p>
-              <p className="mt-1 text-left font-sans text-sm text-white/45">Jokuh Stories</p>
-            </TopNavAnchor>
-          ))}
+    <section className="border-t border-light-space/10 bg-dark-space px-4 py-16 md:px-8 md:py-20" aria-labelledby="more-stories-heading">
+      <div className={CONTENT_SHELL_WIDE}>
+        <div className={articleColumn}>
+          <h2 id="more-stories-heading" className="font-sans text-[1.35rem] font-semibold tracking-[-0.02em] text-light-space md:text-[1.55rem]">
+            More stories
+          </h2>
+        </div>
+        <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-7 md:mt-10 md:grid-cols-3">
+          {others.slice(0, 3).map((story) => {
+            const detail = getStoryDetail(story.slug);
+            return (
+              <TopNavAnchor key={story.slug} href={story.href} className="group flex min-w-0 gap-4 border-t border-light-space/[0.08] pt-5">
+                <div className={cn("size-20 shrink-0 overflow-hidden bg-smoke-2 md:size-24", EDITORIAL_MEDIA_RADIUS_CLASS)}>
+                  <img src={story.image} alt="" className="size-full object-cover" loading="lazy" decoding="async" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-light-space/36">
+                    {detail?.metaLine ?? "Jokuh Stories"}
+                  </p>
+                  <p className="mt-2 font-sans text-[0.98rem] font-medium leading-snug tracking-tight text-light-space transition-colors group-hover:text-light-space/80 md:text-[1.02rem]">
+                    {detail?.title ?? story.title}
+                  </p>
+                </div>
+              </TopNavAnchor>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -244,21 +288,20 @@ export function StoryDetailPage() {
   const story = getStoryDetail(slug);
 
   if (!story) {
-    return <Navigate to="/journal" replace />;
+    return <Navigate to="/stories" replace />;
   }
 
+  useDocumentTitle(`${story.title} — Jokuh`);
+
   return (
-    <div className="landing-cinema min-h-screen bg-black text-light-space">
-      <SiteTopBar />
-      <main>
+    <MarketingPageFrame afterMain={<CookieBanner />}>
+      <>
         <StoryHero story={story} />
+        <StoryNavigator currentSlug={story.slug} />
         <StoryGallery images={story.heroGallery} />
         {story.sections.map((s, i) => renderSection(s, i))}
-        <EndorsementSeal />
         <MoreStories currentSlug={story.slug} />
-      </main>
-      <MegaFooter />
-      <CookieBanner />
-    </div>
+      </>
+    </MarketingPageFrame>
   );
 }

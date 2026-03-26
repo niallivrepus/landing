@@ -30,10 +30,10 @@ function DarkTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-white/10 bg-zinc-950 px-3 py-2 text-xs shadow-xl">
-      {label != null ? <p className="mb-1 text-white/50">{label}</p> : null}
+    <div className="rounded-lg border border-light-space/10 bg-smoke-2 px-3 py-2 text-xs shadow-xl light:border-black/10 light:bg-white light:shadow-md">
+      {label != null ? <p className="mb-1 text-light-space/50">{label}</p> : null}
       {payload.map((p) => (
-        <p key={String(p.name)} className="tabular-nums text-white/90">
+        <p key={String(p.name)} className="tabular-nums text-light-space/90">
           <span style={{ color: p.color }}>{p.name}</span>:{" "}
           {typeof p.value === "number" ? `${p.value}%` : p.value}
         </p>

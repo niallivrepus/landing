@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { DocumentTopicCard } from "../../components/legal/DocumentTopicCard";
 import { LegalBreadcrumb, LegalLayout, legalLink, legalMuted } from "../../components/legal/LegalLayout";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const cards = [
   { title: "Website Terms of Use", to: "/legal/terms" },
@@ -9,6 +10,8 @@ const cards = [
 ];
 
 export function LegalInternetServicesPage() {
+  useDocumentTitle("Internet Services — Jokuh");
+
   return (
     <LegalLayout
       breadcrumb={
@@ -21,8 +24,8 @@ export function LegalInternetServicesPage() {
         />
       }
     >
-      <div className="border-b border-light-glass-10 bg-gradient-to-br from-[#0a1628]/95 via-black to-black">
-        <div className="mx-auto max-w-[1024px] px-4 py-12 md:px-6 md:py-16">
+      <div className="border-b border-light-glass-10 bg-gradient-to-br from-[#0a1628]/95 via-black to-black light:from-slate-100 light:via-white light:to-zinc-100">
+        <div className="mx-auto max-w-[1024px] px-4 py-12 md:px-8 md:py-16">
           <p className="font-sans text-[12px] font-semibold uppercase tracking-wide text-light-space/50">
             Internet Services
           </p>
@@ -36,7 +39,7 @@ export function LegalInternetServicesPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1024px] px-4 py-14 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1024px] px-4 py-14 md:px-8 md:py-16">
         <h2 className="font-sans text-[21px] font-semibold tracking-tight text-light-space md:text-[24px]">
           Documents
         </h2>

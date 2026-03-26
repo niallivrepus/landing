@@ -64,32 +64,32 @@ export function ArticleListenBar({ speechText, durationLabel, shareTitle }: Prop
   const speechOk = typeof window !== "undefined" && "speechSynthesis" in window;
 
   return (
-    <div className="flex flex-col gap-4 border-y border-white/[0.1] py-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-4 border-y border-light-space/[0.1] py-5 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
         {speechOk ? (
           <button
             type="button"
             onClick={togglePlay}
             className={cn(
-              "flex items-center gap-3 rounded-full font-sans text-sm text-white transition-opacity",
-              "hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/30",
+              "flex items-center gap-3 rounded-full font-sans text-sm text-light-space transition-opacity",
+              "hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/30 light:focus-visible:outline-black/25",
             )}
             aria-pressed={playing}
           >
-            <span className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/5">
-              {playing ? <Pause className="size-4 text-white" aria-hidden /> : <Play className="ml-0.5 size-4 text-white" aria-hidden />}
+            <span className="flex size-10 items-center justify-center rounded-full border border-light-space/20 bg-white/5 light:border-black/12 light:bg-black/[0.04]">
+              {playing ? <Pause className="size-4 text-light-space" aria-hidden /> : <Play className="ml-0.5 size-4 text-light-space" aria-hidden />}
             </span>
-            <span className="text-white/85">{playing ? "Stop" : "Listen to article"}</span>
-            <span className="tabular-nums text-white/45">{durationLabel}</span>
+            <span className="text-light-space/85">{playing ? "Stop" : "Listen to article"}</span>
+            <span className="tabular-nums text-light-space/45">{durationLabel}</span>
           </button>
         ) : (
-          <p className="font-sans text-sm text-white/45">Listening isn&apos;t supported in this browser.</p>
+          <p className="font-sans text-sm text-light-space/45">Listening isn&apos;t supported in this browser.</p>
         )}
       </div>
       <button
         type="button"
         onClick={share}
-        className="inline-flex items-center gap-2 self-start font-sans text-sm text-white/80 transition-colors hover:text-white sm:self-auto"
+        className="inline-flex items-center gap-2 self-start font-sans text-sm text-light-space/80 transition-colors hover:text-light-space sm:self-auto"
       >
         <Link2 className="size-4 opacity-70" aria-hidden />
         {copied ? "Link copied" : "Share"}

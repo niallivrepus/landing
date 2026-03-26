@@ -257,7 +257,7 @@ export function VortexMindMap({ className }: { className?: string }) {
 
       new RGBELoader().load(
         "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/moonless_golf_1k.hdr",
-        (hdrTexture) => {
+        (hdrTexture: any) => {
           hdrTexture.mapping = THREE.EquirectangularReflectionMapping;
           scene.background = hdrTexture;
           scene.backgroundBlurriness = 0;
@@ -269,7 +269,7 @@ export function VortexMindMap({ className }: { className?: string }) {
         () => {
           new RGBELoader().load(
             "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/starry_sky_1k.hdr",
-            (hdrTexture) => {
+            (hdrTexture: any) => {
               hdrTexture.mapping = THREE.EquirectangularReflectionMapping;
               scene.background = hdrTexture;
               scene.environment = hdrTexture;
@@ -734,7 +734,7 @@ export function VortexMindMap({ className }: { className?: string }) {
               );
               const indicatorScale = node.collapsed ? ir : ir * 0.6;
               node.indicatorMesh.scale.setScalar(indicatorScale);
-              const im = node.indicatorMesh.material as THREE.MeshBasicMaterial;
+              const im = node.indicatorMesh.material as InstanceType<(typeof THREE)["MeshBasicMaterial"]>;
               im.opacity = node.collapsed ? 1 : 0.5;
             }
           }
@@ -832,18 +832,18 @@ export function VortexMindMap({ className }: { className?: string }) {
   };
 
   return (
-    <div ref={rootRef} className={cn("relative h-full min-h-[280px] w-full bg-[#0a0a0f]", className)}>
+    <div ref={rootRef} className={cn("relative h-full min-h-[280px] w-full bg-smoke-2 light:bg-zinc-100", className)}>
       <div
         ref={tooltipRef}
-        className="pointer-events-none fixed z-[100] max-w-[220px] rounded-lg border border-white/10 bg-[rgb(18,18,24)]/95 px-3.5 py-2 text-[13px] leading-snug text-[#e0e0e0] opacity-0 transition-opacity duration-300"
+        className="pointer-events-none fixed z-[100] max-w-[220px] rounded-lg border border-light-space/10 bg-[rgb(18,18,24)]/95 px-3.5 py-2 text-[13px] leading-snug text-[#e0e0e0] opacity-0 transition-opacity duration-300"
         aria-hidden
       />
 
       {!webgpuOk ? (
         <div className="absolute inset-0 z-[200] flex items-center justify-center rounded-[inherit] bg-[rgb(18,18,24)]/95 p-8 text-center">
-          <div className="max-w-sm rounded-xl border border-white/10 p-6">
-            <h2 className="text-lg font-medium text-[#e0e0e0]">WebGPU not available</h2>
-            <p className="mt-2 text-[13px] text-white/50">
+          <div className="max-w-sm rounded-xl border border-light-space/10 p-6">
+            <h2 className="text-lg font-semibold text-[#e0e0e0]">WebGPU not available</h2>
+            <p className="mt-2 text-[13px] text-light-space/50">
               Use Chrome 113+, Edge 113+, or another WebGPU-capable browser to see this visualization.
             </p>
           </div>
@@ -852,15 +852,15 @@ export function VortexMindMap({ className }: { className?: string }) {
 
       <div className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[min(100%,280px)] flex-col gap-3 md:left-4 md:top-4">
         <div className="px-1 text-left text-[#e0e0e0]">
-          <h2 className="font-serif text-lg font-normal tracking-wide md:text-xl">3D mind map</h2>
-          <p className="mt-1 text-[11px] text-white/40">
+          <h2 className="font-serif text-lg font-semibold tracking-wide md:text-xl">3D mind map</h2>
+          <p className="mt-1 text-[11px] text-light-space/40">
             Drag nodes · Scroll to zoom · Click to expand · Right-drag to orbit
           </p>
         </div>
         <div className="pointer-events-auto flex flex-wrap gap-1.5">
           <button
             type="button"
-            className="rounded-md border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium text-[#c0c0c0] transition-colors hover:bg-white/[0.12] hover:text-white"
+            className="rounded-md border border-light-space/10 bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium text-[#c0c0c0] transition-colors hover:bg-white/[0.12] hover:text-light-space"
             onClick={() => callApi("resetView")}
           >
             Reset view
@@ -871,7 +871,7 @@ export function VortexMindMap({ className }: { className?: string }) {
               "rounded-md border px-3 py-1.5 text-[11px] font-medium transition-colors",
               physicsPaused
                 ? "border-[#648cff]/40 bg-[#648cff]/20 text-[#8aafff]"
-                : "border-white/10 bg-white/[0.06] text-[#c0c0c0] hover:bg-white/[0.12] hover:text-white",
+                : "border-light-space/10 bg-white/[0.06] text-[#c0c0c0] hover:bg-white/[0.12] hover:text-light-space",
             )}
             onClick={() => setPhysicsPaused((p) => !p)}
           >
@@ -879,14 +879,14 @@ export function VortexMindMap({ className }: { className?: string }) {
           </button>
           <button
             type="button"
-            className="rounded-md border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium text-[#c0c0c0] transition-colors hover:bg-white/[0.12] hover:text-white"
+            className="rounded-md border border-light-space/10 bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium text-[#c0c0c0] transition-colors hover:bg-white/[0.12] hover:text-light-space"
             onClick={() => callApi("expandAll")}
           >
             Expand all
           </button>
           <button
             type="button"
-            className="rounded-md border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium text-[#c0c0c0] transition-colors hover:bg-white/[0.12] hover:text-white"
+            className="rounded-md border border-light-space/10 bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium text-[#c0c0c0] transition-colors hover:bg-white/[0.12] hover:text-light-space"
             onClick={() => callApi("collapseAll")}
           >
             Collapse all
@@ -894,11 +894,11 @@ export function VortexMindMap({ className }: { className?: string }) {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-3 right-3 z-10 flex flex-wrap items-center gap-3 rounded-lg border border-white/[0.08] bg-[rgb(18,18,24)]/85 px-3 py-2.5 md:bottom-4 md:right-4">
+      <div className="pointer-events-none absolute bottom-3 right-3 z-10 flex flex-wrap items-center gap-3 rounded-lg border border-light-space/[0.08] bg-[rgb(18,18,24)]/85 px-3 py-2.5 md:bottom-4 md:right-4">
         {Object.entries(VORTEX_PALETTE)
           .filter(([k]) => k !== "root")
           .map(([key, val]) => (
-            <div key={key} className="flex items-center gap-1.5 text-[11px] text-white/50">
+            <div key={key} className="flex items-center gap-1.5 text-[11px] text-light-space/50">
               <span className="size-2 shrink-0 rounded-full" style={{ background: val.hex }} />
               {key}
             </div>
