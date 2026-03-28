@@ -40,7 +40,7 @@ export const REFERENCE_ECOSYSTEMS: ReferenceEcosystem[] = [
       {
         name: "Hub & platforms",
         paths: ["/", "/api/docs", "/codex", "/apps-sdk", "/commerce"],
-        notes: "Featured cards, video, API docs, Codex, Apps SDK, commerce/agentic patterns.",
+        notes: "Featured cards, video, API docs, Codex, Pods SDK, commerce/agentic patterns.",
       },
       {
         name: "Learn & explore",

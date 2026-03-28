@@ -1,5 +1,6 @@
 import mediumPayload from "./medium-feed.json";
 import { JOURNAL_NEWS_ART_ROTATION } from "./editorial-art";
+import { lavaLampStyleForSeed, type LAVA_LAMP_STYLES } from "../components/LavaLamp";
 
 /** Fallback when feed items omit `cardGradient` */
 export const DEFAULT_NEWS_CARD_GRADIENT =
@@ -51,6 +52,8 @@ export type NewsItem = {
   cardGradient: string;
   /** Optional cover art (local `/…` or URL). Falls back to `cardGradient` if missing or broken. */
   cardImage?: string;
+  /** Lava lamp art style used as animated fallback thumbnail */
+  lavaLamp?: keyof typeof LAVA_LAMP_STYLES;
   /** Canonical slug for on-site newsroom articles. */
   slug?: string;
   /** Opens in new tab — Medium or other off-site posts */
@@ -91,11 +94,25 @@ function mediumToNewsItem(entry: MediumFeedFile["items"][number]): NewsItem {
     readMinutes: entry.readMinutes,
     cardGradient: entry.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT,
     cardImage: cardImageForId(entry.id),
+    lavaLamp: lavaLampStyleForSeed(entry.id),
     externalUrl: entry.url,
   };
 }
 
 const STATIC_NEWS_ITEMS: NewsItem[] = [
+  {
+    id: "ethics-compliance-operating-principles",
+    title: "Ethics and compliance are product behaviors",
+    excerpt: "How Jokuh approaches boundaries, escalation, reviewability, and responsible deployment for high-stakes work.",
+    category: "Safety",
+    topics: ["Safety"],
+    publishedAt: "2026-03-28",
+    readMinutes: 5,
+    cardGradient: "linear-gradient(145deg, #020617 0%, #0f3d3e 42%, #152238 100%)",
+    cardImage: "/journal-art/news-green-flow.png",
+    lavaLamp: "jungle",
+    internalHref: "/ethics",
+  },
   {
     id: "introducing-jokuh-cortex",
     title: "Introducing Jokuh Cortex",
@@ -106,6 +123,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 14,
     cardGradient: "linear-gradient(160deg, #020617 0%, #0f172a 45%, #1e3a5f 100%)",
     cardImage: "/journal-art/news-prism-fold.png",
+    lavaLamp: "aurora",
     slug: "introducing-jokuh-cortex",
     internalHref: newsroomPath("introducing-jokuh-cortex"),
   },
@@ -119,6 +137,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 4,
     cardGradient: "linear-gradient(145deg, #020617 0%, #1e1b4b 50%, #312e81 100%)",
     cardImage: "/journal-art/news-blue-lens.png",
+    lavaLamp: "arctic",
     slug: "jokuh-spine-tighter-sync",
     internalHref: newsroomPath("jokuh-spine-tighter-sync"),
   },
@@ -132,6 +151,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 3,
     cardGradient: "linear-gradient(135deg, #020617 0%, #0c4a6e 55%, #164e63 100%)",
     cardImage: "/journal-art/news-coral-wash.png",
+    lavaLamp: "coral",
     slug: "waitlist-regional-rollout-next-quarter",
     internalHref: newsroomPath("waitlist-regional-rollout-next-quarter"),
   },
@@ -145,6 +165,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 6,
     cardGradient: "linear-gradient(150deg, #020617 0%, #1e293b 40%, #334155 100%)",
     cardImage: "/journal-art/news-orb-violet.png",
+    lavaLamp: "ultraviolet",
     slug: "gooey-accessible-focus-rings-motion-prefs",
     internalHref: newsroomPath("gooey-accessible-focus-rings-motion-prefs"),
   },
@@ -158,6 +179,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 5,
     cardGradient: "linear-gradient(135deg, #020617 0%, #14532d 42%, #0f172a 100%)",
     cardImage: "/journal-art/news-green-flow.png",
+    lavaLamp: "jungle",
     slug: "responsible-use-guidelines-v1llains-lab",
     internalHref: newsroomPath("responsible-use-guidelines-v1llains-lab"),
   },
@@ -171,6 +193,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 2,
     cardGradient: "linear-gradient(140deg, #020617 0%, #312e81 50%, #1e1b4b 100%)",
     cardImage: "/journal-art/news-glass-ribbon.png",
+    lavaLamp: "nebula",
     slug: "blurbs-composer-markdown-tables-paste-cleanup",
     internalHref: newsroomPath("blurbs-composer-markdown-tables-paste-cleanup"),
   },
@@ -184,6 +207,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 1,
     cardGradient: "linear-gradient(135deg, #020617 0%, #1e293b 55%, #0f172a 100%)",
     cardImage: "/journal-art/news-sunburst.png",
+    lavaLamp: "sunrise",
     slug: "open-office-hours-identity-claim-flow",
     internalHref: newsroomPath("open-office-hours-identity-claim-flow"),
   },
@@ -197,6 +221,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 2,
     cardGradient: "linear-gradient(145deg, #020617 0%, #422006 35%, #1c1917 100%)",
     cardImage: "/journal-art/news-blue-berries.png",
+    lavaLamp: "electric",
     slug: "hiring-design-systems-realtime-infra",
     internalHref: newsroomPath("hiring-design-systems-realtime-infra"),
   },
@@ -210,6 +235,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     readMinutes: 7,
     cardGradient: "linear-gradient(135deg, #020617 0%, #172554 50%, #0c4a6e 100%)",
     cardImage: "/journal-art/news-blue-lens.png",
+    lavaLamp: "void",
     slug: "pod-encryption-at-rest-what-changed",
     internalHref: newsroomPath("pod-encryption-at-rest-what-changed"),
   },

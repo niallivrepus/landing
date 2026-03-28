@@ -18,17 +18,29 @@ export type PrivacySection = {
 
 export type PrivacyDocMeta = {
   key: PrivacyDocKey;
-  cardTitle: string;
-  selectTitle: string;
-  documentH1: string;
-  breadcrumbLabel: string;
+  title: string;
+  summary: string;
   intro: string;
   introContinued?: string[];
+  documentTitle?: string;
   documentSubtitle?: string;
+  breadcrumbLabel?: string;
   resourceLinks?: PrivacyResourceLink[];
   counselNote?: string;
   sections: PrivacySection[];
 };
+
+export function getPrivacyDocTitle(meta: PrivacyDocMeta) {
+  return meta.title;
+}
+
+export function getPrivacyDocumentTitle(meta: PrivacyDocMeta) {
+  return meta.documentTitle ?? meta.title;
+}
+
+export function getPrivacyBreadcrumbLabel(meta: PrivacyDocMeta) {
+  return meta.breadcrumbLabel ?? meta.title;
+}
 
 /** Long-form customer policy — structure aligned with common global privacy pages (e.g. apple.com/legal/privacy/en-ww); Jokuh-specific wording. */
 const CUSTOMER_SECTIONS: PrivacySection[] = [
@@ -162,10 +174,9 @@ const CUSTOMER_SECTIONS: PrivacySection[] = [
 export const PRIVACY_DOCS: Record<PrivacyDocKey, PrivacyDocMeta> = {
   customer: {
     key: "customer",
-    cardTitle: "Jokuh Customer Privacy Policy",
-    selectTitle: "Jokuh Customer Privacy Policy",
-    documentH1: "Jokuh Privacy Policy",
-    breadcrumbLabel: "Customer Privacy",
+    title: "Customer Privacy",
+    summary: "How Jokuh collects, uses, stores, and protects personal data across our products and services.",
+    documentTitle: "Privacy Policy",
     documentSubtitle: "Updated March 26, 2026",
     intro:
       "Jokuh’s Privacy Policy describes how Jokuh collects, uses, and shares your personal data when you use our products and services.",
@@ -185,10 +196,8 @@ export const PRIVACY_DOCS: Record<PrivacyDocKey, PrivacyDocMeta> = {
   },
   "data-products": {
     key: "data-products",
-    cardTitle: "Data & privacy in products",
-    selectTitle: "Data & privacy in products",
-    documentH1: "Data & Privacy in Jokuh Products",
-    breadcrumbLabel: "Data in products",
+    title: "Product Privacy",
+    summary: "Feature-level disclosures for Pods, Spine, Vortex, analytics, diagnostics, and connected services.",
     intro:
       "This disclosure summarizes categories of data processed by Jokuh software and connected services, and how in-product controls relate to our customer privacy policy.",
     sections: [
@@ -224,10 +233,8 @@ export const PRIVACY_DOCS: Record<PrivacyDocKey, PrivacyDocMeta> = {
   },
   governance: {
     key: "governance",
-    cardTitle: "Privacy governance",
-    selectTitle: "Privacy governance",
-    documentH1: "Jokuh Privacy Governance",
-    breadcrumbLabel: "Governance",
+    title: "Privacy Governance",
+    summary: "Program accountability, vendor review, training, and incident handling across privacy operations.",
     intro:
       "How Jokuh operationalizes privacy by design, vendor risk, and accountability across engineering, security, and legal.",
     sections: [
@@ -259,10 +266,8 @@ export const PRIVACY_DOCS: Record<PrivacyDocKey, PrivacyDocMeta> = {
   },
   "gov-requests": {
     key: "gov-requests",
-    cardTitle: "Government information requests",
-    selectTitle: "Government information requests",
-    documentH1: "Government & Civil Information Requests",
-    breadcrumbLabel: "Gov. requests",
+    title: "Information Requests",
+    summary: "How Jokuh reviews, narrows, and reports legal, civil, and emergency requests for user data.",
     intro:
       "Transparency principles for law enforcement, national security, and civil requests relating to Jokuh user data.",
     sections: [
@@ -294,10 +299,26 @@ export const PRIVACY_DOCS: Record<PrivacyDocKey, PrivacyDocMeta> = {
   },
 };
 
-export const PRIVACY_TOPIC_ROWS: { key: PrivacyDocKey | "account"; title: string; to: string }[] = [
-  { key: "customer", title: "Jokuh Customer Privacy Policy", to: "/legal/privacy/customer" },
-  { key: "data-products", title: "Data & privacy in products", to: "/legal/privacy/data-products" },
-  { key: "governance", title: "Privacy governance", to: "/legal/privacy/governance" },
-  { key: "gov-requests", title: "Government information requests", to: "/legal/privacy/gov-requests" },
-  { key: "account", title: "Manage your account", to: "/#start" },
+export const PRIVACY_TOPIC_ROWS: {
+  key: PrivacyDocKey | "account";
+  title: string;
+  description?: string;
+  to: string;
+}[] = [
+  ...PRIVACY_DOC_KEYS.map((key) => {
+    const meta = PRIVACY_DOCS[key];
+
+    return {
+      key,
+      title: meta.title,
+      description: meta.summary,
+      to: `/legal/privacy/${key}`,
+    };
+  }),
+  {
+    key: "account",
+    title: "Manage your account",
+    description: "Open your Jokuh account controls, permissions, and support entry points.",
+    to: "/#start",
+  },
 ];

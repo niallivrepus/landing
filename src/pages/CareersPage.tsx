@@ -9,6 +9,7 @@ import {
   CAREERS_RESOURCES,
   CAREERS_VALUES,
 } from "../data/careers";
+import { FaqSection } from "../components/FaqSection";
 import { SecondaryLink } from "../components/SecondaryLink";
 import {
   CompanyPageClosingCta,
@@ -50,7 +51,7 @@ export default function CareersPage() {
     <CompanyPageLayout>
       <>
       <section className={cn(COMPANY_PAGE_SHELL, "pt-28 pb-12 md:pt-32 md:pb-16")}>
-        <CompanyPageHero eyebrow="Company" title="Build trustworthy speech infrastructure">
+        <CompanyPageHero eyebrow="Company" title="Build speech systems">
           <MarketingProseLead className="mt-8">
             We’re looking for curious minds from engineering, design, research, and operations—people who care
             about latency, consent, and the record people rely on.
@@ -68,9 +69,7 @@ export default function CareersPage() {
 
       <div className="border-t border-light-space/[0.06] bg-light-space/[0.02] py-16 md:py-20">
         <div className={COMPANY_PAGE_SHELL}>
-          <h2 className="font-sans text-lg font-semibold leading-snug tracking-tight text-light-space md:text-xl">
-            Speech systems must be built with respect for how people live, work, and remember.
-          </h2>
+          <h2 className="font-sans text-lg font-semibold leading-snug tracking-tight text-light-space md:text-xl">Build for real lives.</h2>
           <p className={cn(proseBodyMutedClass, "mt-4 max-w-[720px]")}>
             <span className="text-light-space/65">Values: </span>
             These shape what we optimize for when tradeoffs appear. We believe aligning to them is the most
@@ -126,7 +125,7 @@ export default function CareersPage() {
 
       <section
         id="open-roles"
-        className="border-t border-light-space/[0.08] bg-gradient-to-b from-purple-5/[0.06] via-transparent to-transparent py-16 md:py-24"
+        className="border-t border-light-space/[0.08] bg-dark-space py-16 md:py-24"
       >
         <div className={COMPANY_PAGE_SHELL}>
           <MarketingSectionHeading className="!mt-0 md:text-3xl">
@@ -146,7 +145,7 @@ export default function CareersPage() {
             {CAREERS_FEATURED_PROGRAMS.map((card) => (
               <article
                 key={card.title}
-                className="rounded-2xl border border-light-space/[0.1] bg-dark-space/40 p-6 md:p-8"
+                className="rounded-2xl border border-light-space/[0.1] bg-white/[0.02] p-6 md:p-8"
               >
                 <h3 className="font-sans text-lg font-semibold text-light-space">{card.title}</h3>
                 <p className={cn(proseBodyMutedClass, "mt-3 max-w-none text-[15px] leading-relaxed")}>{card.body}</p>
@@ -157,7 +156,7 @@ export default function CareersPage() {
             ))}
           </div>
 
-          <figure className="mt-16 rounded-2xl border border-light-space/[0.08] bg-light-space/[0.03] p-8 md:p-10">
+          <figure className="mt-16 rounded-2xl border border-light-space/[0.08] bg-white/[0.02] p-8 md:p-10">
             <blockquote className="font-sans text-[18px] font-medium leading-snug tracking-tight text-light-space/90 md:text-[20px]">
               “The team treats the transcript as infrastructure, not a feature checkbox—and that shows up in how
               we think about consent, retention, and what ‘good’ actually means for customers.”
@@ -184,6 +183,33 @@ export default function CareersPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className={cn(COMPANY_PAGE_SHELL, "py-20 md:py-28")}>
+        <FaqSection
+          items={[
+            {
+              question: "How do I apply?",
+              answer: "Browse our open roles and submit your application through the listed email. Include your resume and a brief note about what draws you to Jokuh.",
+            },
+            {
+              question: "What is the interview process like?",
+              answer: "Our process typically includes an introductory call, a technical or portfolio review, a team conversation, and a values alignment discussion. We aim to be respectful of your time.",
+            },
+            {
+              question: "Do you offer remote positions?",
+              answer: "Yes. Jokuh is distributed by default. Most roles are fully remote, though some may involve occasional in-person collaboration.",
+            },
+            {
+              question: "What benefits do you offer?",
+              answer: "We offer competitive compensation, equity, health coverage, generous PTO, learning budgets, and home office support. Details vary by role and region.",
+            },
+            {
+              question: "I don't see a role that fits me. Can I still apply?",
+              answer: "Absolutely. Send a general application to careers@jokuh.com. We're always interested in people who are passionate about speech infrastructure and identity systems.",
+            },
+          ]}
+        />
       </section>
 
       <CompanyPageClosingCta

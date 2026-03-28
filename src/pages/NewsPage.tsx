@@ -21,6 +21,7 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 type SortOrder = "newest" | "oldest";
 type ViewMode = "grid" | "list";
+const NEWSROOM_LAZY_BATCH = 9;
 
 function GridViewIcon({ active }: { active: boolean }) {
   return (
@@ -111,6 +112,7 @@ function JournalGridCard({ item, featured = false }: { item: NewsItem; featured?
           <NewsCardArt
             gradient={item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT}
             image={item.cardImage}
+            lavaLamp={item.lavaLamp}
             className={EDITORIAL_MEDIA_RADIUS_CLASS}
           />
         </div>
@@ -135,6 +137,34 @@ function JournalGridCard({ item, featured = false }: { item: NewsItem; featured?
   );
 }
 
+function JournalCompactCard({ item }: { item: NewsItem }) {
+  return (
+    <article className="group flex h-full flex-col">
+      <SiteLink href={newsHref(item)} className="flex h-full flex-col no-underline">
+        <div
+          className={cn(
+            "aspect-square overflow-hidden border border-light-space/[0.08] bg-white/[0.03]",
+            EDITORIAL_MEDIA_RADIUS_CLASS,
+          )}
+        >
+          <NewsCardArt
+            gradient={item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT}
+            image={item.cardImage}
+            lavaLamp={item.lavaLamp}
+            className={EDITORIAL_MEDIA_RADIUS_CLASS}
+          />
+        </div>
+        <div className="flex flex-1 flex-col gap-3 pt-4">
+          <JournalMeta item={item} />
+          <h2 className="font-sans text-[1.2rem] font-semibold leading-[1.08] tracking-[-0.03em] text-light-space transition-colors group-hover:text-light-space/82">
+            {item.title}
+          </h2>
+        </div>
+      </SiteLink>
+    </article>
+  );
+}
+
 function JournalListItem({ item }: { item: NewsItem }) {
   return (
     <article className="grid gap-5 border-t border-light-space/[0.08] py-6 first:border-t-0 first:pt-0 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 lg:py-8">
@@ -143,6 +173,7 @@ function JournalListItem({ item }: { item: NewsItem }) {
           <NewsCardArt
             gradient={item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT}
             image={item.cardImage}
+            lavaLamp={item.lavaLamp}
             className={EDITORIAL_MEDIA_RADIUS_CLASS}
           />
         </div>
@@ -163,17 +194,98 @@ function JournalListItem({ item }: { item: NewsItem }) {
   );
 }
 
-function JournalGrid({ items }: { items: NewsItem[] }) {
+function JournalFeedGrid({ items }: { items: NewsItem[] }) {
   if (items.length === 0) return null;
 
+  const featured = items[0];
+  const support = items.slice(1, 4);
+  const remainder = items.slice(4);
+
+  function FeedWall({
+    wallItems,
+    title,
+  }: {
+    wallItems: NewsItem[];
+    title?: string;
+  }) {
+    const [visibleCount, setVisibleCount] = useState(NEWSROOM_LAZY_BATCH);
+    const hasMore = visibleCount < wallItems.length;
+    const visibleItems = wallItems.slice(0, visibleCount);
+
+    useEffect(() => {
+      setVisibleCount(NEWSROOM_LAZY_BATCH);
+    }, [wallItems]);
+
+    if (wallItems.length === 0) return null;
+
+    return (
+      <div className="mt-12 border-t border-light-space/10 pt-10 md:mt-16 md:pt-12">
+        {title ? (
+          <h3 className="mb-8 font-sans text-lg font-semibold tracking-tight text-light-space">{title}</h3>
+        ) : null}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
+          {visibleItems.map((item) => (
+            <JournalCompactCard key={item.id} item={item} />
+          ))}
+        </div>
+        {hasMore ? (
+          <div className="mt-8 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((count) => Math.min(count + NEWSROOM_LAZY_BATCH, wallItems.length))}
+              className="inline-flex h-11 items-center rounded-full border border-light-space/[0.12] bg-white/[0.03] px-5 font-sans text-[13px] font-semibold text-light-space transition-colors hover:bg-white/[0.06]"
+            >
+              Load more
+            </button>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
-    <ul className="grid grid-cols-1 gap-x-6 gap-y-10 lg:grid-cols-2 lg:gap-y-11 xl:grid-cols-3 xl:gap-y-12">
-      {items.map((item, index) => (
-        <li key={item.id} className={cn(index === 0 && "lg:col-span-2")}>
-          <JournalGridCard item={item} featured={index === 0} />
-        </li>
-      ))}
-    </ul>
+    <div>
+      {featured ? (
+        <div className="space-y-6 md:space-y-8 lg:space-y-0">
+          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6 xl:gap-8">
+            <div className="min-w-0">
+              <div className="lg:sticky lg:top-16">
+                <JournalGridCard item={featured} featured />
+              </div>
+            </div>
+
+            {support.length > 0 ? (
+              <div className="mt-6 hidden flex-col gap-4 self-start lg:mt-0 lg:flex lg:w-[320px] lg:gap-4">
+                {support.map((item) => (
+                  <JournalCompactCard key={`desktop-${item.id}`} item={item} />
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          {support.length > 0 ? (
+            <div
+              className={cn(
+                "mt-6 flex gap-4 overflow-x-auto overscroll-x-contain lg:hidden",
+                "snap-x snap-mandatory scroll-pl-0 scroll-pr-0 pb-2",
+                "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+              )}
+            >
+              {support.map((item) => (
+                <div
+                  key={`carousel-${item.id}`}
+                  className="w-[72vw] max-w-[280px] shrink-0 snap-start sm:w-[52vw] sm:max-w-[300px] md:w-[38vw] md:max-w-[320px]"
+                >
+                  <JournalCompactCard item={item} />
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      <FeedWall wallItems={remainder} title="Recent news" />
+    </div>
   );
 }
 
@@ -533,7 +645,7 @@ export function NewsPage() {
             <p className="text-[15px] text-light-space/52">No newsroom articles match your current filters.</p>
           </div>
         ) : viewMode === "grid" ? (
-          <JournalGrid items={filtered} />
+          <JournalFeedGrid items={filtered} />
         ) : (
           <JournalList items={filtered} />
         )}

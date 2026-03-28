@@ -1,4 +1,20 @@
 export { MarketingPageFrame } from "./MarketingPageFrame";
+export {
+  TertiaryPageChrome,
+  TertiaryBreadcrumb,
+  TERTIARY_PAGE_SHELL,
+  TERTIARY_READING_MEASURE,
+  type TertiaryBreadcrumbItem,
+} from "./TertiaryPageChrome";
+export { TertiaryPageHero, type TertiaryPageHeroProps } from "./TertiaryPageHero";
+export {
+  TertiaryHubBody,
+  TertiarySection,
+  TertiaryQuickLinksGrid,
+  TertiaryClosingCta,
+  type TertiaryQuickLink,
+} from "./TertiaryHubBody";
+export { TertiaryDocBody, type TertiaryDocSection } from "./TertiaryDocBody";
 export { EDITORIAL_MEDIA_RADIUS_CLASS } from "./editorialMedia";
 export {
   CONTENT_SHELL_COMPANY,
@@ -11,6 +27,40 @@ export {
 } from "./shells";
 export { SimplePageMain } from "./SimplePageMain";
 export {
+  // ── New kit ──
+  Display,
+  Title1,
+  Title2,
+  Title3,
+  Heading,
+  Subheading,
+  BodyLarge,
+  Body,
+  BodySmall,
+  Label,
+  Eyebrow,
+  MonoEyebrow,
+  Mono,
+  MonoSmall,
+  Caption,
+  // ── Class strings ──
+  displayClass,
+  title1Class,
+  title2Class,
+  title3Class,
+  headingClass,
+  subheadingClass,
+  bodyLgClass,
+  bodyClass,
+  bodySmClass,
+  labelClass,
+  eyebrowClass,
+  monoEyebrowClass,
+  monoClass,
+  monoSmClass,
+  captionClass,
+  proseBodyMutedClass,
+  // ── Backward-compatible (deprecated) ──
   MarketingDisplayTitle,
   MarketingEyebrow,
   MarketingProseLead,
@@ -19,8 +69,8 @@ export {
   MarketingSectionLabel,
   MarketingSimplePageTitle,
   MarketingStubDescription,
-  proseBodyMutedClass,
 } from "./typography";
+export { ArticleMetaRow } from "./ArticleMetaRow";
 export { MarketingPageSection, SectionHeaderRow } from "./sections";
 export { SimpleMarketingPageTemplate } from "./templates/SimpleMarketingPageTemplate";
 export {

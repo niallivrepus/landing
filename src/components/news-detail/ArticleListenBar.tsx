@@ -77,19 +77,19 @@ export function ArticleListenBar({ speechText, durationLabel, shareTitle }: Prop
             aria-pressed={playing}
           >
             <span className="flex size-10 items-center justify-center rounded-full border border-light-space/20 bg-white/5 light:border-black/12 light:bg-black/[0.04]">
-              {playing ? <Pause className="size-4 text-light-space" aria-hidden /> : <Play className="ml-0.5 size-4 text-light-space" aria-hidden />}
+              {playing ? <Pause className="size-4 text-light-space light:text-zinc-900" aria-hidden /> : <Play className="ml-0.5 size-4 text-light-space light:text-zinc-900" aria-hidden />}
             </span>
-            <span className="text-light-space/85">{playing ? "Stop" : "Listen to article"}</span>
-            <span className="tabular-nums text-light-space/45">{durationLabel}</span>
+            <span className="text-light-space/85 light:text-zinc-900">{playing ? "Stop" : "Listen to article"}</span>
+            <span className="tabular-nums text-light-space/45 light:text-zinc-500">{durationLabel}</span>
           </button>
         ) : (
-          <p className="font-sans text-sm text-light-space/45">Listening isn&apos;t supported in this browser.</p>
+          <p className="font-sans text-sm text-light-space/45 light:text-zinc-500">Listening isn&apos;t supported in this browser.</p>
         )}
       </div>
       <button
         type="button"
         onClick={share}
-        className="inline-flex items-center gap-2 self-start font-sans text-sm text-light-space/80 transition-colors hover:text-light-space sm:self-auto"
+        className="inline-flex items-center gap-2 self-start font-sans text-sm text-light-space/80 transition-colors hover:text-light-space light:text-zinc-700 light:hover:text-zinc-950 sm:self-auto"
       >
         <Link2 className="size-4 opacity-70" aria-hidden />
         {copied ? "Link copied" : "Share"}

@@ -7,7 +7,7 @@ Marketing and product surface for **[Jokuh](https://github.com/niallivrepus)** �
 ## Highlights
 
 - **Design system** — Built on [`@jokuh/gooey`](https://github.com/niallivrepus) (Radix-style primitives, Tailwind v4, dark-first theming).
-- **Production build** — `pnpm build` ships a **minimal mask splash** (static hero asset + tiny bundle). Full navigation and pages load in **development only** (`pnpm dev`).
+- **Production build** — `pnpm build` keeps the current default production entry, which is selected in `src/main.tsx`. Use `pnpm build:landing` to force the full landing site build, or `pnpm build:mask` to make the current mask-target explicit.
 - **News** — Medium posts are baked from RSS into `src/data/medium-feed.json` via a small Node script; GitHub Actions can refresh that file on a schedule.
 - **Fast iteration** — TypeScript, React 19, React Router 7, Motion, Lottie where it matters.
 
@@ -39,6 +39,10 @@ Marketing and product surface for **[Jokuh](https://github.com/niallivrepus)** �
 ```
 
 Clone this repo **next to** the `gooey` monorepo so that path resolves, **or** change the dependency to a published tarball/Git tag once `gooey` is published.
+
+For local development, `landing` resolves Gooey directly from the sibling source tree instead of treating the copied `node_modules/@jokuh/gooey` folder as the effective source of truth. The package dependency remains in place for dependency installation, but the runtime/editor boundary points at `../gooey/packages/gooey/src`.
+
+See [docs/gooey-ingestion.md](/Users/sonadin/Documents/code/jokuh/landing/docs/gooey-ingestion.md) for the repo contract.
 
 Suggested layout:
 
@@ -76,8 +80,11 @@ Preview uses the same port settings as dev.
 | Command            | Description |
 | ------------------ | ----------- |
 | `pnpm dev`         | Start Vite dev server with the **full** site (all routes, Gooey theme). |
-| `pnpm build`       | Production build: **mask-only** entry + lean CSS; output in `dist/`. |
+| `pnpm build`       | Production build using the default entry in `src/main.tsx`; output in `dist/`. |
+| `pnpm build:mask`  | Explicit alias for the default production build entry. |
+| `pnpm build:landing` | Full landing-site production build with `VITE_SITE_ENTRY=landing`. |
 | `pnpm preview`     | Serve `dist/` for smoke tests. |
+| `pnpm typecheck`   | Run the repo TypeScript check with `tsc --noEmit`. |
 | `pnpm sync:medium` | Fetch Medium RSS and write `src/data/medium-feed.json`. |
 
 ---
@@ -152,7 +159,7 @@ If the feed changes, the workflow commits updates to `src/data/medium-feed.json`
 
 ## Contributing
 
-Issues and PRs are welcome. Please run `pnpm build` before opening a change that touches entry points or styles, so the production mask view stays intact.
+Issues and PRs are welcome. Before opening a change that touches entry points or styles, run `pnpm build`, `pnpm build:landing`, and `pnpm typecheck` so both production entry paths and the TypeScript boundary are exercised.
 
 ---
 

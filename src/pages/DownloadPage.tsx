@@ -1,4 +1,5 @@
 import { OO, cn } from "@jokuh/gooey";
+import { FaqSection } from "../components/FaqSection";
 import { MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_COMPANY } from "../components/system/shells";
 import { SecondaryLink } from "../components/SecondaryLink";
@@ -100,19 +101,19 @@ function GooglePlayGlyph({ className }: { className?: string }) {
 function MobileAppSection() {
   return (
     <section
-      className="bg-smoke-2 px-4 py-20 text-light-space md:px-8 md:py-28"
+      className="bg-smoke-2 px-4 py-20 text-light-space md:px-8 md:py-28 light:bg-[#f4effc] light:text-[#402060]"
       aria-labelledby="mobile-download-heading"
     >
       <div className="mx-auto flex max-w-[920px] flex-col items-center text-center">
-        <HandPhoneIcon className="mb-10 text-light-space md:mb-12" />
+        <HandPhoneIcon className="mb-10 text-light-space md:mb-12 light:text-[#5a3d8a]" />
 
         <h2
           id="mobile-download-heading"
-          className="max-w-xl font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-light-space md:text-[2.25rem]"
+          className="max-w-xl font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-light-space md:text-[2.25rem] light:text-[#402060]"
         >
           Take Jokuh on the go
         </h2>
-        <p className="mt-5 max-w-md font-sans text-[15px] leading-relaxed text-light-space/55 md:text-base">
+        <p className="mt-5 max-w-md font-sans text-[15px] leading-relaxed text-light-space/55 md:text-base light:text-[#5a4580]/80">
           Start a thought here, finish anywhere. Jokuh remembers across your phone, desktop, and the
           web.
         </p>
@@ -122,7 +123,7 @@ function MobileAppSection() {
             <FakeQr seed={0x9e3779b9} className="aspect-square w-[min(72vw,200px)]" />
             <a
               href="#"
-              className="mt-8 inline-flex items-center gap-2 rounded-full border border-light-space/35 px-5 py-2.5 font-sans text-sm font-medium text-light-space transition-colors hover:border-light-space/55 hover:bg-white/[0.04] light:border-black/20 light:hover:bg-black/[0.04]"
+              className="mt-8 inline-flex items-center gap-2 rounded-full border border-light-space/35 px-5 py-2.5 font-sans text-sm font-medium text-light-space transition-colors hover:border-light-space/55 hover:bg-white/[0.04] light:border-black/20 light:text-zinc-900 light:hover:bg-black/[0.04]"
             >
               <AppleGlyph className="shrink-0" />
               Apple
@@ -133,7 +134,7 @@ function MobileAppSection() {
             <FakeQr seed={0x6c078965} className="aspect-square w-[min(72vw,200px)]" />
             <a
               href="#"
-              className="mt-8 inline-flex items-center gap-2 rounded-full border border-light-space/35 px-5 py-2.5 font-sans text-sm font-medium text-light-space transition-colors hover:border-light-space/55 hover:bg-white/[0.04] light:border-black/20 light:hover:bg-black/[0.04]"
+              className="mt-8 inline-flex items-center gap-2 rounded-full border border-light-space/35 px-5 py-2.5 font-sans text-sm font-medium text-light-space transition-colors hover:border-light-space/55 hover:bg-white/[0.04] light:border-black/20 light:text-zinc-900 light:hover:bg-black/[0.04]"
             >
               <GooglePlayGlyph className="shrink-0" />
               Google Play
@@ -149,7 +150,7 @@ export function DownloadPage() {
   useDocumentTitle("Download — Jokuh");
 
   return (
-    <MarketingPageFrame footer={null} className="bg-[#f4effc] text-[#402060]" withFontSans>
+    <MarketingPageFrame footer={null} className="bg-[#07070b] text-light-space light:bg-[#f4effc] light:text-[#402060]" withFontSans>
       <div
         className={cn(
           CONTENT_SHELL_COMPANY,
@@ -164,26 +165,66 @@ export function DownloadPage() {
                 className="inline-flex shrink-0 -rotate-6 items-center justify-center"
                 aria-hidden
               >
-                <OO
-                  style={{ width: 46, height: 46 }}
-                  backgroundColor="#e5daf8"
-                  borderColor="rgba(64, 32, 96, 0.14)"
-                  bodyGradientStart="#c9b8ee"
-                  bodyGradientEnd="#ddd0f7"
-                  bodyStrokeColor="#a88fd8"
-                  eyeColor="#FFFFFF"
-                />
+                <span className="inline-flex light:hidden">
+                  <OO
+                    style={{ width: 46, height: 46 }}
+                    backgroundColor="#12131d"
+                    borderColor="rgba(228, 230, 255, 0.18)"
+                    bodyGradientStart="#525a95"
+                    bodyGradientEnd="#7a88d0"
+                    bodyStrokeColor="#a2b1ff"
+                    eyeColor="#FFFFFF"
+                  />
+                </span>
+                <span className="hidden light:inline-flex">
+                  <OO
+                    style={{ width: 46, height: 46 }}
+                    backgroundColor="#e5daf8"
+                    borderColor="rgba(64, 32, 96, 0.14)"
+                    bodyGradientStart="#c9b8ee"
+                    bodyGradientEnd="#ddd0f7"
+                    bodyStrokeColor="#a88fd8"
+                    eyeColor="#FFFFFF"
+                  />
+                </span>
               </span>
               <span className="sr-only">Jokuh </span>
               <span className="text-2xl md:text-3xl">desktop</span>
             </span>
           </h1>
-          <SecondaryLink href="#" className="mt-10 text-[15px]">
+          <SecondaryLink href="#" className="mt-10 text-[15px] text-light-space/75 hover:text-light-space light:text-[#53357d] light:hover:text-[#402060]">
             System requirements & coverage
           </SecondaryLink>
       </div>
 
       <MobileAppSection />
+
+      <div className="mx-auto max-w-[980px] px-4 py-20 md:px-8 md:py-28">
+        <FaqSection
+          items={[
+            {
+              question: "What are the system requirements?",
+              answer: "Jokuh desktop runs on macOS 13+, Windows 10+, and Ubuntu 22.04+. The mobile app requires iOS 16+ or Android 12+.",
+            },
+            {
+              question: "Is Jokuh free to download?",
+              answer: "Yes, the desktop and mobile apps are free to download. Some features may require a subscription once the platform reaches general availability.",
+            },
+            {
+              question: "How do I update the app?",
+              answer: "Jokuh updates automatically in the background. You can also check for updates manually from the app settings.",
+            },
+            {
+              question: "Can I use Jokuh offline?",
+              answer: "Core features are available offline. Your data syncs automatically when you reconnect to the internet.",
+            },
+            {
+              question: "Where is my data stored?",
+              answer: "Data is encrypted and stored securely in the cloud. Local caches on your device are also encrypted at rest.",
+            },
+          ]}
+        />
+      </div>
     </MarketingPageFrame>
   );
 }

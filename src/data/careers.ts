@@ -82,12 +82,11 @@ export const CAREERS_FEATURED_PROGRAMS = [
 export const CAREERS_RESOURCES = [
   { label: "Legal & policies", href: "/legal", tag: "Company" },
   { label: "Ethics & compliance", href: "/ethics", tag: "Trust" },
-  { label: "Research", href: "/research", tag: "Company" },
   { label: "Developer docs", href: "/developers/docs", tag: "Build" },
 ] as const;
 
 export const CAREERS_CLOSING_CTA = {
-  headline: "Shape how live speech becomes structured memory",
+  headline: "Shape speech memory",
   buttonLabel: "View open roles",
   buttonHref: "mailto:careers@jokuh.com?subject=Open%20roles",
 } as const;

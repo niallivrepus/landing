@@ -60,8 +60,6 @@ export function NewsDetailPage() {
   if (doc.kind === "brief") {
     return (
       <EditorialArticleTemplate
-        backHref="/newsroom"
-        backLabel="Newsroom"
         metaLine={doc.metaLine}
         title={doc.title}
         subtitle={doc.subtitle}
@@ -92,7 +90,7 @@ export function NewsDetailPage() {
         </EditorialArticleProseSection>
 
         <EditorialArticleShellSection>
-          <EndorsementSeal articleMeasure className="pb-4 md:pb-6" />
+          <EndorsementSeal className="pb-4 md:pb-6" />
         </EditorialArticleShellSection>
       </EditorialArticleTemplate>
     );
@@ -102,8 +100,6 @@ export function NewsDetailPage() {
 
   return (
     <EditorialArticleTemplate
-      backHref="/newsroom"
-      backLabel="Newsroom"
       metaLine={doc.metaLine}
       title={doc.title}
       subtitle={doc.subtitle}

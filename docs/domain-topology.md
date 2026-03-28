@@ -10,6 +10,82 @@ This document distinguishes between:
 - sibling Jokuh subdomains that the landing site links out to
 - standalone brand properties that may later run in their own environments
 
+## Today Target State
+
+This section is the current decision record for what Jokuh wants today.
+
+### Active public host model for today
+
+Treat the ecosystem as having these primary public surfaces:
+
+- `jokuh.com` or canonical `www.jokuh.com` -> main marketing, product story, company, legal, editorial, and lightweight support
+- `developers.jokuh.com` -> developer workspace and docs
+- `status.jokuh.com` -> status, incidents, uptime, maintenance, trust communication
+- `v1llains.com` -> standalone V1llains property
+- `TBD.v1llains.com` -> dedicated V1llains purchase environment for avatar buying / checkout
+
+### Status logic for today
+
+Status should be handled as a dedicated sibling environment, not as a normal marketing page.
+
+Current desired behavior:
+
+- `status.jokuh.com` is the canonical public status destination
+- this status host is expected to be incident-driven and suitable for an incident.io-backed implementation
+- the main Jokuh marketing site should link users into the status host instead of pretending status is just another normal page
+- `/system-status` exists as the bridge / fallback route on the marketing site
+- if the status host is configured, the marketing route should redirect or hand off to `status.jokuh.com`
+- if the status host is not configured yet, `/system-status` can remain the temporary fallback inside the main site
+
+Communication rule:
+
+- use the main Jokuh host to tell the product story
+- use the status host to communicate operational truth
+
+### Subdomain logic for today
+
+Use subdomains only when the user is entering a different mode.
+
+For today, the approved split-outs are:
+
+- `developers.jokuh.com` because builder workflows are different from brand storytelling
+- `status.jokuh.com` because incident and reliability communication is different from marketing
+
+For today, keep these centralized on the main Jokuh host:
+
+- product storytelling
+- journal and stories
+- company pages
+- legal and privacy
+- lightweight support entry
+- temporary ecosystem teaser pages
+
+### V1llains logic for today
+
+Treat V1llains as more than a subsection of Jokuh.
+
+Current desired state:
+
+- `v1llains.com` should exist as its own property
+- the Jokuh site can keep `/ecosystem/v1llains` as a bridge, teaser, or discovery route
+- avatar purchase should happen on a dedicated V1llains-controlled subdomain, not on the main Jokuh marketing host
+- the exact purchase hostname is still open, but it should be planned as a first-class commerce environment under `v1llains.com`
+
+### Things acknowledged, but not required today
+
+These are valid future host classes, but they are not mandatory to launch today:
+
+- `account.jokuh.com` or `app.jokuh.com`
+- `help.jokuh.com`
+- `community.jokuh.com`
+- `changelog.jokuh.com`
+- `beta.jokuh.com`
+
+Interpretation:
+
+- keep them in the architecture vocabulary
+- do not create them until the product depth justifies them
+
 ## Current Jokuh Public Surface
 
 ### Primary marketing host

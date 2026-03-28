@@ -12,6 +12,7 @@ export function MarketingPageFrame({
   className,
   mainClassName,
   mainProps,
+  theme = "dark",
   footer = <MegaFooter />,
   topBar = <SiteTopBar />,
   withAntialiased = false,
@@ -25,6 +26,7 @@ export function MarketingPageFrame({
   className?: string;
   mainClassName?: string;
   mainProps?: ComponentPropsWithoutRef<"main">;
+  theme?: "dark" | "light";
   footer?: ReactNode;
   topBar?: ReactNode;
   withAntialiased?: boolean;
@@ -42,8 +44,9 @@ export function MarketingPageFrame({
 
   return (
     <div
+      data-theme={theme}
       className={cn(
-        MARKETING_ROOT_CLASS,
+        theme === "light" ? "light min-h-screen bg-white text-zinc-950" : MARKETING_ROOT_CLASS,
         withFontSans && "font-sans",
         withAntialiased && "antialiased",
         className,

@@ -32,7 +32,7 @@ export function NewsFeatureDetailSection({ doc, durationLabel }: Props) {
         {doc.introParagraphs.map((p) => (
           <RichParagraph
             key={p.slice(0, 40)}
-            className="news-detail-reading text-[1.0625rem] leading-[1.72] text-light-space/82 md:text-lg md:leading-[1.68]"
+            className="news-detail-reading text-[1.0625rem] leading-[1.72] text-light-space/82 light:text-zinc-700 md:text-lg md:leading-[1.68]"
           >
             {p}
           </RichParagraph>
@@ -53,7 +53,7 @@ export function NewsFeatureDetailSection({ doc, durationLabel }: Props) {
         {doc.knowledgeWork.paragraphs.map((p) => (
           <RichParagraph
             key={p.slice(0, 40)}
-            className="news-detail-reading text-[1.0625rem] leading-[1.72] text-light-space/82 md:text-lg md:leading-[1.68]"
+            className="news-detail-reading text-[1.0625rem] leading-[1.72] text-light-space/82 light:text-zinc-700 md:text-lg md:leading-[1.68]"
           >
             {p}
           </RichParagraph>
@@ -67,7 +67,7 @@ export function NewsFeatureDetailSection({ doc, durationLabel }: Props) {
       </EditorialArticleMeasure>
 
       <EditorialArticleShellSection>
-        <EndorsementSeal articleMeasure className="pb-4 md:pb-6" />
+        <EndorsementSeal className="pb-4 md:pb-6" />
       </EditorialArticleShellSection>
 
       <EditorialArticleMeasure className="py-20 md:py-28">

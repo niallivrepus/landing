@@ -3,6 +3,7 @@
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "baseUrl": ".",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -10,10 +11,20 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "paths": {
+      "@jokuh/gooey": ["src/types/jokuh-gooey.d.ts"]
+    },
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "vite.config.ts",
+    "site-search-middleware.ts",
+    "contact-sales-middleware.ts",
+    "playwright.config.ts"
+  ],
+  "exclude": ["tests", "dist", "playwright-report", "node_modules"]
 }

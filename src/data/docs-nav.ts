@@ -7,6 +7,7 @@ export const DOCS_NAV_SECTIONS: { heading: string; items: DocsNavItem[] }[] = [
     heading: "Get started",
     items: [
       { label: "Overview", to: "/developers/docs" },
+      { label: "Models", to: "/developers/docs/models" },
       { label: "Quickstart", to: "/developers/docs/quickstart" },
       { label: "Cookbook", to: "/developers/docs/cookbook" },
     ],
@@ -16,7 +17,6 @@ export const DOCS_NAV_SECTIONS: { heading: string; items: DocsNavItem[] }[] = [
     items: [
       { label: "Latest & digests", to: "/developers/learn" },
       { label: "Developer blog", to: "/developers/blog" },
-      { label: "Apps platform", to: "/developers/apps" },
     ],
   },
   {

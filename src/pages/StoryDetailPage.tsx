@@ -1,6 +1,6 @@
 import { cn } from "@jokuh/gooey";
 import { CookieBanner } from "../components/CookieBanner";
-import { EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
+import { ArticleMetaRow, EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { TopNavAnchor } from "../components/TopNavAnchor";
 import { HOME_STORIES } from "../data/home-stories";
@@ -8,6 +8,7 @@ import {
   getStoryDetail,
   type StoryDetail,
   type StoryImageCaptioned,
+  type StoryImageNarrative,
   type StorySection,
 } from "../data/stories-detail";
 import { ArrowLeft } from "lucide-react";
@@ -55,10 +56,8 @@ function StoryHero({ story }: { story: StoryDetail }) {
           <ArrowLeft className="size-4" aria-hidden />
           Stories
         </Link>
-        <p className="mt-8 font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-light-space/42 md:text-xs">
-          {story.metaLine}
-        </p>
-        <h1 className="mt-5 max-w-[20ch] font-sans text-[2.3rem] font-semibold leading-[1.06] tracking-[-0.035em] text-light-space sm:text-5xl md:text-6xl lg:text-[4rem] lg:leading-[1.02]">
+        <ArticleMetaRow metaLine={story.metaLine} align="start" className="mt-8" />
+        <h1 className="mt-4 max-w-[20ch] font-sans text-[2.3rem] font-semibold leading-[1.06] tracking-[-0.035em] text-light-space sm:mt-5 sm:text-5xl md:text-6xl lg:text-[4rem] lg:leading-[1.02]">
           {story.title}
         </h1>
         <p className="news-detail-reading mt-7 max-w-[34rem] text-[1.22rem] font-normal leading-[1.56] text-light-space/72 md:mt-8 md:text-[1.34rem] md:leading-[1.54]">
@@ -169,6 +168,51 @@ function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; s
   );
 }
 
+function renderInlineBold(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={`${part}-${index}`} className="font-semibold text-light-space light:text-zinc-950">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+
+    return <span key={`${part}-${index}`}>{part}</span>;
+  });
+}
+
+function TriptychBlock({ items }: { items: [StoryImageNarrative, StoryImageNarrative, StoryImageNarrative] }) {
+  return (
+    <div className={`${CONTENT_SHELL_WIDE} py-14 md:py-20`}>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6 xl:gap-8">
+        {items.map((item) => (
+          <article key={item.src} className="min-w-0">
+            <div
+              className={cn(
+                "overflow-hidden border border-light-space/[0.08] bg-smoke-2 light:border-black/[0.08] light:bg-zinc-100",
+                EDITORIAL_MEDIA_RADIUS_CLASS,
+              )}
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="aspect-[4/5] w-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <p className="mt-5 font-sans text-[1.02rem] leading-[1.65] tracking-[-0.015em] text-light-space/68 light:text-zinc-700 md:text-[1.08rem]">
+              {renderInlineBold(item.text)}
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function QuoteBlock({ text, attribution }: { text: string; attribution: string }) {
   return (
     <div className={`${CONTENT_SHELL_WIDE} py-14 md:py-20`}>
@@ -242,9 +286,11 @@ function MoreStories({ currentSlug }: { currentSlug: string }) {
                   <img src={story.image} alt="" className="size-full object-cover" loading="lazy" decoding="async" />
                 </div>
                 <div className="min-w-0">
-                  <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-light-space/36">
-                    {detail?.metaLine ?? "Jokuh Stories"}
-                  </p>
+                  <ArticleMetaRow
+                    metaLine={detail?.metaLine ?? "Jokuh Stories"}
+                    align="start"
+                    size="compact"
+                  />
                   <p className="mt-2 font-sans text-[0.98rem] font-medium leading-snug tracking-tight text-light-space transition-colors group-hover:text-light-space/80 md:text-[1.02rem]">
                     {detail?.title ?? story.title}
                   </p>
@@ -266,6 +312,8 @@ function renderSection(section: StorySection, key: number) {
       return <SubheadBlock key={key} text={section.text} />;
     case "imagesAsymmetric":
       return <AsymmetricImagesBlock key={key} large={section.large} small={section.small} />;
+    case "triptych":
+      return <TriptychBlock key={key} items={section.items} />;
     case "quote":
       return <QuoteBlock key={key} text={section.text} attribution={section.attribution} />;
     case "cta":

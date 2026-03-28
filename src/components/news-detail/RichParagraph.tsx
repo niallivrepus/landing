@@ -12,7 +12,7 @@ export function RichParagraph({
       {parts.map((part, i) => {
         if (part.startsWith("**") && part.endsWith("**")) {
           return (
-            <strong key={i} className="font-semibold text-light-space">
+            <strong key={i} className="font-semibold text-light-space light:text-zinc-950">
               {part.slice(2, -2)}
             </strong>
           );

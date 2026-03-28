@@ -1,28 +1,34 @@
 import { Link } from "react-router-dom";
-import { JokuhMark } from "./JokuhMark";
 import { cn } from "@jokuh/gooey";
 
 export function DocumentTopicCard({
   to,
   title,
+  description,
   selected,
 }: {
   to: string;
   title: string;
+  description?: string;
   selected?: boolean;
 }) {
   return (
     <Link
       to={to}
       className={cn(
-        "flex min-h-[140px] flex-col items-center justify-center gap-4 rounded-[2px] border bg-white/[0.04] px-4 py-6 font-sans transition-colors light:border-black/10 light:bg-white light:shadow-sm light:hover:bg-zinc-50",
+        "flex min-h-[160px] flex-col justify-between rounded-[24px] border px-5 py-5 font-sans transition-colors",
         selected
-          ? "border-[var(--color-blue-4)] shadow-[inset_0_0_0_1px_var(--color-blue-4)]"
-          : "border-light-glass-20 hover:border-light-glass-40 hover:bg-white/[0.06] light:hover:border-black/18",
+          ? "border-[var(--color-blue-4)] bg-white/[0.04] shadow-[inset_0_0_0_1px_var(--color-blue-4)] light:bg-white"
+          : "border-light-space/[0.08] bg-white/[0.02] hover:border-light-space/[0.14] hover:bg-white/[0.04] light:border-black/[0.08] light:bg-zinc-50 light:hover:border-black/[0.14] light:hover:bg-zinc-100",
       )}
     >
-      <JokuhMark className="h-8 w-[52px] shrink-0 text-light-space" />
-      <span className="max-w-[140px] text-center text-[12px] leading-snug text-light-space/60">{title}</span>
+      <div>
+        <h3 className="text-[15px] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">{title}</h3>
+        {description ? (
+          <p className="mt-2 text-[13px] leading-[1.55] text-light-space/58 light:text-zinc-600">{description}</p>
+        ) : null}
+      </div>
+      <span className="text-[12px] font-medium text-[var(--color-blue-4)]">Open</span>
     </Link>
   );
 }

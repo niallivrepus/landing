@@ -6,7 +6,7 @@ type SearchRequestArticle = {
   title: string;
   snippet: string;
   meta: string;
-  external?: boolean;
+  external: boolean;
 };
 
 function readBody(req: IncomingMessage): Promise<string> {
@@ -26,9 +26,9 @@ Answer in clear prose, max about 120 words. No markdown headings. If the questio
 
 function normalizeArticles(value: unknown): SearchRequestArticle[] {
   if (!Array.isArray(value)) return [];
-  return value
+  const articles = value
     .slice(0, 6)
-    .map((item) => {
+    .map((item): SearchRequestArticle | null => {
       if (!item || typeof item !== "object") return null;
       const candidate = item as Partial<SearchRequestArticle>;
       const href = typeof candidate.href === "string" ? candidate.href.trim() : "";
@@ -43,8 +43,9 @@ function normalizeArticles(value: unknown): SearchRequestArticle[] {
         meta,
         external: Boolean(candidate.external),
       };
-    })
-    .filter((item): item is SearchRequestArticle => item !== null);
+    });
+
+  return articles.filter((item): item is SearchRequestArticle => item !== null);
 }
 
 function buildContext(articles: SearchRequestArticle[]): string {

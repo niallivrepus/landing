@@ -1,5 +1,7 @@
 import { formatNewsDate, getNewsHref, type NewsItem, NEWS_ITEMS } from "../data/news";
+import { HOME_STORIES, type HomeStory } from "../data/home-stories";
 import { PRODUCT_IDS, type ProductId, PRODUCTS } from "../data/products";
+import { STORY_DETAILS } from "../data/stories-detail";
 
 export type SiteArticleHit = {
   href: string;
@@ -11,6 +13,11 @@ export type SiteArticleHit = {
   external: boolean;
   /** ISO date for tie-break sort */
   publishedAt?: string;
+};
+
+type CorpusEntry = {
+  hit: SiteArticleHit;
+  searchText: string;
 };
 
 const STOP = new Set([
@@ -133,6 +140,25 @@ function newsToHit(n: NewsItem): SiteArticleHit {
   };
 }
 
+function storyToHit(story: HomeStory): SiteArticleHit {
+  const detail = STORY_DETAILS[story.slug];
+  const metaLine = detail?.metaLine
+    ?.split("·")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .slice(0, 2)
+    .join(" · ");
+
+  return {
+    href: story.href,
+    title: detail?.title ?? story.title,
+    snippet: detail?.dek ?? `Story from the Jokuh editorial archive.`,
+    meta: metaLine ? `Story · ${metaLine}` : "Story",
+    image: story.image,
+    external: false,
+  };
+}
+
 function productToHit(id: ProductId): SiteArticleHit {
   const p = PRODUCTS[id];
   return {
@@ -145,6 +171,20 @@ function productToHit(id: ProductId): SiteArticleHit {
 }
 
 const CURATED: SiteArticleHit[] = [
+  {
+    href: "/stories",
+    title: "Stories",
+    snippet: "Human-centered stories from teams, makers, and operators using Jokuh.",
+    meta: "Stories",
+    external: false,
+  },
+  {
+    href: "/newsroom",
+    title: "Newsroom",
+    snippet: "Corporate, engineering, and product updates from Jokuh.",
+    meta: "Newsroom",
+    external: false,
+  },
   {
     href: "/about",
     title: "About Jokuh",
@@ -182,32 +222,62 @@ const CURATED: SiteArticleHit[] = [
   },
 ];
 
-function buildCorpus(): SiteArticleHit[] {
-  const fromNews = NEWS_ITEMS.map(newsToHit);
-  const seen = new Set(fromNews.map((h) => h.href));
-  const fromProducts: SiteArticleHit[] = [];
+function entryForHit(hit: SiteArticleHit, searchText?: string): CorpusEntry {
+  return { hit, searchText: searchText ?? `${hit.title} ${hit.snippet} ${hit.meta}` };
+}
+
+function buildCorpus(): CorpusEntry[] {
+  const fromNews = NEWS_ITEMS.map((item) =>
+    entryForHit(newsToHit(item), `${item.title} ${item.excerpt ?? ""} ${item.category} ${item.topics.join(" ")}`),
+  );
+  const seen = new Set(fromNews.map((entry) => entry.hit.href));
+  const fromStories: CorpusEntry[] = [];
+  for (const story of HOME_STORIES) {
+    const hit = storyToHit(story);
+    if (seen.has(hit.href)) continue;
+    seen.add(hit.href);
+    const detail = STORY_DETAILS[story.slug];
+    fromStories.push(
+      entryForHit(
+        hit,
+        `${hit.title} ${detail?.dek ?? ""} ${detail?.metaLine ?? ""} ${story.title}`,
+      ),
+    );
+  }
+  const fromProducts: CorpusEntry[] = [];
   for (const id of PRODUCT_IDS) {
     const hit = productToHit(id);
     if (seen.has(hit.href)) continue;
     seen.add(hit.href);
-    fromProducts.push(hit);
+    fromProducts.push(entryForHit(hit));
   }
-  const curatedFiltered = CURATED.filter((c) => {
-    if (seen.has(c.href)) return false;
+  const curatedFiltered = CURATED.flatMap((c) => {
+    if (seen.has(c.href)) return [];
     seen.add(c.href);
-    return true;
+    return [entryForHit(c)];
   });
-  return [...fromNews, ...fromProducts, ...curatedFiltered];
+  return [...fromNews, ...fromStories, ...fromProducts, ...curatedFiltered];
 }
 
 const CORPUS = buildCorpus();
 
-function scoreHit(hit: SiteArticleHit, tokens: string[], newsBoost: string): number {
-  const title = hit.title.toLowerCase();
-  const snip = hit.snippet.toLowerCase();
-  const href = hit.href.toLowerCase();
-  const boost = newsBoost.toLowerCase();
+function scoreEntry(entry: CorpusEntry, query: string, tokens: string[]): number {
+  const loweredQuery = query.toLowerCase();
+  const title = entry.hit.title.toLowerCase();
+  const snip = entry.hit.snippet.toLowerCase();
+  const href = entry.hit.href.toLowerCase();
+  const boost = entry.searchText.toLowerCase();
   let s = 0;
+
+  if (loweredQuery.length >= 2) {
+    if (title === loweredQuery) s += 140;
+    if (title.startsWith(loweredQuery)) s += 64;
+    if (title.split(/\s+/).some((word) => word.startsWith(loweredQuery))) s += 28;
+    if (href.includes(loweredQuery)) s += 16;
+    if (snip.includes(loweredQuery)) s += 10;
+    if (boost.includes(loweredQuery)) s += 12;
+  }
+
   for (const t of tokens) {
     if (title.includes(t)) s += 5;
     if (snip.includes(t)) s += 2;
@@ -217,25 +287,13 @@ function scoreHit(hit: SiteArticleHit, tokens: string[], newsBoost: string): num
   return s;
 }
 
-function newsBoostString(n: NewsItem): string {
-  return `${n.category} ${n.topics.join(" ")} ${n.title} ${n.excerpt ?? ""}`;
-}
-
-/** Rank real on-site (and linked) content for the query. */
-export function rankSiteArticles(query: string, limit = 8): SiteArticleHit[] {
-  const tokens = tokenize(query);
-  const newsByHref = new Map<string, NewsItem>();
-  for (const n of NEWS_ITEMS) {
-    const { href } = hrefForNews(n);
-    newsByHref.set(href, n);
-  }
-
-  const scored = CORPUS.map((hit) => {
-    const n = newsByHref.get(hit.href);
-    const boost = n ? newsBoostString(n) : `${hit.title} ${hit.snippet}`;
-    const sc = tokens.length === 0 ? 0 : scoreHit(hit, tokens, boost);
-    return { hit, sc };
-  });
+function rankCorpus(query: string) {
+  const trimmed = query.trim();
+  const tokens = tokenize(trimmed);
+  const scored = CORPUS.map((entry) => ({
+    hit: entry.hit,
+    sc: trimmed.length === 0 ? 0 : scoreEntry(entry, trimmed, tokens),
+  }));
 
   scored.sort((a, b) => {
     if (b.sc !== a.sc) return b.sc - a.sc;
@@ -243,6 +301,13 @@ export function rankSiteArticles(query: string, limit = 8): SiteArticleHit[] {
     const db = b.hit.publishedAt ? new Date(b.hit.publishedAt + "T12:00:00").getTime() : 0;
     return db - da;
   });
+
+  return scored;
+}
+
+/** Rank real on-site (and linked) content for the query. */
+export function rankSiteArticles(query: string, limit = 8): SiteArticleHit[] {
+  const scored = rankCorpus(query);
 
   const positive = scored.filter((x) => x.sc > 0).map((x) => x.hit);
   const seenHref = new Set<string>();
@@ -260,4 +325,19 @@ export function rankSiteArticles(query: string, limit = 8): SiteArticleHit[] {
     if (deduped.length >= limit) break;
   }
   return deduped;
+}
+
+export function suggestSiteArticles(query: string, limit = 6): SiteArticleHit[] {
+  const trimmed = query.trim();
+  if (trimmed.length < 2) return [];
+
+  const seenHref = new Set<string>();
+  const matches: SiteArticleHit[] = [];
+  for (const { hit, sc } of rankCorpus(trimmed)) {
+    if (sc <= 0 || seenHref.has(hit.href)) continue;
+    seenHref.add(hit.href);
+    matches.push(hit);
+    if (matches.length >= limit) break;
+  }
+  return matches;
 }

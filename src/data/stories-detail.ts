@@ -13,6 +13,12 @@ export type StoryImageCaptioned = {
   caption: string;
 };
 
+export type StoryImageNarrative = {
+  src: string;
+  alt: string;
+  text: string;
+};
+
 export type StorySection =
   | { kind: "prose"; paragraphs: string[] }
   | { kind: "subhead"; text: string }
@@ -20,6 +26,10 @@ export type StorySection =
       kind: "imagesAsymmetric";
       large: StoryImageCaptioned;
       small: StoryImageCaptioned;
+    }
+  | {
+      kind: "triptych";
+      items: [StoryImageNarrative, StoryImageNarrative, StoryImageNarrative];
     }
   | { kind: "quote"; text: string; attribution: string }
   | { kind: "cta"; title: string; body: string; buttonLabel: string; buttonHref: string };
@@ -253,6 +263,26 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
         paragraphs: [
           "The team started using structured prompts to draft equipment checklists, summarize supplier emails, and turn field notes into next-day plans. The goal was never to replace judgment—it was to buy back minutes for the decisions only a grower can make.",
           "What changed first was friction. Fewer threads lost in inboxes. Fewer half-remembered tasks. More of the day spent where it matters: walking rows, reading the weather, and keeping the operation honest.",
+        ],
+      },
+      {
+        kind: "triptych",
+        items: [
+          {
+            src: u("photo-1500382017468-9049fed747ef", 900, 1100),
+            alt: "",
+            text: "Turn scattered updates into **field notes** the whole team can actually pick up tomorrow morning.",
+          },
+          {
+            src: u("photo-1520607162513-77705c0f0d4a", 900, 1100),
+            alt: "",
+            text: "Break down **supplier bills** and check line items before a small mistake rolls into the season.",
+          },
+          {
+            src: u("photo-1499529112087-3cb3b73cec95", 900, 1100),
+            alt: "",
+            text: "Map **inventory and planting windows** against weather shifts, labor time, and delivery commitments.",
+          },
         ],
       },
       {

@@ -12,14 +12,11 @@ import { FOOTER_FINE_PRINT } from "../data/site-directory";
 import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
 import {
   IconGithub,
-  IconInstagram,
-  IconLinkedin,
-  IconMailFilled,
   IconX,
   IconYoutube,
 } from "./footer-social-icons";
 
-const FOOTER_NAV_COLUMNS = resolveRigidNavColumns(RIGID_NAV_COLUMNS, "footer");
+const FOOTER_COLUMNS = resolveRigidNavColumns(RIGID_NAV_COLUMNS, "footer");
 
 function DirectoryLink({ link, className }: { link: RigidLink; className?: string }) {
   const location = useLocation();
@@ -62,7 +59,7 @@ const footerMetaLink =
 const sectionLabel =
   "font-sans text-[11px] font-semibold uppercase leading-tight tracking-[0.08em] text-light-space/38 light:text-zinc-500";
 
-function FooterColumn({ col, className }: { col: (typeof FOOTER_NAV_COLUMNS)[number]; className?: string }) {
+function FooterColumn({ col, className }: { col: (typeof FOOTER_COLUMNS)[number]; className?: string }) {
   return (
     <div className={className}>
       <div className="flex flex-col gap-10">
@@ -93,10 +90,7 @@ const FOOTER_SOCIAL: {
 }[] = [
   { href: "https://x.com/jokuh", label: "Jokuh on X", Icon: IconX },
   { href: "https://www.youtube.com/@jokuh", label: "Jokuh on YouTube", Icon: IconYoutube },
-  { href: "https://www.linkedin.com/company/jokuh", label: "Jokuh on LinkedIn", Icon: IconLinkedin },
   { href: "https://github.com/jokuh", label: "Jokuh on GitHub", Icon: IconGithub },
-  { href: "https://www.instagram.com/jokuh", label: "Jokuh on Instagram", Icon: IconInstagram },
-  { href: "mailto:hello@jokuh.com", label: "Email Jokuh", Icon: IconMailFilled },
 ];
 
 export function MegaFooter() {
@@ -122,8 +116,8 @@ export function MegaFooter() {
   return (
     <footer className="bg-dark-space text-light-space light:bg-white light:text-zinc-900">
       <div className="px-4 pt-10 pb-2 md:px-8 md:pt-14 lg:pt-[4.5rem]">
-        <div className="mx-auto w-full max-w-[1100px]">
-          <div className="border-t border-light-glass-10" aria-hidden />
+        <div className="mx-auto w-full max-w-[1240px]">
+          <div className="border-t border-light-glass-10 light:border-black/[0.08]" aria-hidden />
           <div className="space-y-5 py-10 font-sans text-[11px] leading-relaxed text-light-space/48 md:space-y-6 md:py-14 md:text-[12px] md:leading-relaxed lg:py-16 light:text-zinc-500">
             {FOOTER_FINE_PRINT.paragraphs.map((block, i) =>
               typeof block === "string" ? (
@@ -139,21 +133,24 @@ export function MegaFooter() {
               ),
             )}
           </div>
-          <div className="border-t border-light-glass-10" aria-hidden />
+          <div className="border-t border-light-glass-10 light:border-black/[0.08]" aria-hidden />
           <div className="pb-12 pt-12 md:pb-16 md:pt-14 lg:pb-20 lg:pt-16">
-            <div className="hidden lg:grid lg:grid-cols-5 lg:gap-x-12 lg:gap-y-14 xl:gap-x-16">
-              {FOOTER_NAV_COLUMNS.map((col) => (
+            <div
+              className="hidden items-start lg:grid lg:gap-x-14 lg:gap-y-14 xl:gap-x-20"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}
+            >
+              {FOOTER_COLUMNS.map((col) => (
                 <FooterColumn key={col.id} col={col} className="min-w-0" />
               ))}
             </div>
 
             <div className="lg:hidden">
-              {FOOTER_NAV_COLUMNS.map((col, colIndex) => (
-                <details key={col.id} className="group border-b border-light-glass-10 last:border-b-0">
-                  <summary className="premium-soft-fade flex cursor-pointer list-none items-center justify-between py-4 font-sans text-[13px] font-semibold leading-tight text-light-space [&::-webkit-details-marker]:hidden">
+              {FOOTER_COLUMNS.map((col, colIndex) => (
+                <details key={col.id} className="group border-b border-light-glass-10 light:border-black/[0.08] last:border-b-0">
+                  <summary className="premium-soft-fade flex cursor-pointer list-none items-center justify-between py-4 font-sans text-[13px] font-semibold leading-tight text-light-space light:text-zinc-950 [&::-webkit-details-marker]:hidden">
                     <span>{col.heading}</span>
                     <ChevronDown
-                      className="premium-soft-fade size-4 shrink-0 text-light-space/45 group-open:rotate-180"
+                      className="premium-soft-fade size-4 shrink-0 text-light-space/45 group-open:rotate-180 light:text-zinc-500"
                       aria-hidden
                     />
                   </summary>
@@ -223,19 +220,13 @@ export function MegaFooter() {
               <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
                 ·
               </span>
-              <Link
-                to="/privacy"
-                className={footerMetaLink}
-              >
+              <Link to="/legal/privacy" className={footerMetaLink}>
                 Privacy
               </Link>
               <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
                 ·
               </span>
-              <Link
-                to="/terms"
-                className={footerMetaLink}
-              >
+              <Link to="/legal/terms" className={footerMetaLink}>
                 Terms
               </Link>
               <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>

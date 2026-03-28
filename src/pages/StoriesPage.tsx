@@ -1,7 +1,7 @@
 import { cn } from "@jokuh/gooey";
 import { useState } from "react";
 import { TopNavAnchor } from "../components/TopNavAnchor";
-import { EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
+import { ArticleMetaRow, EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { HOME_STORIES } from "../data/home-stories";
 import { getStoryDetail } from "../data/stories-detail";
@@ -75,9 +75,11 @@ export function StoriesPage() {
                   />
                 </div>
                 <div className="mt-4 space-y-2">
-                  <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/42">
-                    {detail?.metaLine ?? "Jokuh Stories"}
-                  </p>
+                  <ArticleMetaRow
+                    metaLine={detail?.metaLine ?? "Jokuh Stories"}
+                    align="start"
+                    size="compact"
+                  />
                   <h2 className="font-sans text-[1.45rem] font-semibold leading-[1.1] tracking-[-0.03em] text-light-space">
                     {detail?.title ?? story.title}
                   </h2>

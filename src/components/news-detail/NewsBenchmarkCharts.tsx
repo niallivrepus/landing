@@ -31,9 +31,9 @@ function DarkTooltip({
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded-lg border border-light-space/10 bg-smoke-2 px-3 py-2 text-xs shadow-xl light:border-black/10 light:bg-white light:shadow-md">
-      {label != null ? <p className="mb-1 text-light-space/50">{label}</p> : null}
+      {label != null ? <p className="mb-1 text-light-space/50 light:text-zinc-500">{label}</p> : null}
       {payload.map((p) => (
-        <p key={String(p.name)} className="tabular-nums text-light-space/90">
+        <p key={String(p.name)} className="tabular-nums text-light-space/90 light:text-zinc-900">
           <span style={{ color: p.color }}>{p.name}</span>:{" "}
           {typeof p.value === "number" ? `${p.value}%` : p.value}
         </p>
@@ -47,6 +47,7 @@ export function GdpvalStackedChart({ footnote }: { footnote: string }) {
     <ChartFrame
       title="GDPval"
       subtitle="Knowledge work tasks"
+      downloadFilename="jokuh-gdpval-benchmark.svg"
       footnote={footnote}
       legend={
         <>
@@ -88,7 +89,7 @@ export function GdpvalStackedChart({ footnote }: { footnote: string }) {
           <Tooltip content={<DarkTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
           <ReferenceLine
             y={50}
-            stroke="#ffffff"
+            stroke="#71717a"
             strokeDasharray="5 5"
             strokeOpacity={0.28}
             label={{
@@ -111,6 +112,7 @@ export function SweBenchLineChart({ footnote }: { footnote: string }) {
     <ChartFrame
       title="SWE-Bench Pro (public)"
       subtitle="Accuracy vs estimated latency"
+      downloadFilename="jokuh-swe-bench-pro-benchmark.svg"
       footnote={footnote}
       legend={
         <>
@@ -195,6 +197,7 @@ export function OsworldLineChart({ footnote }: { footnote: string }) {
     <ChartFrame
       title="PodBench-Verified"
       subtitle="Accuracy vs tool yields"
+      downloadFilename="jokuh-podbench-verified-benchmark.svg"
       footnote={footnote}
       legend={
         <>

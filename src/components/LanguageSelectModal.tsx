@@ -64,18 +64,18 @@ export function LanguageSelectModal({ open, onClose }: { open: boolean; onClose:
         aria-modal="true"
         aria-labelledby="jokuh-lang-title"
         className={cn(
-          "fixed z-[250] flex max-h-[min(88vh,720px)] w-[min(100vw-1.25rem,360px)] flex-col overflow-hidden rounded-2xl border border-zinc-300/90 bg-zinc-200 text-zinc-950 shadow-[0_20px_60px_rgba(0,0,0,0.22)]",
+          "fixed z-[250] flex max-h-[min(88vh,720px)] w-[min(100vw-1.25rem,360px)] flex-col overflow-hidden rounded-2xl border border-light-space/10 bg-[#111214] text-light-space shadow-[0_20px_60px_rgba(0,0,0,0.4)] light:border-zinc-300/90 light:bg-zinc-200 light:text-zinc-950 light:shadow-[0_20px_60px_rgba(0,0,0,0.22)]",
           "bottom-4 right-3 md:bottom-auto md:top-1/2 md:right-5 md:-translate-y-1/2",
         )}
       >
-        <header className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-300/80 px-4 py-3.5">
+        <header className="flex shrink-0 items-center justify-between gap-3 border-b border-light-space/10 px-4 py-3.5 light:border-zinc-300/80">
           <h2 id="jokuh-lang-title" className="font-sans text-[17px] font-semibold tracking-tight">
             Select language
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex size-9 items-center justify-center rounded-full text-zinc-600 transition-colors hover:bg-zinc-300/60 hover:text-zinc-950"
+            className="inline-flex size-9 items-center justify-center rounded-full text-light-space/55 transition-colors hover:bg-white/[0.08] hover:text-light-space light:text-zinc-600 light:hover:bg-zinc-300/60 light:hover:text-zinc-950"
             aria-label="Close"
           >
             <X className="size-[18px]" strokeWidth={2} />
@@ -97,15 +97,17 @@ export function LanguageSelectModal({ open, onClose }: { open: boolean; onClose:
                   onClick={() => applySiteLanguage(lang)}
                   className={cn(
                     "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
-                    selected ? "bg-white/70" : "hover:bg-white/50",
+                    selected
+                      ? "bg-white/[0.08] light:bg-white/70"
+                      : "hover:bg-white/[0.04] light:hover:bg-white/50",
                   )}
                 >
                   <span className="min-w-0 flex-1">
                     <span className="block font-sans text-[15px] font-semibold leading-snug">{lang.native}</span>
-                    <span className="mt-0.5 block font-sans text-[13px] leading-snug text-zinc-600">{sub}</span>
+                    <span className="mt-0.5 block font-sans text-[13px] leading-snug text-light-space/55 light:text-zinc-600">{sub}</span>
                   </span>
                   {selected ? (
-                    <Check className="mt-0.5 size-[18px] shrink-0 text-zinc-900" strokeWidth={2.25} aria-hidden />
+                    <Check className="mt-0.5 size-[18px] shrink-0 text-light-space light:text-zinc-900" strokeWidth={2.25} aria-hidden />
                   ) : (
                     <span className="size-[18px] shrink-0" aria-hidden />
                   )}
@@ -115,10 +117,10 @@ export function LanguageSelectModal({ open, onClose }: { open: boolean; onClose:
           })}
         </ul>
 
-        <div className="shrink-0 border-t border-zinc-300/80 p-3">
+        <div className="shrink-0 border-t border-light-space/10 p-3 light:border-zinc-300/80">
           <div className="relative">
             <Search
-              className="pointer-events-none absolute left-3.5 top-1/2 size-[17px] -translate-y-1/2 text-zinc-500"
+              className="pointer-events-none absolute left-3.5 top-1/2 size-[17px] -translate-y-1/2 text-light-space/45 light:text-zinc-500"
               strokeWidth={1.75}
               aria-hidden
             />
@@ -129,7 +131,7 @@ export function LanguageSelectModal({ open, onClose }: { open: boolean; onClose:
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search"
               autoComplete="off"
-              className="w-full rounded-full border border-zinc-300/80 bg-zinc-100 py-2.5 pr-3 pl-10 font-sans text-[14px] text-zinc-900 placeholder:text-zinc-500 outline-none ring-zinc-400/40 focus:border-zinc-400 focus:ring-2"
+              className="w-full rounded-full border border-light-space/10 bg-white/[0.05] py-2.5 pr-3 pl-10 font-sans text-[14px] text-light-space placeholder:text-light-space/35 outline-none ring-white/20 focus:border-light-space/20 focus:ring-2 light:border-zinc-300/80 light:bg-zinc-100 light:text-zinc-900 light:placeholder:text-zinc-500 light:ring-zinc-400/40 light:focus:border-zinc-400"
             />
           </div>
         </div>

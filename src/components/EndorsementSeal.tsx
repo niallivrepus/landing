@@ -1,7 +1,7 @@
 import { cn } from "@jokuh/gooey";
 import { Link } from "react-router-dom";
 
-const shell = "mx-auto w-full max-w-[1380px] px-4 md:px-8";
+const shell = "mx-auto w-full max-w-[1100px] px-4 md:px-8";
 /** Use inside a padded shell (e.g. news article column); matches `read` on NewsDetailPage */
 const articleMeasure = "mx-auto w-full max-w-[min(100%,720px)]";
 
@@ -25,9 +25,9 @@ const CARDS: [SealCard, SealCard] = [
     company: "Northline",
     panelClass:
       "relative overflow-hidden bg-gradient-to-br from-[#c4b5fd]/25 via-[#a5b4fc]/20 to-[#93c5fd]/15 ring-1 ring-light-space/[0.1]",
-    quoteClass: "text-[#1c1535]/95",
-    metaClass: "text-[#1c1535]/80",
-    logoClass: "bg-[#1c1535]/90 text-white",
+    quoteClass: "text-white [text-shadow:0_1px_24px_rgba(0,0,0,0.25)]",
+    metaClass: "text-white/90",
+    logoClass: "bg-white/20 text-white ring-1 ring-white/25",
   },
   {
     quote: "Our speed is intense and Jokuh helps us stay action-biased on long-horizon work.",
@@ -66,14 +66,6 @@ function SealCardView({ card, wide }: { card: SealCard; wide: boolean }) {
         card.panelClass,
       )}
     >
-      {wide && (
-        <div
-          className="pointer-events-none absolute -right-8 -top-8 font-sans text-[140px] font-semibold leading-none text-light-space/[0.07] md:text-[180px]"
-          aria-hidden
-        >
-          {letter}
-        </div>
-      )}
       <p
         className={cn(
           "relative z-[1] max-w-[22ch] font-sans text-xl font-medium leading-[1.2] tracking-[-0.03em] md:max-w-none md:text-2xl lg:text-[1.65rem] lg:leading-[1.25]",
@@ -119,12 +111,12 @@ export function EndorsementSeal({
         <SealCardView card={b} wide={false} />
       </div>
       <div className="mt-8 flex flex-col gap-4 md:mt-10 md:flex-row md:items-center md:justify-between">
-        <p className="font-sans text-sm leading-relaxed text-light-space/45 md:text-[0.9375rem]">
+        <p className="font-sans text-sm leading-relaxed text-light-space/45 light:text-zinc-500 md:text-[0.9375rem]">
           Jokuh powers product and platform teams—from ambitious startups to major enterprises.
         </p>
         <Link
           to={storiesHref}
-          className="inline-flex w-fit items-center gap-1 font-sans text-sm text-light-space/45 transition-colors hover:text-light-space/75 md:text-[0.9375rem]"
+          className="inline-flex w-fit items-center gap-1 font-sans text-sm text-light-space/45 transition-colors hover:text-light-space/75 light:text-zinc-500 light:hover:text-zinc-800 md:text-[0.9375rem]"
         >
           Customer stories
           <span aria-hidden>→</span>

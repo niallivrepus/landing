@@ -11,16 +11,22 @@ export function SimpleMarketingPageTemplate({
   description = DEFAULT_STUB,
   children,
   beforeTitle,
+  theme,
+  frameClassName,
+  mainClassName,
 }: {
   title: string;
   description?: string;
   children?: ReactNode;
   /** e.g. hero image above the title */
   beforeTitle?: ReactNode;
+  theme?: "dark" | "light";
+  frameClassName?: string;
+  mainClassName?: string;
 }) {
   return (
-    <MarketingPageFrame>
-      <SimplePageMain>
+    <MarketingPageFrame theme={theme} className={frameClassName}>
+      <SimplePageMain className={mainClassName}>
         {beforeTitle}
         <MarketingSimplePageTitle>{title}</MarketingSimplePageTitle>
         <MarketingStubDescription>{description}</MarketingStubDescription>

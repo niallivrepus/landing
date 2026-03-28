@@ -16,7 +16,7 @@ export function MarketingPageSection({
   return (
     <section
       id={id}
-      className={cn(borderedTop && "border-t border-light-space/[0.08]", className)}
+      className={cn(borderedTop && "border-t border-light-space/[0.08] light:border-black/[0.08]", className)}
     >
       {children}
     </section>
@@ -36,7 +36,7 @@ export function SectionHeaderRow({
 }) {
   return (
     <div className={cn("mb-10 flex items-baseline justify-between gap-6 md:mb-12", className)}>
-      <h2 className="font-sans text-lg font-semibold tracking-tight text-light-space/90 md:text-xl">{title}</h2>
+      <h2 className="font-sans text-lg font-semibold tracking-tight text-light-space/90 light:text-zinc-950 md:text-xl">{title}</h2>
       <Link
         to={actionTo}
         className="shrink-0 font-sans text-sm font-semibold text-light-space transition-colors hover:text-light-space/88 light:text-zinc-950 light:hover:text-zinc-800"

@@ -1,6 +1,15 @@
 /** Jokuh website terms — original drafting; structure inspired by standard site terms. */
 
-export type TermsSection = { id: string; title: string; paragraphs: string[] };
+export type TermsSection = {
+  id: string;
+  title: string;
+  paragraphs: string[];
+  cta?: {
+    label: string;
+    to?: string;
+    href?: string;
+  };
+};
 
 export const TERMS_SECTIONS: TermsSection[] = [
   {
@@ -52,6 +61,10 @@ export const TERMS_SECTIONS: TermsSection[] = [
       "Our Privacy Policy describes how we handle personal data in connection with the Site and is incorporated into these Terms by reference.",
       "Internet transmissions are not completely secure. You acknowledge that information you send to the Site may be intercepted despite encryption where we employ it.",
     ],
+    cta: {
+      label: "Read the Jokuh Privacy Policy.",
+      to: "/legal/privacy",
+    },
   },
   {
     id: "links",

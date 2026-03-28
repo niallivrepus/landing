@@ -94,8 +94,9 @@ export function SitemapPage() {
             </h2>
             <SitemapLinkList
               links={[
-                { label: "Privacy & Security", href: "/privacy" },
-                { label: "Terms", href: "/terms" },
+                { label: "Legal", href: "/legal" },
+                { label: "Privacy Policy", href: "/legal/privacy" },
+                { label: "Terms of Use", href: "/legal/terms" },
                 { label: "Site map", href: "/sitemap#sitemap-top" },
               ]}
             />

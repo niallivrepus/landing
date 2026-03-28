@@ -34,9 +34,12 @@ export function ProductSectionIntro({
   className?: string;
 }) {
   const centered = align === "center";
-  const titleColor = tone === "light" ? "text-zinc-950" : "text-light-space";
-  const bodyColor = tone === "light" ? "text-zinc-600" : "text-light-space/55";
-  const eyebrowColor = tone === "light" ? "text-zinc-500" : "text-light-space/38";
+  const titleColor =
+    tone === "light" ? "text-zinc-950 dark:text-zinc-100" : "text-zinc-950 dark:text-light-space";
+  const bodyColor =
+    tone === "light" ? "text-zinc-600 dark:text-zinc-400" : "text-zinc-600 dark:text-light-space/55";
+  const eyebrowColor =
+    tone === "light" ? "text-zinc-500 dark:text-zinc-400" : "text-zinc-500 dark:text-light-space/38";
 
   return (
     <div className={cn(centered && "mx-auto text-center", className)}>
@@ -80,7 +83,8 @@ export function ProductShowcaseSurface({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[32px] border border-black/[0.05] bg-[#ebeae6] shadow-[0_24px_80px_rgba(15,23,42,0.08)]",
+        "overflow-hidden rounded-[32px] border border-zinc-200/80 bg-[#f5f4f1] shadow-[0_24px_80px_rgba(15,23,42,0.06)]",
+        "dark:border-zinc-800/60 dark:bg-black dark:shadow-[0_24px_80px_rgba(0,0,0,0.5)]",
         className,
       )}
     >

@@ -2,19 +2,14 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button, cn } from "@jokuh/gooey";
 import { useGentleHoverSound } from "../hooks/useGentleHoverSound";
-import { MarketingDisplayTitle, MarketingEyebrow } from "./system";
-import { MarketingPageFrame } from "./system/MarketingPageFrame";
+import { MarketingDisplayTitle, MarketingEyebrow, TertiaryPageChrome } from "./system";
 import { CONTENT_SHELL_COMPANY } from "./system/shells";
 
 /** Shared content width for company/marketing pages (About, Careers, …). */
 export const COMPANY_PAGE_SHELL = CONTENT_SHELL_COMPANY;
 
 export function CompanyPageLayout({ children }: { children: ReactNode }) {
-  return (
-    <MarketingPageFrame withAntialiased withFontSans>
-      {children}
-    </MarketingPageFrame>
-  );
+  return <TertiaryPageChrome>{children}</TertiaryPageChrome>;
 }
 
 export function CompanyPageHero({
@@ -66,9 +61,9 @@ export function CompanyPageClosingCta({
     );
 
   return (
-    <section className={cn("border-t border-light-space/[0.08] py-20 md:py-28", className)}>
+    <section className={cn("border-t border-light-space/[0.08] py-20 light:border-black/[0.08] md:py-28", className)}>
       <div className={cn(COMPANY_PAGE_SHELL, "text-center")}>
-        <h2 className="font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-light-space">
+        <h2 className="font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-light-space light:text-zinc-950">
           {headline}
         </h2>
         <div className="mt-8 flex justify-center">{cta}</div>
