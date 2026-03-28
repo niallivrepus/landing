@@ -16,7 +16,21 @@ import {
   IconYoutube,
 } from "./footer-social-icons";
 
-const FOOTER_COLUMNS = resolveRigidNavColumns(RIGID_NAV_COLUMNS, "footer");
+const FOOTER_COLUMN_ORDER = [
+  "product",
+  "company",
+  "business",
+  "developers",
+  "more",
+  "safety",
+  "terms-policies",
+] as const;
+
+const FOOTER_COLUMNS = resolveRigidNavColumns(RIGID_NAV_COLUMNS, "footer").sort((a, b) => {
+  const aIndex = FOOTER_COLUMN_ORDER.indexOf(a.id as (typeof FOOTER_COLUMN_ORDER)[number]);
+  const bIndex = FOOTER_COLUMN_ORDER.indexOf(b.id as (typeof FOOTER_COLUMN_ORDER)[number]);
+  return (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) - (bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex);
+});
 
 function DirectoryLink({ link, className }: { link: RigidLink; className?: string }) {
   const location = useLocation();
