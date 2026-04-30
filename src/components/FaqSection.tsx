@@ -10,7 +10,7 @@ export function FaqItem({ question, answer }: FaqEntry) {
   const contentRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="border-b border-light-space/[0.08] light:border-zinc-200">
+    <div>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -56,7 +56,7 @@ export function FaqSection({
     <section id="faqs" className={className ?? "scroll-mt-24"}>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-[280px_1fr] md:gap-12 lg:grid-cols-[320px_1fr]">
         <div className="md:sticky md:top-24 md:self-start">
-          <h2 className="font-sans text-xl font-semibold tracking-tight text-light-space light:text-zinc-950 md:text-2xl">
+          <h2 className="font-sans text-xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-2xl">
             {title}
           </h2>
         </div>

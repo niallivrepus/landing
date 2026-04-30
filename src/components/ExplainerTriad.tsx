@@ -117,7 +117,7 @@ export function ExplainerTriad({ className }: { className?: string }) {
             <div className="mt-8 flex min-h-[min(160px,32vw)] flex-1 items-center justify-center md:mt-10">
               {item.illustration}
             </div>
-            <h3 className="mt-10 font-sans text-lg font-semibold tracking-tight text-light-space light:text-zinc-950 md:mt-12 md:text-xl">
+            <h3 className="mt-10 font-sans text-lg font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:mt-12 md:text-xl">
               {item.title}
             </h3>
             <p className="mt-3 max-w-sm font-sans text-[15px] leading-relaxed text-light-space/55 light:text-zinc-600 md:text-[15px]">

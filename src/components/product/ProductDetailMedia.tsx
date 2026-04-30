@@ -1,9 +1,5 @@
-import { cn } from "@jokuh/gooey";
+import { cn, useTheme } from "@jokuh/gooey";
 import type { ProductDetailMedia as ProductDetailMediaConfig } from "../../data/product-detail-blueprints";
-
-function PlaceholderSurface({ className }: { className?: string }) {
-  return <div className={cn("size-full bg-zinc-100 dark:bg-black", className)} />;
-}
 
 export function ProductDetailMedia({
   media,
@@ -14,6 +10,8 @@ export function ProductDetailMedia({
   active?: boolean;
   className?: string;
 }) {
+  const { resolvedTheme } = useTheme();
+
   if (media.kind === "image") {
     return (
       <img
@@ -32,28 +30,29 @@ export function ProductDetailMedia({
       <video
         src={media.src}
         poster={media.poster}
-        className={cn("size-full object-cover", className)}
-        muted
-        playsInline
-        loop
         aria-label={media.alt}
+        className={cn("size-full object-cover", className)}
+        autoPlay
+        muted
+        loop
+        playsInline
       />
     );
   }
 
   if (media.kind === "gradient") {
+    if (media.gradient === "none" || !media.gradient.trim()) {
+      return null;
+    }
+    const background = resolvedTheme === "dark" ? (media.darkGradient ?? media.gradient) : media.gradient;
     return (
-      <div className={cn("relative size-full overflow-hidden", className)}>
-        <div aria-hidden className="absolute inset-0 bg-zinc-100 dark:bg-black" />
-        <div
-          aria-hidden
-          className="absolute inset-0 dark:hidden"
-          style={{ background: media.gradient }}
-        />
-        <div className="relative z-10 size-full min-h-0" />
-      </div>
+      <div
+        className={cn("size-full", className)}
+        style={{ background }}
+        aria-hidden
+      />
     );
   }
 
-  return <PlaceholderSurface className={className} />;
+  return null;
 }

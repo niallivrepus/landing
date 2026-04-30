@@ -46,17 +46,17 @@ export function IdentityBlock() {
         aria-hidden
       >
         <div className="relative h-[20rem] w-[20rem] sm:h-[24rem] sm:w-[24rem] md:h-[29rem] md:w-[29rem]">
-          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(8,8,8,0.92)_0%,rgba(5,5,5,0.72)_34%,rgba(0,0,0,0.28)_58%,rgba(0,0,0,0)_76%)] blur-2xl light:bg-[radial-gradient(circle,rgba(255,255,255,0.78)_0%,rgba(255,255,255,0.56)_34%,rgba(255,255,255,0.24)_58%,rgba(255,255,255,0)_76%)]" />
-          <div className="absolute left-1/2 top-1/2 h-[56%] w-[56%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(10,10,10,0.88)_0%,rgba(5,5,5,0.58)_48%,rgba(0,0,0,0)_100%)] blur-xl light:bg-[radial-gradient(circle,rgba(255,255,255,0.88)_0%,rgba(255,255,255,0.52)_48%,rgba(255,255,255,0)_100%)]" />
+          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(8,8,8,0.92)_0%,rgba(5,5,5,0.72)_34%,rgba(0,0,0,0.28)_58%,rgba(0,0,0,0)_76%)] blur-2xl light:bg-[radial-gradient(circle,rgba(245,245,247,0.86)_0%,rgba(244,244,245,0.66)_34%,rgba(255,255,255,0.22)_58%,rgba(255,255,255,0)_76%)]" />
+          <div className="absolute left-1/2 top-1/2 h-[56%] w-[56%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(10,10,10,0.88)_0%,rgba(5,5,5,0.58)_48%,rgba(0,0,0,0)_100%)] blur-xl light:bg-[radial-gradient(circle,rgba(250,250,250,0.72)_0%,rgba(245,245,247,0.46)_48%,rgba(255,255,255,0)_100%)]" />
         </div>
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-[min(85vh,720px)] max-w-4xl flex-col items-center justify-center text-center">
-        <h2 className="max-w-[min(94vw,52ch)] font-sans text-[3rem] font-semibold leading-[1.05] tracking-[-0.035em] text-light-space light:text-zinc-950 sm:text-[3.75rem] md:text-[5rem] lg:text-[6.25rem]">
+        <h2 className="max-w-[min(94vw,52ch)] font-sans text-[3rem] font-semibold leading-[1.05] tracking-[0em] text-light-space light:text-zinc-950 sm:text-[3.75rem] md:text-[5rem] lg:text-[6.25rem]">
           Own your next move.
         </h2>
         <div className="mt-10 flex w-full max-w-sm justify-center md:mt-12 md:max-w-none">
-          <ClaimIdentityCta href="/waitlist" className="justify-center">
+          <ClaimIdentityCta href="/download" className="justify-center">
             Claim identity
           </ClaimIdentityCta>
         </div>

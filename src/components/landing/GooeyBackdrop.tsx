@@ -22,22 +22,22 @@ export function GooeyBackdrop() {
         style={{ filter: "url(#landing-gooey)" }}
       >
         <motion.div
-          className="absolute left-[10%] top-[18%] size-[48%] rounded-full bg-purple-5/45"
+          className="absolute left-[10%] top-[18%] size-[48%] rounded-full bg-purple-5/45 light:bg-zinc-200/85"
           animate={{ x: [0, 20, 0], y: [0, -14, 0] }}
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute right-[6%] top-[30%] size-[44%] rounded-full bg-blue-5/40"
+          className="absolute right-[6%] top-[30%] size-[44%] rounded-full bg-blue-5/40 light:bg-zinc-300/80"
           animate={{ x: [0, -16, 0], y: [0, 18, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-[8%] left-[26%] size-[36%] rounded-full bg-pink-5/35"
+          className="absolute bottom-[8%] left-[26%] size-[36%] rounded-full bg-pink-5/35 light:bg-zinc-100/90"
           animate={{ x: [0, -12, 0], y: [0, 12, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black light:from-white light:via-zinc-200/40 light:to-zinc-100" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black light:from-white light:via-white/78 light:to-section-grey-light" />
       <div className="landing-grain absolute inset-0 opacity-[0.04]" aria-hidden />
     </div>
   );

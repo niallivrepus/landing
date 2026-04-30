@@ -1,4 +1,4 @@
-import { OO, cn } from "@jokuh/gooey";
+import { cn } from "@jokuh/gooey";
 import { Download04Icon, Copy01Icon, CheckmarkCircle02Icon } from "hugeicons-react";
 import { useState, useCallback, type CSSProperties, type ReactNode } from "react";
 import { FaqSection } from "../components/FaqSection";
@@ -6,8 +6,8 @@ import { LavaLamp } from "../components/LavaLamp";
 import {
   CompanyPageLayout,
   CompanyPageHero,
-  COMPANY_PAGE_SHELL,
 } from "../components/CompanyPageLayout";
+import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 /* ── Logo paths ───────────────────────────────────────────────────────── */
@@ -15,9 +15,7 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 const NEXUS_PATH =
   "M27.7824 5.14531C22.5874 6.36044 19.7007 9.48499 19.1325 9.48499C18.5643 9.48499 15.6776 6.36044 10.4827 5.14531C6.70459 4.26162 4.14221 7.69747 6.64694 12.1901C8.19379 15.678 9.77851 17 12.2418 17C14.1937 17 15.4004 15.9752 16.3073 15.3788C16.9965 14.9255 18.035 14.1105 19.1326 14.1105C20.2302 14.1105 21.2686 14.9255 21.958 15.3788C22.8648 15.9752 24.0714 17 26.0234 17C28.4866 17 30.0715 15.678 31.6183 12.1901C33.509 7.50321 31.5608 4.26176 27.7827 5.14546L27.7824 5.14531ZM16.9692 12.4816C16.4843 13.1956 12.9576 15.3082 11.0573 14.0865C9.15706 12.8649 7.37419 8.7448 8.59416 7.85859C9.81413 6.97238 18.1891 10.685 16.9692 12.4816ZM27.2076 14.0865C25.3073 15.3082 21.7807 13.1957 21.2958 12.4816C20.0758 10.685 28.451 6.97223 29.6708 7.85844C30.8906 8.74466 29.1077 12.8649 27.2076 14.0865Z";
 
-const NEXUS_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 22" fill="none"><path d="${NEXUS_PATH}" fill="currentColor"/></svg>`;
-
-const VORTEX_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57 26" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M28.0925 0.000217438C12.5774 0.000217438 -6.86646e-05 5.65301 -6.86646e-05 12.6261C-6.86646e-05 19.5992 12.5774 25.252 28.0925 25.252C43.6076 25.252 56.1851 19.5992 56.1851 12.6261C56.1851 5.65301 43.6076 0.000217438 28.0925 0.000217438ZM36.7459 12.3018C31.9394 12.4017 10.1995 12.7144 13.7468 8.27048C17.0259 4.51373 24.4167 1.8941 33.0087 1.8941C44.645 1.8941 54.0781 6.69897 54.0781 12.6261C54.0781 18.5532 44.645 23.3581 33.0087 23.3581C24.4167 23.3581 17.026 20.7385 13.7468 16.9817C10.1993 12.5377 31.9394 12.8504 36.7459 12.9503C36.9136 15.783 39.264 18.0285 42.1388 18.0285C45.1224 18.0285 47.5412 15.6098 47.5412 12.6261C47.5412 9.64242 45.1224 7.22367 42.1388 7.22367C39.264 7.22367 36.9136 9.46913 36.7459 12.3018Z" fill="currentColor"/></svg>`;
+const BRAND_PAGE_SHELL = CONTENT_SHELL_WIDE;
 
 /* ── Color palette ────────────────────────────────────────────────────── */
 
@@ -109,8 +107,8 @@ function BrandSection({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <div className="mb-8 border-b border-light-space/[0.08] pb-4 light:border-zinc-200">
-        <h2 className="font-sans text-xl font-semibold tracking-tight text-light-space light:text-zinc-950 md:text-2xl">
+      <div className="mb-8 pb-4">
+        <h2 className="font-sans text-xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-2xl">
           {title}
         </h2>
         {description && (
@@ -133,7 +131,7 @@ export function BrandPage() {
     <CompanyPageLayout>
       <>
         {/* ── Hero + Brand Kit Bento ─────────────────────────────── */}
-        <section className={cn(COMPANY_PAGE_SHELL, "pt-28 pb-16 md:pt-32 md:pb-20")}>
+        <section className={cn(BRAND_PAGE_SHELL, "pt-28 pb-16 md:pt-32 md:pb-20")}>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <CompanyPageHero eyebrow="Company" title="Brand" />
             <p className="max-w-[320px] font-sans text-[15px] leading-relaxed text-light-space/50 light:text-zinc-600 sm:text-right">
@@ -159,8 +157,8 @@ export function BrandPage() {
             {/* Right column — stacked */}
             <div className="flex flex-col gap-4 md:row-span-2">
               {/* Gooey card */}
-              <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-[20px] bg-[#0a0a0a] light:bg-zinc-100">
-                <span className="select-none font-sans text-[clamp(1.5rem,4vw,2.25rem)] font-semibold tracking-tight text-light-space light:text-zinc-950">
+              <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-[20px] bg-[#0a0a0a] light:bg-section-grey-light">
+                <span className="select-none font-sans text-[clamp(1.5rem,4vw,2.25rem)] font-semibold tracking-[0em] text-light-space light:text-zinc-950">
                   G<GooeyEyes />ey.
                 </span>
               </div>
@@ -169,7 +167,7 @@ export function BrandPage() {
               <a
                 href="/brand/jokuh-logomark-white.svg"
                 download="jokuh-brand-kit.svg"
-                className="group flex flex-1 flex-col justify-between rounded-[20px] border border-light-space/[0.08] p-6 transition-colors hover:border-light-space/20 hover:bg-white/[0.02] light:border-zinc-200 light:hover:border-zinc-300 light:hover:bg-zinc-50"
+                className="group flex flex-1 flex-col justify-between rounded-[20px] border border-light-space/[0.08] p-6 transition-colors hover:border-light-space/20 hover:bg-white/[0.02] light:border-zinc-200 light:hover:border-zinc-300 light:hover:bg-zinc-200/50"
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -198,7 +196,7 @@ export function BrandPage() {
         </section>
 
         {/* ── Sections ─────────────────────────────────────────────── */}
-        <div className={cn(COMPANY_PAGE_SHELL, "space-y-20 pb-24")}>
+        <div className={cn(BRAND_PAGE_SHELL, "space-y-20 pb-24")}>
           {/* Logo */}
           <BrandSection
             id="logo"
@@ -206,7 +204,7 @@ export function BrandPage() {
             description="Our definitive mark."
           >
             {/* Large showcase */}
-            <div className="flex aspect-[16/9] w-full items-center justify-center rounded-[20px] bg-[#0a0a0a] light:bg-zinc-100">
+            <div className="flex aspect-[16/9] w-full items-center justify-center rounded-[20px] bg-[#0a0a0a] light:bg-section-grey-light">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 38 22"
@@ -270,8 +268,8 @@ export function BrandPage() {
             <div className="grid grid-cols-1 gap-8 md:grid-cols-[280px_1fr] md:gap-12 lg:grid-cols-[320px_1fr]">
               {/* Left — sticky title */}
               <div className="md:sticky md:top-24 md:self-start">
-                <div className="border-b border-light-space/[0.08] pb-4 light:border-zinc-200">
-                  <h2 className="font-sans text-xl font-semibold tracking-tight text-light-space light:text-zinc-950 md:text-2xl">
+                <div className="pb-4">
+                  <h2 className="font-sans text-xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-2xl">
                     Typography
                   </h2>
                   <p className="mt-2 font-sans text-[15px] leading-relaxed text-light-space/50 light:text-zinc-600">
@@ -284,10 +282,10 @@ export function BrandPage() {
               <div className="space-y-6">
                 {TYPEFACES.map((tf) => (
                   <div key={tf.name}>
-                    <div className="flex h-[200px] min-w-0 items-center overflow-hidden rounded-[20px] bg-light-space/[0.04] pl-[8%] light:bg-zinc-100/80 md:h-[240px]">
+                    <div className="flex h-[200px] min-w-0 items-center overflow-hidden rounded-[20px] bg-light-space/[0.04] pl-[8%] light:bg-section-grey-light/80 md:h-[240px]">
                       <span
                         className={cn(
-                          "select-none whitespace-nowrap text-[clamp(5rem,12vw,9rem)] font-medium leading-[0.85] tracking-[-0.05em] text-light-space/[0.1] light:text-zinc-950/[0.1]",
+                          "select-none whitespace-nowrap text-[clamp(5rem,12vw,9rem)] font-medium leading-[0.85] tracking-[0em] text-light-space/[0.1] light:text-zinc-950/[0.1]",
                           tf.fontClass,
                         )}
                       >
@@ -310,9 +308,9 @@ export function BrandPage() {
 
                 {/* Red Hat Mono */}
                 <div>
-                  <div className="flex h-[200px] min-w-0 items-center overflow-hidden rounded-[20px] bg-light-space/[0.04] pl-[8%] light:bg-zinc-100/80 md:h-[240px]">
-                    <span className="select-none whitespace-nowrap font-mono text-[clamp(5rem,12vw,9rem)] font-medium leading-[0.85] tracking-[-0.05em] text-light-space/[0.1] light:text-zinc-950/[0.1]">
-                      uint a = 128;
+                  <div className="flex h-[200px] min-w-0 items-center overflow-hidden rounded-[20px] bg-light-space/[0.04] pl-[8%] light:bg-section-grey-light/80 md:h-[240px]">
+                    <span className="select-none whitespace-nowrap font-mono text-[clamp(5rem,12vw,9rem)] font-medium leading-[0.85] tracking-[0em] text-light-space/[0.1] light:text-zinc-950/[0.1]">
+                      Mono
                     </span>
                   </div>
                   <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
@@ -331,99 +329,6 @@ export function BrandPage() {
             </div>
           </section>
 
-          {/* Token & Avatars */}
-          <BrandSection
-            id="token-avatars"
-            title="Token & Avatars"
-            description="The logomark inside a circular or square container."
-          >
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {/* Circle — Vortex symbol */}
-              <div className="group relative flex aspect-[4/3] items-center justify-center rounded-[20px] bg-light-space/[0.04] light:bg-zinc-100/80">
-                <div className="flex size-[clamp(80px,16vw,140px)] items-center justify-center rounded-full bg-light-space/[0.08] light:bg-zinc-200">
-                  <svg
-                    width="57"
-                    height="26"
-                    viewBox="0 0 57 26"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-[clamp(40px,8vw,64px)] text-white light:text-zinc-950"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M28.0925 0.000217438C12.5774 0.000217438 -6.86646e-05 5.65301 -6.86646e-05 12.6261C-6.86646e-05 19.5992 12.5774 25.252 28.0925 25.252C43.6076 25.252 56.1851 19.5992 56.1851 12.6261C56.1851 5.65301 43.6076 0.000217438 28.0925 0.000217438ZM36.7459 12.3018C31.9394 12.4017 10.1995 12.7144 13.7468 8.27048C17.0259 4.51373 24.4167 1.8941 33.0087 1.8941C44.645 1.8941 54.0781 6.69897 54.0781 12.6261C54.0781 18.5532 44.645 23.3581 33.0087 23.3581C24.4167 23.3581 17.026 20.7385 13.7468 16.9817C10.1993 12.5377 31.9394 12.8504 36.7459 12.9503C36.9136 15.783 39.264 18.0285 42.1388 18.0285C45.1224 18.0285 47.5412 15.6098 47.5412 12.6261C47.5412 9.64242 45.1224 7.22367 42.1388 7.22367C39.264 7.22367 36.9136 9.46913 36.7459 12.3018Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
-                <CopySvgButton svg={VORTEX_SVG} />
-              </div>
-
-              {/* Square — Jokuh logo */}
-              <div className="group relative flex aspect-[4/3] items-center justify-center rounded-[20px] bg-light-space/[0.04] light:bg-zinc-100/80">
-                <div className="flex size-[clamp(80px,16vw,140px)] items-center justify-center rounded-2xl bg-light-space/[0.08] light:bg-zinc-200">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 38 22"
-                    fill="none"
-                    className="w-[clamp(36px,7vw,56px)] text-white light:text-zinc-950"
-                  >
-                    <path d={NEXUS_PATH} fill="currentColor" />
-                  </svg>
-                </div>
-                <CopySvgButton svg={NEXUS_SVG} />
-              </div>
-            </div>
-          </BrandSection>
-
-          {/* OO Mascot */}
-          <BrandSection
-            id="oo"
-            title="OO"
-            description="Reintroducing Jokuh's ubiquitous global icon, OO."
-          >
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {/* Row 1 — two side by side */}
-              <div className="flex aspect-[4/3] items-center justify-center rounded-[20px] border border-zinc-800 bg-black light:border-zinc-200 light:bg-zinc-100">
-                <OO
-                  expression="default"
-                  backgroundColor="#0066FF"
-                  className="!size-[clamp(80px,16vw,140px)] !border-[3px]"
-                />
-              </div>
-              <div className="flex aspect-[4/3] items-center justify-center rounded-[20px] border border-zinc-800 bg-black light:border-zinc-200 light:bg-zinc-100">
-                <OO
-                  expression="happy"
-                  backgroundColor="#21DC11"
-                  bodyGradientStart="#7700FF"
-                  bodyGradientEnd="#B300FF"
-                  className="!size-[clamp(80px,16vw,140px)] !border-[3px]"
-                />
-              </div>
-
-              {/* Row 2 */}
-              <div className="flex aspect-square items-center justify-center rounded-[20px] border border-zinc-800 bg-black light:border-zinc-200 light:bg-zinc-100 sm:aspect-[4/3]">
-                <OO
-                  expression="rainbow-puke"
-                  backgroundColor="#0066FF"
-                  className="!size-[clamp(64px,12vw,100px)] !border-[2px]"
-                />
-              </div>
-              <div className="flex aspect-square items-center justify-center rounded-[20px] border border-zinc-800 bg-black light:border-zinc-200 light:bg-zinc-100 sm:aspect-[4/3]">
-                <OO
-                  expression="default"
-                  backgroundColor="#008789"
-                  bodyGradientStart="#00667A"
-                  bodyGradientEnd="#009BA0"
-                  bodyStrokeColor="#83EEE8"
-                  className="!size-[clamp(64px,12vw,100px)] !border-[2px]"
-                />
-              </div>
-            </div>
-          </BrandSection>
-
-
           {/* Best Practices */}
           <BrandSection
             id="best-practices"
@@ -439,26 +344,26 @@ export function BrandPage() {
                 good
                 label="Use colors with adequate contrast."
                 logo={<LogoMark fill="currentColor" className="text-white light:text-zinc-950" />}
-                bg="bg-[#0a0a0a] light:bg-zinc-100"
+                bg="bg-[#0a0a0a] light:bg-section-grey-light"
               />
               <PracticeCard
                 good
                 label="Give the mark enough spacing."
                 logo={<LogoMark fill="currentColor" className="text-light-space/30 light:text-zinc-400" />}
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
                 border
               />
               <PracticeCard
                 good
                 label="Use the logos as provided. Treat them with care."
                 logo={<LogoMark fill="currentColor" className="text-light-space/50 light:text-zinc-500" />}
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
               />
               <PracticeCard
                 good
                 label="Use the full logo when more brand context is needed."
                 logo={<LogoMark fill="currentColor" className="text-light-space/50 light:text-zinc-500" />}
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
               />
             </div>
 
@@ -470,19 +375,19 @@ export function BrandPage() {
               <PracticeCard
                 label="Stretching or deforming the mark in a non-uniform way."
                 logo={<LogoMark fill="currentColor" className="text-light-space/25 light:text-zinc-300" style={{ transform: "scaleX(1.5) scaleY(0.7)" }} />}
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
                 strikethrough
               />
               <PracticeCard
                 label="Rotating the mark or flipping it upside-down awkwardly."
                 logo={<LogoMark fill="currentColor" className="text-light-space/25 light:text-zinc-300" style={{ transform: "rotate(180deg)" }} />}
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
                 strikethrough
               />
               <PracticeCard
                 label="Presenting the mark with negative emotions."
                 logo={<LogoMark fill="currentColor" className="text-light-space/25 light:text-zinc-300" style={{ transform: "scaleY(-1)" }} />}
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
                 strikethrough
               />
               <PracticeCard
@@ -494,7 +399,7 @@ export function BrandPage() {
                     <path d={NEXUS_PATH} fill="none" stroke="currentColor" strokeWidth="0.5" className="text-light-space/15 light:text-zinc-300" />
                   </svg>
                 }
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
                 strikethrough
               />
               <PracticeCard
@@ -504,7 +409,7 @@ export function BrandPage() {
                     <LogoMark fill="currentColor" className="text-light-space/25 light:text-zinc-300" style={{ marginTop: -4 }} />
                   </div>
                 }
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
                 strikethrough
               />
               <PracticeCard
@@ -522,7 +427,7 @@ export function BrandPage() {
                     </svg>
                   </div>
                 }
-                bg="bg-light-space/[0.04] light:bg-zinc-100/80"
+                bg="bg-light-space/[0.04] light:bg-section-grey-light/80"
                 strikethrough
               />
             </div>
@@ -560,34 +465,6 @@ export function BrandPage() {
 }
 
 /* ── Sub-components ───────────────────────────────────────────────────── */
-
-function CopySvgButton({ svg }: { svg: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = useCallback(() => {
-    navigator.clipboard.writeText(svg).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    });
-  }, [svg]);
-
-  return (
-    <button
-      type="button"
-      onClick={copy}
-      className="group/copy absolute right-4 bottom-4 flex size-9 items-center justify-center rounded-full border border-light-space/[0.1] bg-light-space/[0.05] text-light-space/40 opacity-0 transition-all group-hover:opacity-100 hover:border-light-space/25 hover:bg-light-space/[0.1] hover:text-light-space light:border-zinc-200 light:bg-white light:text-zinc-400 light:hover:border-zinc-300 light:hover:text-zinc-900"
-      aria-label="Copy SVG"
-    >
-      {copied ? (
-        <CheckmarkCircle02Icon size={16} strokeWidth={1.5} />
-      ) : (
-        <Copy01Icon size={16} strokeWidth={1.5} />
-      )}
-      <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md bg-zinc-900 px-2.5 py-1 font-sans text-[11px] font-medium whitespace-nowrap text-white opacity-0 shadow-lg transition-opacity group-hover/copy:opacity-100 light:bg-zinc-800">
-        {copied ? "Copied!" : "Copy SVG"}
-      </span>
-    </button>
-  );
-}
 
 function GooeyEyes() {
   const [blinking, setBlinking] = useState(false);

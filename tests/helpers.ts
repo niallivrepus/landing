@@ -2,11 +2,16 @@ import { expect, type Page } from '@playwright/test';
 
 export async function primeCookieConsent(page: Page) {
   await page.addInitScript(() => {
+    const record = {
+      version: 1,
+      prefs: { analytics: true, marketing: true },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
     window.localStorage.setItem('jokuh.cookieConsent', 'custom');
-    window.localStorage.setItem(
-      'jokuh.cookiePreferences',
-      JSON.stringify({ analytics: true, marketing: true }),
-    );
+    window.localStorage.setItem('jokuh.cookiePreferences', JSON.stringify(record));
+    document.cookie = `jokuh_cookie_consent=${encodeURIComponent(JSON.stringify(record))}; Path=/; Max-Age=15552000; SameSite=Lax`;
   });
 }
 

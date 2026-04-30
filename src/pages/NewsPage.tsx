@@ -17,6 +17,7 @@ import { NewsCardArt } from "../components/NewsCardArt";
 import { SiteLink } from "../components/SiteLink";
 import { EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
+import { RSS_FEED_PATH } from "../config/rss";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 type SortOrder = "newest" | "oldest";
@@ -88,11 +89,11 @@ function newsHref(item: NewsItem) {
 
 function JournalMeta({ item }: { item: NewsItem }) {
   return (
-    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-medium uppercase tracking-[0.16em] text-light-space/46">
-      <span className="text-light-space/72">{item.category}</span>
-      <span className="text-light-space/25">•</span>
+    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-medium uppercase tracking-[0.16em] text-light-space/46 light:text-zinc-500">
+      <span className="text-light-space/72 light:text-zinc-700">{item.category}</span>
+      <span className="text-light-space/25 light:text-zinc-300">•</span>
       <span>{formatNewsDate(item.publishedAt)}</span>
-      <span className="text-light-space/25">•</span>
+      <span className="text-light-space/25 light:text-zinc-300">•</span>
       <span>{item.readMinutes} min read</span>
     </p>
   );
@@ -104,7 +105,7 @@ function JournalGridCard({ item, featured = false }: { item: NewsItem; featured?
       <SiteLink href={newsHref(item)} className="flex h-full flex-col no-underline">
         <div
           className={cn(
-            "overflow-hidden border border-light-space/[0.08] bg-white/[0.03]",
+            "overflow-hidden border border-light-space/[0.08] bg-white/[0.03] light:border-black/[0.08] light:bg-section-grey-light/80",
             EDITORIAL_MEDIA_RADIUS_CLASS,
             featured ? "aspect-[16/10]" : "aspect-[4/5] sm:aspect-[4/4.6]",
           )}
@@ -120,14 +121,14 @@ function JournalGridCard({ item, featured = false }: { item: NewsItem; featured?
           <JournalMeta item={item} />
           <h2
             className={cn(
-              "font-sans font-semibold leading-[1.04] tracking-[-0.03em] text-light-space transition-colors group-hover:text-light-space/82",
+              "font-sans font-semibold leading-[1.04] tracking-[0em] text-light-space transition-colors group-hover:text-light-space/82 light:text-zinc-950 light:group-hover:text-zinc-700",
               featured ? "text-[2rem] md:text-[2.6rem]" : "text-[1.2rem] md:text-[1.45rem]",
             )}
           >
             {item.title}
           </h2>
           {featured && item.excerpt ? (
-            <p className="max-w-2xl text-[15px] leading-7 text-light-space/58 md:text-[16px]">
+            <p className="max-w-2xl text-[15px] leading-7 text-light-space/58 light:text-zinc-600 md:text-[16px]">
               {item.excerpt}
             </p>
           ) : null}
@@ -143,7 +144,7 @@ function JournalCompactCard({ item }: { item: NewsItem }) {
       <SiteLink href={newsHref(item)} className="flex h-full flex-col no-underline">
         <div
           className={cn(
-            "aspect-square overflow-hidden border border-light-space/[0.08] bg-white/[0.03]",
+            "aspect-square overflow-hidden border border-light-space/[0.08] bg-white/[0.03] light:border-black/[0.08] light:bg-section-grey-light/80",
             EDITORIAL_MEDIA_RADIUS_CLASS,
           )}
         >
@@ -156,7 +157,7 @@ function JournalCompactCard({ item }: { item: NewsItem }) {
         </div>
         <div className="flex flex-1 flex-col gap-3 pt-4">
           <JournalMeta item={item} />
-          <h2 className="font-sans text-[1.2rem] font-semibold leading-[1.08] tracking-[-0.03em] text-light-space transition-colors group-hover:text-light-space/82">
+          <h2 className="font-sans text-[1.2rem] font-semibold leading-[1.08] tracking-[0em] text-light-space transition-colors group-hover:text-light-space/82 light:text-zinc-950 light:group-hover:text-zinc-700">
             {item.title}
           </h2>
         </div>
@@ -167,9 +168,9 @@ function JournalCompactCard({ item }: { item: NewsItem }) {
 
 function JournalListItem({ item }: { item: NewsItem }) {
   return (
-    <article className="grid gap-5 border-t border-light-space/[0.08] py-6 first:border-t-0 first:pt-0 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 lg:py-8">
+    <article className="grid gap-5 py-6 first:pt-0 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 lg:py-8">
       <SiteLink href={newsHref(item)} className={cn("block overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
-        <div className={cn("aspect-[4/3] border border-light-space/[0.08] bg-white/[0.03]", EDITORIAL_MEDIA_RADIUS_CLASS)}>
+        <div className={cn("aspect-[4/3] border border-light-space/[0.08] bg-white/[0.03] light:border-black/[0.08] light:bg-section-grey-light/80", EDITORIAL_MEDIA_RADIUS_CLASS)}>
           <NewsCardArt
             gradient={item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT}
             image={item.cardImage}
@@ -181,13 +182,13 @@ function JournalListItem({ item }: { item: NewsItem }) {
 
       <div className="flex min-w-0 flex-col gap-3">
         <JournalMeta item={item} />
-        <h2 className="font-sans text-[1.5rem] font-semibold leading-[1.08] tracking-[-0.03em] text-light-space">
-          <SiteLink href={newsHref(item)} className="transition-colors hover:text-light-space/80">
+        <h2 className="font-sans text-[1.5rem] font-semibold leading-[1.08] tracking-[0em] text-light-space light:text-zinc-950">
+          <SiteLink href={newsHref(item)} className="transition-colors hover:text-light-space/80 light:hover:text-zinc-700">
             {item.title}
           </SiteLink>
         </h2>
         {item.excerpt ? (
-          <p className="max-w-3xl text-[15px] leading-7 text-light-space/58">{item.excerpt}</p>
+          <p className="max-w-3xl text-[15px] leading-7 text-light-space/58 light:text-zinc-600">{item.excerpt}</p>
         ) : null}
       </div>
     </article>
@@ -219,9 +220,9 @@ function JournalFeedGrid({ items }: { items: NewsItem[] }) {
     if (wallItems.length === 0) return null;
 
     return (
-      <div className="mt-12 border-t border-light-space/10 pt-10 md:mt-16 md:pt-12">
+      <div className="mt-12 pt-10 md:mt-16 md:pt-12">
         {title ? (
-          <h3 className="mb-8 font-sans text-lg font-semibold tracking-tight text-light-space">{title}</h3>
+          <h3 className="mb-8 font-sans text-lg font-semibold tracking-[0em] text-light-space">{title}</h3>
         ) : null}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
           {visibleItems.map((item) => (
@@ -233,7 +234,7 @@ function JournalFeedGrid({ items }: { items: NewsItem[] }) {
             <button
               type="button"
               onClick={() => setVisibleCount((count) => Math.min(count + NEWSROOM_LAZY_BATCH, wallItems.length))}
-              className="inline-flex h-11 items-center rounded-full border border-light-space/[0.12] bg-white/[0.03] px-5 font-sans text-[13px] font-semibold text-light-space transition-colors hover:bg-white/[0.06]"
+              className="inline-flex h-11 items-center rounded-full border border-light-space/[0.12] bg-white/[0.03] px-5 font-sans text-[13px] font-semibold text-light-space transition-colors hover:bg-white/[0.06] light:border-black/[0.1] light:bg-section-grey-light light:text-zinc-950 light:hover:bg-zinc-200"
             >
               Load more
             </button>
@@ -420,9 +421,17 @@ export function NewsPage() {
     >
       <section className="space-y-10">
         <header className="space-y-8 md:space-y-10">
-          <h1 className="font-sans text-[2.5rem] font-semibold tracking-[-0.04em] text-light-space md:text-[3.25rem] md:leading-[1.05]">
-            Newsroom
-          </h1>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <h1 className="font-sans text-[2.5rem] font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-[3.25rem] md:leading-[1.05]">
+              Newsroom
+            </h1>
+            <SiteLink
+              href={RSS_FEED_PATH}
+              className="inline-flex w-fit items-center rounded-full border border-light-space/[0.12] px-4 py-2 font-sans text-[13px] font-semibold text-light-space/70 transition-colors hover:border-light-space/[0.22] hover:text-light-space light:border-black/[0.1] light:bg-section-grey-light light:text-zinc-700 light:hover:border-black/[0.16] light:hover:text-zinc-950"
+            >
+              RSS feed
+            </SiteLink>
+          </div>
 
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
             <div
@@ -439,7 +448,7 @@ export function NewsPage() {
                   onClick={() => setCategory(item)}
                   className={cn(
                     "shrink-0 transition-colors",
-                    item === category ? "text-light-space" : "text-light-space/45 hover:text-light-space/75",
+                    item === category ? "text-light-space light:text-zinc-950" : "text-light-space/45 hover:text-light-space/75 light:text-zinc-500 light:hover:text-zinc-900",
                   )}
                 >
                   {item}
@@ -467,7 +476,7 @@ export function NewsPage() {
                       <SlidersHorizontal className="size-[17px] shrink-0 opacity-90" strokeWidth={1.75} />
                     )}
                     {hasActiveFilters ? (
-                      <span className="text-light-space/40" aria-hidden>
+                      <span className="text-light-space/40 light:text-zinc-400" aria-hidden>
                         ({activeFilterCount})
                       </span>
                     ) : null}
@@ -476,14 +485,14 @@ export function NewsPage() {
                   {filterOpen ? (
                     <div
                       ref={filterPanelRef}
-                      className="absolute left-0 top-full z-40 mt-3 w-[min(92vw,34rem)] rounded-[26px] border border-light-space/[0.1] bg-smoke-2 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.42)] light:border-black/10 light:bg-white light:shadow-[0_20px_60px_rgba(0,0,0,0.12)] lg:left-auto lg:right-0"
+                      className="absolute left-0 top-full z-40 mt-3 w-[min(92vw,34rem)] rounded-[26px] border border-light-space/[0.1] bg-smoke-2 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.42)] light:border-black/10 light:bg-section-grey-light light:shadow-[0_20px_60px_rgba(0,0,0,0.12)] lg:left-auto lg:right-0"
                     >
-                    <div className="flex items-start justify-between gap-4 border-b border-light-space/[0.08] pb-4">
+                    <div className="flex items-start justify-between gap-4 pb-4">
                       <div>
-                        <p className="text-[15px] font-semibold tracking-tight text-light-space">
+                        <p className="text-[15px] font-semibold tracking-tight text-light-space light:text-zinc-950">
                           Refine the feed
                         </p>
-                        <p className="mt-1 text-[13px] leading-6 text-light-space/50">
+                        <p className="mt-1 text-[13px] leading-6 text-light-space/50 light:text-zinc-600">
                           Mix categories with topic and year filters.
                         </p>
                       </div>
@@ -491,7 +500,7 @@ export function NewsPage() {
                         <button
                           type="button"
                           onClick={clearFilters}
-                          className="text-[12px] font-medium uppercase tracking-[0.14em] text-light-space/55 transition-colors hover:text-light-space"
+                          className="text-[12px] font-medium uppercase tracking-[0.14em] text-light-space/55 transition-colors hover:text-light-space light:text-zinc-500 light:hover:text-zinc-950"
                         >
                           Clear all
                         </button>
@@ -500,18 +509,18 @@ export function NewsPage() {
 
                     <div className="mt-5 grid gap-6 sm:grid-cols-2">
                       <div>
-                        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/38">
+                        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/38 light:text-zinc-400">
                           Topic
                         </p>
                         <ul className="space-y-3">
                           {NEWS_FILTER_TOPICS.map((topic) => (
                             <li key={topic}>
-                              <label className="flex cursor-pointer items-center gap-3 text-[14px] text-light-space/88">
+                              <label className="flex cursor-pointer items-center gap-3 text-[14px] text-light-space/88 light:text-zinc-900">
                                 <input
                                   type="checkbox"
                                   checked={selectedTopics.has(topic)}
                                   onChange={() => toggleTopic(topic)}
-                                  className="size-4 rounded-full border border-light-space/35 bg-transparent accent-light-space"
+                                  className="size-4 rounded-full border border-light-space/35 bg-transparent accent-light-space light:border-black/25 light:accent-zinc-900"
                                 />
                                 <span>{topic}</span>
                               </label>
@@ -521,18 +530,18 @@ export function NewsPage() {
                       </div>
 
                       <div>
-                        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/38">
+                        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/38 light:text-zinc-400">
                           Year
                         </p>
                         <ul className="space-y-3">
                           {NEWS_FILTER_YEARS.map((year) => (
                             <li key={year}>
-                              <label className="flex cursor-pointer items-center gap-3 text-[14px] text-light-space/88">
+                              <label className="flex cursor-pointer items-center gap-3 text-[14px] text-light-space/88 light:text-zinc-900">
                                 <input
                                   type="checkbox"
                                   checked={selectedYears.has(year)}
                                   onChange={() => toggleYear(year)}
-                                  className="size-4 rounded-full border border-light-space/35 bg-transparent accent-light-space"
+                                  className="size-4 rounded-full border border-light-space/35 bg-transparent accent-light-space light:border-black/25 light:accent-zinc-900"
                                 />
                                 <span>{year}</span>
                               </label>
@@ -567,7 +576,7 @@ export function NewsPage() {
                     <div
                       ref={sortPanelRef}
                       role="menu"
-                      className="absolute left-0 top-full z-40 mt-3 min-w-[220px] rounded-[22px] border border-light-space/[0.1] bg-smoke-2 p-2 shadow-[0_18px_50px_rgba(0,0,0,0.42)] light:border-black/10 light:bg-white light:shadow-[0_18px_50px_rgba(0,0,0,0.12)] lg:left-auto lg:right-0"
+                      className="absolute left-0 top-full z-40 mt-3 min-w-[220px] rounded-[22px] border border-light-space/[0.1] bg-smoke-2 p-2 shadow-[0_18px_50px_rgba(0,0,0,0.42)] light:border-black/10 light:bg-section-grey-light light:shadow-[0_18px_50px_rgba(0,0,0,0.12)] lg:left-auto lg:right-0"
                     >
                     <label className="flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-3 hover:bg-white/[0.06] light:hover:bg-black/[0.04]">
                       <input
@@ -575,9 +584,9 @@ export function NewsPage() {
                         name="news-sort"
                         checked={sortOrder === "newest"}
                         onChange={() => setSortOrder("newest")}
-                        className="size-4 accent-light-space"
+                        className="size-4 accent-light-space light:accent-zinc-900"
                       />
-                      <span className="text-[13px] text-light-space">Newest first</span>
+                      <span className="text-[13px] text-light-space light:text-zinc-950">Newest first</span>
                     </label>
                     <label className="flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-3 hover:bg-white/[0.06] light:hover:bg-black/[0.04]">
                       <input
@@ -585,9 +594,9 @@ export function NewsPage() {
                         name="news-sort"
                         checked={sortOrder === "oldest"}
                         onChange={() => setSortOrder("oldest")}
-                        className="size-4 accent-light-space"
+                        className="size-4 accent-light-space light:accent-zinc-900"
                       />
-                      <span className="text-[13px] text-light-space">Oldest first</span>
+                      <span className="text-[13px] text-light-space light:text-zinc-950">Oldest first</span>
                     </label>
                   </div>
                   ) : null}
@@ -602,8 +611,8 @@ export function NewsPage() {
                   className={cn(
                     "p-2 transition-colors",
                     viewMode === "grid"
-                      ? "text-light-space"
-                      : "text-light-space/38 hover:text-light-space/65",
+                      ? "text-light-space light:text-zinc-950"
+                      : "text-light-space/38 hover:text-light-space/65 light:text-zinc-400 light:hover:text-zinc-800",
                   )}
                   aria-label="Grid view"
                 >
@@ -616,8 +625,8 @@ export function NewsPage() {
                   className={cn(
                     "p-2 transition-colors",
                     viewMode === "list"
-                      ? "text-light-space"
-                      : "text-light-space/38 hover:text-light-space/65",
+                      ? "text-light-space light:text-zinc-950"
+                      : "text-light-space/38 hover:text-light-space/65 light:text-zinc-400 light:hover:text-zinc-800",
                   )}
                   aria-label="List view"
                 >
@@ -628,9 +637,9 @@ export function NewsPage() {
           </div>
 
           {activeLabels.length > 0 ? (
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-sans text-[13px] text-light-space/42">
-              <span className="text-light-space/55">{filtered.length} articles</span>
-              <span className="text-light-space/20" aria-hidden>
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-sans text-[13px] text-light-space/42 light:text-zinc-400">
+              <span className="text-light-space/55 light:text-zinc-600">{filtered.length} articles</span>
+              <span className="text-light-space/20 light:text-zinc-300" aria-hidden>
                 ·
               </span>
               {activeLabels.map((label) => (
@@ -641,8 +650,8 @@ export function NewsPage() {
         </header>
 
         {filtered.length === 0 ? (
-          <div className="rounded-[28px] border border-light-space/[0.08] bg-white/[0.03] px-6 py-12 text-center">
-            <p className="text-[15px] text-light-space/52">No newsroom articles match your current filters.</p>
+          <div className="rounded-[28px] border border-light-space/[0.08] bg-white/[0.03] px-6 py-12 text-center light:border-black/[0.08] light:bg-section-grey-light">
+            <p className="text-[15px] text-light-space/52 light:text-zinc-600">No newsroom articles match your current filters.</p>
           </div>
         ) : viewMode === "grid" ? (
           <JournalFeedGrid items={filtered} />

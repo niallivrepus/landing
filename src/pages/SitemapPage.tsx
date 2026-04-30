@@ -54,7 +54,7 @@ export function SitemapPage() {
         className: cn(CONTENT_SHELL_COMPANY, PAGE_TOP_PAD_DENSE, "scroll-mt-20"),
       }}
     >
-        <h1 className="font-sans text-[32px] font-semibold leading-tight tracking-tight text-light-space md:text-[40px]">
+        <h1 className="font-sans text-[32px] font-semibold leading-tight tracking-[0em] text-light-space md:text-[40px]">
           Site map
         </h1>
         <div className="mt-4 h-px w-full bg-light-glass-10" aria-hidden />
@@ -64,7 +64,7 @@ export function SitemapPage() {
             <section key={col.id} aria-labelledby={`sitemap-${col.id}`}>
               <h2
                 id={`sitemap-${col.id}`}
-                className="font-sans text-[19px] font-semibold leading-snug tracking-tight text-light-space md:text-[21px]"
+                className="font-sans text-[19px] font-semibold leading-snug tracking-[0em] text-light-space md:text-[21px]"
               >
                 {col.heading}
               </h2>
@@ -88,15 +88,14 @@ export function SitemapPage() {
           <section aria-labelledby="sitemap-footer-only">
             <h2
               id="sitemap-footer-only"
-              className="font-sans text-[19px] font-semibold leading-snug tracking-tight text-light-space md:text-[21px]"
+              className="font-sans text-[19px] font-semibold leading-snug tracking-[0em] text-light-space md:text-[21px]"
             >
               Footer
             </h2>
             <SitemapLinkList
               links={[
-                { label: "Legal", href: "/legal" },
-                { label: "Privacy Policy", href: "/legal/privacy" },
-                { label: "Terms of Use", href: "/legal/terms" },
+                { label: "Privacy Policy", href: "/privacy" },
+                { label: "Terms of Service", href: "/terms" },
                 { label: "Site map", href: "/sitemap#sitemap-top" },
               ]}
             />

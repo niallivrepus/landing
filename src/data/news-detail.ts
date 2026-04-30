@@ -160,6 +160,29 @@ const NEWSROOM_BRIEF_BY_SLUG: Record<
   string,
   Omit<NewsBriefDetailDocument, "kind" | "slug" | "metaLine" | "title">
 > = {
+  "ethics-compliance-responsible-deployment": {
+    subtitle: "Ethics and compliance are product behaviors, not a policy appendix.",
+    introParagraphs: [
+      "**Position:** Ethics and compliance are product behaviors, not a policy appendix.",
+      "Jokuh operates in domains where credibility is the product — tokenized communities, regulated launches, sensitive internal operations, technical diligence, and decision support that affects real users and real capital. We treat ethics and compliance as load-bearing engineering constraints, wired into the product, the review workflow, and the deploy pipeline. They are not a marketing layer applied after the system feels impressive.",
+      "Our standard is direct: **high-agency systems require high-clarity boundaries.** We design for traceability, least-privilege access, explicit escalation, human accountability, and disclosure of model uncertainty whenever evidence is incomplete or confidence is bounded.",
+    ],
+    bodyTitle: "What we optimize for",
+    bodyParagraphs: [
+      "We optimize for outputs that are **useful and reviewable.** Speed without provenance is not a product — it is a liability. A client must be able to see where a claim came from, what assumptions shaped it, and the precise threshold at which the system should have paused and asked for human judgment.",
+      "In practice, this means we prefer **constrained autonomy** to performative autonomy. In legal, clinical, financial, identity, security-sensitive, or on-chain settlement contexts, our workflows escalate early rather than improvise through ambiguity. Improvisation is acceptable on ideation surfaces; it is not acceptable where the cost of being wrong is asymmetric.",
+      "**Operational controls.** Our control plane aligns with established frameworks — **SOC 2 Type II control objectives, ISO/IEC 27001 information security practices, the NIST AI Risk Management Framework, EU AI Act risk-tiering, and GDPR data minimization principles** — adapted for AI-native, Web3-adjacent workflows.",
+      "Inside the product, this surfaces as scoped permission boundaries, role-based access controls, approval checkpoints for destructive or externally consequential actions, immutable audit trails, signed action logs, and disclosure rules covering inferred intent, generated summaries, and model uncertainty. Cryptographic operations follow standard custody hygiene: keys are segregated, rotated, and never co-located with model context. Experimentation and production are separated by policy and by infrastructure — promotion into customer-facing surfaces requires narrower scopes, additional review, and full auditability beyond what an internal prototype needs.",
+      "**Human review and escalation.** Some tasks must never quietly auto-complete. If a workflow touches regulated content, personal data, account access, policy interpretation, financial settlement, or irreversible system state, the product routes to human confirmation rather than hiding the handoff.",
+      "Escalation is not failure. It is a product behavior. Mature systems recognize when evidence is thin, when instructions conflict, and when the cost of being approximately right is materially higher than the cost of asking. We instrument these handoffs explicitly so reviewers can see what triggered the escalation, what the system inferred, and what remains unverified.",
+      "**Privacy, security, and evidence.** We treat privacy and security as components of model quality. A polished answer is low quality if it relied on data outside the agreed boundary, accessed information too broadly, or made claims unsupported by retrievable evidence.",
+      "Our approach: **data minimization by default, auditable access paths, source-aware reasoning, retrieval grounding, and explicit scoping.** The system makes it easier — not harder — to see what it knows, what it inferred, and what still requires verification. We red-team for direct and indirect prompt injection, retrieval poisoning, and adversarial input shaping. Output provenance and citation are treated as first-class product surfaces, not afterthoughts.",
+      "For Web3 surfaces specifically, we apply additional controls: sanctions and OFAC screening on counterparty interactions, smart-contract interaction allowlists, custody isolation, and a hard separation between informational output and any action that moves value.",
+      "**What this means for clients and partners.** For Web3 communities, biotech teams, and enterprise operators, the bar is the same: **the product must support speed without weakening defensibility.** Workflows for policy-sensitive research, launch readiness, support operations, and internal knowledge work are designed around the actual risk profile of the task — not a uniform assumption that every action is low risk.",
+      "For procurement and diligence, we maintain a structured controls package — data flow diagrams, subprocessor list, model governance documentation, incident response procedures, and DPIA templates — available to qualified counterparties under NDA.",
+      "**Contact:** For a controls review, implementation walkthrough, or procurement-ready answers on responsible use, privacy, or security posture, route the request to our team and it will be assigned to the appropriate operator.",
+    ],
+  },
   "jokuh-spine-tighter-sync": {
     subtitle: "Lower latency handoff when you move between pods on desktop and web.",
     introParagraphs: [

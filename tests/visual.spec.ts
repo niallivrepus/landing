@@ -27,12 +27,12 @@ test.describe('visual snapshots', () => {
     });
   });
 
-  test('pods hero stays visually stable', async ({ page }) => {
+  test('download page hero stays visually stable', async ({ page }) => {
     await primeCookieConsent(page);
-    await page.goto('/pods');
+    await page.goto('/download');
     await stabilizeForScreenshot(page);
 
-    await expect(page.locator('section').first()).toHaveScreenshot('pods-hero-desktop.png', {
+    await expect(page.locator('section').first()).toHaveScreenshot('download-hero-desktop.png', {
       mask: [page.getByRole('banner')],
     });
   });

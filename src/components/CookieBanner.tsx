@@ -2,30 +2,12 @@ import { cn } from "@jokuh/gooey";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-const STORAGE_KEY = "jokuh.cookieConsent";
-const PREFS_KEY = "jokuh.cookiePreferences";
-
-type Prefs = { analytics: boolean; marketing: boolean };
-
-function readPrefs(): Prefs {
-  try {
-    const raw = localStorage.getItem(PREFS_KEY);
-    if (raw) {
-      const p = JSON.parse(raw) as Partial<Prefs>;
-      return {
-        analytics: typeof p.analytics === "boolean" ? p.analytics : true,
-        marketing: typeof p.marketing === "boolean" ? p.marketing : true,
-      };
-    }
-    const legacy = localStorage.getItem(STORAGE_KEY);
-    if (legacy === "accepted") return { analytics: true, marketing: true };
-    if (legacy === "declined") return { analytics: false, marketing: false };
-  } catch {
-    /* ignore */
-  }
-  return { analytics: true, marketing: true };
-}
+import {
+  hasCookieConsentDecision,
+  readCookiePrefsWithDefaults,
+  saveCookieConsent,
+  type CookiePrefs,
+} from "../lib/cookie-consent";
 
 export function CookieBanner() {
   const [open, setOpen] = useState(false);
@@ -33,15 +15,13 @@ export function CookieBanner() {
   const [marketing, setMarketing] = useState(true);
 
   const syncTogglesFromStorage = useCallback(() => {
-    const p = readPrefs();
+    const p = readCookiePrefsWithDefaults();
     setAnalytics(p.analytics);
     setMarketing(p.marketing);
   }, []);
 
   useEffect(() => {
-    try {
-      if (!localStorage.getItem(STORAGE_KEY)) setOpen(true);
-    } catch {
+    if (!hasCookieConsentDecision()) {
       setOpen(true);
     }
   }, []);
@@ -72,9 +52,7 @@ export function CookieBanner() {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      try {
-        if (localStorage.getItem(STORAGE_KEY)) setOpen(false);
-      } catch {
+      if (hasCookieConsentDecision()) {
         setOpen(false);
       }
     };
@@ -83,13 +61,8 @@ export function CookieBanner() {
   }, [open]);
 
   const saveDone = () => {
-    const prefs: Prefs = { analytics, marketing };
-    try {
-      localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
-      localStorage.setItem(STORAGE_KEY, "custom");
-    } catch {
-      /* ignore */
-    }
+    const prefs: CookiePrefs = { analytics, marketing };
+    saveCookieConsent(prefs);
     setOpen(false);
   };
 
@@ -106,7 +79,7 @@ export function CookieBanner() {
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6"
     >
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-[32px] light:bg-black/[0.35]"
+        className="absolute inset-0 bg-black/85 light:bg-black/[0.35] light:backdrop-blur-[32px]"
         aria-hidden
       />
 
@@ -115,13 +88,13 @@ export function CookieBanner() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
-          "relative z-[1] w-full max-w-[440px] rounded-2xl border border-white/10 bg-[#0f1117] px-8 py-9 shadow-[0_24px_80px_rgba(0,0,0,0.5)] sm:px-10 sm:py-10",
+          "relative z-[1] w-full max-w-[440px] rounded-2xl border border-white/10 bg-black px-8 py-9 shadow-[0_24px_80px_rgba(0,0,0,0.72)] sm:px-10 sm:py-10",
           "text-light-space light:border-black/10 light:bg-white light:text-zinc-900",
         )}
       >
         <h2
           id="cookie-preferences-title"
-          className="font-sans text-xl font-semibold leading-tight tracking-tight text-light-space light:text-zinc-950"
+          className="font-sans text-xl font-semibold leading-tight tracking-[0em] text-light-space light:text-zinc-950"
         >
           Cookie preferences center
         </h2>
@@ -130,14 +103,14 @@ export function CookieBanner() {
           We use cookies to run the site, understand usage, and improve your experience. You can change optional
           categories anytime.{" "}
           <Link
-            to="/legal/privacy"
+            to="/privacy"
             className="font-medium text-light-space underline decoration-light-space/30 underline-offset-[3px] hover:decoration-light-space/65 light:text-zinc-900 light:decoration-zinc-300 light:hover:decoration-zinc-500"
           >
             Learn more
           </Link>
         </p>
 
-        <ul className="mt-8 space-y-0 divide-y divide-white/10 border-t border-white/10 light:divide-zinc-100 light:border-zinc-100">
+        <ul className="mt-8 space-y-0">
           <li className="flex gap-3 py-5">
             <input
               type="checkbox"
@@ -145,7 +118,7 @@ export function CookieBanner() {
               readOnly
               disabled
               tabIndex={-1}
-              className="mt-0.5 size-[18px] shrink-0 cursor-not-allowed rounded border border-white/16 bg-white/10 accent-white light:border-zinc-200 light:bg-zinc-100 light:accent-zinc-900"
+              className="mt-0.5 size-[18px] shrink-0 cursor-not-allowed rounded border border-white/16 bg-white/10 accent-white light:border-zinc-200 light:bg-section-grey-light light:accent-zinc-900"
               aria-label="Strictly necessary cookies, always active"
             />
             <div className="min-w-0">

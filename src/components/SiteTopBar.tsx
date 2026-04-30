@@ -38,7 +38,7 @@ function NavLogo({ width = 34, height = 20 }: { width?: number; height?: number 
   );
 }
 
-type MegaLink = Pick<RigidLink, "label" | "href" | "navGlyph">;
+type MegaLink = Pick<RigidLink, "label" | "href" | "summary" | "navGlyph">;
 type MegaColumn = { heading: string; links: MegaLink[] };
 type MegaGroup = {
   id: string;
@@ -64,6 +64,9 @@ function buildNavGroups(cols: ReturnType<typeof resolveRigidNavColumns>): MegaGr
 function showOffSiteGroupGlyph(_groupId: string) {
   return false;
 }
+
+const megaSectionLabel =
+  "nav-fade-item mb-4 font-sans text-[11px] font-semibold tracking-[0.08em] text-light-space/42 uppercase light:text-zinc-500";
 
 function NavSearchButton({
   className,
@@ -112,7 +115,7 @@ export function TryJokuhCta({
 
   return (
     <Link
-      to="/waitlist"
+      to="/download"
       onClick={onNavigate}
       style={style}
       {...hoverSoundProps}
@@ -224,6 +227,10 @@ export function SiteTopBar() {
                             ),
                       )}
                       onMouseEnter={() => setOpenId(g.id)}
+                      onClick={() => {
+                        cancelClose();
+                        setOpenId((current) => (current === g.id ? null : g.id));
+                      }}
                       aria-expanded={openId === g.id}
                     >
                       <span className="inline-flex items-center gap-1.5">
@@ -282,7 +289,7 @@ export function SiteTopBar() {
                 >
                   <div>
                     <p
-                      className="nav-fade-item mb-3 font-sans text-[11px] font-normal tracking-[0.06em] text-light-space/40 uppercase light:text-zinc-500"
+                      className={megaSectionLabel}
                       style={{ "--item-index": 0 } as CSSProperties}
                     >
                       {openGroup.primaryHeading ?? openGroup.label}
@@ -303,13 +310,13 @@ export function SiteTopBar() {
                             <TopNavAnchor
                               href={item.href}
                               className={cn(
-                                "premium-soft-fade block rounded-md py-1.5 font-sans text-[1.375rem] leading-snug font-semibold tracking-[-0.02em] text-light-space first:pt-0 hover:text-light-space/96 light:text-zinc-950 light:hover:text-zinc-700 md:text-[1.5rem] md:leading-[1.2]",
+                                "premium-soft-fade block rounded-md py-2 font-sans text-light-space first:pt-0 hover:text-light-space/96 light:text-zinc-950 light:hover:text-zinc-700",
                                 dim && "opacity-[0.28]",
                               )}
                               onMouseEnter={() => setPrimaryHoverKey(pk)}
                               onClick={() => setOpenId(null)}
                             >
-                              <span className="inline-flex items-center gap-1.5">
+                              <span className="inline-flex items-center gap-1.5 text-[1.375rem] leading-snug font-semibold tracking-[0em] md:text-[1.5rem] md:leading-[1.2]">
                                 {item.label}
                                 {showOffSiteNavGlyph(item) ? <OffSiteGlyph className="translate-y-px" /> : null}
                               </span>
@@ -330,7 +337,7 @@ export function SiteTopBar() {
                     return (
                       <div key={col.heading}>
                         <p
-                          className="nav-fade-item mb-4 font-sans text-[13px] font-semibold tracking-[0.04em] text-light-space/50 uppercase light:text-zinc-400"
+                          className={megaSectionLabel}
                           style={{ "--item-index": columnOffset } as CSSProperties}
                         >
                           {col.heading}
@@ -384,7 +391,7 @@ export function SiteTopBar() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="grid h-14 shrink-0 grid-cols-[2.5rem_1fr_2.5rem] items-center border-b border-light-space/10 px-4 light:border-black/[0.08]"
+              className="grid h-14 shrink-0 grid-cols-[2.5rem_1fr_2.5rem] items-center px-4"
             >
               <div />
               <Link to="/" className="flex justify-center" aria-label="Jokuh home">
@@ -392,7 +399,7 @@ export function SiteTopBar() {
               </Link>
               <button
                 type="button"
-                className="premium-soft-button flex size-10 items-center justify-center justify-self-end rounded-full text-light-space hover:bg-white/[0.05] light:text-zinc-950 light:hover:bg-zinc-100"
+                className="premium-soft-button flex size-10 items-center justify-center justify-self-end rounded-full text-light-space hover:bg-white/[0.05] light:text-zinc-950 light:hover:bg-zinc-200"
                 aria-label="Close menu"
                 onClick={() => setMobileOpen(false)}
               >
@@ -421,7 +428,7 @@ export function SiteTopBar() {
                         <button
                           type="button"
                           onClick={() => setOpenId(g.id)}
-                          className="block w-full py-3 text-left font-sans text-[2.25rem] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950"
+                          className="block w-full py-3 text-left font-sans text-[2.25rem] font-semibold tracking-[0em] text-light-space light:text-zinc-950"
                         >
                           <span className="inline-flex items-center gap-2">
                             {g.label}
@@ -468,7 +475,7 @@ export function SiteTopBar() {
                           >
                             <TopNavAnchor
                               href={item.href}
-                              className="block py-3 font-sans text-[2.25rem] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950"
+                              className="block py-3 font-sans text-[2.25rem] font-semibold tracking-[0em] text-light-space light:text-zinc-950"
                               onClick={() => { setMobileOpen(false); setOpenId(null); }}
                             >
                               <span className="inline-flex items-center gap-2">
@@ -489,7 +496,7 @@ export function SiteTopBar() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="shrink-0 border-t border-light-space/10 bg-dark-space px-4 py-4 light:border-black/[0.08] light:bg-white"
+              className="shrink-0 bg-dark-space px-4 py-4 light:bg-white"
             >
               <TryJokuhCta
                 className="nav-fade-item w-full"

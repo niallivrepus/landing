@@ -1,148 +1,101 @@
-import { OO, cn } from "@jokuh/gooey";
+import { cn } from "@jokuh/gooey";
+import { Download } from "lucide-react";
 import { FaqSection } from "../components/FaqSection";
-import { MarketingPageFrame } from "../components/system";
-import { CONTENT_SHELL_COMPANY } from "../components/system/shells";
+import { EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
+import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { SecondaryLink } from "../components/SecondaryLink";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
-function HandPhoneIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="52"
-      height="60"
-      viewBox="0 0 52 60"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path
-        d="M26 4h10a2 2 0 012 2v36a2 2 0 01-2 2H16a2 2 0 01-2-2V6a2 2 0 012-2h10z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M22 44h8"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8 28c-2.5 2-4 5.5-4 10v6c0 4 2 7 5 8l6 2M44 28c2.5 2 4 5.5 4 10v6c0 4-2 7-5 8l-6 2"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12 24c0-6 6.5-11 14-11s14 5 14 11"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+const APP_STORE_BADGE_DARK = "/badges/apple-dark.svg";
+const APP_STORE_BADGE_LIGHT = "/badges/apple-light.svg";
+const GOOGLE_PLAY_BADGE_DARK = "/badges/playstore-dark.svg";
+const GOOGLE_PLAY_BADGE_LIGHT = "/badges/playstore-light.svg";
+
+const MOBILE_PREVIEW_IMAGE = "/download/mobile-preview.png";
+const DESKTOP_PREVIEW_IMAGE = "/download/2.png";
+
+function DownloadPreviewCard({
+  overlayImageSrc,
+  overlayImageAlt,
+  className,
+}: {
+  overlayImageSrc: string;
+  overlayImageAlt: string;
+  className?: string;
+}) {
+  const frame = cn(
+    "aspect-square w-full min-w-0 shrink-0 overflow-hidden max-md:mx-auto max-md:max-w-[min(100%,420px)]",
+    className,
   );
-}
-
-function QrCornerFinder({ ox, oy }: { ox: number; oy: number }) {
-  return (
-    <>
-      <rect x={ox} y={oy} width={7} height={7} fill="#ffffff" />
-      <rect x={ox + 1} y={oy + 1} width={5} height={5} fill="#0a0a0a" />
-      <rect x={ox + 2} y={oy + 2} width={3} height={3} fill="#ffffff" />
-    </>
-  );
-}
-
-function FakeQr({ seed, className }: { seed: number; className?: string }) {
-  const n = 25;
-  let rng = seed >>> 0;
-  const dots: [number, number][] = [];
-  for (let i = 0; i < 140; i++) {
-    rng = (rng * 1664525 + 1013904223) >>> 0;
-    dots.push([rng % n, (rng >> 10) % n]);
-  }
 
   return (
-    <svg viewBox={`0 0 ${n} ${n}`} className={className} aria-hidden>
-      <rect width={n} height={n} fill="#0a0a0a" />
-      <QrCornerFinder ox={0} oy={0} />
-      <QrCornerFinder ox={18} oy={0} />
-      <QrCornerFinder ox={0} oy={18} />
-      {dots.map(([x, y], i) => (
-        <rect key={i} x={x} y={y} width={1} height={1} fill="#ffffff" />
-      ))}
-    </svg>
-  );
-}
-
-function AppleGlyph({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 20" width="16" height="20" aria-hidden>
-      <path
-        fill="currentColor"
-        d="M12.64 1.09c-.95 1.16-1.54 2.65-1.38 4.2.13.02.27.03.41.03 1.35-.02 2.72-.73 3.58-1.86.9-1.19 1.19-2.7.98-4.15-1.28.15-2.55.78-3.59 1.78zM10.5 5.8c-2.14-.1-4.45 1.58-5.28 1.58-.86 0-2.45-1.49-4.03-1.45C.4 5.96-1.1 7.53.7 11.2c.86 1.78 1.82 3.77 3.15 3.78.78 0 1.08-.5 2.02-.5.95 0 1.22.5 2.03.5 1.34 0 2.42-2.26 3.28-4.03-2.9-1.6-2.43-4.78.32-5.15z"
-      />
-    </svg>
-  );
-}
-
-function GooglePlayGlyph({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" width="18" height="18" aria-hidden>
-      <path fill="currentColor" d="M3 20.5V3.5L20.5 12 3 20.5z" />
-    </svg>
-  );
-}
-
-function MobileAppSection() {
-  return (
-    <section
-      className="bg-smoke-2 px-4 py-20 text-light-space md:px-8 md:py-28 light:bg-[#f4effc] light:text-[#402060]"
-      aria-labelledby="mobile-download-heading"
-    >
-      <div className="mx-auto flex max-w-[920px] flex-col items-center text-center">
-        <HandPhoneIcon className="mb-10 text-light-space md:mb-12 light:text-[#5a3d8a]" />
-
-        <h2
-          id="mobile-download-heading"
-          className="max-w-xl font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-light-space md:text-[2.25rem] light:text-[#402060]"
-        >
-          Take Jokuh on the go
-        </h2>
-        <p className="mt-5 max-w-md font-sans text-[15px] leading-relaxed text-light-space/55 md:text-base light:text-[#5a4580]/80">
-          Start a thought here, finish anywhere. Jokuh remembers across your phone, desktop, and the
-          web.
-        </p>
-
-        <div className="mt-14 grid w-full max-w-[640px] grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5 md:mt-16">
-          <article className="flex flex-col items-center rounded-[24px] border border-light-space/[0.08] bg-smoke-2 px-6 pb-8 pt-8 md:px-8 md:pb-10 md:pt-10 light:border-black/[0.1] light:bg-white light:shadow-[0_16px_48px_-20px_rgba(0,0,0,0.08)]">
-            <FakeQr seed={0x9e3779b9} className="aspect-square w-[min(72vw,200px)]" />
-            <a
-              href="#"
-              className="mt-8 inline-flex items-center gap-2 rounded-full border border-light-space/35 px-5 py-2.5 font-sans text-sm font-medium text-light-space transition-colors hover:border-light-space/55 hover:bg-white/[0.04] light:border-black/20 light:text-zinc-900 light:hover:bg-black/[0.04]"
-            >
-              <AppleGlyph className="shrink-0" />
-              Apple
-            </a>
-          </article>
-
-          <article className="flex flex-col items-center rounded-[24px] border border-light-space/[0.08] bg-smoke-2 px-6 pb-8 pt-8 md:px-8 md:pb-10 md:pt-10 light:border-black/[0.1] light:bg-white light:shadow-[0_16px_48px_-20px_rgba(0,0,0,0.08)]">
-            <FakeQr seed={0x6c078965} className="aspect-square w-[min(72vw,200px)]" />
-            <a
-              href="#"
-              className="mt-8 inline-flex items-center gap-2 rounded-full border border-light-space/35 px-5 py-2.5 font-sans text-sm font-medium text-light-space transition-colors hover:border-light-space/55 hover:bg-white/[0.04] light:border-black/20 light:text-zinc-900 light:hover:bg-black/[0.04]"
-            >
-              <GooglePlayGlyph className="shrink-0" />
-              Google Play
-            </a>
-          </article>
-        </div>
+    <div className={frame}>
+      <div className={cn("relative size-full overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
+        <img
+          src={overlayImageSrc}
+          alt={overlayImageAlt}
+          className="pointer-events-none absolute inset-0 size-full object-cover"
+          draggable={false}
+        />
       </div>
-    </section>
+    </div>
+  );
+}
+
+function MobileStoreBadges({
+  appStoreHref,
+  playStoreHref,
+}: {
+  appStoreHref: string;
+  playStoreHref: string;
+}) {
+  return (
+    <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-5">
+      <a
+        href={appStoreHref}
+        rel="noopener noreferrer"
+        target="_blank"
+        className="inline-block shrink-0 rounded-md transition-opacity hover:opacity-90"
+        aria-label="Download on the App Store"
+      >
+        <img
+          src={APP_STORE_BADGE_DARK}
+          alt=""
+          width={120}
+          height={40}
+          className="h-10 w-auto object-contain light:hidden"
+        />
+        <img
+          src={APP_STORE_BADGE_LIGHT}
+          alt=""
+          width={120}
+          height={40}
+          className="hidden h-10 w-auto object-contain light:block"
+        />
+      </a>
+      <a
+        href={playStoreHref}
+        rel="noopener noreferrer"
+        target="_blank"
+        className="inline-block shrink-0 rounded-md transition-opacity hover:opacity-90"
+        aria-label="Get it on Google Play"
+      >
+        <img
+          src={GOOGLE_PLAY_BADGE_DARK}
+          alt=""
+          width={120}
+          height={40}
+          className="h-10 w-auto object-contain light:hidden"
+        />
+        <img
+          src={GOOGLE_PLAY_BADGE_LIGHT}
+          alt=""
+          width={120}
+          height={40}
+          className="hidden h-10 w-auto object-contain light:block"
+        />
+      </a>
+    </div>
   );
 }
 
@@ -150,65 +103,94 @@ export function DownloadPage() {
   useDocumentTitle("Download — Jokuh");
 
   return (
-    <MarketingPageFrame footer={null} className="bg-[#07070b] text-light-space light:bg-[#f4effc] light:text-[#402060]" withFontSans>
-      <div
-        className={cn(
-          CONTENT_SHELL_COMPANY,
-          "flex min-h-[calc(100dvh-3.5rem)] flex-col items-center justify-center pt-24 pb-16 md:pt-28",
-        )}
+    <MarketingPageFrame footer={null} className="light:bg-white light:text-[#402060]" withFontSans>
+      {/* Mobile — copy left, visual right */}
+      <section
+        className={cn(CONTENT_SHELL_WIDE, "pt-24 pb-14 md:pt-28 md:pb-20")}
+        aria-labelledby="download-mobile-heading"
       >
-          <h1 className="text-center text-3xl font-semibold tracking-tight md:text-4xl">
-            <span className="block">Download</span>
-            <span className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 md:mt-6 md:gap-x-3">
-              <span className="text-2xl md:text-3xl">for</span>
-              <span
-                className="inline-flex shrink-0 -rotate-6 items-center justify-center"
-                aria-hidden
+        <div className="grid items-center gap-12 md:grid-cols-2 md:gap-14 lg:gap-20">
+          <div className="min-w-0">
+            <h1
+              id="download-mobile-heading"
+              className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[0em] text-light-space light:text-[#402060]"
+            >
+              Download Jokuh
+              <br />
+              for mobile
+            </h1>
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-light-space/60 light:text-[#5a4580]/85 md:text-base">
+              Continue threads, capture voice, and stay in sync from your phone.
+            </p>
+
+            <MobileStoreBadges appStoreHref="#" playStoreHref="#" />
+          </div>
+
+          <DownloadPreviewCard
+            overlayImageSrc={MOBILE_PREVIEW_IMAGE}
+            overlayImageAlt="Jokuh mobile app on a smartphone"
+            className="max-md:mx-auto max-md:max-w-[min(100%,420px)]"
+          />
+        </div>
+      </section>
+
+      {/* Desktop — visual left, copy right */}
+      <section
+        className={cn(CONTENT_SHELL_WIDE, "py-14 md:py-20")}
+        aria-labelledby="download-desktop-heading"
+      >
+        <div className="grid items-center gap-12 md:grid-cols-2 md:gap-14 lg:gap-20">
+          <DownloadPreviewCard
+            overlayImageSrc={DESKTOP_PREVIEW_IMAGE}
+            overlayImageAlt="Jokuh desktop app on a laptop"
+          />
+          <div className="min-w-0">
+            <h2
+              id="download-desktop-heading"
+              className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[0em] text-light-space light:text-[#402060]"
+            >
+              Download Jokuh
+              <br />
+              for desktop
+            </h2>
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-light-space/60 light:text-[#5a4580]/85 md:text-base">
+              Capture meetings, notes, and screen context in one place. Built for macOS and Windows.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#"
+                className="inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-white px-6 font-sans text-[14px] font-semibold text-zinc-950 transition hover:bg-zinc-100 light:bg-zinc-950 light:text-white light:hover:bg-zinc-800"
               >
-                <span className="inline-flex light:hidden">
-                  <OO
-                    style={{ width: 46, height: 46 }}
-                    backgroundColor="#12131d"
-                    borderColor="rgba(228, 230, 255, 0.18)"
-                    bodyGradientStart="#525a95"
-                    bodyGradientEnd="#7a88d0"
-                    bodyStrokeColor="#a2b1ff"
-                    eyeColor="#FFFFFF"
-                  />
-                </span>
-                <span className="hidden light:inline-flex">
-                  <OO
-                    style={{ width: 46, height: 46 }}
-                    backgroundColor="#e5daf8"
-                    borderColor="rgba(64, 32, 96, 0.14)"
-                    bodyGradientStart="#c9b8ee"
-                    bodyGradientEnd="#ddd0f7"
-                    bodyStrokeColor="#a88fd8"
-                    eyeColor="#FFFFFF"
-                  />
-                </span>
-              </span>
-              <span className="sr-only">Jokuh </span>
-              <span className="text-2xl md:text-3xl">desktop</span>
-            </span>
-          </h1>
-          <SecondaryLink href="#" className="mt-10 text-[15px] text-light-space/75 hover:text-light-space light:text-[#53357d] light:hover:text-[#402060]">
-            System requirements & coverage
-          </SecondaryLink>
-      </div>
+                <Download className="size-4 shrink-0" strokeWidth={2} aria-hidden />
+                macOS
+              </a>
+              <a
+                href="#"
+                className="inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-white px-6 font-sans text-[14px] font-semibold text-zinc-950 transition hover:bg-zinc-100 light:bg-zinc-950 light:text-white light:hover:bg-zinc-800"
+              >
+                <Download className="size-4 shrink-0" strokeWidth={2} aria-hidden />
+                Windows
+              </a>
+            </div>
+            <div className="mt-8">
+              <SecondaryLink href="#" className="text-light-space/90 hover:text-light-space light:text-[#402060]">
+                Learn more about the desktop app
+              </SecondaryLink>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <MobileAppSection />
-
-      <div className="mx-auto max-w-[980px] px-4 py-20 md:px-8 md:py-28">
+      <div className={cn(CONTENT_SHELL_WIDE, "py-16 md:py-24")}>
         <FaqSection
           items={[
             {
               question: "What are the system requirements?",
-              answer: "Jokuh desktop runs on macOS 13+, Windows 10+, and Ubuntu 22.04+. The mobile app requires iOS 16+ or Android 12+.",
+              answer: "Jokuh desktop runs on macOS 13+, Windows 10+, and Ubuntu 22.04+. Mobile apps support recent iOS and Android releases.",
             },
             {
               question: "Is Jokuh free to download?",
-              answer: "Yes, the desktop and mobile apps are free to download. Some features may require a subscription once the platform reaches general availability.",
+              answer: "Yes. The desktop and mobile apps are free to download. Some features may require a subscription once the platform reaches general availability.",
             },
             {
               question: "How do I update the app?",

@@ -1,8 +1,6 @@
 import { ProductCenteredShowcase } from "../components/product/ProductCenteredShowcase";
 import { ProductCloserLookExplorer } from "../components/product/ProductCloserLookExplorer";
-import { ProductFullBleedReveal } from "../components/product/ProductFullBleedReveal";
 import { ProductHighlightsCarousel } from "../components/product/ProductHighlightsCarousel";
-import { V1llainsHoneycombHero } from "../components/product/V1llainsHoneycombHero";
 import { ClaimIdentityCta } from "../components/landing/ClaimIdentityCta";
 import { FaqSection } from "../components/FaqSection";
 import { MarketingPageFrame } from "../components/system";
@@ -19,7 +17,7 @@ export function ProductPage({ productId }: { productId: ProductId }) {
   const heroSentence = product.summary.match(/^[^.]+\./)?.[0] ?? product.summary;
   const { resolvedTheme } = useTheme();
 
-  useDocumentTitle(`${product.title} — Jokuh`);
+  useDocumentTitle(`${product.title} · Jokuh`);
 
   return (
     <MarketingPageFrame
@@ -27,41 +25,21 @@ export function ProductPage({ productId }: { productId: ProductId }) {
       withFontSans
       theme={resolvedTheme === "light" ? "light" : "dark"}
     >
-      <section className="pt-24 pb-10 md:pt-28 md:pb-16">
-        <div className={cn(CONTENT_SHELL_WIDE, "flex flex-col items-center text-center")}>
-          <h1 className="max-w-[min(100%,920px)] text-[clamp(2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-zinc-950 dark:text-light-space">
-            {heroSentence.replace(/\s+your\s+thinking\.?$/, "")}
-            <br className="hidden md:inline" />
-            {" your thinking."}
+      <section className="flex min-h-[100svh] flex-col pt-24 pb-6 md:pt-28 md:pb-8">
+        <div className={cn(CONTENT_SHELL_WIDE, "flex flex-col items-center py-[40px] text-center")}>
+          <h1 className="max-w-[min(100%,920px)] text-[clamp(2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[0em] text-zinc-950 dark:text-light-space">
+            {heroSentence}
           </h1>
           <div className="mt-8">
-            <ClaimIdentityCta href="/waitlist">Make memories</ClaimIdentityCta>
+            <ClaimIdentityCta href="/download">Build profile</ClaimIdentityCta>
           </div>
         </div>
 
-        <div className={cn(CONTENT_SHELL_WIDE, "mt-14 md:mt-20")}>
-          {productId === "v1llains" ? (
-            <div className="relative overflow-hidden rounded-[32px] border border-zinc-800/60 bg-black shadow-[0_24px_80px_rgba(0,0,0,0.5)]" style={{ height: "min(70vh, 720px)" }}>
-              <V1llainsHoneycombHero />
-              <img
-                src="/brand/v1llains-logo.svg"
-                alt="V1llains"
-                className="pointer-events-none absolute top-1/2 left-1/2 z-20 w-[clamp(200px,45%,420px)] -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_40px_rgba(0,0,0,0.7)]"
-                draggable={false}
-              />
-            </div>
-          ) : (
-            <div className="relative overflow-hidden rounded-[32px] border border-zinc-200 bg-zinc-100 shadow-[0_24px_80px_rgba(15,23,42,0.08)] dark:border-zinc-800/60 dark:bg-black dark:shadow-[0_24px_80px_rgba(0,0,0,0.5)]">
-              <div className="aspect-[1086/1153] max-h-[70vh] w-full bg-zinc-100 dark:bg-black" />
-            </div>
-          )}
-        </div>
       </section>
 
       <ProductHighlightsCarousel {...detail.highlights} />
       <ProductCloserLookExplorer {...detail.closerLook} />
       <ProductCenteredShowcase {...detail.centerpiece} />
-      <ProductFullBleedReveal {...detail.reveal} />
 
       <div className={cn(CONTENT_SHELL_WIDE, "py-20 md:py-28")}>
         <FaqSection
@@ -90,7 +68,7 @@ export function ProductPage({ productId }: { productId: ProductId }) {
         />
       </div>
 
-      <div className="border-t border-zinc-200 px-4 py-10 text-center font-sans text-[13px] text-zinc-500 dark:border-light-space/[0.06] dark:text-light-space/40 md:px-8">
+      <div className="px-4 py-10 text-center font-sans text-[13px] text-zinc-500 dark:text-light-space/40 md:px-8">
         <Link
           to={`/#${productId}`}
           className="underline-offset-4 hover:text-zinc-950 hover:underline dark:hover:text-light-space"

@@ -32,12 +32,14 @@ export const NEWS_CATEGORIES: (NewsCategory | "All")[] = [
 export const NEWS_FILTER_TOPICS = [
   "Pods",
   "Blurbs",
-  "API Platform",
+  "Agent Portal",
   "Community",
   "Culture & careers",
   "Events",
   "Safety",
 ] as const;
+
+const PUBLIC_NEWS_ITEM_LIMIT = 4;
 
 export type NewsTopic = (typeof NEWS_FILTER_TOPICS)[number];
 
@@ -102,23 +104,24 @@ function mediumToNewsItem(entry: MediumFeedFile["items"][number]): NewsItem {
 const STATIC_NEWS_ITEMS: NewsItem[] = [
   {
     id: "ethics-compliance-operating-principles",
-    title: "Ethics and compliance are product behaviors",
-    excerpt: "How Jokuh approaches boundaries, escalation, reviewability, and responsible deployment for high-stakes work.",
+    title: "Ethics, Compliance & Responsible Deployment",
+    excerpt: "Ethics and compliance are product behaviors, not a policy appendix.",
     category: "Safety",
     topics: ["Safety"],
     publishedAt: "2026-03-28",
-    readMinutes: 5,
+    readMinutes: 6,
     cardGradient: "linear-gradient(145deg, #020617 0%, #0f3d3e 42%, #152238 100%)",
     cardImage: "/journal-art/news-green-flow.png",
     lavaLamp: "jungle",
-    internalHref: "/ethics",
+    slug: "ethics-compliance-responsible-deployment",
+    internalHref: newsroomPath("ethics-compliance-responsible-deployment"),
   },
   {
     id: "introducing-jokuh-cortex",
     title: "Introducing Jokuh Cortex",
     excerpt: "Designed for professional work — benchmarks, latency sweeps, and pilot stories.",
     category: "Product",
-    topics: ["API Platform", "Pods"],
+    topics: ["Agent Portal", "Pods"],
     publishedAt: "2026-03-05",
     readMinutes: 14,
     cardGradient: "linear-gradient(160deg, #020617 0%, #0f172a 45%, #1e3a5f 100%)",
@@ -132,7 +135,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     title: "Jokuh Spine: tighter sync for multi-pod sessions",
     excerpt: "Lower latency handoff when you move between pods on desktop and web.",
     category: "Product",
-    topics: ["Pods", "API Platform"],
+    topics: ["Pods", "Agent Portal"],
     publishedAt: "2026-03-18",
     readMinutes: 4,
     cardGradient: "linear-gradient(145deg, #020617 0%, #1e1b4b 50%, #312e81 100%)",
@@ -160,7 +163,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     title: "Gooey 0.9: accessible focus rings and motion prefs",
     excerpt: "Respects reduced motion and improves keyboard navigation across primitives.",
     category: "Engineering",
-    topics: ["Blurbs", "API Platform"],
+    topics: ["Blurbs", "Agent Portal"],
     publishedAt: "2026-02-20",
     readMinutes: 6,
     cardGradient: "linear-gradient(150deg, #020617 0%, #1e293b 40%, #334155 100%)",
@@ -260,7 +263,7 @@ function mergeNews(): NewsItem[] {
   return merged;
 }
 
-export const NEWS_ITEMS: NewsItem[] = mergeNews();
+export const NEWS_ITEMS: NewsItem[] = mergeNews().slice(0, PUBLIC_NEWS_ITEM_LIMIT);
 
 const yearSet = new Set<number>();
 for (const n of NEWS_ITEMS) {

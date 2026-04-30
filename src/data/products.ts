@@ -1,4 +1,16 @@
-export const PRODUCT_IDS = ["pods", "blurbs", "spine", "vortex", "passport", "orb", "realms", "v1llains"] as const;
+export const PRODUCT_IDS = [
+  "pods",
+  "blurbs",
+  "spine",
+  "calls",
+  "messages",
+  "profile",
+  "vortex",
+  "passport",
+  "orb",
+  "realms",
+  "v1llains",
+] as const;
 export type ProductId = (typeof PRODUCT_IDS)[number];
 
 export type Product = {
@@ -22,21 +34,51 @@ export const PRODUCTS: Record<ProductId, Product> = {
   blurbs: {
     id: "blurbs",
     title: "Blurbs",
-    summary: "Turn talk into clean copy.",
+    summary: "Seeds of thought from what you already said.",
     body: [
-      "Blurbs turn raw conversation—meetings, chats, voice—into drafts you can ship. The model understands context from how you already talk, not from a blank text box.",
-      "Each blurb can land differently per follower: tighter for investors, warmer for friends, sharper for builders—without you rewriting the same story four times.",
-      "The goal is not more posts; it is fewer tabs between what was said and what goes out.",
+      "Blurbs are short, AI-crystallized seeds pulled from the conversations you are already having. You choose what stays private and what you publish.",
+      "Posting becomes a routing decision, not a creation chore. Private by default. Public only when you say so.",
+      "They inherit Spine’s confidentiality: source material is processed the same way the rest of your memory is—yours, not the company’s.",
     ],
   },
   spine: {
     id: "spine",
     title: "Spine",
-    summary: "See time more clearly.",
+    summary: "The encrypted memory layer at the core of Jokuh.",
     body: [
-      "The spine replaces endless feeds with time as bubbles: days, weeks, months, and years you can move through deliberately.",
-      "It preserves where you have been and what mattered next, instead of washing context away with infinite scroll.",
-      "When you move between pods and sessions—especially on desktop and web—the spine is the continuity layer that keeps the story intact.",
+      "Spine is persistent memory your agents read and write. Conversations, decisions, documents, and signals you keep—encrypted at rest, in motion, and in compute—crystallize into your Knowledge Pool.",
+      "It is built so the company that ships it cannot read what it stores. Keys are yours. Forgetting is one click, and it is real.",
+      "From Calls and Messages to Blurbs and connected tools, Spine is the vault that learns on your terms.",
+    ],
+  },
+  calls: {
+    id: "calls",
+    title: "Calls",
+    summary: "Encrypted voice that flows into your Knowledge Pool.",
+    body: [
+      "End-to-end encrypted voice: audio is private on the wire, and the transcript and summary live in your Spine, not a vendor’s model farm.",
+      "Transcription and crystallization run in a trusted execution path so plaintext never becomes someone else’s product.",
+      "Search past calls, spin Blurbs from highlights, and let your Sidekick join quietly—all without giving up the room.",
+    ],
+  },
+  messages: {
+    id: "messages",
+    title: "Messages",
+    summary: "Encrypted threads that compound in your Spine.",
+    body: [
+      "The wire is end-to-end encrypted; the thread persists in your Spine where only you and the people you addressed can read it.",
+      "Text, files, voice memos, and value can share one thread. Your agent can search and act inside the same confidentiality model as the rest of Jokuh.",
+      "Forget a thread and the keys are gone. The pattern mainstream messengers use—encrypted today, forgotten tomorrow—is not the trade here.",
+    ],
+  },
+  profile: {
+    id: "profile",
+    title: "Profile",
+    summary: "Where your Sigil (your living identity) shows up.",
+    body: [
+      "Profile is the public surface for your Sigil: a self-owned, evolving digital identity that compounds from how you actually think, not a leased bio.",
+      "Public blurbs, verifiable proofs, and your glyph sit beside facets you can scope to collaborators, friends, or anonymity.",
+      "It is not a Linktree or a static page; it is the seat of identity for an operating system that runs on you.",
     ],
   },
   vortex: {

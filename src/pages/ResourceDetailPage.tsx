@@ -1,9 +1,9 @@
-import { CookieBanner } from "../components/CookieBanner";
 import {
   EditorialArticleHeadingSection,
   EditorialArticleProseSection,
   EditorialArticleShellSection,
   EditorialArticleTemplate,
+  pageHeroEyebrowUppercaseClass,
 } from "../components/system";
 import { SiteLink } from "../components/SiteLink";
 import { getResourceDetailPage, type ResourcePageId } from "../data/resource-detail-pages";
@@ -17,7 +17,7 @@ function ResourceHighlights({ highlights }: { highlights: string[] }) {
         {highlights.map((highlight) => (
           <div
             key={highlight}
-            className="rounded-[24px] border border-light-space/[0.08] bg-white/[0.03] px-5 py-5 font-sans text-[0.95rem] leading-[1.55] text-light-space/72 light:border-black/[0.08] light:bg-zinc-100 light:text-zinc-700"
+            className="rounded-[24px] border border-light-space/[0.08] bg-white/[0.03] px-5 py-5 font-sans text-[0.95rem] leading-[1.55] text-light-space/72 light:border-black/[0.08] light:bg-section-grey-light light:text-zinc-700"
           >
             {highlight}
           </div>
@@ -40,11 +40,11 @@ function ResourceCta({
 }) {
   return (
     <EditorialArticleShellSection className="pb-14 md:pb-20">
-      <div className="rounded-[32px] border border-light-space/[0.08] bg-white/[0.03] px-6 py-7 md:px-8 md:py-8 light:border-black/[0.08] light:bg-zinc-100">
-        <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-light-space/42 light:text-zinc-500">
+      <div className="rounded-[32px] border border-light-space/[0.08] bg-white/[0.03] px-6 py-7 md:px-8 md:py-8 light:border-black/[0.08] light:bg-section-grey-light">
+        <p className={pageHeroEyebrowUppercaseClass}>
           Further reading
         </p>
-        <h2 className="mt-4 max-w-[28rem] font-sans text-[1.45rem] font-semibold leading-[1.14] tracking-[-0.03em] text-light-space light:text-zinc-950 md:text-[1.8rem]">
+        <h2 className="mt-4 max-w-[28rem] font-sans text-[1.45rem] font-semibold leading-[1.14] tracking-[0em] text-light-space light:text-zinc-950 md:text-[1.8rem]">
           {title}
         </h2>
         <p className="news-detail-reading mt-4 max-w-[38rem] text-[1rem] leading-[1.72] text-light-space/72 light:text-zinc-700 md:text-[1.05rem]">
@@ -75,7 +75,6 @@ export function ResourceDetailPage({ resourceId }: { resourceId: ResourcePageId 
       metaLine={doc.metaLine}
       title={doc.title}
       subtitle={doc.subtitle}
-      afterMain={<CookieBanner />}
     >
       <EditorialArticleProseSection className="py-10 md:py-14">
         <p className="news-detail-reading text-[1.0625rem] leading-[1.72] text-light-space/82 light:text-zinc-700 md:text-lg md:leading-[1.68]">

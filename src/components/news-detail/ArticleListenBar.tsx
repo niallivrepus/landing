@@ -64,7 +64,7 @@ export function ArticleListenBar({ speechText, durationLabel, shareTitle }: Prop
   const speechOk = typeof window !== "undefined" && "speechSynthesis" in window;
 
   return (
-    <div className="flex flex-col gap-4 border-y border-light-space/[0.1] py-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
         {speechOk ? (
           <button
@@ -76,7 +76,7 @@ export function ArticleListenBar({ speechText, durationLabel, shareTitle }: Prop
             )}
             aria-pressed={playing}
           >
-            <span className="flex size-10 items-center justify-center rounded-full border border-light-space/20 bg-white/5 light:border-black/12 light:bg-black/[0.04]">
+            <span className="flex size-10 items-center justify-center rounded-full border border-light-space/20 bg-white/5 light:border-black/12 light:bg-section-grey-light">
               {playing ? <Pause className="size-4 text-light-space light:text-zinc-900" aria-hidden /> : <Play className="ml-0.5 size-4 text-light-space light:text-zinc-900" aria-hidden />}
             </span>
             <span className="text-light-space/85 light:text-zinc-900">{playing ? "Stop" : "Listen to article"}</span>

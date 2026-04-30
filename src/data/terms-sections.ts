@@ -1,4 +1,4 @@
-/** Jokuh website terms — original drafting; structure inspired by standard site terms. */
+/** Jokuh terms of service — original drafting; structure inspired by standard site terms. */
 
 export type TermsSection = {
   id: string;
@@ -16,7 +16,7 @@ export const TERMS_SECTIONS: TermsSection[] = [
     id: "ownership",
     title: "Ownership of site; agreement to terms",
     paragraphs: [
-      'These Terms of Use (“Terms”) govern your access to and use of the Jokuh website, preview pages, documentation subsites, and other web properties we operate and link to from jokuh.com (collectively, the “Site”). The Site is owned and operated by Jokuh and its licensors. BY USING THE SITE, YOU AGREE TO THESE TERMS; IF YOU DO NOT AGREE, DO NOT USE THE SITE.',
+      'These Terms of Service (“Terms”) govern your access to and use of the Jokuh website, preview pages, documentation subsites, and other web properties we operate and link to from jokuh.com (collectively, the “Site”). The Site is owned and operated by Jokuh and its licensors. BY USING THE SITE, YOU AGREE TO THESE TERMS; IF YOU DO NOT AGREE, DO NOT USE THE SITE.',
       "We may change these Terms at any time. We will post the updated Terms on the Site. Your continued use after changes means you accept the revised Terms. Subject to these Terms, Jokuh grants you a personal, non-exclusive, non-transferable, limited right to access and use the Site.",
     ],
   },
@@ -63,7 +63,7 @@ export const TERMS_SECTIONS: TermsSection[] = [
     ],
     cta: {
       label: "Read the Jokuh Privacy Policy.",
-      to: "/legal/privacy",
+      to: "/privacy",
     },
   },
   {

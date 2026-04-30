@@ -1,5 +1,3 @@
-import { CookieBanner } from "../components/CookieBanner";
-import { EndorsementSeal } from "../components/EndorsementSeal";
 import { RichParagraph } from "../components/news-detail/RichParagraph";
 import { SiteLink } from "../components/SiteLink";
 import {
@@ -61,7 +59,6 @@ export function EthicsPage() {
       metaLine="March 28, 2026 · Trust · Ethics & compliance"
       title="Ethics and compliance are product behaviors, not a policy appendix."
       subtitle="How Jokuh approaches boundaries, escalation, reviewability, and responsible deployment for high-stakes client work."
-      afterMain={<CookieBanner />}
     >
       <EditorialArticleProseSection className="py-10 md:py-14">
         {INTRO_PARAGRAPHS.map((paragraph) => (
@@ -93,26 +90,26 @@ export function EthicsPage() {
       ))}
 
       <EditorialArticleShellSection className="pb-14 md:pb-20">
-        <div className="mx-auto max-w-3xl rounded-[28px] border border-light-space/[0.08] bg-white/[0.04] p-6 backdrop-blur-md md:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-light-space/48">
+        <div className="mx-auto max-w-3xl rounded-[28px] border border-light-space/[0.08] bg-white/[0.04] p-6 backdrop-blur-md light:border-black/[0.08] light:bg-section-grey-light md:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-light-space/48 light:text-zinc-500">
             Contact
           </p>
-          <h2 className="mt-3 font-sans text-2xl font-semibold tracking-[-0.03em] text-light-space md:text-[2rem]">
+          <h2 className="mt-3 font-sans text-2xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-[2rem]">
             Need a controls review for your deployment?
           </h2>
-          <p className="mt-4 max-w-2xl text-[1rem] leading-7 text-light-space/72 md:text-[1.0625rem]">
+          <p className="mt-4 max-w-2xl text-[1rem] leading-7 text-light-space/72 light:text-zinc-700 md:text-[1.0625rem]">
             We can walk through responsible-use constraints, review paths, and implementation expectations for your team.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <SiteLink
               href="/contact"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-light-space/[0.14] bg-light-space px-5 text-sm font-semibold text-dark-space transition-colors hover:bg-light-space/90"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-light-space/[0.14] bg-light-space px-5 text-sm font-semibold text-dark-space transition-colors hover:bg-light-space/90 light:border-black/[0.12] light:bg-zinc-950 light:text-white light:hover:bg-zinc-800"
             >
               Contact sales
             </SiteLink>
             <SiteLink
               href="/support"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-light-space/[0.12] bg-white/[0.03] px-5 text-sm font-semibold text-light-space transition-colors hover:bg-white/[0.06]"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-light-space/[0.12] bg-white/[0.03] px-5 text-sm font-semibold text-light-space transition-colors hover:bg-white/[0.06] light:border-black/[0.12] light:bg-white light:text-zinc-950 light:hover:bg-zinc-100"
             >
               Support overview
             </SiteLink>
@@ -120,9 +117,6 @@ export function EthicsPage() {
         </div>
       </EditorialArticleShellSection>
 
-      <EditorialArticleShellSection>
-        <EndorsementSeal className="pb-4 md:pb-6" />
-      </EditorialArticleShellSection>
     </EditorialArticleTemplate>
   );
 }

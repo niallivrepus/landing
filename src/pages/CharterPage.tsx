@@ -136,7 +136,7 @@ export function CharterPage() {
         <blockquote
           className={cn(
             CONTENT_READING_MEASURE,
-            "border-l border-light-space/[0.12] pl-6 italic text-light-space/72 light:border-zinc-200 light:text-zinc-600",
+            "pl-6 italic text-light-space/72 light:text-zinc-600",
           )}
         >
           Your data. Your identity. Your freedom.
@@ -192,7 +192,7 @@ export function CharterPage() {
         <blockquote
           className={cn(
             CONTENT_READING_MEASURE,
-            "border-l border-light-space/[0.12] pl-6 italic text-light-space/72 light:border-zinc-200 light:text-zinc-600",
+            "pl-6 italic text-light-space/72 light:text-zinc-600",
           )}
         >
           We do not ask users to perform for the algorithm. We make the algorithm work for the user. That is the
@@ -201,7 +201,7 @@ export function CharterPage() {
       </div>
 
       <div className={CONTENT_SHELL_WIDE}>
-        <div className={cn(CONTENT_READING_MEASURE, "border-t border-light-space/[0.08] py-12 light:border-zinc-200")}>
+        <div className={cn(CONTENT_READING_MEASURE, "py-12")}>
           <p className="text-sm leading-relaxed text-light-space/40 light:text-zinc-500">
             JOKUH Inc. · Cursor for Social Intelligence · March 2026
           </p>

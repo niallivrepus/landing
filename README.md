@@ -1,6 +1,6 @@
 # Jokuh · Landing
 
-Marketing and product surface for **[Jokuh](https://github.com/niallivrepus)** — a humane layer for communities, identity, and expression. This repo is the public-facing **Vite + React** site: home, product pages, news (Medium), downloads, and legal hubs.
+Marketing and product surface for **[Jokuh](https://github.com/niallivrepus)** — a humane layer for communities, identity, and expression. This repo is the public-facing **Vite + React** site: home, product pages, news (Medium), downloads, privacy, and terms.
 
 ---
 
@@ -101,6 +101,8 @@ Copy `.env.example` to `.env` for local development:
 | `VITE_ORIGIN_DEVELOPERS` | Optional absolute origin for the developer portal, e.g. `https://developers.jokuh.com`. |
 | `VITE_ORIGIN_HELP` | Optional absolute origin for the help center, e.g. `https://help.jokuh.com`. |
 | `VITE_ORIGIN_STATUS` | Optional absolute origin for the status portal, e.g. `https://status.jokuh.com`. |
+| `VITE_COOKIE_DOMAIN` | Optional cookie domain, e.g. `.jokuh.com`, so consent persists across subdomains. |
+| `VITE_GA_MEASUREMENT_ID` | Optional Google Analytics measurement ID. The Google tag loads only after analytics consent. |
 
 If you also need Medium sync in your local setup, use the script-specific environment expected by `scripts/sync-medium.mjs`.
 

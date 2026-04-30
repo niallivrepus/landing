@@ -1,5 +1,4 @@
 import {
-  TertiaryBreadcrumb,
   TertiaryClosingCta,
   TertiaryHubBody,
   TertiaryPageChrome,
@@ -29,24 +28,9 @@ const SUPPORT_LINKS = [
     description: "Manage access, seats, billing details, and account-level settings.",
   },
   {
-    label: "Pods",
-    href: "/pods",
-    description: "Product details and support paths for Pods.",
-  },
-  {
-    label: "Spine",
-    href: "/spine",
-    description: "Product details and support paths for Spine.",
-  },
-  {
-    label: "Vortex",
-    href: "/vortex",
-    description: "Product details and support paths for Vortex.",
-  },
-  {
-    label: "Blurbs",
-    href: "/blurbs",
-    description: "Product details and support paths for Blurbs.",
+    label: "Download",
+    href: "/download",
+    description: "Get Jokuh for mobile and desktop.",
   },
   {
     label: "System status",
@@ -60,9 +44,7 @@ export function SupportPage() {
   const { open } = useSiteSearch();
 
   return (
-    <TertiaryPageChrome
-      breadcrumb={<TertiaryBreadcrumb items={[{ label: "Jokuh", to: "/" }, { label: "Support" }]} />}
-    >
+    <TertiaryPageChrome>
       <TertiaryPageHero
         eyebrow="Support"
         title="Support without a second homepage."
@@ -71,7 +53,7 @@ export function SupportPage() {
           <button
             type="button"
             onClick={() => open()}
-            className="inline-flex h-11 items-center justify-center rounded-full border border-light-space/[0.12] px-6 text-[14px] font-medium text-light-space transition-colors hover:border-light-space/[0.24] hover:bg-white/[0.04] light:border-black/[0.12] light:text-zinc-950 light:hover:border-black/[0.18] light:hover:bg-zinc-100"
+            className="inline-flex h-11 items-center justify-center rounded-full border border-light-space/[0.12] px-6 text-[14px] font-medium text-light-space transition-colors hover:border-light-space/[0.24] hover:bg-white/[0.04] light:border-black/[0.12] light:text-zinc-950 light:hover:border-black/[0.18] light:hover:bg-zinc-200"
           >
             Search Jokuh
           </button>

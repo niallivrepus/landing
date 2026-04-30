@@ -68,7 +68,7 @@ export function LanguageSelectModal({ open, onClose }: { open: boolean; onClose:
           "bottom-4 right-3 md:bottom-auto md:top-1/2 md:right-5 md:-translate-y-1/2",
         )}
       >
-        <header className="flex shrink-0 items-center justify-between gap-3 border-b border-light-space/10 px-4 py-3.5 light:border-zinc-300/80">
+        <header className="flex shrink-0 items-center justify-between gap-3 px-4 py-3.5">
           <h2 id="jokuh-lang-title" className="font-sans text-[17px] font-semibold tracking-tight">
             Select language
           </h2>
@@ -117,7 +117,7 @@ export function LanguageSelectModal({ open, onClose }: { open: boolean; onClose:
           })}
         </ul>
 
-        <div className="shrink-0 border-t border-light-space/10 p-3 light:border-zinc-300/80">
+        <div className="shrink-0 p-3">
           <div className="relative">
             <Search
               className="pointer-events-none absolute left-3.5 top-1/2 size-[17px] -translate-y-1/2 text-light-space/45 light:text-zinc-500"
@@ -131,7 +131,7 @@ export function LanguageSelectModal({ open, onClose }: { open: boolean; onClose:
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search"
               autoComplete="off"
-              className="w-full rounded-full border border-light-space/10 bg-white/[0.05] py-2.5 pr-3 pl-10 font-sans text-[14px] text-light-space placeholder:text-light-space/35 outline-none ring-white/20 focus:border-light-space/20 focus:ring-2 light:border-zinc-300/80 light:bg-zinc-100 light:text-zinc-900 light:placeholder:text-zinc-500 light:ring-zinc-400/40 light:focus:border-zinc-400"
+              className="w-full rounded-full border border-light-space/10 bg-white/[0.05] py-2.5 pr-3 pl-10 font-sans text-[14px] text-light-space placeholder:text-light-space/35 outline-none ring-white/20 focus:border-light-space/20 focus:ring-2 light:border-zinc-300/80 light:bg-section-grey-light light:text-zinc-900 light:placeholder:text-zinc-500 light:ring-zinc-400/40 light:focus:border-zinc-400"
             />
           </div>
         </div>

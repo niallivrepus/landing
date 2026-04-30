@@ -1,66 +1,46 @@
 import { cn } from "@jokuh/gooey";
-import { CookieBanner } from "../components/CookieBanner";
-import { ArticleMetaRow, EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "motion/react";
+import {
+  EDITORIAL_MEDIA_RADIUS_CLASS,
+  EditorialQuoteBlock,
+  MarketingPageFrame,
+  SectionHeaderRow,
+} from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { TopNavAnchor } from "../components/TopNavAnchor";
 import { HOME_STORIES } from "../data/home-stories";
 import {
   getStoryDetail,
   type StoryDetail,
+  type StoryGalleryImage,
   type StoryImageCaptioned,
   type StoryImageNarrative,
   type StorySection,
 } from "../data/stories-detail";
-import { ArrowLeft } from "lucide-react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
-const articleColumn = "mx-auto w-full max-w-[min(100%,40rem)]";
-
-function StoryNavigator({ currentSlug }: { currentSlug: string }) {
-  return (
-    <div className={`${CONTENT_SHELL_WIDE} pb-10 md:pb-14`}>
-      <div className="border-y border-light-space/[0.08] py-4">
-        <div className="flex flex-wrap gap-x-5 gap-y-2 md:gap-x-6">
-          {HOME_STORIES.map((story) => {
-            const detail = getStoryDetail(story.slug);
-            const active = story.slug === currentSlug;
-
-            return (
-              <TopNavAnchor
-                key={story.slug}
-                href={story.href}
-                className={cn(
-                  "font-sans text-[13px] leading-snug tracking-tight transition-colors md:text-[0.9375rem]",
-                  active ? "text-light-space" : "text-light-space/42 hover:text-light-space/72",
-                )}
-              >
-                {detail?.title ?? story.title}
-              </TopNavAnchor>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
+const articleColumn = "mx-auto w-full max-w-[min(100%,48rem)]";
+/** Pixels of horizontal drift per second when the gallery is “running” (not drag / inertia / hover). */
+const STORY_GALLERY_SPEED_PX_PER_S = 30;
+const STORY_GALLERY_CATCH_UP_STIFFNESS = 30;
+const STORY_GALLERY_CATCH_UP_DAMPING = 10;
+const STORY_GALLERY_CATCH_UP_REST_PX = 0.35;
 function StoryHero({ story }: { story: StoryDetail }) {
+  const [date] = story.metaLine.split(" · ");
+
   return (
-    <header className={`${CONTENT_SHELL_WIDE} pt-28 pb-8 md:pt-32 md:pb-10`}>
-      <div className={articleColumn}>
-        <Link
-          to="/stories"
-          className="inline-flex items-center gap-2 font-sans text-sm text-light-space/48 transition-colors hover:text-light-space/75"
-        >
-          <ArrowLeft className="size-4" aria-hidden />
-          Stories
-        </Link>
-        <ArticleMetaRow metaLine={story.metaLine} align="start" className="mt-8" />
-        <h1 className="mt-4 max-w-[20ch] font-sans text-[2.3rem] font-semibold leading-[1.06] tracking-[-0.035em] text-light-space sm:mt-5 sm:text-5xl md:text-6xl lg:text-[4rem] lg:leading-[1.02]">
+    <header className={`${CONTENT_SHELL_WIDE} pt-28 pb-14 text-center md:pt-32 md:pb-16`}>
+      <div className="mx-auto w-full max-w-[48rem]">
+        <p className="font-sans text-[11px] font-medium leading-none text-light-space">
+          {date}
+          <span className="ml-5">Jokuh</span>
+        </p>
+        <h1 className="mx-auto mt-8 max-w-[16ch] text-balance font-sans text-[2.85rem] font-semibold leading-[1.02] tracking-[0em] text-light-space sm:text-[4rem] md:text-[5rem] lg:text-[5.45rem]">
           {story.title}
         </h1>
-        <p className="news-detail-reading mt-7 max-w-[34rem] text-[1.22rem] font-normal leading-[1.56] text-light-space/72 md:mt-8 md:text-[1.34rem] md:leading-[1.54]">
+        <p className="mx-auto mt-6 max-w-[42rem] text-pretty font-sans text-[15px] leading-[1.62] font-normal tracking-[0em] text-light-space/78 md:text-[16px] md:leading-[1.58]">
           {story.dek}
         </p>
       </div>
@@ -69,49 +49,286 @@ function StoryHero({ story }: { story: StoryDetail }) {
 }
 
 function StoryGallery({ images }: { images: StoryDetail["heroGallery"] }) {
-  const [lead, ...supporting] = images;
-  if (!lead) return null;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [cycleWidth, setCycleWidth] = useState(0);
+  const carouselImages = useMemo(() => [...images, ...images, ...images], [images]);
+  const dragRef = useRef({
+    active: false,
+    pointerId: -1,
+    startX: 0,
+    startScrollLeft: 0,
+    lastX: 0,
+    lastT: 0,
+    velocity: 0,
+  });
+  const inertiaFrameRef = useRef<number | null>(null);
+  const momentumActiveRef = useRef(false);
+  /** Scroll distance that would have happened during hover. Repaid by the spring loop after resume. */
+  const owedAutoplayPxRef = useRef(0);
+  const catchUpVelocityRef = useRef(0);
+  const autoplayCarryPxRef = useRef(0);
+  const isPausedRef = useRef(false);
+  isPausedRef.current = isPaused;
+
+  const wrapScroll = (root: HTMLDivElement) => {
+    if (cycleWidth <= 0) return;
+    const maxScrollLeft = Math.max(root.scrollWidth - root.clientWidth, 0);
+    const lowerBound = Math.min(cycleWidth * 0.5, maxScrollLeft);
+    const upperBound = Math.min(cycleWidth * 2, maxScrollLeft);
+    if (maxScrollLeft <= 0 || upperBound <= lowerBound) return;
+
+    let nextScrollLeft = root.scrollLeft;
+    if (nextScrollLeft >= upperBound) {
+      nextScrollLeft = lowerBound + ((nextScrollLeft - lowerBound) % cycleWidth);
+    } else if (nextScrollLeft < lowerBound) {
+      nextScrollLeft = upperBound - ((lowerBound - nextScrollLeft) % cycleWidth);
+    }
+
+    root.scrollLeft = Math.min(Math.max(nextScrollLeft, 0), maxScrollLeft);
+  };
+
+  const stopInertia = () => {
+    if (inertiaFrameRef.current !== null) {
+      window.cancelAnimationFrame(inertiaFrameRef.current);
+      inertiaFrameRef.current = null;
+    }
+    momentumActiveRef.current = false;
+  };
+
+  useEffect(() => {
+    const measure = () => {
+      const root = scrollRef.current;
+      const duplicateStart = root?.querySelector<HTMLElement>(`[data-gallery-index="${images.length}"]`);
+      if (!root || !duplicateStart) return;
+      const nextCycleWidth = duplicateStart.offsetLeft - root.offsetLeft;
+      setCycleWidth(nextCycleWidth);
+      if (root.scrollLeft < 1) {
+        root.scrollLeft = Math.min(nextCycleWidth, Math.max(root.scrollWidth - root.clientWidth, 0));
+      }
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [images.length]);
+
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root || cycleWidth <= 0 || images.length <= 1) return;
+
+    let frame = 0;
+    let previous = performance.now();
+    const speed = STORY_GALLERY_SPEED_PX_PER_S;
+
+    const tick = (now: number) => {
+      const elapsed = now - previous;
+      previous = now;
+      const drag = dragRef.current.active;
+      const mom = momentumActiveRef.current;
+      const paused = isPausedRef.current;
+
+      if (drag || mom) {
+        frame = window.requestAnimationFrame(tick);
+        return;
+      }
+
+      const step = (speed * elapsed) / 1000;
+      if (paused) {
+        owedAutoplayPxRef.current += step;
+        catchUpVelocityRef.current = 0;
+        autoplayCarryPxRef.current = 0;
+      } else {
+        const dt = elapsed / 1000;
+        const owed = owedAutoplayPxRef.current;
+        let catchUpStep = 0;
+
+        if (Math.abs(owed) > STORY_GALLERY_CATCH_UP_REST_PX || Math.abs(catchUpVelocityRef.current) > 0.01) {
+          const acceleration = owed * STORY_GALLERY_CATCH_UP_STIFFNESS;
+          const damping = Math.exp(-STORY_GALLERY_CATCH_UP_DAMPING * dt);
+          catchUpVelocityRef.current = (catchUpVelocityRef.current + acceleration * dt) * damping;
+          catchUpStep = catchUpVelocityRef.current * dt;
+
+          if (Math.abs(catchUpStep) >= Math.abs(owed)) {
+            catchUpStep = owed;
+            catchUpVelocityRef.current = 0;
+          }
+
+          owedAutoplayPxRef.current = owed - catchUpStep;
+        } else {
+          owedAutoplayPxRef.current = 0;
+          catchUpVelocityRef.current = 0;
+        }
+
+        const rawStep = step + catchUpStep + autoplayCarryPxRef.current;
+        const wholeStep = rawStep >= 0 ? Math.floor(rawStep) : Math.ceil(rawStep);
+        autoplayCarryPxRef.current = rawStep - wholeStep;
+
+        if (wholeStep !== 0) {
+          root.scrollLeft += wholeStep;
+          wrapScroll(root);
+        }
+      }
+
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [cycleWidth, images.length]);
+
+  useEffect(() => () => stopInertia(), []);
+
+  const startInertia = () => {
+    const root = scrollRef.current;
+    if (!root) return;
+
+    let velocity = dragRef.current.velocity;
+    let previous = performance.now();
+    momentumActiveRef.current = true;
+
+    const step = (now: number) => {
+      const elapsed = now - previous;
+      previous = now;
+      root.scrollLeft += velocity * elapsed;
+      wrapScroll(root);
+      velocity *= 0.94;
+
+      if (Math.abs(velocity) < 0.015) {
+        momentumActiveRef.current = false;
+        inertiaFrameRef.current = null;
+        if (!root.matches(":hover")) setIsPaused(false);
+        return;
+      }
+
+      inertiaFrameRef.current = window.requestAnimationFrame(step);
+    };
+
+    inertiaFrameRef.current = window.requestAnimationFrame(step);
+  };
+
+  if (images.length === 0) return null;
 
   return (
-    <div className={`${CONTENT_SHELL_WIDE} pb-16 md:pb-20`}>
-      <div className="space-y-4 md:space-y-5">
-        <div className={cn("overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
-          <img
-            src={lead.src}
-            alt={lead.alt}
-            className="aspect-[16/9] w-full object-cover md:aspect-[16/8.5]"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        {supporting.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-            {supporting.map((img) => (
-              <div key={img.src} className={cn("overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="aspect-[4/3] w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
+    <div className="pb-16 md:pb-20">
+      <div
+        ref={scrollRef}
+        dir="ltr"
+        className={cn(
+          "overflow-x-auto overscroll-x-contain px-4 md:px-6",
+          "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        )}
+        style={{ WebkitOverflowScrolling: "touch" }}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => {
+          setIsPaused(false);
+          setHoveredCardIndex(null);
+        }}
+        onPointerDown={(event) => {
+          const root = scrollRef.current;
+          if (!root) return;
+          stopInertia();
+          root.setPointerCapture(event.pointerId);
+          dragRef.current = {
+            active: true,
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startScrollLeft: root.scrollLeft,
+            lastX: event.clientX,
+            lastT: performance.now(),
+            velocity: 0,
+          };
+          setIsPaused(true);
+          setIsDragging(true);
+        }}
+        onPointerMove={(event) => {
+          const root = scrollRef.current;
+          const drag = dragRef.current;
+          if (!root || !drag.active || drag.pointerId !== event.pointerId) return;
+          const now = performance.now();
+          const dxFromStart = event.clientX - drag.startX;
+          const nextScrollLeft = drag.startScrollLeft - dxFromStart;
+          const dt = Math.max(now - drag.lastT, 1);
+          drag.velocity = (nextScrollLeft - root.scrollLeft) / dt;
+          root.scrollLeft = nextScrollLeft;
+          wrapScroll(root);
+          drag.lastX = event.clientX;
+          drag.lastT = now;
+        }}
+        onPointerUp={(event) => {
+          const root = scrollRef.current;
+          const drag = dragRef.current;
+          if (!root || !drag.active || drag.pointerId !== event.pointerId) return;
+          drag.active = false;
+          setIsDragging(false);
+          root.releasePointerCapture(event.pointerId);
+          startInertia();
+        }}
+        onPointerCancel={(event) => {
+          const root = scrollRef.current;
+          const drag = dragRef.current;
+          if (!root || drag.pointerId !== event.pointerId) return;
+          drag.active = false;
+          setIsDragging(false);
+          setIsPaused(false);
+        }}
+      >
+        <div className={cn("flex w-max gap-4 md:gap-5", isDragging ? "cursor-grabbing" : "cursor-grab")}>
+          {carouselImages.map((img: StoryGalleryImage, index) => {
+            const focused = hoveredCardIndex === null || hoveredCardIndex === index;
+            return (
+              <div
+                key={`${img.src}-${index}`}
+                data-gallery-index={index}
+                className="group w-[72vw] min-w-[280px] max-w-[746px] shrink-0 md:w-[58vw] lg:w-[746px]"
+                onMouseEnter={() => setHoveredCardIndex(index)}
+                onFocus={() => {
+                  setIsPaused(true);
+                  setHoveredCardIndex(index);
+                }}
+              >
+                <motion.p
+                  initial={false}
+                  animate={{
+                    opacity: hoveredCardIndex === index ? 1 : 0,
+                    y: hoveredCardIndex === index ? 0 : 8,
+                  }}
+                  transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                  className="mb-4 font-sans text-[14px] leading-none font-semibold text-white"
+                >
+                  {img.label}
+                </motion.p>
+                <div className="overflow-hidden rounded-[6px] bg-smoke-2">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className={cn(
+                      "aspect-video w-full object-cover transition-opacity duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                      focused ? "opacity-100" : "opacity-60",
+                    )}
+                    loading={index < images.length ? "eager" : "lazy"}
+                    decoding="async"
+                    fetchPriority={index < images.length ? "high" : "auto"}
+                  />
+                </div>
               </div>
-            ))}
-          </div>
-        ) : null}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
-
 function ProseBlock({ paragraphs }: { paragraphs: string[] }) {
   return (
     <div className={`${CONTENT_SHELL_WIDE} py-8 md:py-10`}>
-      <div className={`${articleColumn} space-y-6 md:space-y-7`}>
+      <div className={`${articleColumn} space-y-8 md:space-y-9`}>
         {paragraphs.map((p, i) => (
           <p
             key={i}
-            className="news-detail-reading text-[1.1rem] font-normal leading-[1.8] tracking-[0.002em] text-light-space/82 md:text-[1.18rem] md:leading-[1.82]"
+            className="news-detail-reading text-[1.05rem] font-normal leading-[1.82] tracking-[0em] text-light-space/74 md:text-[1.13rem] md:leading-[1.86]"
           >
             {p}
           </p>
@@ -124,19 +341,91 @@ function ProseBlock({ paragraphs }: { paragraphs: string[] }) {
 function SubheadBlock({ text }: { text: string }) {
   return (
     <div className={`${CONTENT_SHELL_WIDE} pt-8 pb-1 md:pt-10 md:pb-2`}>
-      <h2 className={`${articleColumn} font-sans text-[1.55rem] font-semibold leading-[1.18] tracking-[-0.025em] text-light-space md:text-[1.9rem]`}>
+      <h2 className={`${articleColumn} text-balance font-sans text-[2.15rem] font-semibold leading-[1.05] tracking-[0em] text-light-space md:text-[3rem]`}>
         {text}
       </h2>
     </div>
   );
 }
 
-function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; small: StoryImageCaptioned }) {
+function FeatureTextBlock({
+  title,
+  subtitle,
+  paragraphs,
+}: {
+  title: string;
+  subtitle: string;
+  paragraphs: string[];
+}) {
   return (
-    <div className={`${CONTENT_SHELL_WIDE} py-14 md:py-20`}>
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-6 xl:gap-8">
-        <div className="lg:col-span-8">
-          <div className={cn("overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
+    <section className="bg-black py-28 md:py-36 lg:py-44 light:bg-section-grey-light light:ring-1 light:ring-inset light:ring-zinc-200/80">
+      <div className={CONTENT_SHELL_WIDE}>
+        <div className="mx-auto w-full max-w-[48rem]">
+          <h2 className="max-w-[12ch] text-balance font-sans text-[3rem] font-semibold leading-[0.98] tracking-[0em] text-white light:text-zinc-950 md:text-[4.1rem]">
+            {title}
+          </h2>
+          <p className="mt-8 max-w-[42rem] text-pretty font-sans text-[1.45rem] leading-[1.28] font-medium tracking-[0em] text-white/90 light:text-zinc-800 md:text-[2rem] md:leading-[1.24]">
+            {subtitle}
+          </p>
+          <div className="mt-16 space-y-8 md:mt-20 md:space-y-9">
+            {paragraphs.map((paragraph) => (
+              <p
+                key={paragraph}
+                className="news-detail-reading max-w-[44rem] text-[1.02rem] leading-[1.82] tracking-[0em] text-white/74 light:text-zinc-600 md:text-[1.1rem] md:leading-[1.86]"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const storyEditorialImageRadius = "rounded-2xl";
+
+function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; small: StoryImageCaptioned }) {
+  if (small.hidden) {
+    const portrait = large.imageLayout === "portrait";
+    return (
+      <div className={`${CONTENT_SHELL_WIDE} py-20 md:py-28`}>
+        <div
+          className={cn(
+            "mx-auto w-full",
+            portrait ? "max-w-[min(100%,32rem)]" : "max-w-[min(100%,52rem)]",
+          )}
+        >
+          <div
+            className={cn(
+              "overflow-hidden bg-smoke-2/40 light:bg-section-grey-light",
+              storyEditorialImageRadius,
+            )}
+          >
+            <img
+              src={large.src}
+              alt={large.alt}
+              className={cn(
+                "w-full object-cover",
+                portrait ? "aspect-[3/4] object-top" : "aspect-[16/10]",
+              )}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <p className="mt-4 max-w-[40rem] font-sans text-[12px] leading-[1.45] text-light-space/60 light:text-zinc-600 md:text-[13px]">
+            {large.caption}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${CONTENT_SHELL_WIDE} py-20 md:py-28`}>
+      <div className="mx-auto flex w-full max-w-[min(100%,76rem)] flex-col items-stretch gap-12 lg:flex-row lg:items-start lg:gap-[clamp(2rem,4.5vw,3.75rem)]">
+        <div className="min-w-0 flex-1 lg:max-w-[64%]">
+          <div className={cn("overflow-hidden bg-smoke-2/40 light:bg-section-grey-light", storyEditorialImageRadius)}>
             <img
               src={large.src}
               alt={large.alt}
@@ -145,21 +434,21 @@ function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; s
               decoding="async"
             />
           </div>
-          <p className="mt-3 max-w-[42rem] font-sans text-[13px] leading-snug text-light-space/48 md:text-sm">
+          <p className="mt-4 max-w-[42rem] font-sans text-[12px] leading-[1.45] text-light-space/60 light:text-zinc-600 md:text-[13px]">
             {large.caption}
           </p>
         </div>
-        <div className="lg:col-span-4">
-          <div className={cn("overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
+        <div className="min-w-0 shrink-0 lg:w-[min(34%,22rem)]">
+          <div className={cn("overflow-hidden bg-smoke-2/40 light:bg-section-grey-light", storyEditorialImageRadius)}>
             <img
               src={small.src}
               alt={small.alt}
-              className="aspect-square w-full object-cover"
+              className="aspect-[4/5] w-full object-cover"
               loading="lazy"
               decoding="async"
             />
           </div>
-          <p className="mt-3 font-sans text-[13px] leading-snug text-light-space/48 md:text-sm">
+          <p className="mt-4 font-sans text-[12px] leading-[1.55] text-light-space/60 light:text-zinc-600 md:text-[13px]">
             {small.caption}
           </p>
         </div>
@@ -191,7 +480,7 @@ function TriptychBlock({ items }: { items: [StoryImageNarrative, StoryImageNarra
           <article key={item.src} className="min-w-0">
             <div
               className={cn(
-                "overflow-hidden border border-light-space/[0.08] bg-smoke-2 light:border-black/[0.08] light:bg-zinc-100",
+                "overflow-hidden border border-light-space/[0.08] bg-smoke-2 light:border-black/[0.08] light:bg-section-grey-light",
                 EDITORIAL_MEDIA_RADIUS_CLASS,
               )}
             >
@@ -203,7 +492,7 @@ function TriptychBlock({ items }: { items: [StoryImageNarrative, StoryImageNarra
                 decoding="async"
               />
             </div>
-            <p className="mt-5 font-sans text-[1.02rem] leading-[1.65] tracking-[-0.015em] text-light-space/68 light:text-zinc-700 md:text-[1.08rem]">
+            <p className="mt-5 font-sans text-[1.02rem] leading-[1.65] tracking-[0em] text-light-space/68 light:text-zinc-700 md:text-[1.08rem]">
               {renderInlineBold(item.text)}
             </p>
           </article>
@@ -214,54 +503,43 @@ function TriptychBlock({ items }: { items: [StoryImageNarrative, StoryImageNarra
 }
 
 function QuoteBlock({ text, attribution }: { text: string; attribution: string }) {
-  return (
-    <div className={`${CONTENT_SHELL_WIDE} py-14 md:py-20`}>
-      <blockquote className={`${articleColumn} border-t border-light-space/[0.1] pt-8 md:pt-10`}>
-        <p className="news-detail-reading text-[1.55rem] font-normal leading-[1.5] tracking-[0.002em] text-light-space md:text-[1.9rem] md:leading-[1.48]">
-          “{text}”
-        </p>
-        <footer className="mt-6 font-sans text-[13px] font-medium uppercase tracking-[0.08em] text-light-space/46 md:text-sm">
-          {attribution}
-        </footer>
-      </blockquote>
-    </div>
-  );
+  return <EditorialQuoteBlock text={text} attribution={attribution} />;
 }
 
-function CtaBlock({
-  title,
-  body,
-  buttonLabel,
-  buttonHref,
-}: {
-  title: string;
-  body: string;
-  buttonLabel: string;
-  buttonHref: string;
-}) {
+function MoreStoryCard({ story }: { story: (typeof HOME_STORIES)[number] }) {
+  const detail = getStoryDetail(story.slug);
+  const [src, setSrc] = useState(story.image);
+
   return (
-    <div className={`${CONTENT_SHELL_WIDE} py-14 md:py-20`}>
-      <div className={`${articleColumn} border-t border-light-space/[0.1] pt-8 md:pt-10`}>
-        <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/38">
-          Further reading
-        </p>
-        <h2 className="mt-4 max-w-[28rem] font-sans text-[1.55rem] font-semibold leading-[1.16] tracking-[-0.025em] text-light-space md:text-[1.9rem]">
-          {title}
-        </h2>
-        <p className="news-detail-reading mt-5 max-w-[34rem] text-[1.06rem] leading-[1.76] text-light-space/74 md:text-[1.12rem]">
-          {body}
-        </p>
-        <a
-          href={buttonHref}
+    <article className="group flex h-full flex-col">
+      <TopNavAnchor href={story.href} className="flex h-full flex-col no-underline">
+        <div
           className={cn(
-            "mt-6 inline-flex items-center gap-2 font-sans text-[13px] font-medium uppercase tracking-[0.08em] text-light-space/56 transition-colors hover:text-light-space",
+            "aspect-square overflow-hidden border border-light-space/[0.08] bg-white/[0.03] light:border-black/[0.08] light:bg-section-grey-light/80",
+            EDITORIAL_MEDIA_RADIUS_CLASS,
           )}
         >
-          {buttonLabel}
-          <span aria-hidden>→</span>
-        </a>
-      </div>
-    </div>
+          <img
+            src={src}
+            alt=""
+            className="size-full object-cover brightness-[0.86] contrast-[1.04] saturate-[0.76] transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035] light:brightness-[0.97] light:contrast-[1.01] light:saturate-[0.9]"
+            loading="lazy"
+            decoding="async"
+            onError={() => {
+              if (story.imageFallback && src !== story.imageFallback) setSrc(story.imageFallback);
+            }}
+          />
+        </div>
+        <div className="mt-3 flex flex-1 flex-col gap-1.5 pt-0.5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-light-space/45 light:text-zinc-500">
+            {detail?.metaLine?.split(" · ")[0] ?? "Jokuh Stories"}
+          </p>
+          <h3 className="font-sans text-[0.9375rem] font-semibold leading-snug tracking-[0em] text-light-space transition-colors group-hover:text-light-space/80 light:text-zinc-950 md:text-[0.95rem]">
+            {detail?.title ?? story.title}
+          </h3>
+        </div>
+      </TopNavAnchor>
+    </article>
   );
 }
 
@@ -270,34 +548,13 @@ function MoreStories({ currentSlug }: { currentSlug: string }) {
   if (others.length === 0) return null;
 
   return (
-    <section className="border-t border-light-space/10 bg-dark-space px-4 py-16 md:px-8 md:py-20" aria-labelledby="more-stories-heading">
+    <section className="bg-dark-space px-4 py-16 md:px-8 md:py-20" aria-labelledby="more-stories-heading">
       <div className={CONTENT_SHELL_WIDE}>
-        <div className={articleColumn}>
-          <h2 id="more-stories-heading" className="font-sans text-[1.35rem] font-semibold tracking-[-0.02em] text-light-space md:text-[1.55rem]">
-            More stories
-          </h2>
-        </div>
-        <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-7 md:mt-10 md:grid-cols-3">
-          {others.slice(0, 3).map((story) => {
-            const detail = getStoryDetail(story.slug);
-            return (
-              <TopNavAnchor key={story.slug} href={story.href} className="group flex min-w-0 gap-4 border-t border-light-space/[0.08] pt-5">
-                <div className={cn("size-20 shrink-0 overflow-hidden bg-smoke-2 md:size-24", EDITORIAL_MEDIA_RADIUS_CLASS)}>
-                  <img src={story.image} alt="" className="size-full object-cover" loading="lazy" decoding="async" />
-                </div>
-                <div className="min-w-0">
-                  <ArticleMetaRow
-                    metaLine={detail?.metaLine ?? "Jokuh Stories"}
-                    align="start"
-                    size="compact"
-                  />
-                  <p className="mt-2 font-sans text-[0.98rem] font-medium leading-snug tracking-tight text-light-space transition-colors group-hover:text-light-space/80 md:text-[1.02rem]">
-                    {detail?.title ?? story.title}
-                  </p>
-                </div>
-              </TopNavAnchor>
-            );
-          })}
+        <SectionHeaderRow title="More stories" actionLabel="View all" actionTo="/stories" />
+        <div className="mt-0 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 xl:gap-8">
+          {others.slice(0, 2).map((story) => (
+            <MoreStoryCard key={story.slug} story={story} />
+          ))}
         </div>
       </div>
     </section>
@@ -310,6 +567,15 @@ function renderSection(section: StorySection, key: number) {
       return <ProseBlock key={key} paragraphs={section.paragraphs} />;
     case "subhead":
       return <SubheadBlock key={key} text={section.text} />;
+    case "featureText":
+      return (
+        <FeatureTextBlock
+          key={key}
+          title={section.title}
+          subtitle={section.subtitle}
+          paragraphs={section.paragraphs}
+        />
+      );
     case "imagesAsymmetric":
       return <AsymmetricImagesBlock key={key} large={section.large} small={section.small} />;
     case "triptych":
@@ -317,15 +583,7 @@ function renderSection(section: StorySection, key: number) {
     case "quote":
       return <QuoteBlock key={key} text={section.text} attribution={section.attribution} />;
     case "cta":
-      return (
-        <CtaBlock
-          key={key}
-          title={section.title}
-          body={section.body}
-          buttonLabel={section.buttonLabel}
-          buttonHref={section.buttonHref}
-        />
-      );
+      return null;
     default:
       return null;
   }
@@ -339,13 +597,12 @@ export function StoryDetailPage() {
     return <Navigate to="/stories" replace />;
   }
 
-  useDocumentTitle(`${story.title} — Jokuh`);
+  useDocumentTitle(`${story.title} · Jokuh`);
 
   return (
-    <MarketingPageFrame afterMain={<CookieBanner />}>
+    <MarketingPageFrame>
       <>
         <StoryHero story={story} />
-        <StoryNavigator currentSlug={story.slug} />
         <StoryGallery images={story.heroGallery} />
         {story.sections.map((s, i) => renderSection(s, i))}
         <MoreStories currentSlug={story.slug} />

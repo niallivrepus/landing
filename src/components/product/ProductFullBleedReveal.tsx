@@ -33,7 +33,7 @@ export function ProductFullBleedReveal({
         <div className="mt-10 flex justify-center pb-8 md:mt-14">
           <motion.div
             style={{ scale, borderRadius: radius, y: translateY }}
-            className="w-screen overflow-hidden border border-zinc-200 bg-[#f5f4f1] shadow-[0_40px_100px_rgba(15,23,42,0.1)] dark:border-zinc-800/60 dark:bg-black dark:shadow-[0_40px_100px_rgba(0,0,0,0.5)]"
+            className="w-screen overflow-hidden border border-zinc-200/80 bg-[#F5F5F7] shadow-[0_40px_100px_rgba(15,23,42,0.08)] dark:border-white/[0.08] dark:bg-[#1C1C1E] dark:shadow-[0_40px_100px_rgba(0,0,0,0.42)]"
           >
             <div className="aspect-[16/9] min-h-[22rem] md:min-h-[34rem]">
               <ProductDetailMedia media={media} className="size-full" />

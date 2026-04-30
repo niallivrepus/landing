@@ -1,28 +1,17 @@
-import { LegalBreadcrumb, LegalLayout, legalMuted } from "../../components/legal/LegalLayout";
+import { LegalLayout, legalMuted } from "../../components/legal/LegalLayout";
 import { TertiaryDocBody, TertiaryPageHero } from "../../components/system";
 import { TERMS_SECTIONS } from "../../data/terms-sections";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function LegalTermsPage() {
-  useDocumentTitle("Website Terms — Jokuh");
+  useDocumentTitle("Terms of Service — Jokuh");
 
   return (
-    <LegalLayout
-      breadcrumb={
-        <LegalBreadcrumb
-          items={[
-            { label: "Jokuh", to: "/" },
-            { label: "Legal", to: "/legal" },
-            { label: "Internet Services", to: "/legal/internet-services" },
-            { label: "Website Terms" },
-          ]}
-        />
-      }
-    >
+    <LegalLayout>
       <TertiaryPageHero
-        eyebrow="Legal information"
-        title="Website Terms"
-        intro="These terms govern use of Jokuh’s public websites, preview pages, and linked marketing properties."
+        eyebrow="Legal"
+        title="Terms of Service"
+        intro="These terms govern use of Jokuh's public websites, preview pages, documentation, and linked marketing properties."
       />
 
       <TertiaryDocBody

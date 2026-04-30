@@ -6,6 +6,8 @@
 export type RigidLink = {
   label: string;
   href: string;
+  /** Optional short support copy for richer nav/menu surfaces. */
+  summary?: string;
   /** When set and env origin is defined, rewrites href to that subdomain. */
   host?: "developers" | "status";
   /** Hugeicons link-square (Gooey-style) after label — docs / product launch affordance. */
@@ -68,42 +70,18 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
     heading: "Product",
     sections: [
       {
-        heading: "Product",
+        heading: "Products",
         links: [
-          { label: "Pods", href: "/pods", surfaces: ALL_SOURCES },
-          { label: "Blurbs", href: "/blurbs", surfaces: ALL_SOURCES },
-          { label: "Spine", href: "/spine", surfaces: ALL_SOURCES },
-          { label: "Vortex", href: "/vortex", surfaces: ALL_SOURCES },
-          { label: "Orb", href: "/orb", surfaces: ALL_SOURCES },
-          { label: "Realms", href: "/realms", surfaces: ["footer"] },
-        ],
-      },
-      {
-        heading: "Identity",
-        links: [
-          { label: "Passport", href: "/passport", surfaces: ALL_SOURCES },
-          { label: "V1llains", href: "/ecosystem/v1llains", surfaces: ALL_SOURCES },
-          { label: "Realms", href: "/realms", surfaces: ["primary", "search", "sitemap"] },
+          { label: "Spine", href: "/spine", summary: "See time more clearly.", surfaces: ALL_SOURCES },
+          { label: "Blurbs", href: "/blurbs", summary: "Turn talk into clean copy.", surfaces: ALL_SOURCES },
+          { label: "Calls", href: "/calls", summary: "Capture conversations without losing the room.", surfaces: ALL_SOURCES },
+          { label: "Messages", href: "/messages", summary: "Keep every thread close to the people behind it.", surfaces: ALL_SOURCES },
+          { label: "Profile", href: "/profile", summary: "Build a living identity people can actually use.", surfaces: ALL_SOURCES },
         ],
       },
       {
         heading: "Get started",
-        links: [{ label: "Waitlist", href: "/waitlist", surfaces: ["footer", "search", "sitemap"] }],
-      },
-    ],
-  },
-  {
-    id: "platform",
-    heading: "Platform",
-    sections: [
-      {
-        heading: "Platform",
-        links: [
-          { label: "Identity", href: "/platform/identity", surfaces: ["sitemap"] },
-          { label: "Gooey", href: "/platform/gooey", surfaces: ["sitemap"] },
-          { label: "Wallet", href: "/platform/wallet", surfaces: ["sitemap"] },
-          { label: "Galaxy Nodes", href: "/platform/galaxy-nodes", surfaces: ["sitemap"] },
-        ],
+        links: [{ label: "Download", href: "/download", surfaces: ALL_SOURCES }],
       },
     ],
   },
@@ -114,7 +92,6 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       {
         heading: "Ecosystem",
         links: [
-          { label: "V1llains", href: "/ecosystem/v1llains", surfaces: ["sitemap"] },
           { label: "Community", href: "/ecosystem/community", surfaces: ["sitemap"] },
           { label: "Partnerships", href: "/ecosystem/partnerships", surfaces: ["sitemap"] },
         ],
@@ -129,6 +106,8 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
         heading: "Company",
         links: [
           { label: "About us", href: "/about", surfaces: ALL_SOURCES },
+          { label: "Manifesto", href: "/manifesto", surfaces: ALL_SOURCES },
+          { label: "Brand", href: "/brand", surfaces: ["footer", "sitemap"] },
           { label: "Stories", href: "/stories", surfaces: ALL_SOURCES },
           { label: "Company", href: "/charter", surfaces: ALL_SOURCES },
           { label: "News", href: "/newsroom", surfaces: ALL_SOURCES },
@@ -144,8 +123,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       {
         heading: "Business",
         links: [
-          { label: "Overview", href: "/chatgpt/business", surfaces: ALL_SOURCES },
-          { label: "Pricing", href: "/pricing", surfaces: ALL_SOURCES },
+          { label: "Overview", href: "/about", surfaces: ALL_SOURCES },
           { label: "Customer Stories", href: "/stories", surfaces: ALL_SOURCES },
           { label: "Resources", href: "/developers/docs", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
           { label: "Contact Sales", href: "/contact", surfaces: ALL_SOURCES },
@@ -154,16 +132,9 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       {
         heading: "Products",
         links: [
-          { label: "Jokuh Business", href: "/chatgpt/business", surfaces: ALL_SOURCES },
-          { label: "Jokuh Enterprise", href: "/chatgpt/enterprise", surfaces: ALL_SOURCES },
-          { label: "API Platform", href: "/developers/sdk", surfaces: ALL_SOURCES },
-        ],
-      },
-      {
-        heading: "Solutions",
-        links: [
-          { label: "Coding", href: "/developers/sdk", surfaces: ALL_SOURCES },
-          { label: "Agents", href: "/developers/agents", surfaces: ALL_SOURCES },
+          { label: "Jokuh Business", href: "/contact", surfaces: ALL_SOURCES },
+          { label: "Jokuh Enterprise", href: "/contact", surfaces: ALL_SOURCES },
+          { label: "SDK & API", href: "/developers/docs/sdk", surfaces: ALL_SOURCES },
         ],
       },
     ],
@@ -178,7 +149,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
         links: [
           { label: "News", href: "/newsroom", surfaces: ["footer", "sitemap"] },
           { label: "Stories", href: "/stories", surfaces: ["footer", "sitemap"] },
-          { label: "RSS", href: "/rss", surfaces: ["footer", "sitemap"] },
+          { label: "RSS", href: "/rss.xml", surfaces: ["footer", "sitemap"] },
         ],
       },
     ],
@@ -186,7 +157,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
   {
     id: "safety",
     heading: "Safety",
-    surfaces: ["footer", "sitemap"],
+    surfaces: ["sitemap"],
     sections: [
       {
         heading: "Safety",
@@ -199,34 +170,15 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
     ],
   },
   {
-    id: "chatgpt",
-    heading: "ChatGPT",
-    surfaces: ["sitemap"],
-    sections: [
-      {
-        heading: "ChatGPT",
-        links: [
-          { label: "Explore ChatGPT", href: "/chatgpt/explore", navGlyph: "launch", surfaces: ["sitemap"] },
-          { label: "Business", href: "/chatgpt/business", surfaces: ["sitemap"] },
-          { label: "Enterprise", href: "/chatgpt/enterprise", surfaces: ["sitemap"] },
-          { label: "Education", href: "/chatgpt/education", surfaces: ["sitemap"] },
-          { label: "Pricing", href: "/pricing", navGlyph: "launch", surfaces: ["sitemap"] },
-          { label: "Download", href: "/download", navGlyph: "launch", surfaces: ["sitemap"] },
-        ],
-      },
-    ],
-  },
-  {
     id: "terms-policies",
     heading: "Terms & Policies",
-    surfaces: ["footer", "sitemap"],
+    surfaces: ["sitemap"],
     sections: [
       {
         heading: "Terms & Policies",
         links: [
-          { label: "Terms of Use", href: "/terms", surfaces: ["footer", "sitemap"] },
+          { label: "Terms of Service", href: "/terms", surfaces: ["footer", "sitemap"] },
           { label: "Privacy Policy", href: "/privacy", surfaces: ["footer", "sitemap"] },
-          { label: "Other Policies", href: "/legal", surfaces: ["footer", "sitemap"] },
         ],
       },
     ],
@@ -239,15 +191,12 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
         heading: "Explore Developers",
         links: [
           { label: "Jokuh SDK", href: "/developers/sdk", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
-          { label: "Agents of Chaos", href: "/developers/agents", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
         ],
       },
       {
         heading: "Resources",
         links: [
-          { label: "Pods API", href: "/pods", navGlyph: "launch", surfaces: ALL_SOURCES },
-          { label: "Cookbooks", href: "/developers/docs/cookbook", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
-          { label: "Community", href: "/developers/forum", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
+          { label: "Quickstart", href: "/developers/docs/quickstart", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
           { label: "Docs", href: "/developers/docs", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
         ],
       },

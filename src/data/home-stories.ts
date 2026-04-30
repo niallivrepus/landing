@@ -12,40 +12,22 @@ export type HomeStory = {
 
 const RAW_STORIES = [
   {
-    slug: "treasury-inference-api-grid",
-    image: STORY_CARD_IMAGE_BY_SLUG["treasury-inference-api-grid"],
-    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["treasury-inference-api-grid"],
-    title: "Treasury loops and the API grid",
+    slug: "made-from-memory",
+    image: STORY_CARD_IMAGE_BY_SLUG["made-from-memory"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["made-from-memory"],
+    title: "Made from Memory",
   },
   {
-    slug: "live-transcript-hooks-spine",
-    image: STORY_CARD_IMAGE_BY_SLUG["live-transcript-hooks-spine"],
-    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["live-transcript-hooks-spine"],
-    title: "Live transcript hooks on the spine",
+    slug: "aaron-liebowitz-psychotherapy-nyc",
+    image: STORY_CARD_IMAGE_BY_SLUG["aaron-liebowitz-psychotherapy-nyc"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["aaron-liebowitz-psychotherapy-nyc"],
+    title: "A psychotherapy practice in New York",
   },
   {
-    slug: "gooey-island-merge-hygiene",
-    image: STORY_CARD_IMAGE_BY_SLUG["gooey-island-merge-hygiene"],
-    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["gooey-island-merge-hygiene"],
-    title: "The Gooey app as a design island",
-  },
-  {
-    slug: "salvage-yard-nevada",
-    image: STORY_CARD_IMAGE_BY_SLUG["salvage-yard-nevada"],
-    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["salvage-yard-nevada"],
-    title: "A salvage yard in Nevada",
-  },
-  {
-    slug: "seed-farm-south-carolina",
-    image: STORY_CARD_IMAGE_BY_SLUG["seed-farm-south-carolina"],
-    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["seed-farm-south-carolina"],
-    title: "A seed farm in South Carolina",
-  },
-  {
-    slug: "tamale-shop-california",
-    image: STORY_CARD_IMAGE_BY_SLUG["tamale-shop-california"],
-    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["tamale-shop-california"],
-    title: "A tamale shop in California",
+    slug: "tomas-aldaz",
+    image: STORY_CARD_IMAGE_BY_SLUG["tomas-aldaz"],
+    imageFallback: STORY_CARD_IMAGE_FALLBACK_BY_SLUG["tomas-aldaz"],
+    title: "A regenerative grain cooperative in the High Plains",
   },
 ] as const;
 

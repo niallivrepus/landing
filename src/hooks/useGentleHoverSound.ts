@@ -1,7 +1,10 @@
 import { useEffect, useRef, type MouseEventHandler, type PointerEventHandler } from "react";
-import { playGentleHoverSfx, primeGentleHoverSfx } from "../lib/gentle-hover-sfx";
+import { playBubblyIdentityHoverSfx, playGentleHoverSfx, primeGentleHoverSfx } from "../lib/gentle-hover-sfx";
 
-export function useGentleHoverSound(enabled = true) {
+export function useGentleHoverSound(
+  enabled = true,
+  variant: "gentle" | "bubbly" = "gentle",
+) {
   const localHoverAtRef = useRef(0);
 
   const triggerHoverSound = () => {
@@ -10,7 +13,11 @@ export function useGentleHoverSound(enabled = true) {
     const now = performance.now();
     if (now - localHoverAtRef.current < 220) return;
     localHoverAtRef.current = now;
-    playGentleHoverSfx();
+    if (variant === "bubbly") {
+      playBubblyIdentityHoverSfx();
+    } else {
+      playGentleHoverSfx();
+    }
   };
 
   const onPointerEnter: PointerEventHandler<HTMLElement> = (event) => {

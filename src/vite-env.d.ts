@@ -5,6 +5,8 @@ interface ImportMetaEnv {
   readonly VITE_ORIGIN_DEVELOPERS?: string;
   readonly VITE_ORIGIN_HELP?: string;
   readonly VITE_ORIGIN_STATUS?: string;
+  readonly VITE_COOKIE_DOMAIN?: string;
+  readonly VITE_GA_MEASUREMENT_ID?: string;
 }
 
 interface ImportMeta {

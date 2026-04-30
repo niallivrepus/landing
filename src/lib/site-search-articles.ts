@@ -1,6 +1,6 @@
 import { formatNewsDate, getNewsHref, type NewsItem, NEWS_ITEMS } from "../data/news";
 import { HOME_STORIES, type HomeStory } from "../data/home-stories";
-import { PRODUCT_IDS, type ProductId, PRODUCTS } from "../data/products";
+import { type ProductId, PRODUCTS } from "../data/products";
 import { STORY_DETAILS } from "../data/stories-detail";
 
 export type SiteArticleHit = {
@@ -19,6 +19,9 @@ type CorpusEntry = {
   hit: SiteArticleHit;
   searchText: string;
 };
+
+const SEARCHABLE_PRODUCT_IDS: ProductId[] = ["spine", "blurbs", "calls", "messages", "profile"];
+const HIDDEN_NEWS_TOPICS = new Set(["Pods"]);
 
 const STOP = new Set([
   "a",
@@ -200,7 +203,7 @@ const CURATED: SiteArticleHit[] = [
     external: false,
   },
   {
-    href: "/waitlist",
+    href: "/download",
     title: "Waitlist",
     snippet: "Request early access and regional rollout updates.",
     meta: "Page",
@@ -209,7 +212,7 @@ const CURATED: SiteArticleHit[] = [
   {
     href: "/#prompt",
     title: "Prompt bar",
-    snippet: "The command surface that ties pods, blurbs, and inference together.",
+    snippet: "The command surface that ties memory, messages, and inference together.",
     meta: "Product",
     external: false,
   },
@@ -227,9 +230,11 @@ function entryForHit(hit: SiteArticleHit, searchText?: string): CorpusEntry {
 }
 
 function buildCorpus(): CorpusEntry[] {
-  const fromNews = NEWS_ITEMS.map((item) =>
-    entryForHit(newsToHit(item), `${item.title} ${item.excerpt ?? ""} ${item.category} ${item.topics.join(" ")}`),
-  );
+  const fromNews = NEWS_ITEMS
+    .filter((item) => !item.topics.some((topic) => HIDDEN_NEWS_TOPICS.has(topic)))
+    .map((item) =>
+      entryForHit(newsToHit(item), `${item.title} ${item.excerpt ?? ""} ${item.category} ${item.topics.join(" ")}`),
+    );
   const seen = new Set(fromNews.map((entry) => entry.hit.href));
   const fromStories: CorpusEntry[] = [];
   for (const story of HOME_STORIES) {
@@ -245,7 +250,7 @@ function buildCorpus(): CorpusEntry[] {
     );
   }
   const fromProducts: CorpusEntry[] = [];
-  for (const id of PRODUCT_IDS) {
+  for (const id of SEARCHABLE_PRODUCT_IDS) {
     const hit = productToHit(id);
     if (seen.has(hit.href)) continue;
     seen.add(hit.href);

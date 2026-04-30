@@ -16,7 +16,7 @@ function MiniTip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded border border-light-space/10 bg-smoke-2 px-2 py-1.5 text-[11px] text-light-space/85 light:border-black/10 light:bg-zinc-100 light:text-zinc-800">
+    <div className="rounded border border-light-space/10 bg-smoke-2 px-2 py-1.5 text-[11px] text-light-space/85 light:border-black/10 light:bg-section-grey-light light:text-zinc-800">
       {payload.map((p) => (
         <p key={String(p.name)} className="tabular-nums">
           <span style={{ color: p.color }}>{p.name}</span>: {p.value}%
@@ -33,7 +33,7 @@ export function TestimonialPanels({ entries }: { entries: TestimonialEntry[] }) 
   return (
     <div className="space-y-10 md:space-y-12">
       <div
-        className="flex flex-wrap gap-1.5 rounded-full border border-light-space/[0.1] bg-white/[0.03] p-1.5 light:border-black/[0.08] light:bg-zinc-100"
+        className="flex flex-wrap gap-1.5 rounded-full border border-light-space/[0.1] bg-white/[0.03] p-1.5 light:border-black/[0.08] light:bg-section-grey-light"
         role="tablist"
         aria-label="Customer stories"
       >
@@ -57,7 +57,7 @@ export function TestimonialPanels({ entries }: { entries: TestimonialEntry[] }) 
       </div>
 
       <blockquote className="mx-auto w-full max-w-[min(100%,720px)] text-center">
-        <p className="font-sans text-xl font-medium leading-[1.45] tracking-[-0.02em] text-light-space light:text-zinc-950 md:text-2xl md:leading-snug lg:text-[1.65rem]">
+        <p className="font-sans text-xl font-medium leading-[1.45] tracking-[0em] text-light-space light:text-zinc-950 md:text-2xl md:leading-snug lg:text-[1.65rem]">
           “{t.quote}”
         </p>
         <footer className="mt-6 font-sans text-sm text-light-space/50 light:text-zinc-500 md:text-base">— {t.attribution}</footer>

@@ -10,11 +10,14 @@ export function NewsCardArt({
   lavaLamp,
   className,
   children,
+  overlaySlotClassName,
 }: {
   gradient: string;
   image?: string;
   lavaLamp?: keyof typeof LAVA_LAMP_STYLES;
   className?: string;
+  /** Overrides default centered overlay flex (e.g. bottom-anchored artwork). */
+  overlaySlotClassName?: string;
   children?: ReactNode;
 }) {
   return (
@@ -30,7 +33,12 @@ export function NewsCardArt({
         />
       )}
       {children && (
-        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+        <div
+          className={cn(
+            "pointer-events-none absolute inset-0 z-10 flex items-center justify-center",
+            overlaySlotClassName,
+          )}
+        >
           {children}
         </div>
       )}

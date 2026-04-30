@@ -31,35 +31,26 @@ type DocsTopMenuItem = {
 
 const DOCS_TOP_MENU_ITEMS: readonly DocsTopMenuItem[] = [
   { label: "Home", to: "/" },
-  { label: "API", to: "/developers/docs" },
-  { label: "Codex", to: "/developers/sdk" },
+  { label: "Docs", to: "/developers/docs" },
+  { label: "Quickstart", to: "/developers/docs/quickstart" },
+  { label: "SDK & API", to: "/developers/docs/sdk" },
   {
-    label: "ChatGPT",
+    label: "Build",
     children: [
       {
-        label: "Pods SDK",
-        description: "Build apps to extend ChatGPT",
-        to: "/developers/apps",
+        label: "Text generation",
+        description: "Send a prompt and get a response",
+        to: "/developers/docs/text",
       },
       {
-        label: "Commerce",
-        description: "Build commerce flows in ChatGPT",
-        to: "/developers/docs/cookbook",
-      },
-    ],
-  },
-  {
-    label: "Resources",
-    children: [
-      {
-        label: "Cookbook",
-        description: "Implementation patterns and shipping examples",
-        to: "/developers/docs/cookbook",
+        label: "Structured output",
+        description: "Return JSON your product can trust",
+        to: "/developers/docs/structured-output",
       },
       {
-        label: "Forum",
-        description: "Discuss ideas with other developers",
-        to: "/developers/docs",
+        label: "Audio basics",
+        description: "Prepare for calls, notes, and transcripts",
+        to: "/developers/docs/audio",
       },
     ],
   },
@@ -76,7 +67,7 @@ function DocsSidebarLink({ href, label }: Pick<RigidLink, "href" | "label">) {
     return (
       <SiteLink href={href} className={docsSidebarLink}>
         <span>{label}</span>
-        {showGlyph ? <OffSiteGlyph className="text-white/38" /> : null}
+        {showGlyph ? <OffSiteGlyph className="text-white/38 light:text-black/38" /> : null}
       </SiteLink>
     );
   }
@@ -88,12 +79,12 @@ function DocsSidebarLink({ href, label }: Pick<RigidLink, "href" | "label">) {
       className={({ isActive }) => cn(docsSidebarLink, isActive && docsSidebarLinkActive)}
     >
       <span>{label}</span>
-      {showGlyph ? <OffSiteGlyph className="text-white/38" /> : null}
+      {showGlyph ? <OffSiteGlyph className="text-white/38 light:text-black/38" /> : null}
     </NavLink>
   );
 }
 
-const SUGGESTED_TERMS = ["responses API", "streaming", "function calling", "tools", "agents", "models"];
+const SUGGESTED_TERMS = ["quickstart", "SDK", "text", "structured output", "audio", "status"];
 
 type DocsSearchResult = { title: string; breadcrumb: string; href: string };
 
@@ -105,27 +96,10 @@ const DOCS_SEARCH_INDEX: DocsSearchResult[] = [
       href: item.to,
     })),
   ),
-  { title: "Responses API", breadcrumb: "API docs › Guides", href: "/developers/sdk" },
-  { title: "Streaming responses", breadcrumb: "API docs › Guides", href: "/developers/sdk" },
-  { title: "Function calling", breadcrumb: "API docs › Guides", href: "/developers/sdk" },
-  { title: "Tools & integrations", breadcrumb: "API docs › Guides", href: "/developers/sdk" },
-  { title: "Agents overview", breadcrumb: "API docs › Agents", href: "/developers/docs/cookbook" },
-  { title: "Build agents", breadcrumb: "API docs › Agents", href: "/developers/docs/cookbook" },
-  { title: "Deploy in your product", breadcrumb: "API docs › Agents", href: "/developers/docs/cookbook" },
-  { title: "All models", breadcrumb: "Docs › Get started", href: "/developers/docs/models" },
-  { title: "GPT-4.1", breadcrumb: "Docs › Models", href: "/developers/docs/models" },
-  { title: "Claude 4 Sonnet", breadcrumb: "Docs › Models", href: "/developers/docs/models" },
-  { title: "Gemini 2.5 Pro", breadcrumb: "Docs › Models", href: "/developers/docs/models" },
-  { title: "Llama 4", breadcrumb: "Docs › Models", href: "/developers/docs/models" },
-  { title: "DeepSeek R1", breadcrumb: "Docs › Models", href: "/developers/docs/models" },
-  { title: "Qwen3", breadcrumb: "Docs › Models", href: "/developers/docs/models" },
-  { title: "Pods runtime", breadcrumb: "API docs › Reference", href: "/pods" },
-  { title: "MCP server", breadcrumb: "API docs › Guides", href: "/developers/sdk" },
-  { title: "Structured output", breadcrumb: "API docs › Guides", href: "/developers/sdk" },
-  { title: "Image generation", breadcrumb: "API docs › Guides", href: "/developers/docs/cookbook" },
-  { title: "Audio & speech", breadcrumb: "API docs › Guides", href: "/developers/sdk" },
-  { title: "Reasoning", breadcrumb: "API docs › Guides", href: "/developers/sdk" },
-  { title: "Fine-tuning & evals", breadcrumb: "API docs › Guides", href: "/developers/docs/cookbook" },
+  { title: "SDK & API", breadcrumb: "Docs › Build", href: "/developers/docs/sdk" },
+  { title: "Text generation", breadcrumb: "Docs › Build", href: "/developers/docs/text" },
+  { title: "Structured output", breadcrumb: "Docs › Build", href: "/developers/docs/structured-output" },
+  { title: "Audio basics", breadcrumb: "Docs › Build", href: "/developers/docs/audio" },
 ];
 
 function DocsSearchModal({ onClose }: { onClose: () => void }) {
@@ -168,14 +142,20 @@ function DocsSearchModal({ onClose }: { onClose: () => void }) {
   );
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh] sm:pt-[16vh]">
+    <div
+      className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh] sm:pt-[16vh]"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Documentation search"
+    >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden />
-      <div className="relative z-[1] mx-4 w-full max-w-[620px] overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] shadow-[0_24px_64px_-16px_rgba(0,0,0,0.7)] light:border-black/[0.08] light:bg-white light:shadow-[0_24px_64px_-16px_rgba(15,23,42,0.18)]">
-        <header className="flex items-center gap-3 border-b border-white/[0.06] px-4 py-3 light:border-black/[0.06]">
+      <div className="relative z-[1] mx-3 max-h-[76dvh] w-full max-w-[620px] overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] shadow-[0_24px_64px_-16px_rgba(0,0,0,0.7)] light:border-black/[0.08] light:bg-white light:shadow-[0_24px_64px_-16px_rgba(15,23,42,0.18)] sm:mx-4">
+        <header className="flex items-center gap-3 px-3 py-3 sm:px-4">
           <Search className="size-4 shrink-0 text-white/35 light:text-black/35" strokeWidth={1.8} />
           <input
             ref={inputRef}
             type="text"
+            aria-label="Search documentation"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Start searching"
@@ -185,7 +165,8 @@ function DocsSearchModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-white/40 transition-colors hover:bg-white/[0.06] hover:text-white/70 light:text-black/40 light:hover:bg-black/[0.06] light:hover:text-black/70"
+            className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-white/40 transition-colors hover:bg-white/[0.06] hover:text-white/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 light:text-black/40 light:hover:bg-black/[0.06] light:hover:text-black/70 light:focus-visible:outline-black/70"
+            aria-label="Close search"
           >
             <X className="size-4" strokeWidth={2} />
           </button>
@@ -203,7 +184,7 @@ function DocsSearchModal({ onClose }: { onClose: () => void }) {
                     key={term}
                     type="button"
                     onClick={() => setQuery(term)}
-                    className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 font-sans text-[13px] font-medium text-white/72 transition-colors hover:bg-white/[0.08] hover:text-white light:border-black/[0.08] light:bg-black/[0.03] light:text-black/72 light:hover:bg-black/[0.06] light:hover:text-black"
+                    className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 font-sans text-[13px] font-medium text-white/72 transition-colors hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 light:border-black/[0.08] light:bg-section-grey-light light:text-black/72 light:hover:bg-zinc-200 light:hover:text-black light:focus-visible:outline-black/70"
                   >
                     {term}
                   </button>
@@ -217,7 +198,7 @@ function DocsSearchModal({ onClose }: { onClose: () => void }) {
                   <button
                     type="button"
                     onClick={() => go(r.href)}
-                    className="flex w-full flex-col gap-0.5 px-4 py-3 text-left transition-colors hover:bg-white/[0.04] light:hover:bg-black/[0.04]"
+                    className="flex w-full flex-col gap-0.5 px-4 py-3 text-left transition-colors hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-white/70 light:hover:bg-black/[0.04] light:focus-visible:outline-black/70"
                   >
                     <span className="font-sans text-[11px] text-white/35 light:text-black/35">{r.breadcrumb}</span>
                     <span className="font-sans text-[14px] font-semibold text-white/90 light:text-black/90">{r.title}</span>
@@ -241,16 +222,35 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileCloseButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    mobileCloseButtonRef.current?.focus();
+    const prev = document.body.style.overflow;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white antialiased light:bg-white light:text-zinc-950">
-      <header className="sticky top-0 z-[100] border-b border-white/8 bg-black/88 backdrop-blur-xl light:border-black/[0.08] light:bg-white/88">
+      <header className="sticky top-0 z-[100] bg-black/88 backdrop-blur-xl light:bg-white/88">
         {/* Mobile / tablet header */}
         <div className="mx-auto grid h-14 w-full grid-cols-[2.5rem_1fr_2.5rem] items-center px-4 md:h-16 md:px-6 lg:hidden">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="inline-flex size-10 items-center justify-center rounded-full text-white/70 hover:bg-white/[0.06] light:text-black/70 light:hover:bg-black/[0.06]"
+            className="inline-flex size-10 items-center justify-center rounded-full text-white/70 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 light:text-black/70 light:hover:bg-black/[0.06] light:focus-visible:outline-black/70"
             aria-label="Open menu"
           >
             <Menu className="size-5" strokeWidth={1.8} />
@@ -261,7 +261,7 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="inline-flex size-10 items-center justify-center rounded-full text-white/70 hover:bg-white/[0.06] light:text-black/70 light:hover:bg-black/[0.06]"
+            className="inline-flex size-10 items-center justify-center rounded-full text-white/70 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 light:text-black/70 light:hover:bg-black/[0.06] light:focus-visible:outline-black/70"
             aria-label="Open search"
           >
             <Search className="size-5" strokeWidth={1.8} />
@@ -334,15 +334,15 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-            className="inline-flex h-10 min-w-[11rem] items-center justify-between rounded-full border border-white/10 bg-white/[0.04] px-4 font-sans text-[13px] font-medium text-white/52 transition-colors hover:bg-white/[0.06] hover:text-white/74 light:border-black/[0.1] light:bg-black/[0.03] light:text-black/52 light:hover:bg-black/[0.05] light:hover:text-black/74"
+              className="inline-flex h-10 min-w-[11rem] items-center justify-between rounded-full border border-white/10 bg-white/[0.04] px-4 font-sans text-[13px] font-medium text-white/52 transition-colors hover:bg-white/[0.06] hover:text-white/74 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 light:border-black/[0.1] light:bg-section-grey-light light:text-black/66 light:hover:bg-zinc-200 light:hover:text-black/82 light:focus-visible:outline-black/70"
               aria-label="Open site search"
             >
               <span>Start searching</span>
               <Search className="size-4" strokeWidth={1.8} aria-hidden />
             </button>
             <Link
-              to="/waitlist"
-              className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-4 font-sans text-[12px] font-semibold tracking-tight text-black transition-colors hover:bg-white/90"
+              to="/download"
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-4 font-sans text-[12px] font-semibold tracking-tight text-black transition-colors hover:bg-white/90 light:bg-black light:text-white light:hover:bg-black/92"
             >
               <CtaLordIcon icon="logSignIn" size={16} darkColor="#000000" lightColor="#ffffff" />
               Try Jokuh
@@ -353,21 +353,22 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
 
       {/* Mobile menu drawer */}
       {mobileMenuOpen ? (
-        <div className="fixed inset-0 z-[150] lg:hidden">
-          <div className="relative z-[1] flex h-full w-full flex-col overflow-y-auto bg-black light:bg-white px-6 py-6">
+        <div className="fixed inset-0 z-[150] lg:hidden" role="dialog" aria-modal="true" aria-label="Documentation menu">
+          <div className="relative z-[1] flex h-full w-full flex-col overflow-y-auto bg-black px-4 py-5 light:bg-white sm:px-6 sm:py-6">
             <div className="mb-6 flex items-center justify-center relative">
               <Logo width={34} height={20} />
               <button
+                ref={mobileCloseButtonRef}
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="absolute right-0 inline-flex size-8 items-center justify-center rounded-md text-white/50 light:text-black/50 hover:text-white light:hover:text-black"
+                className="absolute right-0 inline-flex size-9 items-center justify-center rounded-md text-white/50 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 light:text-black/50 light:hover:text-black light:focus-visible:outline-black/70"
                 aria-label="Close menu"
               >
                 <X className="size-5" strokeWidth={2} />
               </button>
             </div>
 
-            <nav className="flex-1 space-y-6">
+            <nav className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain pb-2">
               {DOCS_NAV_SECTIONS.map((section) => (
                 <section key={section.heading}>
                   <p className="px-2 font-sans text-[10px] font-semibold uppercase tracking-[0.08em] text-white/32 light:text-black/40">
@@ -401,9 +402,9 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
               ))}
             </nav>
 
-            <div className="sticky bottom-0 border-t border-white/8 light:border-black/8 bg-black light:bg-white pt-6 pb-2 mt-8 space-y-2">
+            <div className="sticky bottom-0 bg-black light:bg-white pt-6 pb-2 mt-8 space-y-2">
               <Link
-                to="/waitlist"
+                to="/download"
                 onClick={() => setMobileMenuOpen(false)}
                 className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full bg-white px-4 font-sans text-[12px] font-semibold tracking-tight text-black transition-colors hover:bg-white/90 light:bg-black light:text-white light:hover:bg-black/90"
               >
@@ -422,7 +423,7 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
         </div>
       ) : null}
 
-      <div className="mx-auto w-full max-w-[1560px] px-4 md:px-6 lg:grid lg:grid-cols-[120px_minmax(0,1fr)] lg:gap-6 lg:px-8">
+      <div className="mx-auto w-full max-w-[1560px] px-4 md:px-6 lg:grid lg:grid-cols-[180px_minmax(0,1fr)] lg:gap-6 lg:px-8">
         <aside className="sticky top-16 hidden max-h-[calc(100dvh-4rem)] overflow-y-auto pt-6 lg:block [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <nav aria-label="Documentation" className="space-y-6 pb-8">
             {DOCS_NAV_SECTIONS.map((section) => (
@@ -442,9 +443,9 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
           </nav>
         </aside>
 
-        <main className="min-w-0 pb-24 pt-8 lg:border-l lg:border-white/8 lg:pl-8 lg:pt-8 light:lg:border-black/[0.08]">
+        <main className="min-w-0 pb-24 pt-8 lg:pl-8 lg:pt-8">
           <nav
-            className="flex gap-2 overflow-x-auto pb-2 lg:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex gap-2 overflow-x-auto overscroll-x-contain px-4 pb-2 lg:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             aria-label="Documentation sections"
           >
             {DOCS_NAV_SECTIONS.flatMap((section) => section.items).map((item) =>
@@ -452,7 +453,7 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
                 <SiteLink
                   key={item.to}
                   href={item.to}
-                  className="inline-flex h-10 shrink-0 items-center rounded-full border border-white/10 bg-white/[0.04] px-4 font-sans text-[13px] font-medium text-white/72 light:border-black/[0.1] light:bg-black/[0.03] light:text-black/72"
+                  className="inline-flex h-10 shrink-0 items-center rounded-full border border-white/10 bg-white/[0.04] px-4 font-sans text-[13px] font-medium text-white/72 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 light:border-black/[0.1] light:bg-black/[0.03] light:text-black/72 light:focus-visible:outline-black/70"
                 >
                   {item.label}
                 </SiteLink>
@@ -467,6 +468,7 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
                       isActive
                         ? "border-white/16 bg-white/[0.1] text-white light:border-black/[0.16] light:bg-black/[0.08] light:text-black"
                         : "border-white/10 bg-white/[0.04] text-white/72 hover:bg-white/[0.06] hover:text-white light:border-black/[0.1] light:bg-black/[0.03] light:text-black/72 light:hover:bg-black/[0.05] light:hover:text-black",
+                      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 light:focus-visible:outline-black/70",
                     )
                   }
                 >

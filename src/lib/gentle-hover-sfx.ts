@@ -155,3 +155,101 @@ export function playGentleHoverSfx() {
     masterGain.disconnect();
   }, 500);
 }
+
+/**
+ * Very soft, airy hover — two quiet sine swells, warm mids, no edge.
+ */
+export function playBubblyIdentityHoverSfx() {
+  const context = getAudioContext();
+  if (!context || context.state !== "running") {
+    primeGentleHoverSfx();
+    return;
+  }
+
+  const nowMs = performance.now();
+  if (nowMs - lastHoverAt < GLOBAL_HOVER_COOLDOWN_MS) return;
+  lastHoverAt = nowMs;
+
+  const startAt = context.currentTime + 0.006;
+  const drift = 1 + (Math.random() - 0.5) * 0.018;
+
+  const makeLayer = (
+    offset: number,
+    f0: number,
+    fMid: number,
+    gain: number,
+  ) => {
+    const t0 = startAt + offset;
+    const osc = context.createOscillator();
+    const g = context.createGain();
+    const tint = context.createOscillator();
+    const tintG = context.createGain();
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(f0 * drift, t0);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(50, fMid * drift), t0 + 0.09);
+
+    /** Breath-light detuned shimmer (+6¢), sine only */
+    tint.type = "sine";
+    tint.frequency.setValueAtTime(f0 * 1.006 * drift, t0);
+    tint.frequency.exponentialRampToValueAtTime(Math.max(50, fMid * 1.006 * drift), t0 + 0.09);
+
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(gain, t0 + 0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.26);
+
+    tintG.gain.setValueAtTime(0.0001, t0);
+    tintG.gain.linearRampToValueAtTime(gain * 0.35, t0 + 0.014);
+    tintG.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.22);
+
+    return { osc, g, tint, tintG, t0, end: t0 + 0.3 };
+  };
+
+  const a = makeLayer(0, 360, 620, 0.02);
+  const b = makeLayer(0.045, 480, 780, 0.012);
+
+  const perLp = context.createBiquadFilter();
+  perLp.type = "lowpass";
+  perLp.frequency.setValueAtTime(1100, startAt);
+  perLp.frequency.exponentialRampToValueAtTime(3400, startAt + 0.12);
+  perLp.Q.value = 0.35;
+
+  const master = context.createGain();
+  /** ~4× quieter than previous bubbly preset */
+  master.gain.setValueAtTime(0.19, startAt);
+
+  a.osc.connect(a.g);
+  a.tint.connect(a.tintG);
+  a.g.connect(perLp);
+  a.tintG.connect(perLp);
+
+  b.osc.connect(b.g);
+  b.tint.connect(b.tintG);
+  b.g.connect(perLp);
+  b.tintG.connect(perLp);
+
+  perLp.connect(master);
+  master.connect(context.destination);
+
+  a.osc.start(a.t0);
+  a.tint.start(a.t0);
+  b.osc.start(b.t0);
+  b.tint.start(b.t0);
+  a.osc.stop(a.end);
+  a.tint.stop(a.end);
+  b.osc.stop(b.end);
+  b.tint.stop(b.end);
+
+  window.setTimeout(() => {
+    a.osc.disconnect();
+    a.g.disconnect();
+    a.tint.disconnect();
+    a.tintG.disconnect();
+    b.osc.disconnect();
+    b.g.disconnect();
+    b.tint.disconnect();
+    b.tintG.disconnect();
+    perLp.disconnect();
+    master.disconnect();
+  }, 400);
+}

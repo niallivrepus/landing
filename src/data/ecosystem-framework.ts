@@ -1,5 +1,5 @@
 /**
- * Consolidated reference model: OpenAI / Apple / ChatGPT public IA patterns → Jokuh parity routes.
+ * Consolidated reference model: OpenAI / ChatGPT public IA patterns → Jokuh parity routes.
  * Regenerate signals via `npm run ecosystem:agents` (parallel URL probes).
  */
 
@@ -71,27 +71,6 @@ export const REFERENCE_ECOSYSTEMS: ReferenceEcosystem[] = [
     ],
   },
   {
-    id: "apple-legal",
-    label: "Apple Legal",
-    rootUrl: "https://www.apple.com/legal/",
-    pillars: [
-      {
-        name: "Structured legal home",
-        paths: [
-          "/legal/",
-          "/legal/internet-services/",
-          "/legal/privacy/",
-          "/legal/warranty/",
-          "/legal/sla/",
-          "/legal/sales-support/",
-          "/legal/intellectual-property/",
-          "/legal/more-resources/",
-        ],
-        notes: "Clear IA: hardware, software, sales, internet services, privacy, IP; locale-specific privacy flows.",
-      },
-    ],
-  },
-  {
     id: "chatgpt-product",
     label: "ChatGPT (product)",
     rootUrl: "https://chatgpt.com",
@@ -133,12 +112,6 @@ export const JOKUH_PORTAL_PARITY: JokuhPortalSurface[] = [
     referenceIds: ["openai-status"],
   },
   {
-    id: "legal-apple-style",
-    intent: "Legal home grid, internet services, privacy locales, terms",
-    jokuhRouteOrEnv: "/legal, /legal/*, /privacy, /terms",
-    referenceIds: ["apple-legal"],
-  },
-  {
     id: "product-legal-links",
     intent: "Thin product shell linking to centralized policies",
     jokuhRouteOrEnv: "Future app surfaces → /terms, /privacy",
@@ -150,7 +123,6 @@ export const ECOSYSTEM_AGENT_URLS: { url: string; label: string }[] = [
   { url: "https://openai.com", label: "openai-marketing" },
   { url: "https://developers.openai.com", label: "openai-developers" },
   { url: "https://status.openai.com", label: "openai-status" },
-  { url: "https://www.apple.com/legal/", label: "apple-legal" },
   { url: "https://chatgpt.com", label: "chatgpt-product" },
   { url: "https://help.openai.com/en/", label: "openai-help" },
   { url: "https://community.openai.com/", label: "openai-forum" },

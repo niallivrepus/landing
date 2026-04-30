@@ -1,11 +1,5 @@
 export { MarketingPageFrame } from "./MarketingPageFrame";
-export {
-  TertiaryPageChrome,
-  TertiaryBreadcrumb,
-  TERTIARY_PAGE_SHELL,
-  TERTIARY_READING_MEASURE,
-  type TertiaryBreadcrumbItem,
-} from "./TertiaryPageChrome";
+export { TertiaryPageChrome, TERTIARY_PAGE_SHELL, TERTIARY_READING_MEASURE } from "./TertiaryPageChrome";
 export { TertiaryPageHero, type TertiaryPageHeroProps } from "./TertiaryPageHero";
 export {
   TertiaryHubBody,
@@ -55,6 +49,8 @@ export {
   bodySmClass,
   labelClass,
   eyebrowClass,
+  pageHeroEyebrowClass,
+  pageHeroEyebrowUppercaseClass,
   monoEyebrowClass,
   monoClass,
   monoSmClass,
@@ -71,6 +67,7 @@ export {
   MarketingStubDescription,
 } from "./typography";
 export { ArticleMetaRow } from "./ArticleMetaRow";
+export { EditorialQuoteBlock } from "./EditorialQuoteBlock";
 export { MarketingPageSection, SectionHeaderRow } from "./sections";
 export { SimpleMarketingPageTemplate } from "./templates/SimpleMarketingPageTemplate";
 export {

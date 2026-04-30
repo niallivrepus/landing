@@ -1,9 +1,4 @@
-export const PRIVACY_DOC_KEYS = ["customer", "data-products", "governance", "gov-requests"] as const;
-export type PrivacyDocKey = (typeof PRIVACY_DOC_KEYS)[number];
-
-export function isPrivacyDocKey(s: string): s is PrivacyDocKey {
-  return (PRIVACY_DOC_KEYS as readonly string[]).includes(s);
-}
+export type PrivacyDocKey = "customer";
 
 export type PrivacyResourceLink = { label: string; to?: string; href?: string };
 
@@ -24,25 +19,12 @@ export type PrivacyDocMeta = {
   introContinued?: string[];
   documentTitle?: string;
   documentSubtitle?: string;
-  breadcrumbLabel?: string;
   resourceLinks?: PrivacyResourceLink[];
   counselNote?: string;
   sections: PrivacySection[];
 };
 
-export function getPrivacyDocTitle(meta: PrivacyDocMeta) {
-  return meta.title;
-}
-
-export function getPrivacyDocumentTitle(meta: PrivacyDocMeta) {
-  return meta.documentTitle ?? meta.title;
-}
-
-export function getPrivacyBreadcrumbLabel(meta: PrivacyDocMeta) {
-  return meta.breadcrumbLabel ?? meta.title;
-}
-
-/** Long-form customer policy — structure aligned with common global privacy pages (e.g. apple.com/legal/privacy/en-ww); Jokuh-specific wording. */
+/** Long-form customer policy for the single public Privacy Policy page. */
 const CUSTOMER_SECTIONS: PrivacySection[] = [
   {
     title: "What is personal data at Jokuh?",
@@ -188,137 +170,9 @@ export const PRIVACY_DOCS: Record<PrivacyDocKey, PrivacyDocMeta> = {
       { label: "Download a copy of this Privacy Policy", href: "#print-policy" },
       { label: "U.S. state privacy disclosures", href: "#us-state-disclosures" },
       { label: "Commercial email & messaging (Canada)", href: "#canada-messages" },
-      { label: "Product privacy library (coming soon)", href: "/legal/privacy/data-products" },
     ],
     counselNote:
       "This English (Global) page is a detailed example layout for the marketing site. Have counsel review and localize before production use.",
     sections: CUSTOMER_SECTIONS,
   },
-  "data-products": {
-    key: "data-products",
-    title: "Product Privacy",
-    summary: "Feature-level disclosures for Pods, Spine, Vortex, analytics, diagnostics, and connected services.",
-    intro:
-      "This disclosure summarizes categories of data processed by Jokuh software and connected services, and how in-product controls relate to our customer privacy policy.",
-    sections: [
-      {
-        title: "Purpose",
-        body: [
-          "Jokuh surfaces privacy information when a feature needs access to sensitive categories (microphone, contacts, location, health-related inferences, etc.). This document complements the Customer Privacy Policy.",
-        ],
-      },
-      {
-        title: "Pods, Spine, and Vortex",
-        body: [
-          "Session transcripts, embeddings, and file references may be processed to provide continuity across devices you authorize. You can revoke device keys and export or delete associated vault material where the product supports it.",
-        ],
-      },
-      {
-        title: "Analytics and diagnostics",
-        body: [
-          "We may collect crash logs and coarse performance metrics. Where analytics could relate to an identifiable account, we provide opt-outs or aggregate reporting as described in each client’s settings.",
-        ],
-      },
-      {
-        title: "Third-party integrations",
-        body: [
-          "When you connect a third-party OAuth provider or API, their terms and privacy policy apply to data they process. Jokuh passes through only the scopes you approve.",
-        ],
-      },
-      {
-        title: "Contact",
-        body: ["Product-specific questions: privacy@jokuh.com."],
-      },
-    ],
-  },
-  governance: {
-    key: "governance",
-    title: "Privacy Governance",
-    summary: "Program accountability, vendor review, training, and incident handling across privacy operations.",
-    intro:
-      "How Jokuh operationalizes privacy by design, vendor risk, and accountability across engineering, security, and legal.",
-    sections: [
-      {
-        title: "Program overview",
-        body: [
-          "Our privacy office maintains records of processing activities, coordinates DPIAs for high-risk launches, and reviews subprocessors before onboarding.",
-        ],
-      },
-      {
-        title: "Training and access",
-        body: [
-          "Employees with access to production systems complete recurring privacy and security training. Access follows least-privilege and is logged.",
-        ],
-      },
-      {
-        title: "Incidents",
-        body: [
-          "We maintain an incident response plan including notification workflows where required by law. Users may report concerns to privacy@jokuh.com.",
-        ],
-      },
-      {
-        title: "Assurance",
-        body: [
-          "We pursue independent assessments where they materially reduce risk for customers. Certificates and reports will be published here when available.",
-        ],
-      },
-    ],
-  },
-  "gov-requests": {
-    key: "gov-requests",
-    title: "Information Requests",
-    summary: "How Jokuh reviews, narrows, and reports legal, civil, and emergency requests for user data.",
-    intro:
-      "Transparency principles for law enforcement, national security, and civil requests relating to Jokuh user data.",
-    sections: [
-      {
-        title: "Process",
-        body: [
-          "We review requests for legal validity and narrowness. We push back on overbroad orders where permitted and notify users when not prohibited.",
-        ],
-      },
-      {
-        title: "Types of disclosure",
-        body: [
-          "Categories may include subscriber information, transactional metadata, and content stored on Jokuh systems. End-to-end encrypted payloads that Jokuh cannot decrypt are identified in transparency reporting.",
-        ],
-      },
-      {
-        title: "Reporting",
-        body: [
-          "We will publish aggregate statistics on request volumes by jurisdiction as our legal obligations and scale allow.",
-        ],
-      },
-      {
-        title: "Emergency requests",
-        body: [
-          "We may preserve or disclose information where we reasonably believe it necessary to prevent imminent harm, subject to documentation and follow-up legal process where applicable.",
-        ],
-      },
-    ],
-  },
 };
-
-export const PRIVACY_TOPIC_ROWS: {
-  key: PrivacyDocKey | "account";
-  title: string;
-  description?: string;
-  to: string;
-}[] = [
-  ...PRIVACY_DOC_KEYS.map((key) => {
-    const meta = PRIVACY_DOCS[key];
-
-    return {
-      key,
-      title: meta.title,
-      description: meta.summary,
-      to: `/legal/privacy/${key}`,
-    };
-  }),
-  {
-    key: "account",
-    title: "Manage your account",
-    description: "Open your Jokuh account controls, permissions, and support entry points.",
-    to: "/#start",
-  },
-];

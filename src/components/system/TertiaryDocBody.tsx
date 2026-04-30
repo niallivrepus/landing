@@ -34,7 +34,7 @@ export function TertiaryDocBody({
       <div className="grid gap-10 md:grid-cols-[220px_minmax(0,1fr)] md:gap-12 lg:grid-cols-[240px_minmax(0,1fr)]">
         <aside className="md:sticky md:top-24 md:self-start">
           <nav
-            className="rounded-[24px] border border-light-space/[0.08] bg-white/[0.02] p-4 light:border-black/[0.08] light:bg-zinc-50"
+            className="rounded-[24px] border border-light-space/[0.08] bg-white/[0.02] p-4 light:border-black/[0.1] light:bg-section-grey-light"
             aria-label={tocLabel}
           >
             <p className="text-[11px] font-medium tracking-[0.12em] text-light-space/45 uppercase light:text-zinc-500">
@@ -45,7 +45,7 @@ export function TertiaryDocBody({
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}
-                    className="text-[13px] leading-snug text-light-space/65 transition-colors hover:text-light-space light:text-zinc-600 light:hover:text-zinc-950"
+                    className="text-[13px] leading-snug text-light-space/72 transition-colors hover:text-light-space light:text-zinc-600 light:hover:text-zinc-950"
                   >
                     {item.label}
                   </a>
@@ -62,9 +62,9 @@ export function TertiaryDocBody({
                   <section
                     key={section.id}
                     id={section.id}
-                    className="scroll-mt-24 border-b border-light-space/[0.08] pb-10 last:border-b-0 last:pb-0 light:border-black/[0.08]"
+                    className="scroll-mt-24 pb-10 last:pb-0"
                   >
-                    <h2 className="font-sans text-[22px] font-semibold tracking-[-0.03em] text-light-space light:text-zinc-950 md:text-[24px]">
+                    <h2 className="font-sans text-[22px] font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-[24px]">
                       {section.title}
                     </h2>
                     {section.body.map((paragraph) => (
@@ -75,11 +75,11 @@ export function TertiaryDocBody({
                     {section.cta ? (
                       <p className="mt-4">
                         {section.cta.to ? (
-                          <Link to={section.cta.to} className="text-[14px] text-[var(--color-blue-4)] transition-colors hover:underline">
+                          <Link to={section.cta.to} className="rounded-sm text-[14px] text-[var(--color-blue-4)] transition-colors hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-blue-4)]/30">
                             {section.cta.label}
                           </Link>
                         ) : (
-                          <a href={section.cta.href ?? "#"} className="text-[14px] text-[var(--color-blue-4)] transition-colors hover:underline">
+                          <a href={section.cta.href ?? "#"} className="rounded-sm text-[14px] text-[var(--color-blue-4)] transition-colors hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-blue-4)]/30">
                             {section.cta.label}
                           </a>
                         )}

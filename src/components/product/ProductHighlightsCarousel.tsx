@@ -2,8 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@jokuh/gooey";
 import { Pause, Play } from "lucide-react";
 import type { ProductHighlightSlide } from "../../data/product-detail-blueprints";
+import { CONTENT_SHELL_WIDE } from "../system/shells";
 import { ProductDetailMedia } from "./ProductDetailMedia";
-import { ProductSectionIntro, ProductShowcaseSurface, ProductStorySection } from "./ProductDetailPrimitives";
+import { ProductSectionIntro, ProductShowcaseSurface } from "./ProductDetailPrimitives";
 
 const AUTOPLAY_STEP_MS = 80;
 const AUTOPLAY_DURATION_MS = 4200;
@@ -66,7 +67,7 @@ export function ProductHighlightsCarousel({
     if (!root) return;
     const card = root.querySelector<HTMLElement>(`[data-slide-index="${index}"]`);
     if (!card) return;
-    card.scrollIntoView({ behavior, block: "nearest", inline: "center" });
+    card.scrollIntoView({ behavior, block: "nearest", inline: "start" });
   }, []);
 
   useEffect(() => {
@@ -75,47 +76,49 @@ export function ProductHighlightsCarousel({
   }, [activeIndex, isPlaying, scrollCardIntoView, slides.length]);
 
   return (
-    <ProductStorySection>
-      <ProductSectionIntro title={title} />
+    <section className="py-20 md:py-28">
+      <div className={CONTENT_SHELL_WIDE}>
+        <ProductSectionIntro title={title} />
+      </div>
 
       <div className="mt-12 min-w-0 md:mt-16">
-        <div className="-mx-4 overflow-x-hidden px-4 md:-mx-8 md:px-8">
-          <div
-            ref={scrollRef}
-            className={cn(
-              "flex w-full min-w-0 gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth pb-1 md:gap-5",
-              "snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none]",
-              "[&::-webkit-scrollbar]:hidden",
-            )}
-            style={{ WebkitOverflowScrolling: "touch" }}
-          >
-            {slides.map((slide, index) => (
-              <div
-                key={slide.id}
-                data-slide-index={index}
-                className="w-[min(72rem,calc(100vw-2rem))] max-w-[min(72rem,100%)] shrink-0 snap-center"
-              >
-                <ProductShowcaseSurface className={cardSurfaceClassName}>
-                  <div className="absolute inset-0">
-                    <ProductDetailMedia
-                      media={slide.media}
-                      active={isPlaying && index === activeIndex}
-                      className="size-full"
-                    />
-                  </div>
-                  <div className="absolute inset-x-0 top-0 px-8 pt-8 md:px-10 md:pt-10">
-                    <h3 className="max-w-[16ch] font-sans text-[1.75rem] font-semibold leading-[1.08] tracking-[-0.04em] text-zinc-950 dark:text-zinc-100 md:text-[2.25rem]">
-                      {slide.title}
-                    </h3>
-                  </div>
-                </ProductShowcaseSurface>
-              </div>
-            ))}
-          </div>
+        <div
+          ref={scrollRef}
+          className={cn(
+            "flex min-w-0 gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth pb-1 md:gap-5",
+            "w-full max-w-[100vw] snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none]",
+            "[&::-webkit-scrollbar]:hidden",
+            "pl-4 pr-0 md:pl-[max(2rem,calc((100vw-86.25rem)/2+2rem))]",
+            "scroll-pl-4 md:scroll-pl-[max(2rem,calc((100vw-86.25rem)/2+2rem))]",
+          )}
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
+          {slides.map((slide, index) => (
+            <div
+              key={slide.id}
+              data-slide-index={index}
+              className="w-[min(72rem,calc(100vw-2rem))] max-w-[min(72rem,calc(100vw-2rem))] shrink-0 snap-start"
+            >
+              <ProductShowcaseSurface className={cardSurfaceClassName}>
+                <div className="absolute inset-0">
+                  <ProductDetailMedia
+                    media={slide.media}
+                    active={isPlaying && index === activeIndex}
+                    className="size-full"
+                  />
+                </div>
+                <div className="absolute inset-x-0 top-0 px-8 pt-8 md:px-10 md:pt-10">
+                  <h3 className="max-w-[16ch] font-sans text-[1.75rem] font-semibold leading-[1.08] tracking-[0em] text-zinc-950 dark:text-zinc-100 md:text-[2.25rem]">
+                    {slide.title}
+                  </h3>
+                </div>
+              </ProductShowcaseSurface>
+            </div>
+          ))}
         </div>
 
         <div className="mt-8 flex items-center justify-center gap-3">
-          <div className="inline-flex h-12 items-center gap-2 rounded-full border border-zinc-200/90 bg-white/95 px-4 shadow-[0_16px_32px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-zinc-600/60 dark:bg-zinc-800/95 dark:shadow-[0_16px_32px_rgba(0,0,0,0.35)]">
+          <div className="inline-flex h-12 items-center gap-2 rounded-full border border-zinc-200/90 bg-[#F5F5F7]/95 px-4 shadow-[0_16px_32px_rgba(15,23,42,0.05)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-[#2A2A2D]/95 dark:shadow-[0_16px_32px_rgba(0,0,0,0.32)]">
             {slides.map((slide, index) => {
               const active = index === activeIndex;
               const fill = active ? `${Math.max(progress, isPlaying ? 0.08 : 1) * 100}%` : "0%";
@@ -131,12 +134,12 @@ export function ProductHighlightsCarousel({
                     scrollCardIntoView(index, "smooth");
                   }}
                   className={cn(
-                    "relative h-2 overflow-hidden rounded-full bg-zinc-300/90 transition-all dark:bg-zinc-600/80",
-                    active ? "w-10" : "w-2.5 hover:bg-zinc-400/90 dark:hover:bg-zinc-500/80",
+                    "relative h-2 overflow-hidden rounded-full bg-zinc-300/78 transition-all dark:bg-white/[0.14]",
+                    active ? "w-10" : "w-2.5 hover:bg-zinc-400/78 dark:hover:bg-white/[0.22]",
                   )}
                 >
                   <span
-                    className="absolute inset-y-0 left-0 rounded-full bg-zinc-700 transition-[width] duration-100 dark:bg-zinc-300"
+                    className="absolute inset-y-0 left-0 rounded-full bg-zinc-800 transition-[width] duration-100 dark:bg-zinc-100/92"
                     style={{ width: fill }}
                   />
                 </button>
@@ -150,7 +153,7 @@ export function ProductHighlightsCarousel({
               setIsPlaying((value) => !value);
               setProgress(0);
             }}
-            className="inline-flex size-12 items-center justify-center rounded-full border border-zinc-200/90 bg-white text-zinc-900 shadow-[0_16px_32px_rgba(15,23,42,0.06)] backdrop-blur-xl transition-transform hover:scale-[0.98] active:scale-[0.96] dark:border-zinc-600/60 dark:bg-zinc-800 dark:text-zinc-100 dark:shadow-[0_16px_32px_rgba(0,0,0,0.35)]"
+            className="inline-flex size-12 items-center justify-center rounded-full border border-zinc-200/90 bg-[#F5F5F7] text-zinc-900 shadow-[0_16px_32px_rgba(15,23,42,0.05)] backdrop-blur-xl transition-transform hover:scale-[0.98] active:scale-[0.96] dark:border-white/[0.08] dark:bg-[#2A2A2D] dark:text-zinc-100 dark:shadow-[0_16px_32px_rgba(0,0,0,0.32)]"
             aria-label={isPlaying ? "Pause highlight carousel" : "Play highlight carousel"}
           >
             {isPlaying ? (
@@ -165,6 +168,6 @@ export function ProductHighlightsCarousel({
       <div className="sr-only" aria-live="polite">
         {slides[activeIndex]?.title}
       </div>
-    </ProductStorySection>
+    </section>
   );
 }

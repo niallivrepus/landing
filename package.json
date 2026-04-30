@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "generate:rss": "node scripts/generate-rss.mjs",
     "sync:medium": "node scripts/sync-medium.mjs",
     "ecosystem:agents": "node scripts/ecosystem-agents.mjs",
-    "build": "vite build",
-    "build:mask": "vite build",
-    "build:landing": "VITE_SITE_ENTRY=landing vite build",
+    "build": "npm run generate:rss && vite build",
+    "build:mask": "npm run generate:rss && vite build",
+    "build:landing": "npm run generate:rss && VITE_SITE_ENTRY=landing vite build",
     "preview": "vite preview",
     "preview:e2e": "npm run build:landing && vite preview --host 127.0.0.1 --port 4173",
     "typecheck": "tsc --noEmit",
@@ -34,6 +35,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
+    "@supabase/supabase-js": "^2.105.1",
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "^25.5.0",
     "@types/react": "19.2.0",

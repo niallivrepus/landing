@@ -18,11 +18,11 @@ function readBody(req: IncomingMessage): Promise<string> {
   });
 }
 
-const SYSTEM = `You are the Jokuh website assistant. Jokuh builds ambient intelligence products. Tagline: "Your thinking is the product." Key surfaces: Pods, Blurbs, Spine, Vortex, prompt bar; Platform (Identity, Gooey, Wallet, Galaxy Nodes); developers docs at /developers/docs; newsroom at /newsroom; stories at /stories; waitlist at /waitlist.
+const SYSTEM = `You are the Jokuh website assistant. Jokuh builds ambient intelligence products. Tagline: "Your thinking is the product." Primary entry points: download the app at /download; developers docs at /developers/docs; newsroom at /newsroom; stories at /stories.
 
 Use the provided ranked site hits as grounding when available. Favor titles and snippets from those hits, and do not invent pages or features that are not present in the context.
 
-Answer in clear prose, max about 120 words. No markdown headings. If the question is unrelated, answer briefly and point to /newsroom, /stories, or /developers/docs.`;
+Answer in clear prose, max about 120 words. No markdown headings. If the question is unrelated, answer briefly and point to /download, /newsroom, /stories, or /developers/docs.`;
 
 function normalizeArticles(value: unknown): SearchRequestArticle[] {
   if (!Array.isArray(value)) return [];
@@ -58,7 +58,7 @@ function buildContext(articles: SearchRequestArticle[]): string {
 function buildFallbackSummary(query: string, articles: SearchRequestArticle[]): string {
   const top = articles.slice(0, 3);
   if (top.length === 0) {
-    return `I could not reach the live site search service, but the closest local matches for "${query}" are the newsroom, product pages, stories, and docs. Try a more specific product or topic name for a tighter result.`;
+    return `I could not reach the live site search service, but the closest local matches for "${query}" are the newsroom, stories, docs, and public product pages. Try a more specific topic name for a tighter result.`;
   }
 
   const headline = top.map((hit) => `${hit.title} (${hit.meta.toLowerCase()})`).join(", ");

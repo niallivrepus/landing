@@ -61,9 +61,9 @@ export function CompanyPageClosingCta({
     );
 
   return (
-    <section className={cn("border-t border-light-space/[0.08] py-20 light:border-black/[0.08] md:py-28", className)}>
+    <section className={cn("py-20 md:py-28", className)}>
       <div className={cn(COMPANY_PAGE_SHELL, "text-center")}>
-        <h2 className="font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-light-space light:text-zinc-950">
+        <h2 className="font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-tight tracking-[0em] text-light-space light:text-zinc-950">
           {headline}
         </h2>
         <div className="mt-8 flex justify-center">{cta}</div>

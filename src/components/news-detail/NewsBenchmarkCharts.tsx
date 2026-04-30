@@ -16,8 +16,7 @@ import {
   SWE_LINE_DATA,
 } from "../../data/news-detail";
 import { ChartFrame } from "./ChartFrame";
-
-const tickMuted = { fill: "#a1a1aa", fontSize: 11 };
+import { useTheme } from "@jokuh/gooey";
 
 function DarkTooltip({
   active,
@@ -43,6 +42,13 @@ function DarkTooltip({
 }
 
 export function GdpvalStackedChart({ footnote }: { footnote: string }) {
+  const { resolvedTheme } = useTheme();
+  const isLight = resolvedTheme === "light";
+  const tickMuted = { fill: isLight ? "#71717a" : "#a1a1aa", fontSize: 11 };
+  const axisLabelFill = "#71717a";
+  const gridStroke = isLight ? "#d4d4d8" : "#27272a";
+  const tooltipCursor = isLight ? "rgba(24,24,27,0.05)" : "rgba(255,255,255,0.04)";
+
   return (
     <ChartFrame
       title="GDPval"
@@ -64,7 +70,7 @@ export function GdpvalStackedChart({ footnote }: { footnote: string }) {
     >
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={GDPVAL_BAR_DATA} margin={{ top: 12, right: 12, left: 4, bottom: 8 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} vertical={false} />
           <XAxis
             dataKey="name"
             tick={tickMuted}
@@ -82,19 +88,19 @@ export function GdpvalStackedChart({ footnote }: { footnote: string }) {
               value: "Win rate vs industry professional",
               angle: -90,
               position: "insideLeft",
-              fill: "#71717a",
+              fill: axisLabelFill,
               style: { fontSize: 10, textAnchor: "middle" },
             }}
           />
-          <Tooltip content={<DarkTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+          <Tooltip content={<DarkTooltip />} cursor={{ fill: tooltipCursor }} />
           <ReferenceLine
             y={50}
-            stroke="#71717a"
+            stroke={axisLabelFill}
             strokeDasharray="5 5"
             strokeOpacity={0.28}
             label={{
               value: "Industry expert baseline",
-              fill: "#71717a",
+              fill: axisLabelFill,
               fontSize: 10,
               position: "insideTopRight",
             }}
@@ -108,6 +114,12 @@ export function GdpvalStackedChart({ footnote }: { footnote: string }) {
 }
 
 export function SweBenchLineChart({ footnote }: { footnote: string }) {
+  const { resolvedTheme } = useTheme();
+  const isLight = resolvedTheme === "light";
+  const tickMuted = { fill: isLight ? "#71717a" : "#a1a1aa", fontSize: 11 };
+  const axisLabelFill = "#71717a";
+  const gridStroke = isLight ? "#d4d4d8" : "#27272a";
+
   return (
     <ChartFrame
       title="SWE-Bench Pro (public)"
@@ -133,7 +145,7 @@ export function SweBenchLineChart({ footnote }: { footnote: string }) {
     >
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={SWE_LINE_DATA} margin={{ top: 12, right: 16, left: 4, bottom: 8 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} vertical={false} />
           <XAxis
             type="number"
             dataKey="latency"
@@ -144,7 +156,7 @@ export function SweBenchLineChart({ footnote }: { footnote: string }) {
               value: "Estimated latency (seconds)",
               position: "insideBottom",
               offset: -2,
-              fill: "#71717a",
+              fill: axisLabelFill,
               style: { fontSize: 10 },
             }}
           />
@@ -157,7 +169,7 @@ export function SweBenchLineChart({ footnote }: { footnote: string }) {
               value: "Accuracy",
               angle: -90,
               position: "insideLeft",
-              fill: "#71717a",
+              fill: axisLabelFill,
               style: { fontSize: 10 },
             }}
           />
@@ -193,6 +205,12 @@ export function SweBenchLineChart({ footnote }: { footnote: string }) {
 }
 
 export function OsworldLineChart({ footnote }: { footnote: string }) {
+  const { resolvedTheme } = useTheme();
+  const isLight = resolvedTheme === "light";
+  const tickMuted = { fill: isLight ? "#71717a" : "#a1a1aa", fontSize: 11 };
+  const axisLabelFill = "#71717a";
+  const gridStroke = isLight ? "#d4d4d8" : "#27272a";
+
   return (
     <ChartFrame
       title="PodBench-Verified"
@@ -214,7 +232,7 @@ export function OsworldLineChart({ footnote }: { footnote: string }) {
     >
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={OSWORLD_LINE_DATA} margin={{ top: 12, right: 16, left: 4, bottom: 8 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} vertical={false} />
           <XAxis
             type="number"
             dataKey="yields"
@@ -223,7 +241,7 @@ export function OsworldLineChart({ footnote }: { footnote: string }) {
               value: "Number of tool yields",
               position: "insideBottom",
               offset: -2,
-              fill: "#71717a",
+              fill: axisLabelFill,
               style: { fontSize: 10 },
             }}
           />
@@ -236,7 +254,7 @@ export function OsworldLineChart({ footnote }: { footnote: string }) {
               value: "Accuracy",
               angle: -90,
               position: "insideLeft",
-              fill: "#71717a",
+              fill: axisLabelFill,
               style: { fontSize: 10 },
             }}
           />

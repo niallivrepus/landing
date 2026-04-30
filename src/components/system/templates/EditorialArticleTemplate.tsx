@@ -30,7 +30,7 @@ export function EditorialArticleTemplate({
       <header className={cn(CONTENT_SHELL_WIDE, "pt-28 pb-10 text-center md:pt-32 md:pb-14")}>
         <ArticleMetaRow metaLine={metaLine} align="center" />
         <div className={cn(CONTENT_READING_MEASURE, "text-center")}>
-          <h1 className="mt-4 font-sans text-[2.1rem] font-semibold leading-[1.08] tracking-[-0.03em] text-light-space light:text-zinc-950 sm:mt-5 sm:text-5xl md:text-6xl">
+          <h1 className="mt-4 font-sans text-[2.1rem] font-semibold leading-[1.08] tracking-[0em] text-light-space light:text-zinc-950 sm:mt-5 sm:text-5xl md:text-6xl">
             {title}
           </h1>
           <p className="news-detail-reading mt-6 text-[1.0625rem] font-normal leading-[1.65] text-light-space/72 light:text-zinc-600 md:mt-7 md:text-[1.125rem] md:leading-[1.62]">
@@ -91,7 +91,7 @@ export function EditorialArticleHeadingSection({
 }) {
   return (
     <EditorialArticleMeasure className={cn("pb-6", className)}>
-      <h2 className="text-left font-sans text-3xl font-semibold tracking-tight text-light-space light:text-zinc-950 md:text-4xl">
+      <h2 className="text-left font-sans text-3xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-4xl">
         {children}
       </h2>
     </EditorialArticleMeasure>

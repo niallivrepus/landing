@@ -21,6 +21,7 @@ import {
   MarketingProseLead,
   MarketingSectionHeading,
   MarketingSectionLabel,
+  pageHeroEyebrowUppercaseClass,
   proseBodyMutedClass,
 } from "../components/system";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
@@ -36,7 +37,7 @@ function ValueBlock({
   children: ReactNode;
 }) {
   return (
-    <li className="border-b border-light-space/[0.08] py-6 first:pt-0 last:border-b-0">
+    <li className="py-6 first:pt-0">
       <p className="font-sans text-[15px] font-semibold text-light-space">{title}</p>
       <p className={cn(proseBodyMutedClass, "mt-2 max-w-none")}>{children}</p>
     </li>
@@ -67,9 +68,9 @@ export default function CareersPage() {
         </CompanyPageHero>
       </section>
 
-      <div className="border-t border-light-space/[0.06] bg-light-space/[0.02] py-16 md:py-20">
+      <div className="bg-light-space/[0.02] py-16 md:py-20">
         <div className={COMPANY_PAGE_SHELL}>
-          <h2 className="font-sans text-lg font-semibold leading-snug tracking-tight text-light-space md:text-xl">Build for real lives.</h2>
+          <h2 className="font-sans text-lg font-semibold leading-snug tracking-[0em] text-light-space md:text-xl">Build for real lives.</h2>
           <p className={cn(proseBodyMutedClass, "mt-4 max-w-[720px]")}>
             <span className="text-light-space/65">Values: </span>
             These shape what we optimize for when tradeoffs appear. We believe aligning to them is the most
@@ -107,7 +108,7 @@ export default function CareersPage() {
         <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
           {CAREERS_BENEFITS.map((col) => (
             <div key={col.heading}>
-              <h3 className="font-sans text-[12px] font-semibold tracking-[0.08em] text-light-space/40 uppercase">
+              <h3 className={pageHeroEyebrowUppercaseClass}>
                 {col.heading}
               </h3>
               <ul className="mt-4 space-y-3 font-sans text-[14px] leading-snug text-light-space/60">
@@ -125,7 +126,7 @@ export default function CareersPage() {
 
       <section
         id="open-roles"
-        className="border-t border-light-space/[0.08] bg-dark-space py-16 md:py-24"
+        className="bg-dark-space py-16 light:bg-white md:py-24"
       >
         <div className={COMPANY_PAGE_SHELL}>
           <MarketingSectionHeading className="!mt-0 md:text-3xl">
@@ -145,9 +146,9 @@ export default function CareersPage() {
             {CAREERS_FEATURED_PROGRAMS.map((card) => (
               <article
                 key={card.title}
-                className="rounded-2xl border border-light-space/[0.1] bg-white/[0.02] p-6 md:p-8"
+                className="rounded-2xl border border-light-space/[0.1] bg-white/[0.02] p-6 light:border-black/[0.08] light:bg-section-grey-light md:p-8"
               >
-                <h3 className="font-sans text-lg font-semibold text-light-space">{card.title}</h3>
+                <h3 className="font-sans text-lg font-semibold text-light-space light:text-zinc-950">{card.title}</h3>
                 <p className={cn(proseBodyMutedClass, "mt-3 max-w-none text-[15px] leading-relaxed")}>{card.body}</p>
                 <div className="mt-5">
                   <SecondaryLink to={card.href}>{card.cta}</SecondaryLink>
@@ -156,12 +157,12 @@ export default function CareersPage() {
             ))}
           </div>
 
-          <figure className="mt-16 rounded-2xl border border-light-space/[0.08] bg-white/[0.02] p-8 md:p-10">
-            <blockquote className="font-sans text-[18px] font-medium leading-snug tracking-tight text-light-space/90 md:text-[20px]">
+          <figure className="mt-16 rounded-2xl border border-light-space/[0.08] bg-white/[0.02] p-8 light:border-black/[0.08] light:bg-section-grey-light md:p-10">
+            <blockquote className="font-sans text-[18px] font-medium leading-snug tracking-[0em] text-light-space/90 light:text-zinc-900 md:text-[20px]">
               “The team treats the transcript as infrastructure, not a feature checkbox—and that shows up in how
               we think about consent, retention, and what ‘good’ actually means for customers.”
             </blockquote>
-            <figcaption className="mt-6 font-sans text-[13px] text-light-space/45">
+            <figcaption className="mt-6 font-sans text-[13px] text-light-space/45 light:text-zinc-500">
               — Placeholder attribution, Engineering at Jokuh
             </figcaption>
           </figure>
@@ -170,16 +171,16 @@ export default function CareersPage() {
 
       <section className={cn(COMPANY_PAGE_SHELL, "pb-16 md:pb-20")}>
         <MarketingSectionHeading>Resources</MarketingSectionHeading>
-        <ul className="mt-8 divide-y divide-light-space/[0.08] border-y border-light-space/[0.08]">
+        <ul className="mt-8">
           {CAREERS_RESOURCES.map((r) => (
             <li key={r.href} className="flex flex-col gap-1 py-5 md:flex-row md:items-baseline md:justify-between">
               <Link
                 to={r.href}
-                className="font-sans text-[17px] font-medium text-light-space transition-colors hover:text-[var(--color-blue-4)]"
+                className="font-sans text-[17px] font-medium text-light-space transition-colors hover:text-[var(--color-blue-4)] light:text-zinc-950"
               >
                 {r.label}
               </Link>
-              <span className="shrink-0 font-sans text-[13px] text-light-space/40">{r.tag}</span>
+              <span className="shrink-0 font-sans text-[13px] text-light-space/40 light:text-zinc-500">{r.tag}</span>
             </li>
           ))}
         </ul>

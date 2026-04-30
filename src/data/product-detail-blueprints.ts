@@ -4,6 +4,7 @@ export type ProductDetailMedia =
   | {
       kind: "gradient";
       gradient: string;
+      darkGradient?: string;
       accent?: string;
       variant?: "fan" | "screen" | "slab" | "pillars" | "stack";
     }
@@ -236,6 +237,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
             kind: "gradient",
             variant: "screen",
             gradient: "linear-gradient(180deg, #ecfeff 0%, #eff6ff 100%)",
+            darkGradient: "linear-gradient(180deg, #071a1f 0%, #101827 100%)",
             accent: "#10b981",
           },
         },
@@ -248,6 +250,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
             kind: "gradient",
             variant: "stack",
             gradient: "linear-gradient(180deg, #ecfdf5 0%, #f0fdfa 100%)",
+            darkGradient: "linear-gradient(180deg, #061b14 0%, #0b1f1d 100%)",
             accent: "#14b8a6",
           },
         },
@@ -260,6 +263,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
             kind: "gradient",
             variant: "slab",
             gradient: "linear-gradient(180deg, #f0fdf4 0%, #eff6ff 100%)",
+            darkGradient: "linear-gradient(180deg, #071a12 0%, #101827 100%)",
             accent: "#059669",
           },
         },
@@ -324,52 +328,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       body: "Blurbs gives speech a second life. The interesting part is not just drafting faster, but keeping the soul of what was said while the copy gets sharper.",
       ctaLabel: "Join Beta",
       ctaTo: "/#start",
-      items: [
-        {
-          id: "blurbs-corner-1",
-          position: "top-left",
-          rotation: -8,
-          media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #ecfeff 0%, #f0fdfa 100%)",
-            accent: "#14b8a6",
-          },
-        },
-        {
-          id: "blurbs-corner-2",
-          position: "top-right",
-          rotation: 8,
-          media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)",
-            accent: "#0ea5e9",
-          },
-        },
-        {
-          id: "blurbs-corner-3",
-          position: "bottom-left",
-          rotation: -10,
-          media: {
-            kind: "gradient",
-            variant: "fan",
-            gradient: "linear-gradient(180deg, #ecfdf5 0%, #f0fdf4 100%)",
-            accent: "#10b981",
-          },
-        },
-        {
-          id: "blurbs-corner-4",
-          position: "bottom-right",
-          rotation: 10,
-          media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #f0fdfa 0%, #eff6ff 100%)",
-            accent: "#14b8a6",
-          },
-        },
-      ],
+      items: [],
     },
     reveal: {
       eyebrow: "Draft flow",
@@ -540,6 +499,483 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
         variant: "screen",
         gradient: "linear-gradient(180deg, #fff7ed 0%, #eff6ff 100%)",
         accent: "#f59e0b",
+      },
+    },
+  },
+  calls: {
+    highlights: {
+      title: "Highlights.",
+      slides: [
+        {
+          id: "calls-room",
+          eyebrow: "Room",
+          title: "Keep the room intact.",
+          body: "Calls captures what happened without flattening the people, tone, and timing that made it matter.",
+          media: {
+            kind: "gradient",
+            variant: "screen",
+            gradient: "linear-gradient(180deg, #eef2ff 0%, #ecfeff 100%)",
+            accent: "#2563eb",
+          },
+        },
+        {
+          id: "calls-moments",
+          eyebrow: "Moments",
+          title: "Pull out what matters.",
+          body: "Decisions, questions, and follow-ups can surface without you replaying the whole conversation.",
+          media: {
+            kind: "gradient",
+            variant: "stack",
+            gradient: "linear-gradient(180deg, #eff6ff 0%, #f0fdfa 100%)",
+            accent: "#0ea5e9",
+          },
+        },
+        {
+          id: "calls-action",
+          eyebrow: "Action",
+          title: "Move after the call.",
+          body: "Turn a good conversation into the next message, draft, or task while the context is still warm.",
+          media: {
+            kind: "gradient",
+            variant: "slab",
+            gradient: "linear-gradient(180deg, #ecfeff 0%, #eef2ff 100%)",
+            accent: "#06b6d4",
+          },
+        },
+      ],
+    },
+    closerLook: {
+      title: "Closer look.",
+      items: [
+        {
+          id: "calls-live",
+          label: "Live",
+          title: "Stay present.",
+          body: "The system listens for structure in the background so the call can still feel like a call.",
+          media: {
+            kind: "gradient",
+            variant: "screen",
+            gradient: "linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)",
+            accent: "#2563eb",
+          },
+        },
+        {
+          id: "calls-recap",
+          label: "Recap",
+          title: "Return to the signal.",
+          body: "Recaps keep the strongest moments easy to scan without losing the route back to the source.",
+          media: {
+            kind: "gradient",
+            variant: "fan",
+            gradient: "linear-gradient(180deg, #ecfeff 0%, #eef2ff 100%)",
+            accent: "#0ea5e9",
+          },
+        },
+        {
+          id: "calls-followups",
+          label: "Follow-ups",
+          title: "Keep promises visible.",
+          body: "Action items stay attached to the conversation that created them.",
+          media: {
+            kind: "gradient",
+            variant: "stack",
+            gradient: "linear-gradient(180deg, #f0fdfa 0%, #eff6ff 100%)",
+            accent: "#14b8a6",
+          },
+        },
+        {
+          id: "calls-sharing",
+          label: "Sharing",
+          title: "Share the right amount.",
+          body: "Send the useful context without exposing the whole call to everyone.",
+          media: {
+            kind: "gradient",
+            variant: "slab",
+            gradient: "linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%)",
+            accent: "#6366f1",
+          },
+        },
+      ],
+    },
+    centerpiece: {
+      eyebrow: "Calls",
+      title: "Conversation with memory.",
+      body: "Calls gives live conversation a durable shape so the best parts do not vanish when the room closes.",
+      ctaLabel: "Join Beta",
+      ctaTo: "/#start",
+      items: [
+        {
+          id: "calls-corner-1",
+          position: "top-left",
+          rotation: -8,
+          media: {
+            kind: "gradient",
+            variant: "screen",
+            gradient: "linear-gradient(180deg, #eef2ff 0%, #ecfeff 100%)",
+            accent: "#2563eb",
+          },
+        },
+        {
+          id: "calls-corner-2",
+          position: "top-right",
+          rotation: 8,
+          media: {
+            kind: "gradient",
+            variant: "slab",
+            gradient: "linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)",
+            accent: "#0ea5e9",
+          },
+        },
+        {
+          id: "calls-corner-3",
+          position: "bottom-left",
+          rotation: -10,
+          media: {
+            kind: "gradient",
+            variant: "fan",
+            gradient: "linear-gradient(180deg, #ecfeff 0%, #f0fdfa 100%)",
+            accent: "#06b6d4",
+          },
+        },
+        {
+          id: "calls-corner-4",
+          position: "bottom-right",
+          rotation: 10,
+          media: {
+            kind: "gradient",
+            variant: "stack",
+            gradient: "linear-gradient(180deg, #eef2ff 0%, #f0fdfa 100%)",
+            accent: "#14b8a6",
+          },
+        },
+      ],
+    },
+    reveal: {
+      eyebrow: "Call memory",
+      title: "Let the conversation open up.",
+      body: "A short recap can expand into the full shape of the conversation when the details matter.",
+      media: {
+        kind: "gradient",
+        variant: "screen",
+        gradient: "linear-gradient(180deg, #eef2ff 0%, #ecfeff 100%)",
+        accent: "#2563eb",
+      },
+    },
+  },
+  messages: {
+    highlights: {
+      title: "Highlights.",
+      slides: [
+        {
+          id: "messages-context",
+          eyebrow: "Context",
+          title: "Keep the story together.",
+          body: "Messages links threads to the people, projects, and moments they actually belong to.",
+          media: {
+            kind: "gradient",
+            variant: "screen",
+            gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
+            accent: "#8b5cf6",
+          },
+        },
+        {
+          id: "messages-return",
+          eyebrow: "Return",
+          title: "Find the thread faster.",
+          body: "Return to the right exchange without remembering which app or channel held it.",
+          media: {
+            kind: "gradient",
+            variant: "stack",
+            gradient: "linear-gradient(180deg, #f5f3ff 0%, #eff6ff 100%)",
+            accent: "#6366f1",
+          },
+        },
+        {
+          id: "messages-people",
+          eyebrow: "People",
+          title: "Keep people at the center.",
+          body: "The message stays attached to the relationship, not just the inbox.",
+          media: {
+            kind: "gradient",
+            variant: "slab",
+            gradient: "linear-gradient(180deg, #fdf2f8 0%, #eef2ff 100%)",
+            accent: "#a855f7",
+          },
+        },
+      ],
+    },
+    closerLook: {
+      title: "Closer look.",
+      items: [
+        {
+          id: "messages-threads",
+          label: "Threads",
+          title: "Threads stay readable.",
+          body: "Long-running conversations can compress into the moments that still need attention.",
+          media: {
+            kind: "gradient",
+            variant: "screen",
+            gradient: "linear-gradient(180deg, #faf5ff 0%, #f8fafc 100%)",
+            accent: "#8b5cf6",
+          },
+        },
+        {
+          id: "messages-memory",
+          label: "Memory",
+          title: "Context comes back.",
+          body: "Past details can resurface when they explain the message in front of you.",
+          media: {
+            kind: "gradient",
+            variant: "fan",
+            gradient: "linear-gradient(180deg, #eef2ff 0%, #f5f3ff 100%)",
+            accent: "#6366f1",
+          },
+        },
+        {
+          id: "messages-next",
+          label: "Next",
+          title: "Know what comes next.",
+          body: "The system can separate passing chatter from the reply, commitment, or update that matters.",
+          media: {
+            kind: "gradient",
+            variant: "stack",
+            gradient: "linear-gradient(180deg, #f5f3ff 0%, #eff6ff 100%)",
+            accent: "#7c3aed",
+          },
+        },
+        {
+          id: "messages-private",
+          label: "Private",
+          title: "Keep boundaries clear.",
+          body: "Personal threads and shared context stay scoped to where they belong.",
+          media: {
+            kind: "gradient",
+            variant: "slab",
+            gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
+            accent: "#a855f7",
+          },
+        },
+      ],
+    },
+    centerpiece: {
+      eyebrow: "Messages",
+      title: "Threads with memory.",
+      body: "Messages makes communication feel less scattered by keeping the human context close to every exchange.",
+      ctaLabel: "Join Beta",
+      ctaTo: "/#start",
+      items: [
+        {
+          id: "messages-corner-1",
+          position: "top-left",
+          rotation: -8,
+          media: {
+            kind: "gradient",
+            variant: "screen",
+            gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
+            accent: "#8b5cf6",
+          },
+        },
+        {
+          id: "messages-corner-2",
+          position: "top-right",
+          rotation: 8,
+          media: {
+            kind: "gradient",
+            variant: "slab",
+            gradient: "linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%)",
+            accent: "#6366f1",
+          },
+        },
+        {
+          id: "messages-corner-3",
+          position: "bottom-left",
+          rotation: -10,
+          media: {
+            kind: "gradient",
+            variant: "fan",
+            gradient: "linear-gradient(180deg, #f5f3ff 0%, #eff6ff 100%)",
+            accent: "#7c3aed",
+          },
+        },
+        {
+          id: "messages-corner-4",
+          position: "bottom-right",
+          rotation: 10,
+          media: {
+            kind: "gradient",
+            variant: "stack",
+            gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
+            accent: "#a855f7",
+          },
+        },
+      ],
+    },
+    reveal: {
+      eyebrow: "Thread reveal",
+      title: "Let the context widen.",
+      body: "A single message can open into the history, people, and decisions that explain why it matters.",
+      media: {
+        kind: "gradient",
+        variant: "screen",
+        gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
+        accent: "#8b5cf6",
+      },
+    },
+  },
+  profile: {
+    highlights: {
+      title: "Highlights.",
+      slides: [
+        {
+          id: "profile-surface",
+          eyebrow: "Surface",
+          title: "Show the full context.",
+          body: "Profile brings work, proof, links, and presence into one living identity surface.",
+          media: {
+            kind: "gradient",
+            variant: "fan",
+            gradient: "linear-gradient(180deg, #f5f1ff 0%, #ece8ff 100%)",
+            accent: "#8b5cf6",
+          },
+        },
+        {
+          id: "profile-control",
+          eyebrow: "Control",
+          title: "Choose what people see.",
+          body: "Make parts public, private, or shared with a smaller circle without rebuilding the page.",
+          media: {
+            kind: "gradient",
+            variant: "screen",
+            gradient: "linear-gradient(180deg, #f4f2ff 0%, #eef5ff 100%)",
+            accent: "#6366f1",
+          },
+        },
+        {
+          id: "profile-growth",
+          eyebrow: "Growth",
+          title: "Let it grow with you.",
+          body: "Your profile can change as your work, community, and identity change.",
+          media: {
+            kind: "gradient",
+            variant: "stack",
+            gradient: "linear-gradient(180deg, #faf5ff 0%, #eff6ff 100%)",
+            accent: "#a855f7",
+          },
+        },
+      ],
+    },
+    closerLook: {
+      title: "Closer look.",
+      items: [
+        {
+          id: "profile-pods",
+          label: "Pods",
+          title: "Build it from pods.",
+          body: "Add the parts of your world that should be visible without making everything feel the same.",
+          media: {
+            kind: "image",
+            src: "/story-art/story-office-focus.png",
+            alt: "Person focused at a desk.",
+            objectPosition: "center center",
+          },
+        },
+        {
+          id: "profile-proof",
+          label: "Proof",
+          title: "Proof meets personality.",
+          body: "Credentials, references, and work can sit in the same identity story.",
+          media: {
+            kind: "image",
+            src: "/story-art/story-office-collab.png",
+            alt: "Two people collaborating in an office.",
+            objectPosition: "center center",
+          },
+        },
+        {
+          id: "profile-privacy",
+          label: "Privacy",
+          title: "Stay in control.",
+          body: "Decide what is public, what is private, and what only appears in the right context.",
+          media: {
+            kind: "image",
+            src: "/story-art/story-office-smile.png",
+            alt: "Person smiling in an office.",
+            objectPosition: "center center",
+          },
+        },
+        {
+          id: "profile-sharing",
+          label: "Sharing",
+          title: "One link. Still personal.",
+          body: "A profile can behave like a portfolio, room, or home base without becoming generic.",
+          media: {
+            kind: "image",
+            src: "/story-art/story-office-collab.png",
+            alt: "Team members gathered together in a workspace.",
+            objectPosition: "center center",
+          },
+        },
+      ],
+    },
+    centerpiece: {
+      title: "Identity, your way.",
+      ctaLabel: "Join Beta",
+      ctaTo: "/#start",
+      items: [
+        {
+          id: "profile-corner-1",
+          position: "top-left",
+          rotation: -10,
+          media: {
+            kind: "gradient",
+            variant: "slab",
+            gradient: "linear-gradient(180deg, #f6eefe 0%, #f3f4f6 100%)",
+            accent: "#a855f7",
+          },
+        },
+        {
+          id: "profile-corner-2",
+          position: "top-right",
+          rotation: 8,
+          media: {
+            kind: "gradient",
+            variant: "screen",
+            gradient: "linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%)",
+            accent: "#6366f1",
+          },
+        },
+        {
+          id: "profile-corner-3",
+          position: "bottom-left",
+          rotation: -8,
+          media: {
+            kind: "gradient",
+            variant: "fan",
+            gradient: "linear-gradient(180deg, #eef2ff 0%, #ede9fe 100%)",
+            accent: "#7c3aed",
+          },
+        },
+        {
+          id: "profile-corner-4",
+          position: "bottom-right",
+          rotation: 10,
+          media: {
+            kind: "gradient",
+            variant: "stack",
+            gradient: "linear-gradient(180deg, #f5f3ff 0%, #f8fafc 100%)",
+            accent: "#8b5cf6",
+          },
+        },
+      ],
+    },
+    reveal: {
+      title: "A profile that grows.",
+      body: "Start with a contained identity surface, then let it expand as the story asks for more room.",
+      media: {
+        kind: "gradient",
+        variant: "screen",
+        gradient: "linear-gradient(180deg, #f5f3ff 0%, #eef5ff 100%)",
+        accent: "#7c3aed",
       },
     },
   },

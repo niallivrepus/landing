@@ -53,7 +53,7 @@ export function ChartFrame({
   }, [downloadFilename]);
 
   return (
-    <figure className="relative rounded-xl border border-light-space/[0.08] bg-dark-space px-4 pb-4 pt-12 light:border-black/[0.08] light:bg-white md:px-8 md:pb-6 md:pt-14">
+    <figure className="relative rounded-xl border border-light-space/[0.08] bg-dark-space px-4 pb-4 pt-12 light:border-black/[0.08] light:bg-section-grey-light md:px-8 md:pb-6 md:pt-14">
       {downloadFilename ? (
         <div className="absolute left-1/2 top-3 z-20 -translate-x-1/2 md:top-3.5">
           <button
@@ -79,7 +79,7 @@ export function ChartFrame({
       )}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <figcaption className="min-w-0 text-left">
-          <h3 className="font-sans text-sm font-semibold tracking-tight text-light-space light:text-zinc-950">{title}</h3>
+          <h3 className="font-sans text-sm font-semibold tracking-[0em] text-light-space light:text-zinc-950">{title}</h3>
           {subtitle ? (
             <p className="mt-0.5 font-sans text-xs font-medium text-light-space/55 light:text-zinc-500">{subtitle}</p>
           ) : null}

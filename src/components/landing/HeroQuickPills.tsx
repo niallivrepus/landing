@@ -10,10 +10,10 @@ const pillClassName = cn(
   "sm:px-5 sm:py-[8px] sm:text-sm",
   "border border-[#3A3A3C] bg-[#111111]/88 text-light-space backdrop-blur-[25px]",
   "hover:border-[#4A4A4D] hover:bg-white/[0.08] active:border-[#4A4A4D] active:bg-white/[0.06] active:scale-[0.99]",
-  "light:border light:border-[#E0E0E0] light:bg-white light:text-zinc-600 light:backdrop-blur-none",
+  "light:border light:border-[#D7D7DB] light:bg-section-grey-light light:text-zinc-700 light:backdrop-blur-none",
   "light:shadow-[0_1px_2px_rgba(0,0,0,0.02),0_4px_14px_rgba(0,0,0,0.04)]",
-  "light:hover:border-[#E0E0E0] light:hover:bg-zinc-50/80 light:hover:shadow-[0_1px_2px_rgba(0,0,0,0.02),0_5px_18px_rgba(0,0,0,0.045)]",
-  "light:active:border-[#E0E0E0] light:active:bg-zinc-100/70 light:active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] light:active:scale-[0.995]",
+  "light:hover:border-[#CCCCD1] light:hover:bg-zinc-200/85 light:hover:text-zinc-900 light:hover:shadow-[0_1px_2px_rgba(0,0,0,0.02),0_5px_18px_rgba(0,0,0,0.045)]",
+  "light:active:border-[#CCCCD1] light:active:bg-zinc-200/95 light:active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] light:active:scale-[0.995]",
 );
 
 function PillContent({
@@ -27,7 +27,12 @@ function PillContent({
 }) {
   return (
     <>
-      {item.icon.lordicon ? (
+      {item.icon.lucide ? (
+        <item.icon.lucide
+          className="size-4 shrink-0 stroke-[1.75] text-current transition-transform duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/pill:scale-[1.04]"
+          aria-hidden
+        />
+      ) : item.icon.lordicon ? (
         <>
           <span className="flex size-5 items-center justify-center shrink-0 [.light_&]:hidden">
             <Player
@@ -46,11 +51,6 @@ function PillContent({
             />
           </span>
         </>
-      ) : item.icon.lucide ? (
-        <item.icon.lucide
-          className="size-4 shrink-0 stroke-[1.9] text-current transition-transform duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/pill:scale-[1.04]"
-          aria-hidden
-        />
       ) : null}
       {item.label}
     </>

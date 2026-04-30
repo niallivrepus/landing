@@ -1,9 +1,8 @@
 import { InteractivePromptBar, cn, type GooeyLordiconAssetName } from "@jokuh/gooey";
 import type { LucideIcon } from "lucide-react";
 import {
-  Blocks,
   BookOpen,
-  Compass,
+  Download,
   FileText,
   HeartHandshake,
   MessageCircle,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
+import { buildAppHandoffUrl } from "../../config/site-subdomains";
 import { HOME_PROMPT_SUGGESTIONS } from "../../data/site-search-suggestions";
 import { HeroQuickPills } from "./HeroQuickPills";
 import { LANDING_PROMPT_BORDER_CLASS } from "./promptChrome";
@@ -30,10 +30,9 @@ export type HeroQuickLink = {
 };
 
 export const HERO_PRIMARY_QUICK_LINKS: HeroQuickLink[] = [
-  { label: "Learn about Jokuh Pods", href: "/pods", icon: { lucide: Blocks, lordicon: "work" } },
+  { label: "Download Jokuh", href: "/download", icon: { lucide: Download, lordicon: "downloadSave" } },
   { label: "Search with Jokuh", href: "/#prompt", icon: { lucide: Search, lordicon: "search" } },
-  { label: "Talk with Jokuh", href: "/#prompt", icon: { lucide: MessageCircle, lordicon: "chatEmpty" } },
-  { label: "Explore the Spine", href: "/spine", icon: { lucide: Compass, lordicon: "worldGlobeWikis" } },
+  { label: "Talk with Jokuh", href: buildAppHandoffUrl(""), icon: { lucide: MessageCircle, lordicon: "chatEmpty" } },
   { label: "Ethics & compliance", href: "/ethics", icon: { lucide: FileText, lordicon: "domainVerification" } },
   { label: "Read the newsroom", href: "/newsroom", icon: { lucide: Newspaper, lordicon: "newspaper" } },
   { label: "More", action: "expand", icon: { lucide: MoreHorizontal, lordicon: "plus" } },
@@ -66,9 +65,9 @@ export function LandingHero() {
         className="landing-hero-chrome flex min-h-0 w-full flex-1 flex-col px-1"
       >
         <div className="flex min-h-[min(100%,calc(100svh-6rem))] w-full flex-1 flex-col items-center md:min-h-[min(100%,calc(100svh-7rem))]">
-          <div className="flex w-full max-w-[min(calc(100vw-2rem),400px)] flex-1 flex-col items-center justify-end pb-6 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),770px)]">
-            <h1 className="max-w-[min(94vw,52ch)] text-center font-sans text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-light-space light:text-zinc-950 sm:whitespace-nowrap sm:text-[2.75rem] md:text-[2.75rem] md:leading-[1.1] lg:text-[3.25rem] lg:leading-[1.08]">
-              Your thinking is the product.
+          <div className="flex w-full max-w-[min(calc(100vw-2rem),400px)] flex-1 flex-col items-center justify-end gap-3 pb-6 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),770px)]">
+            <h1 className="max-w-[min(94vw,52ch)] text-center font-sans text-[2rem] font-semibold leading-[1.1] tracking-[0em] text-light-space light:text-zinc-950 sm:text-[2.75rem] md:text-[2.75rem] md:leading-[1.1] lg:text-[3.25rem] lg:leading-[1.08]">
+              Your mind. Your math. Your machine.
             </h1>
           </div>
 
@@ -85,6 +84,9 @@ export function LandingHero() {
                 )}
                 previewSuggestions={HOME_PROMPT_SUGGESTIONS}
                 heroSendOnly
+                onSend={(text: string) => {
+                  window.location.assign(buildAppHandoffUrl(text));
+                }}
               />
             </div>
           </div>

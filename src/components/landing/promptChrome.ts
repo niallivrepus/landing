@@ -7,7 +7,7 @@ export const LANDING_PROMPT_INPUT_CLASS =
   "min-h-0 min-w-0 flex-1 border-none bg-transparent py-0 pr-2 pl-4 font-sans text-base font-normal leading-[1.4] text-light-space outline-none placeholder:text-light-space/50 md:pl-5 light:text-zinc-950 light:placeholder:text-zinc-500";
 
 export const LANDING_PROMPT_SEND_BUTTON_CLASS =
-  "inline-flex size-[42px] shrink-0 items-center justify-center rounded-full bg-[#3A3A3A] text-white transition-[background-color,color,opacity] duration-200 hover:bg-[#444444] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 light:bg-[#F5F5F5] light:text-zinc-800 light:hover:bg-[#EBEBEB] light:focus-visible:ring-black/25";
+  "inline-flex size-[42px] shrink-0 items-center justify-center rounded-full bg-[#3A3A3A] text-white transition-[background-color,color,opacity] duration-200 hover:bg-[#444444] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 light:bg-section-grey-light light:text-zinc-800 light:hover:bg-[#EBEBEB] light:focus-visible:ring-black/25";
 
 export const LANDING_PROMPT_INNER_SHADOW_CLASS =
   "pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_2px_4px_0px_rgba(255,255,255,0.15)] light:shadow-[inset_0px_1px_2px_0px_rgba(15,23,42,0.06)]";

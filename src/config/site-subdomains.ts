@@ -17,6 +17,20 @@ export const STATUS_PORTAL_ORIGIN =
 export const HELP_PORTAL_ORIGIN =
   (import.meta.env.VITE_ORIGIN_HELP as string | undefined)?.replace(/\/$/, "") ?? "";
 
+/** Logged-in product / workspace (e.g. https://app.jokuh.com). */
+export const APP_ORIGIN =
+  (import.meta.env.VITE_ORIGIN_APP as string | undefined)?.replace(/\/$/, "") ||
+  "https://app.jokuh.com";
+
+export function buildAppHandoffUrl(prompt: string): string {
+  const url = new URL(`${APP_ORIGIN}/`);
+  const q = prompt.trim();
+  if (q) {
+    url.searchParams.set("q", q);
+  }
+  return url.toString();
+}
+
 export function resolveStatusHref(href: string = "/"): string {
   if (!STATUS_PORTAL_ORIGIN) return "/system-status";
   const raw = href && href !== "/" ? href : "";

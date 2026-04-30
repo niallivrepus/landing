@@ -1,8 +1,8 @@
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-import { CookieBanner } from "../components/CookieBanner";
 import {
   GooeyBackdrop,
   IdentityBlock,
+  LandingEditorialSection,
   LandingHero,
   PreFooterCta,
   RecentNewsSection,
@@ -12,19 +12,15 @@ import {
 import { MarketingPageFrame } from "../components/system";
 
 export default function Home() {
-  useDocumentTitle("Jokuh — Your thinking is the product");
+  useDocumentTitle("Jokuh — The Sovereign Agentic Operating System");
 
   return (
     <MarketingPageFrame
       beforeChrome={<GooeyBackdrop />}
-      afterMain={
-        <>
-          <PreFooterCta />
-          <CookieBanner />
-        </>
-      }
+      afterMain={<PreFooterCta />}
     >
       <LandingHero />
+      <LandingEditorialSection />
       <RecentNewsSection />
       <StoriesSection />
       <IdentityBlock />

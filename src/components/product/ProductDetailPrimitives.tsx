@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@jokuh/gooey";
+import { pageHeroEyebrowUppercaseClass } from "../system/typography";
 import { CONTENT_SHELL_WIDE } from "../system/shells";
 
 export function ProductStorySection({
@@ -38,19 +39,17 @@ export function ProductSectionIntro({
     tone === "light" ? "text-zinc-950 dark:text-zinc-100" : "text-zinc-950 dark:text-light-space";
   const bodyColor =
     tone === "light" ? "text-zinc-600 dark:text-zinc-400" : "text-zinc-600 dark:text-light-space/55";
-  const eyebrowColor =
-    tone === "light" ? "text-zinc-500 dark:text-zinc-400" : "text-zinc-500 dark:text-light-space/38";
 
   return (
     <div className={cn(centered && "mx-auto text-center", className)}>
       {eyebrow ? (
-        <p className={cn("font-sans text-[11px] font-semibold uppercase tracking-[0.08em]", eyebrowColor)}>
+        <p className={cn(pageHeroEyebrowUppercaseClass, tone === "light" && "text-zinc-950")}>
           {eyebrow}
         </p>
       ) : null}
       <h2
         className={cn(
-          "font-sans text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[1.04] tracking-[-0.04em]",
+          "font-sans text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[1.04] tracking-[0em]",
           eyebrow ? "mt-4" : "",
           centered && "mx-auto max-w-[16ch]",
           titleColor,
@@ -83,8 +82,8 @@ export function ProductShowcaseSurface({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[32px] border border-zinc-200/80 bg-[#f5f4f1] shadow-[0_24px_80px_rgba(15,23,42,0.06)]",
-        "dark:border-zinc-800/60 dark:bg-black dark:shadow-[0_24px_80px_rgba(0,0,0,0.5)]",
+        "overflow-hidden rounded-[32px] border border-zinc-200/80 bg-[#F5F5F7] shadow-[0_24px_80px_rgba(15,23,42,0.05)]",
+        "dark:border-white/[0.08] dark:bg-[#1C1C1E] dark:shadow-[0_24px_80px_rgba(0,0,0,0.42)]",
         className,
       )}
     >

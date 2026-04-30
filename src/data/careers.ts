@@ -80,7 +80,7 @@ export const CAREERS_FEATURED_PROGRAMS = [
 ] as const;
 
 export const CAREERS_RESOURCES = [
-  { label: "Legal & policies", href: "/legal", tag: "Company" },
+  { label: "Terms of Service", href: "/terms", tag: "Company" },
   { label: "Ethics & compliance", href: "/ethics", tag: "Trust" },
   { label: "Developer docs", href: "/developers/docs", tag: "Build" },
 ] as const;

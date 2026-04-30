@@ -1,16 +1,20 @@
 /**
- * Long-form story pages — editorial layout (hero, gallery, prose, media, quote, CTA).
+ * Long-form story pages: editorial layout (hero, gallery, prose, media, quote, CTA).
  */
 
 export type StoryGalleryImage = {
   src: string;
   alt: string;
+  label?: string;
 };
 
 export type StoryImageCaptioned = {
   src: string;
   alt: string;
   caption: string;
+  hidden?: boolean;
+  /** Single-image (`small.hidden`) blocks: portrait suits tall editorial photos. */
+  imageLayout?: "landscape" | "portrait";
 };
 
 export type StoryImageNarrative = {
@@ -22,6 +26,7 @@ export type StoryImageNarrative = {
 export type StorySection =
   | { kind: "prose"; paragraphs: string[] }
   | { kind: "subhead"; text: string }
+  | { kind: "featureText"; title: string; subtitle: string; paragraphs: string[] }
   | {
       kind: "imagesAsymmetric";
       large: StoryImageCaptioned;
@@ -43,391 +48,399 @@ export type StoryDetail = {
   sections: StorySection[];
 };
 
-const u = (id: string, w: number, h: number) =>
-  `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&q=80`;
-
 export const STORY_DETAILS: Record<string, StoryDetail> = {
-  "gooey-island-merge-hygiene": {
-    slug: "gooey-island-merge-hygiene",
-    metaLine: "March 24, 2026 · Engineering · Design systems",
-    title: "The Gooey app as a design island",
-    dek: "A React shell can silently defeat a library if tokens and globals interleave. We treat `apps/gooey` as the canonical surface for the `@jokuh/gooey` package—so Storybook and Vite stay the source of truth.",
+  "made-from-memory": {
+    slug: "made-from-memory",
+    metaLine: "March 29, 2026 · Jokuh Stories · Field story",
+    title: "Made from Memory",
+    dek: "How a Tulum designer keeps every word her clients ever told her.",
     heroGallery: [
-      { src: u("photo-1555066931-4365d14bab8c", 1200, 800), alt: "" },
-      { src: u("photo-1633356122544-f134324a6cee", 1200, 800), alt: "" },
-      { src: u("photo-1460925895917-afdab827c52f", 1200, 800), alt: "" },
+      { src: "/story-art/maren-tulum-coast.png", alt: "", label: "Tulum" },
+      { src: "/story-art/maren-tulum-kitchen.png", alt: "", label: "Workspace" },
+      { src: "/story-art/maren-tulum-call.png", alt: "", label: "Call" },
+      { src: "/story-art/maren-tulum-bungalow.png", alt: "", label: "Retreat" },
     ],
     sections: [
       {
         kind: "prose",
         paragraphs: [
-          "Gooey is not a theme sprinkle—it is a four-layer pipeline: raw palette → `design-tokens.css` → `globals.css` with `@theme inline` → components that only speak in Tailwind utilities and `cn()`. When a product app imports the package but also ships aggressive global CSS, the cascade rewrites micro-details: focus rings, glass blurs, purple accents. The UI still “renders,” but it is no longer the library you tested.",
-          "The mitigation is operational as much as technical: keep the demo application (`apps/gooey`) mergeable as a unit. Pull requests should move the island together—prototype routes, asset manifests, and package pins—without dragging unrelated host layouts. Designers need a folder they can zip, drop into a clean tree, and run with the same hashes engineers used in CI.",
+          "My name is Maren. I'm Canadian, but I've lived in Tulum for the last four years, and I make clothing here: slow, made-to-measure pieces for a small list of women I work with closely. Some of them I've dressed for years. The thing that makes my work different is that I never lose context. Every conversation, every fitting, every offhand comment about a trip or a fabric or a feeling becomes part of how I design for them. Jokuh is what makes that possible. It's where my entire dataroom lives.",
+        ],
+      },
+      {
+        kind: "imagesAsymmetric",
+        large: {
+          src: "/story-art/maren-workspace.png",
+          alt: "",
+          caption: "Maren's work is built from remembered details, not a blank page.",
+        },
+        small: {
+          src: "/story-art/maren-portrait.png",
+          alt: "",
+          caption: "Maren Côté, Tulum",
+        },
+      },
+      {
+        kind: "subhead",
+        text: "Every client has her own private tile",
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "When I get on a call with a client, about a new piece, a wedding, a wardrobe refresh, anything, I record it inside Jokuh. Not for compliance, not for a paper trail. Because I know that somewhere in that hour, she's going to mention the dress her grandmother wore in Marseille, or the fabric she touched in Kyoto, or the fact that she's stopped wearing anything with a hard waistband since her second child.",
+          "Those details are the entire job. Before Jokuh, I lost most of them. Now they're saved, transcribed, and tagged the moment we hang up.",
         ],
       },
       {
         kind: "subhead",
-        text: "Barrel exports, token drift, and the cascade",
+        text: "A dataroom for every woman I design for",
       },
       {
         kind: "prose",
         paragraphs: [
-          "Every primitive must live under `packages/gooey/src/components/ui/` and surface through the barrel (`packages/gooey/src/index.ts`). That single export plane is how we grep for API breaks and how automated refactors stay bounded.",
-          "Tailwind v4’s CSS-first configuration means there is no `tailwind.config.ts` escape hatch—if semantic aliases diverge between consumer and package, you debug computed styles, not JSON. Treat `:root.light` inversions and dark-mode `oklch` blocks as part of the public contract, versioned like any other API.",
+          "Every client has her own private tile inside my dataroom. Inside that tile is everything. Transcripts of every call we've ever had. Photos she's sent me of pieces she loves and pieces she hates. Her measurements over the years, because bodies change. Notes on how a fabric felt against her skin in a fitting. Voice memos I leave myself at midnight when I have an idea for her.",
+          "When I sit down to design a new piece, I don't start from a blank page. I ask Jokuh to remind me of everything she's said about silhouette, every fabric she's been drawn to, every event she's getting dressed for in the next six months. In thirty seconds I have a brief that no other designer could write for her.",
+        ],
+      },
+      {
+        kind: "featureText",
+        title: "The second dress fits better than the first",
+        subtitle:
+          "A few of my clients have joined me on Jokuh. The others still feel the difference.",
+        paragraphs: [
+          "They share a private tile with me, encrypted between us, where everything we make together lives: sketches, photos from their wardrobe, the dresses I've made them, the trips they're packing for.",
+          "When one of them messages me from Mexico City asking what to wear to a friend's wedding in Cartagena, I can see her whole closet, every piece I've ever made her, and our last three conversations. I answer her in two minutes.",
+          "The other clients, the ones who aren't on the platform yet, still feel the difference. They notice that I remember the small things. They notice that the second dress fits better than the first, and the third better than the second.",
         ],
       },
       {
         kind: "imagesAsymmetric",
         large: {
-          src: u("photo-1555066931-4365d14bab8c", 1600, 1000),
+          src: "/story-art/maren-call-window.png",
           alt: "",
-          caption: "Component work stays inside the package; the demo app is the integration harness.",
+          caption: "Jokuh keeps the client history close while Maren designs.",
         },
         small: {
-          src: u("photo-1460925895917-afdab827c52f", 900, 900),
+          src: "/story-art/maren-walk.png",
           alt: "",
-          caption: "Token diffs should be reviewable without opening Figma.",
+          caption: "The work follows her without pulling her back into scattered messages.",
+          hidden: true,
         },
       },
       {
         kind: "quote",
-        text: "If the host thinks it is “logical” to include one more global layer, the library loses a pixel at a time. Isolate first, integrate second.",
-        attribution: "Design-engineering notes, Gooey monorepo",
+        text: "Every call I take adds to a dataroom that only grows richer.",
+        attribution: "Maren Côté",
+      },
+      {
+        kind: "subhead",
+        text: "Made from memory",
       },
       {
         kind: "prose",
         paragraphs: [
-          "For downstream teams, the playbook is blunt: import Gooey, do not fork tokens. Wire `ThemeProvider`, respect `prefers-reduced-motion`, and keep product-specific chrome in namespaced wrappers. When something looks wrong, diff the demo app before you diff the package—odds are the cascade, not the primitive.",
+          "The clothes I make are simple. Linen, cotton, hand-finished, nothing flashy. But the depth behind each piece, the years of conversations, the remembered details, the context that never gets lost, that's the thing my clients pay for, and that's the thing I couldn't deliver without Jokuh.",
+          "I don't worry about forgetting anymore. I don't search through old messages. I don't lose what someone told me a year ago. I just listen, save it, and let it become part of how I see her. That's the work. That's the whole thing.",
+          "Maren Côté is a Canadian clothing designer based in Tulum, Mexico, and a Jokuh user since the closed beta.",
         ],
-      },
-      {
-        kind: "cta",
-        title: "Building on Gooey?",
-        body: "If you are integrating `@jokuh/gooey` and hitting cascade conflicts, send a minimal repro against `apps/gooey`—we can codify the boundary as lint or Storybook guards.",
-        buttonLabel: "Email engineering",
-        buttonHref: "mailto:hello@jokuh.com",
       },
     ],
   },
-
-  "live-transcript-hooks-spine": {
-    slug: "live-transcript-hooks-spine",
-    metaLine: "March 25, 2026 · Product · Realtime",
-    title: "Live transcript hooks on the spine",
-    dek: "Live ASR subtitles are human-facing. Hooks are machine-facing: typed spans aligned to diarization ids so agents can attach goals, decisions, and entities to a durable session spine.",
+  "made-from-memory-ii": {
+    slug: "made-from-memory-ii",
+    metaLine: "March 29, 2026 · Jokuh Stories · Field story",
+    title: "Made from Memory",
+    dek: "How a Tulum designer keeps every word her clients ever told her.",
     heroGallery: [
-      { src: u("photo-1516321318423-f06f85e504b3", 1200, 800), alt: "" },
-      { src: u("photo-1451187580459-43490279c0fa", 1200, 800), alt: "" },
-      { src: u("photo-1550751827-4bd374c3f58b", 1200, 800), alt: "" },
+      { src: "/story-art/maren-tulum-coast.png", alt: "", label: "Tulum" },
+      { src: "/story-art/maren-tulum-kitchen.png", alt: "", label: "Workspace" },
+      { src: "/story-art/maren-tulum-call.png", alt: "", label: "Call" },
+      { src: "/story-art/maren-tulum-bungalow.png", alt: "", label: "Retreat" },
     ],
     sections: [
       {
         kind: "prose",
         paragraphs: [
-          "A transcript stream is cheap to display and expensive to reason about. Without structure, retrieval falls back to naive substring search—fine for captions, inadequate for orchestration. Hooks mark moments where humans telegraph intent: “the goal is…”, “let’s ship…”, “blocker on…”. Visually they surface as alternating highlight bubbles so participants notice them; under the hood they serialize as records `{type, t0, t1, speakerId, confidence, text}` committed to the spine graph.",
-          "The spine is not the chat log. It is the typed projection: edges for decisions, nodes for artifacts, weights for recency and verification state. Hooks become first-class edges so downstream agents do not hallucinate continuity—they read the same graph the UI annotates.",
+          "My name is Maren. I'm Canadian, but I've lived in Tulum for the last four years, and I make clothing here: slow, made-to-measure pieces for a small list of women I work with closely. Some of them I've dressed for years. The thing that makes my work different is that I never lose context. Every conversation, every fitting, every offhand comment about a trip or a fabric or a feeling becomes part of how I design for them. Jokuh is what makes that possible. It's where my entire dataroom lives.",
+        ],
+      },
+      {
+        kind: "imagesAsymmetric",
+        large: {
+          src: "/story-art/maren-workspace.png",
+          alt: "",
+          caption: "Maren's work is built from remembered details, not a blank page.",
+        },
+        small: {
+          src: "/story-art/maren-portrait.png",
+          alt: "",
+          caption: "Maren Côté, Tulum",
+        },
+      },
+      {
+        kind: "subhead",
+        text: "Every client has her own private tile",
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "When I get on a call with a client, about a new piece, a wedding, a wardrobe refresh, anything, I record it inside Jokuh. Not for compliance, not for a paper trail. Because I know that somewhere in that hour, she's going to mention the dress her grandmother wore in Marseille, or the fabric she touched in Kyoto, or the fact that she's stopped wearing anything with a hard waistband since her second child.",
+          "Those details are the entire job. Before Jokuh, I lost most of them. Now they're saved, transcribed, and tagged the moment we hang up.",
         ],
       },
       {
         kind: "subhead",
-        text: "Latency, false positives, and motion policy",
+        text: "A dataroom for every woman I design for",
       },
       {
         kind: "prose",
         paragraphs: [
-          "Hook detection runs on partial hypotheses; you trade precision vs recall against UX. High-contrast cues help humans correct mistakes, but accessibility demands a non-motion path: color and iconography must carry meaning when `prefers-reduced-motion` is set.",
-          "PII and retention policies apply twice: to raw audio and to hook payloads. If a hook lifts a proper noun into the spine, redaction rules need to travel with the edge, not just the caption tile.",
+          "Every client has her own private tile inside my dataroom. Inside that tile is everything. Transcripts of every call we've ever had. Photos she's sent me of pieces she loves and pieces she hates. Her measurements over the years, because bodies change. Notes on how a fabric felt against her skin in a fitting. Voice memos I leave myself at midnight when I have an idea for her.",
+          "When I sit down to design a new piece, I don't start from a blank page. I ask Jokuh to remind me of everything she's said about silhouette, every fabric she's been drawn to, every event she's getting dressed for in the next six months. In thirty seconds I have a brief that no other designer could write for her.",
+        ],
+      },
+      {
+        kind: "featureText",
+        title: "The second dress fits better than the first",
+        subtitle:
+          "A few of my clients have joined me on Jokuh. The others still feel the difference.",
+        paragraphs: [
+          "They share a private tile with me, encrypted between us, where everything we make together lives: sketches, photos from their wardrobe, the dresses I've made them, the trips they're packing for.",
+          "When one of them messages me from Mexico City asking what to wear to a friend's wedding in Cartagena, I can see her whole closet, every piece I've ever made her, and our last three conversations. I answer her in two minutes.",
+          "The other clients, the ones who aren't on the platform yet, still feel the difference. They notice that I remember the small things. They notice that the second dress fits better than the first, and the third better than the second.",
         ],
       },
       {
         kind: "imagesAsymmetric",
         large: {
-          src: u("photo-1516321318423-f06f85e504b3", 1600, 1000),
+          src: "/story-art/maren-call-window.png",
           alt: "",
-          caption: "Subtitles for people; spans and types for agents.",
+          caption: "Jokuh keeps the client history close while Maren designs.",
         },
         small: {
-          src: u("photo-1550751827-4bd374c3f58b", 900, 900),
+          src: "/story-art/maren-walk.png",
           alt: "",
-          caption: "Spine graph edges accumulate across yields and tool batches.",
+          caption: "The work follows her without pulling her back into scattered messages.",
+          hidden: true,
         },
       },
       {
         kind: "quote",
-        text: "The bubble is not decoration—it is a commit point the model can cite later.",
-        attribution: "Realtime product spec draft",
+        text: "Every call I take adds to a dataroom that only grows richer.",
+        attribution: "Maren Côté",
+      },
+      {
+        kind: "subhead",
+        text: "Made from memory",
       },
       {
         kind: "prose",
         paragraphs: [
-          "Implementation sketch: ASR partials → lightweight classifier (or rules + LM verifier) → hook queue with debounce → spine writer with idempotent keys. Clients subscribe to hook events separately from token deltas so UI can animate without thrashing the graph store.",
+          "The clothes I make are simple. Linen, cotton, hand-finished, nothing flashy. But the depth behind each piece, the years of conversations, the remembered details, the context that never gets lost, that's the thing my clients pay for, and that's the thing I couldn't deliver without Jokuh.",
+          "I don't worry about forgetting anymore. I don't search through old messages. I don't lose what someone told me a year ago. I just listen, save it, and let it become part of how I see her. That's the work. That's the whole thing.",
+          "Maren Côté is a Canadian clothing designer based in Tulum, Mexico, and a Jokuh user since the closed beta.",
         ],
-      },
-      {
-        kind: "cta",
-        title: "Shipping realtime features?",
-        body: "We are hiring engineers who care about streaming protocols, graph stores, and honest accessibility—not just demo polish.",
-        buttonLabel: "View careers",
-        buttonHref: "/careers",
       },
     ],
   },
-
-  "treasury-inference-api-grid": {
-    slug: "treasury-inference-api-grid",
-    metaLine: "March 26, 2026 · Engineering · Platform",
-    title: "Treasury loops and the API grid",
-    dek: "When usage settles to treasury and treasury buys inference, the product needs an API grid: adapters per provider, uniform metering, and fee lines users can audit—not a black box labeled “AI.”",
+  "aaron-liebowitz-psychotherapy-nyc": {
+    slug: "aaron-liebowitz-psychotherapy-nyc",
+    metaLine: "April 1, 2026 · Jokuh Stories · Field story",
+    title: "A psychotherapy practice in New York",
+    dek: "A federal privilege ruling and a preservation order made mainstream AI a liability in the consulting room, so Aaron moved the arc of his practice into keys only he holds.",
     heroGallery: [
-      { src: u("photo-1558494949-ef010cbdcc31", 1200, 800), alt: "" },
-      { src: u("photo-1544197150-b99a580bb7a8", 1200, 800), alt: "" },
-      { src: u("photo-1551288049-bebda4e38f71", 1200, 800), alt: "" },
+      { src: "/story-art/aaron-nyc-central-park-lawn.png", alt: "Central Park lawn with the Manhattan skyline beyond the trees", label: "Central Park" },
+      { src: "/story-art/aaron-nyc-waterfront-skyline.avif", alt: "Lower Manhattan skyline across the water on a clear day", label: "Lower Manhattan" },
+      { src: "/story-art/aaron-nyc-central-park-lake.avif", alt: "Central Park lake reflecting the Manhattan skyline", label: "Park reflections" },
+      { src: "/story-art/aaron-nyc-midtown-aerial-grid.png", alt: "Aerial view of dense Midtown Manhattan blocks and towers", label: "Midtown grid" },
+      { src: "/story-art/aaron-nyc-neighborhood-aerial.png", alt: "Aerial view of Manhattan residential towers, streets, and trees", label: "City blocks" },
+      { src: "/story-art/aaron-nyc-lower-manhattan-water.png", alt: "New York City skyline above the waterfront", label: "Waterline" },
+      { src: "/story-art/aaron-nyc-central-park-reservoir.png", alt: "Wide Central Park water view with skyline reflections", label: "Reservoir" },
     ],
     sections: [
       {
         kind: "prose",
         paragraphs: [
-          "The prompt bar is the billing origin: it captures intent, entitlement tier, and the selected model route. From there, jobs fan out across providers with consistent request envelopes—temperature caps, tool allowlists, tracing ids—so finance and reliability see one ledger, not N vendor dashboards stitched in spreadsheets.",
-          "Treasury feedback matters architecturally. Reinvesting settlement surplus into reserved inference capacity changes tail latency; documenting that loop publicly keeps incentives aligned. Users should see *why* a month costs what it costs: base subscription, burst tokens, bridge fees when crypto rails participate, and policy surcharges when safety classifiers engage.",
+          "Few professions sit under more legal pressure around AI than mental health. A federal court has ruled that conversations with mainstream AI systems carry no privilege and are admissible as evidence in litigation, and a separate preservation order has forced one major provider to retain every consumer chat indefinitely, making the most popular AI tools effectively radioactive inside a clinical practice.",
+          "Aaron Liebowitz is a psychotherapist in private practice on the Upper West Side. Trained psychoanalytically, he has kept the same office for nearly thirty years and a list of about twenty-eight long-term patients, some of them in their tenth, twelfth, or fifteenth year with him. Along with the practice he has inherited the quiet burden every long-tenured therapist knows: a locked filing cabinet of handwritten session notes that he stopped trusting himself to remember by year two. Rather than let that history stay trapped on paper or migrate it into mainstream AI that could one day be subpoenaed, Aaron decided to consolidate the entire arc of his practice inside Jokuh: an encrypted dataroom whose keys he, and only he, holds.",
+        ],
+      },
+      {
+        kind: "imagesAsymmetric",
+        large: {
+          src: "/story-art/aaron-nyc-desk.png",
+          alt: "Aaron writing session notes at his desk in his office",
+          caption:
+            "The work is built from remembered details, session by session, year after year.",
+        },
+        small: {
+          src: "/story-art/aaron-nyc-portrait.png",
+          alt: "Aaron Liebowitz",
+          caption: "Aaron Liebowitz, Upper West Side",
+        },
+      },
+      {
+        kind: "quote",
+        text: "My memory used to be the bottleneck. The cabinet used to be a liability. Jokuh is the first piece of software I have ever trusted enough to put a patient's name into.",
+        attribution: "Aaron Liebowitz, private practice, New York",
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "What used to live in fading ink and unreliable recall now lives in sealed, dated, queryable tiles. Past dreams, prescribed medications, the names of the dead and the years they died, the patient's own words from a session in 2019. Aaron can reference any of it instantly without ever leaving the room. Day to day, the workflow runs on the fifty minutes between sessions: a session ends, the recording is sealed and tagged, the next patient's history is surfaced before they knock. Voice mode handles most of it. The clock the patient is not supposed to see no longer counts down to lost detail.",
+          "The Anthropic privilege ruling and the Southern District of New York's preservation order against OpenAI both happened blocks from Aaron's office. He has no intention of becoming the test case that drags either precedent into therapy. With Jokuh, the encryption keys are his alone. The company is mathematically incapable of producing a transcript under subpoena, which means there is nothing to produce. What used to require a locked drawer and a careful conscience now requires only cryptography.",
+          "In a profession where the difference between a useful session and a forgotten one is often a single remembered detail from years ago, that continuity is no longer something Aaron has to hold in his head. The room hasn't changed since he trained. The work hasn't changed. What has changed is how much of the patient he can keep with him, and how safely he can keep it.",
+        ],
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "Aaron Liebowitz, private practice psychotherapist, Upper West Side, Manhattan. Voice mode runs in the fifty-minute gap between sessions, sealing recordings, surfacing patient history, logging impressions while the work is still fresh. Patient tiles are encrypted with keys held solely by the clinician; Jokuh itself has no decryption capability.",
         ],
       },
       {
         kind: "subhead",
-        text: "Fee decomposition and governance latency",
+        text: "Sealing a session",
       },
       {
         kind: "prose",
         paragraphs: [
-          "Cross-asset flows (e.g., user-settled crypto → fiat settlement → third-party booking) explode fee surfaces: network gas, liquidity spread, treasury spread, partner take. The UX can stay one-tap; the receipt must expand into a line-item trace engineers can replay. That is how you answer support tickets without myth-making.",
-          "When policy changes—new model, new rate card, new safety gate—it should surface as a proposal object: title, diff summary, risk notes, effective date. Fast teams still review; automated agents can pre-score impact on P95 latency and projected burn.",
-        ],
-      },
-      {
-        kind: "imagesAsymmetric",
-        large: {
-          src: u("photo-1544197150-b99a580bb7a8", 1600, 1000),
-          alt: "",
-          caption: "Adapters normalize auth, streaming, and errors across providers.",
-        },
-        small: {
-          src: u("photo-1551288049-bebda4e38f71", 900, 900),
-          alt: "",
-          caption: "Metering joins product analytics with finance-grade ids.",
-        },
-      },
-      {
-        kind: "quote",
-        text: "If you cannot trace fees, you cannot iterate on pricing—or trust the reinvestment story.",
-        attribution: "Platform architecture review",
-      },
-      {
-        kind: "prose",
-        paragraphs: [
-          "Hard requirements for v1 of the grid: idempotent job ids, streaming byte accounting, per-route circuit breakers, and a kill switch that degrades to cached templates instead of silent provider failovers. Observability stacks (traces + cost tags) are not optional—they are the control plane.",
-        ],
-      },
-      {
-        kind: "cta",
-        title: "Integrating with Jokuh APIs?",
-        body: "Tell us about your throughput, compliance tier, and whether you need dedicated capacity—we map routes accordingly.",
-        buttonLabel: "Contact platform",
-        buttonHref: "mailto:hello@jokuh.com",
-      },
-    ],
-  },
-
-  "seed-farm-south-carolina": {
-    slug: "seed-farm-south-carolina",
-    metaLine: "March 26, 2026 · Jokuh Stories",
-    title: "A seed farm in South Carolina",
-    dek: "Farming today means juggling weather shifts, equipment upkeep, labor planning, and tight timelines—with decisions that can't wait.",
-    heroGallery: [
-      { src: u("photo-1625246333195-78d9c38ad447", 1200, 800), alt: "" },
-      { src: u("photo-1500382017468-9049fed747ef", 1200, 800), alt: "" },
-      { src: u("photo-1464226184884-fa280b87c399", 1200, 800), alt: "" },
-    ],
-    sections: [
-      {
-        kind: "prose",
-        paragraphs: [
-          "When the forecast swings from drought to deluge in a single week, every choice on the farm compounds. Seed inventory, field windows, and crew schedules have to stay in sync—or the season pays the price.",
-          "For Sharp & Sharp Certified Seed, the work is as much coordination as cultivation. Varieties are tracked by lot, customers expect purity and traceability, and there is no quiet month when you are both grower and supplier.",
+          "Session with Patient 07 just ended. Seal the recording, transcribe it, and tag it with today's themes inside her tile.",
+          "Sealed inside her private tile. Transcript complete. Tags added: recurring father dream, work anxiety, sister relationship. Encryption confirmed. Only your key can open this tile.",
         ],
       },
       {
         kind: "subhead",
-        text: "Clarity when the season won't slow down",
+        text: "Cross-referencing a recurring theme",
       },
       {
         kind: "prose",
         paragraphs: [
-          "The team started using structured prompts to draft equipment checklists, summarize supplier emails, and turn field notes into next-day plans. The goal was never to replace judgment—it was to buy back minutes for the decisions only a grower can make.",
-          "What changed first was friction. Fewer threads lost in inboxes. Fewer half-remembered tasks. More of the day spent where it matters: walking rows, reading the weather, and keeping the operation honest.",
-        ],
-      },
-      {
-        kind: "triptych",
-        items: [
-          {
-            src: u("photo-1500382017468-9049fed747ef", 900, 1100),
-            alt: "",
-            text: "Turn scattered updates into **field notes** the whole team can actually pick up tomorrow morning.",
-          },
-          {
-            src: u("photo-1520607162513-77705c0f0d4a", 900, 1100),
-            alt: "",
-            text: "Break down **supplier bills** and check line items before a small mistake rolls into the season.",
-          },
-          {
-            src: u("photo-1499529112087-3cb3b73cec95", 900, 1100),
-            alt: "",
-            text: "Map **inventory and planting windows** against weather shifts, labor time, and delivery commitments.",
-          },
-        ],
-      },
-      {
-        kind: "imagesAsymmetric",
-        large: {
-          src: u("photo-1500382017468-9049fed747ef", 1600, 1000),
-          alt: "",
-          caption: "Harvest window: timing the pick so moisture and quality line up.",
-        },
-        small: {
-          src: u("photo-1625246333195-78d9c38ad447", 900, 900),
-          alt: "",
-          caption: "Rachael Sharp, Sharp & Sharp Certified Seed",
-        },
-      },
-      {
-        kind: "prose",
-        paragraphs: [
-          "On paper it sounds small—cleaner lists, tighter summaries, faster replies. In practice it is the difference between reacting and steering. The farm still runs on experience; the layer on top just makes room for it.",
-        ],
-      },
-      {
-        kind: "quote",
-        text: "Before, I would wonder, where can I get this, who can help me with that. And now it's like, okay, I can do this.",
-        attribution: "Rachael Sharp, Sharp & Sharp Certified Seed",
-      },
-      {
-        kind: "prose",
-        paragraphs: [
-          "Seasons will keep shortening the margin for error. The tools that win here are the ones that stay out of the way—fast to use, easy to trust, and respectful of how much is already on the line.",
-        ],
-      },
-      {
-        kind: "cta",
-        title: "Share how you're building with Jokuh",
-        body: "We're interested in real stories from real teams: how you're planning, shipping, and staying human at work. Big or small, we'd love to hear it.",
-        buttonLabel: "Tell us your story",
-        buttonHref: "mailto:hello@jokuh.com",
-      },
-    ],
-  },
-
-  "salvage-yard-nevada": {
-    slug: "salvage-yard-nevada",
-    metaLine: "March 22, 2026 · Jokuh Stories",
-    title: "A salvage yard in Nevada",
-    dek: "Between incoming lots, part lookups, and buyers who need an answer now, a yard moves faster when knowledge doesn't stay trapped in one person's head.",
-    heroGallery: [
-      { src: u("photo-1504917595217-d4dc5ebe6122", 1200, 800), alt: "" },
-      { src: u("photo-1581092160562-40aa08f7880a", 1200, 800), alt: "" },
-      { src: u("photo-1565043589221-1a6fd9ae45c7", 1200, 800), alt: "" },
-    ],
-    sections: [
-      {
-        kind: "prose",
-        paragraphs: [
-          "Sparks fly, metal stacks, and someone always needs a VIN match before close. The yard runs on memory and hustle—until the day those don't line up.",
-          "This team started turning repeat questions into short, searchable notes: interchange hints, pricing guardrails, and the oddball exceptions that only come up once a season—but matter when they do.",
-        ],
-      },
-      {
-        kind: "imagesAsymmetric",
-        large: {
-          src: u("photo-1504917595217-d4dc5ebe6122", 1600, 1000),
-          alt: "",
-          caption: "Cutting and sorting: where a few seconds of clarity saves hours.",
-        },
-        small: {
-          src: u("photo-1581092160562-40aa08f7880a", 900, 900),
-          alt: "",
-          caption: "Floor lead, afternoon shift",
-        },
-      },
-      {
-        kind: "quote",
-        text: "We still trust the old hands. We just don't ask them the same question for the tenth time.",
-        attribution: "Yard operations lead",
-      },
-      {
-        kind: "prose",
-        paragraphs: [
-          "The floor is still loud. The work is still physical. What's different is how fast new people ramp—and how often customers get a straight answer on the first call.",
-        ],
-      },
-      {
-        kind: "cta",
-        title: "Share how you're building with Jokuh",
-        body: "We're interested in real stories from real teams: how you're planning, shipping, and staying human at work. Big or small, we'd love to hear it.",
-        buttonLabel: "Tell us your story",
-        buttonHref: "mailto:hello@jokuh.com",
-      },
-    ],
-  },
-
-  "tamale-shop-california": {
-    slug: "tamale-shop-california",
-    metaLine: "March 18, 2026 · Jokuh Stories",
-    title: "A tamale shop in California",
-    dek: "Catering orders, prep lists, and family recipes don't leave much room for admin—unless you carve it out on purpose.",
-    heroGallery: [
-      { src: u("photo-1522071820081-009f0129c71c", 1200, 800), alt: "" },
-      { src: u("photo-1556910103-1c02745aae4d", 1200, 800), alt: "" },
-      { src: u("photo-1555939594-58d7cb561ad1", 1200, 800), alt: "" },
-    ],
-    sections: [
-      {
-        kind: "prose",
-        paragraphs: [
-          "Morning is masa and meat. Afternoon is pickups, deliveries, and the spreadsheet no one wants to admit they hate. The shop grew from a counter to a small team, and with it came the usual growing pains: who's ordering what, and when.",
+          "She told me again today that she had \"the dream.\" Pull every prior reference to it across our entire history together. Dates, contexts, what was happening in her life around each one.",
+          "Found 14 references across 9 years. First mentioned March 11, 2017, the week after her father's hospitalization. Pattern: the dream surfaces within 4–6 weeks of a major caregiving event. Last appearance: 11 weeks ago. Full timeline ready in her tile.",
         ],
       },
       {
         kind: "subhead",
-        text: "Recipes in muscle memory—schedules in plain language",
+        text: "Verifying sovereignty",
       },
       {
         kind: "prose",
         paragraphs: [
-          "They began using simple prompts to turn messy notes into week-ahead prep sheets and customer-ready summaries. Spanish and English side by side where it helped. Nothing fancy—just fewer dropped balls during the Friday rush.",
+          "Confirm the cryptographic status of my patient data. Who holds the keys? What happens if Jokuh is served a subpoena?",
+          "You hold the only keys. All patient tiles are encrypted at rest and in transit inside a Trusted Execution Environment. Jokuh has no decryption capability. Under court order, there is no plaintext we could produce. Attestation logs available for audit. Sovereignty: confirmed.",
+        ],
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "Aaron Liebowitz is a New York-based psychotherapist in private practice and a Jokuh user since the closed beta.",
+        ],
+      },
+    ],
+  },
+  "tomas-aldaz": {
+    slug: "tomas-aldaz",
+    metaLine: "April 8, 2026 · Jokuh Stories · Field story",
+    title: "A regenerative grain cooperative in the High Plains",
+    dek: "Registries, green-claims rules, and greenwashing suits turned every soil panel and grower call into potential evidence, so the cooperative's memory had to be as defensible as its carbon math.",
+    heroGallery: [
+      { src: "/story-art/tomas-aldaz-aerial-farm.png", alt: "Aerial view of farm fields, roads, and grain silos in the High Plains", label: "A cooperative seen from above: roads, silos, and fields that all need one defensible memory." },
+      { src: "/story-art/tomas-aldaz-savannah-field.png", alt: "Wide dirt field under a bright blue sky with trees along the edge", label: "Open soil under a clear sky, the long-horizon record behind every carbon claim." },
+      { src: "/story-art/tomas-aldaz-green-fields.png", alt: "Large green and yellow farmland rows rolling toward a line of trees", label: "Regrowth is a pattern across seasons, not a single snapshot for a sustainability deck." },
+      { src: "/story-art/tomas-aldaz-plowed-field.png", alt: "Freshly plowed field rows stretching toward the horizon beneath a blue sky", label: "Rows stretching to the horizon: the scale that makes memory infrastructure necessary." },
+    ],
+    sections: [
+      {
+        kind: "prose",
+        paragraphs: [
+          "Few sectors face more aggressive scrutiny over data integrity than regenerative agriculture. Carbon-credit registries, FTC green-claims rulemaking, and a wave of greenwashing class actions have turned every soil panel, drone scan, and farmer conversation into potential evidence in an audit, and a single missing record can cost a cooperative its certification and its buyer list overnight.",
+          "Tomás Aldaz is the director of a regenerative grain cooperative spanning the High Plains of Kansas, Nebraska, and eastern Colorado. The grandson of Basque sheep ranchers and a Wageningen-trained agronomist, Tomás coordinates 340 family farms across roughly 1.2 million MRV-certified acres. The cooperative sells into a buyer book that includes Patagonia Provisions, General Mills, and a French banking carbon ledger, counterparties that demand audit-grade documentation on every ton of soil carbon claimed. Rather than continue patching together spreadsheets, drone footage, and grower phone calls across thirty-six different filing systems, Tomás moved the cooperative's entire operational record into Jokuh, with each farm running as its own encrypted node and contributing to a shared knowledge pool only the cooperative can read.",
         ],
       },
       {
         kind: "imagesAsymmetric",
         large: {
-          src: u("photo-1522071820081-009f0129c71c", 1600, 1000),
-          alt: "",
-          caption: "The kitchen after lunch service—still moving.",
+          src: "/story-art/tomas-aldaz-field-notes.png",
+          alt: "Tomás Aldaz writing field notes beside a laptop and drone on a High Plains farm",
+          caption: "Tomás Aldaz keeps field notes, drone context, and cooperative records together at the edge of the work.",
         },
         small: {
-          src: u("photo-1556910103-1c02745aae4d", 900, 900),
-          alt: "",
-          caption: "Co-owner, catering & wholesale",
+          src: "/story-art/tomas-aldaz-portrait.png",
+          alt: "Tomás Aldaz standing in a High Plains field with grain silos in the distance",
+          caption: "Tomás Aldaz, High Plains Regenerative Cooperative.",
         },
       },
       {
         kind: "quote",
-        text: "Our customers feel the calm before they know why. That's enough.",
-        attribution: "Kitchen co-owner",
+        text: "Soil takes decades to remember anything. Our software finally takes the same view. Every acre, every season, every farmer's voice, sealed, indexed, ours.",
+        attribution: "Tomás Aldaz, Director, High Plains Regenerative Cooperative",
       },
       {
-        kind: "cta",
-        title: "Share how you're building with Jokuh",
-        body: "We're interested in real stories from real teams: how you're planning, shipping, and staying human at work. Big or small, we'd love to hear it.",
-        buttonLabel: "Tell us your story",
-        buttonHref: "mailto:hello@jokuh.com",
+        kind: "prose",
+        paragraphs: [
+          "Day to day, the cooperative now runs on continuous capture. Farmers leave voice memos from the cab of a tractor; agronomists upload soil-panel results from the field; drones stream NDVI scans straight into the relevant farm's tile. The Vortex compresses all of it (voice, image, sensor, document) into queryable history that compounds with every season. When a buyer's auditor asks for evidence on a specific 47,000-acre block, Tomás does not assemble a binder over two weeks. He queries the pool. The agentic identity, trained on the cooperative's established voice and methodology, drafts the response in hours. Nothing leaves the encrypted environment. Nothing is paraphrased by a third-party model that could later be subpoenaed.",
+          "The regulatory horizon is what makes this architecture non-negotiable. The EU CSRD, the SEC's climate disclosure framework, and the parallel rise of greenwashing litigation have collapsed the gap between agricultural marketing claims and securities-grade evidence. A cooperative that cannot reproduce the chain of custody on its carbon math is not just losing a buyer; it is exposed. With Jokuh, the cryptographic keys to every farm tile sit with the cooperative. Jokuh itself is mathematically incapable of producing the data under subpoena, and every record carries an attestation log a third-party auditor can verify without ever decrypting the underlying content. Sovereignty and audit-readiness in the same architecture.",
+          "In a discipline where the most important records take half a century to mature, what changed was not the science. The science is older than the cooperative. What changed is that the cooperative now has a memory as long as the soil it stewards, and a confidentiality envelope strong enough to defend it.",
+        ],
+      },
+      {
+        kind: "imagesAsymmetric",
+        large: {
+          src: "/story-art/tomas-aldaz-barn-cat.png",
+          alt: "A barn cat sleeping in hay with High Plains grain silos beyond the barn",
+          caption: "The cooperative's record stretches from quiet daily details to audit-grade evidence across every farm tile.",
+        },
+        small: {
+          src: "/story-art/tomas-aldaz-silo-meter.png",
+          alt: "Tomás Aldaz checking a control meter mounted on a grain silo",
+          caption: "Operational checks become part of the same encrypted history as voice memos, soil panels, and drone scans.",
+        },
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "Tomás Aldaz, Director, High Plains Regenerative Cooperative: 340 farms, 1.2 million acres, MRV-certified. Each farm operates as an encrypted Galaxy Node; voice memos, drone scans, and soil panels are sealed into the relevant farm's tile in real time. The cooperative's shared knowledge pool can only be read by members; Jokuh holds no key and has no decryption capability of its own.",
+        ],
+      },
+      {
+        kind: "subhead",
+        text: "Defending a disputed carbon claim",
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "A buyer's auditor is challenging the soil-carbon math on Block 47-K: 47,000 acres, six member farms, four growing seasons. Pull every piece of evidence supporting the claim. Voice memos, soil panels, drone scans, weather records, cover-crop logs.",
+          "1,847 records assembled from Block 47-K, Q1 2022 through Q4 2025. Soil panels: 312. NDVI scans: 1,104. Farmer voice memos: 287. Cover-crop attestations: 144. Cryptographic attestation logs attached to each record. Knowledge pool synthesis ready in cooperative voice. Draft response prepared.",
+        ],
+      },
+      {
+        kind: "subhead",
+        text: "Querying a multi-year soil trend",
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "Show me the microbial-diversity trajectory across all member farms running cover-crop-plus-no-till since the 2019 baseline. Surface the outliers in both directions and what those farmers said about their seasons.",
+          "178 farms qualify. Mean Shannon diversity index up 41% since baseline. Top decile: 14 farms above 2.1x baseline, all running multi-species cover with managed grazing. Bottom decile: 9 farms flat or declining, six of them citing drought-shortened cover windows in 2023 voice memos. Full timeline and grower commentary ready in the pool.",
+        ],
+      },
+      {
+        kind: "subhead",
+        text: "Drafting in the cooperative's voice",
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "Draft the buyer's annual sustainability letter using our 2025 data. Match the voice we established in the 2022 and 2023 letters. Surface the three highest-conviction findings and flag anything I should review before it goes out.",
+          "Draft complete. Voice match score: 0.94 against prior letters. Three findings surfaced: soil-carbon retention up 12.3% above baseline projection, on-farm biodiversity index outperforming control plots by 1.8x, water-use efficiency up 18% on irrigated acres. Two passages flagged for your review. Both touch claims that may require additional auditor sign-off before publication.",
+        ],
+      },
+      {
+        kind: "prose",
+        paragraphs: [
+          "Tomás Aldaz is the director of a regenerative grain cooperative in the High Plains and a Jokuh enterprise customer since the private beta.",
+        ],
       },
     ],
   },

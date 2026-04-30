@@ -4,7 +4,7 @@ import { CONTENT_SHELL_WIDE } from "../system/shells";
 export function FundersStrip() {
   return (
     <section
-      className="border-t border-light-space/[0.07] bg-dark-space px-4 py-10 light:border-black/[0.08] light:bg-white md:px-8 md:py-12"
+      className="bg-dark-space px-4 py-10 light:bg-white md:px-8 md:py-12"
       aria-label="Backed by"
     >
       <div className={CONTENT_SHELL_WIDE}>

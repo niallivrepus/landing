@@ -1,6 +1,7 @@
 export { ClaimIdentityCta } from "./ClaimIdentityCta";
 export { FundersStrip } from "./FundersStrip";
 export { GooeyBackdrop } from "./GooeyBackdrop";
+export { LandingEditorialSection } from "./LandingEditorialSection";
 export { HeroQuickPills } from "./HeroQuickPills";
 export { HERO_OVERFLOW_QUICK_LINKS, HERO_PRIMARY_QUICK_LINKS, LandingHero } from "./LandingHero";
 export { IdentityBlock } from "./IdentityBlock";

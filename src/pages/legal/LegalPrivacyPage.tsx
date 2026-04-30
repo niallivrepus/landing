@@ -1,55 +1,73 @@
-import { Link } from "react-router-dom";
-import { DocumentTopicCard } from "../../components/legal/DocumentTopicCard";
-import { LegalBreadcrumb, LegalLayout, legalLink } from "../../components/legal/LegalLayout";
-import { TertiaryHubBody, TertiaryPageHero } from "../../components/system";
-import { PRIVACY_TOPIC_ROWS } from "../../data/privacy-docs";
+import { LegalLayout, legalMuted } from "../../components/legal/LegalLayout";
+import { TertiaryDocBody, TertiaryPageHero } from "../../components/system";
+import { PRIVACY_DOCS, type PrivacySection } from "../../data/privacy-docs";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+
+function sectionDomId(section: PrivacySection, index: number) {
+  return section.anchor ?? `privacy-section-${index}`;
+}
 
 export function LegalPrivacyPage() {
   useDocumentTitle("Privacy Policy — Jokuh");
+  const policy = PRIVACY_DOCS.customer;
 
   return (
-    <LegalLayout
-      breadcrumb={
-        <LegalBreadcrumb
-          items={[
-            { label: "Jokuh", to: "/" },
-            { label: "Legal", to: "/legal" },
-            { label: "Privacy Policy" },
-          ]}
-        />
-      }
-    >
+    <LegalLayout>
       <TertiaryPageHero
-        eyebrow="Privacy"
-        title="Privacy documents, kept in one place."
-        intro="Choose a document, then confirm the region and language you need. Every privacy path now uses the same lighter legal structure."
+        eyebrow="Legal"
+        title="Privacy Policy"
+        intro={policy.intro}
       />
 
-      <TertiaryHubBody>
-        <div className="flex flex-wrap gap-x-6 gap-y-3 pb-10 text-[14px] md:pb-12">
-          <a href="mailto:privacy@jokuh.com" className={legalLink}>
-            Contact privacy
-          </a>
-          <Link to="/#start" className={legalLink}>
-            Manage your account
-          </Link>
-          <Link to="/legal/internet-services" className={legalLink}>
-            Internet services legal
-          </Link>
-        </div>
+      <TertiaryDocBody
+        tocItems={policy.sections.map((section, index) => ({
+          id: sectionDomId(section, index),
+          label: section.title,
+        }))}
+        footer={
+          <div className="space-y-1 text-[12px]">
+            <p className={legalMuted}>{policy.documentSubtitle ?? "Updated March 26, 2026"} · Jokuh Legal</p>
+            <p className="text-light-space/40 light:text-zinc-500">
+              Privacy questions: privacy@jokuh.com
+            </p>
+          </div>
+        }
+      >
+        {policy.introContinued?.map((paragraph) => (
+          <p key={paragraph} className="mb-8 text-[16px] leading-[1.72] text-light-space/75 light:text-zinc-700">
+            {paragraph}
+          </p>
+        ))}
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {PRIVACY_TOPIC_ROWS.map((topic) => (
-            <DocumentTopicCard
-              key={topic.key}
-              to={topic.to}
-              title={topic.title}
-              description={topic.description}
-            />
-          ))}
-        </div>
-      </TertiaryHubBody>
+        {policy.sections.map((section, index) => (
+          <section
+            key={`${section.title}-${index}`}
+            id={sectionDomId(section, index)}
+            className="scroll-mt-24 pb-10 last:pb-0"
+          >
+            <h2 className="font-sans text-[22px] font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-[24px]">
+              {section.title}
+            </h2>
+            {section.body.map((paragraph) => (
+              <p key={paragraph} className="mt-4 text-[16px] leading-[1.72] text-light-space/75 light:text-zinc-700">
+                {paragraph}
+              </p>
+            ))}
+            {section.bullets?.length ? (
+              <ul className="mt-4 list-disc space-y-2 pl-5 text-[16px] leading-[1.72] text-light-space/75 marker:text-light-space/35 light:text-zinc-700 light:marker:text-zinc-400">
+                {section.bullets.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            ) : null}
+            {section.afterBullets?.map((paragraph) => (
+              <p key={paragraph} className="mt-4 text-[16px] leading-[1.72] text-light-space/75 light:text-zinc-700">
+                {paragraph}
+              </p>
+            ))}
+          </section>
+        ))}
+      </TertiaryDocBody>
     </LegalLayout>
   );
 }

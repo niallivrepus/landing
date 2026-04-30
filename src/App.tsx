@@ -1,6 +1,9 @@
-import { Suspense, lazy, type ComponentType, useLayoutEffect } from "react";
+import { Suspense, lazy, type ComponentType, useEffect, useLayoutEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigationType, useParams } from "react-router-dom";
+import { ConsentManagedScripts } from "./components/ConsentManagedScripts";
+import { CookieBanner } from "./components/CookieBanner";
 import { GoogleTranslateHost } from "./components/GoogleTranslateHost";
+import { RSS_FEED_PATH } from "./config/rss";
 
 type LazyModule = Record<string, ComponentType<any>>;
 
@@ -18,87 +21,92 @@ const AboutPage = lazy(() => import("./pages/AboutPage"));
 const CareersPage = lazy(() => import("./pages/CareersPage"));
 const ContactSalesPage = lazyNamed(() => import("./pages/ContactSalesPage"), "ContactSalesPage");
 const DownloadPage = lazyNamed(() => import("./pages/DownloadPage"), "DownloadPage");
+const ManifestoPage = lazyNamed(() => import("./pages/ManifestoPage"), "ManifestoPage");
 const NewsDetailPage = lazyNamed(() => import("./pages/NewsDetailPage"), "NewsDetailPage");
 const NewsPage = lazyNamed(() => import("./pages/NewsPage"), "NewsPage");
 const ProductPage = lazyNamed(() => import("./pages/ProductPage"), "ProductPage");
 const ResourceDetailPage = lazyNamed(() => import("./pages/ResourceDetailPage"), "ResourceDetailPage");
 const SitemapPage = lazyNamed(() => import("./pages/SitemapPage"), "SitemapPage");
 const StoryDetailPage = lazyNamed(() => import("./pages/StoryDetailPage"), "StoryDetailPage");
+const ShareYourStoryPage = lazyNamed(() => import("./pages/ShareYourStoryPage"), "ShareYourStoryPage");
 const StoriesPage = lazyNamed(() => import("./pages/StoriesPage"), "StoriesPage");
 const StubPage = lazyNamed(() => import("./pages/StubPage"), "StubPage");
 const SupportPage = lazyNamed(() => import("./pages/SupportPage"), "SupportPage");
 const SystemStatusPage = lazyNamed(() => import("./pages/SystemStatusPage"), "SystemStatusPage");
-const DocsCookbookPage = lazyNamed(() => import("./pages/docs/DocsCookbookPage"), "DocsCookbookPage");
 const DocsLayout = lazyNamed(() => import("./pages/docs/DocsLayout"), "DocsLayout");
-const DocsModelsPage = lazyNamed(() => import("./pages/docs/DocsModelsPage"), "DocsModelsPage");
+const DocsInfoPage = lazyNamed(() => import("./pages/docs/DocsInfoPage"), "DocsInfoPage");
 const DocsOverviewPage = lazyNamed(() => import("./pages/docs/DocsOverviewPage"), "DocsOverviewPage");
 const DocsQuickstartPage = lazyNamed(() => import("./pages/docs/DocsQuickstartPage"), "DocsQuickstartPage");
-const DeveloperBlogPage = lazyNamed(() => import("./pages/DeveloperBlogPage"), "DeveloperBlogPage");
-const DeveloperLearnPage = lazyNamed(() => import("./pages/DeveloperLearnPage"), "DeveloperLearnPage");
-const DeveloperSdkPage = lazyNamed(() => import("./pages/DeveloperSdkPage"), "DeveloperSdkPage");
 const EthicsPage = lazyNamed(() => import("./pages/EthicsPage"), "EthicsPage");
-const LegalHomePage = lazyNamed(() => import("./pages/legal/LegalHomePage"), "LegalHomePage");
-const LegalInternetServicesPage = lazyNamed(
-  () => import("./pages/legal/LegalInternetServicesPage"),
-  "LegalInternetServicesPage",
-);
-const LegalPrivacyDocumentPage = lazyNamed(
-  () => import("./pages/legal/LegalPrivacyDocumentPage"),
-  "LegalPrivacyDocumentPage",
-);
 const LegalPrivacyPage = lazyNamed(() => import("./pages/legal/LegalPrivacyPage"), "LegalPrivacyPage");
-const LegalPrivacySelectPage = lazyNamed(
-  () => import("./pages/legal/LegalPrivacySelectPage"),
-  "LegalPrivacySelectPage",
-);
 const LegalTermsPage = lazyNamed(() => import("./pages/legal/LegalTermsPage"), "LegalTermsPage");
 
 const PRODUCT_ROUTES = [
-  { path: "/pods", productId: "pods" },
   { path: "/blurbs", productId: "blurbs" },
   { path: "/spine", productId: "spine" },
+  { path: "/calls", productId: "calls" },
+  { path: "/messages", productId: "messages" },
+  { path: "/profile", productId: "profile" },
   { path: "/vortex", productId: "vortex" },
   { path: "/passport", productId: "passport" },
   { path: "/realms", productId: "realms" },
   { path: "/orb", productId: "orb" },
-  { path: "/ecosystem/v1llains", productId: "v1llains" },
+] as const;
+
+/** Unpublished marketing URLs → home; do not register these paths as public stubs. */
+const REDIRECT_HOME_PATHS = [
+  "/platform/identity",
+  "/platform/gooey",
+  "/platform/wallet",
+  "/platform/galaxy-nodes",
+  "/pods",
+  "/pricing",
+  "/v1llains",
+  "/ecosystem/v1llains",
+  "/developers/apps",
+  "/developers/agents",
+  "/developers/blog",
+  "/developers/forum",
+  "/developers/learn",
+  "/developers/open-models",
+  "/developers/accessibility",
+  "/chatgpt/explore",
+  "/chatgpt/business",
+  "/chatgpt/enterprise",
+  "/chatgpt/education",
 ] as const;
 
 const STUB_ROUTES = [
-  { path: "/platform/identity", title: "Identity" },
-  { path: "/platform/gooey", title: "Gooey" },
-  { path: "/platform/wallet", title: "Wallet" },
-  { path: "/platform/galaxy-nodes", title: "Galaxy Nodes" },
   { path: "/ecosystem/community", title: "Community" },
   { path: "/ecosystem/partnerships", title: "Partnerships" },
   { path: "/waitlist", title: "Waitlist" },
-  { path: "/developers/sdk", title: "SDK & API" },
-  { path: "/developers/agents", title: "Agents of Chaos" },
-  { path: "/developers/open-models", title: "Open models" },
-  { path: "/developers/apps", title: "Apps platform" },
-  { path: "/developers/forum", title: "Developer forum" },
-  { path: "/developers/accessibility", title: "Accessibility" },
   { path: "/startups", title: "Jokuh for startups" },
   { path: "/account", title: "Account" },
   { path: "/livestreams", title: "Livestreams" },
   { path: "/podcast", title: "Podcast" },
-  { path: "/rss", title: "RSS" },
 ] as const;
 
 const LEGAL_ROUTES = [
   { path: "/privacy", element: <LegalPrivacyPage /> },
   { path: "/terms", element: <LegalTermsPage /> },
-  { path: "/legal", element: <LegalHomePage /> },
-  { path: "/legal/internet-services", element: <LegalInternetServicesPage /> },
-  { path: "/legal/terms", element: <LegalTermsPage /> },
-  { path: "/legal/privacy", element: <LegalPrivacyPage /> },
-  { path: "/legal/privacy/:docKey/read/:locale", element: <LegalPrivacyDocumentPage /> },
-  { path: "/legal/privacy/:docKey", element: <LegalPrivacySelectPage /> },
+  { path: "/legal", element: <Navigate to="/privacy" replace /> },
+  { path: "/legal/terms", element: <Navigate to="/terms" replace /> },
+  { path: "/legal/privacy", element: <Navigate to="/privacy" replace /> },
+  { path: "/legal/privacy/*", element: <Navigate to="/privacy" replace /> },
+  { path: "/legal/*", element: <Navigate to="/terms" replace /> },
 ] as const;
 
 function LegacyNewsRedirect() {
   const { slug } = useParams<{ slug: string }>();
   return <Navigate to={`/newsroom/${slug}`} replace />;
+}
+
+function RssRedirect() {
+  useEffect(() => {
+    window.location.replace(RSS_FEED_PATH);
+  }, []);
+
+  return null;
 }
 
 function RouteFallback() {
@@ -121,8 +129,10 @@ function RouteScrollManager() {
 export default function App() {
   return (
     <>
+      <ConsentManagedScripts />
       <GoogleTranslateHost />
       <RouteScrollManager />
+      <CookieBanner />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -139,23 +149,28 @@ export default function App() {
           <Route path="/journal/:slug" element={<LegacyNewsRedirect />} />
           <Route path="/news" element={<Navigate to="/newsroom" replace />} />
           <Route path="/news/:slug" element={<LegacyNewsRedirect />} />
+          <Route path="/rss" element={<RssRedirect />} />
 
           <Route path="/stories" element={<StoriesPage />} />
+          <Route path="/stories/share" element={<ShareYourStoryPage />} />
+          <Route path="/stories/a-day-with-jokuh-maren-cote" element={<Navigate to="/stories/made-from-memory" replace />} />
+          <Route
+            path="/stories/tomas-aldaz-high-plains-coop"
+            element={<Navigate to="/stories/tomas-aldaz" replace />}
+          />
           <Route path="/stories/:slug" element={<StoryDetailPage />} />
           <Route path="/safety/approach" element={<ResourceDetailPage resourceId="safety-approach" />} />
           <Route path="/safety/security-privacy" element={<ResourceDetailPage resourceId="security-privacy" />} />
           <Route path="/safety/trust-transparency" element={<ResourceDetailPage resourceId="trust-transparency" />} />
-          <Route path="/chatgpt/explore" element={<ResourceDetailPage resourceId="explore-chatgpt" />} />
-          <Route path="/chatgpt/business" element={<ResourceDetailPage resourceId="business" />} />
-          <Route path="/chatgpt/enterprise" element={<ResourceDetailPage resourceId="enterprise" />} />
-          <Route path="/chatgpt/education" element={<ResourceDetailPage resourceId="education" />} />
-          <Route path="/pricing" element={<ResourceDetailPage resourceId="pricing" />} />
           {PRODUCT_ROUTES.map((route) => (
             <Route
               key={route.path}
               path={route.path}
               element={<ProductPage productId={route.productId} />}
             />
+          ))}
+          {REDIRECT_HOME_PATHS.map((path) => (
+            <Route key={path} path={path} element={<Navigate to="/" replace />} />
           ))}
 
           <Route path="/prompt" element={<Navigate to="/#prompt" replace />} />
@@ -164,9 +179,7 @@ export default function App() {
           <Route path="/support" element={<SupportPage />} />
           <Route path="/system-status" element={<SystemStatusPage />} />
           <Route path="/ethics" element={<EthicsPage />} />
-          <Route path="/developers/sdk" element={<DeveloperSdkPage />} />
-          <Route path="/developers/learn" element={<DeveloperLearnPage />} />
-          <Route path="/developers/blog" element={<DeveloperBlogPage />} />
+          <Route path="/developers/sdk" element={<Navigate to="/developers/docs/sdk" replace />} />
           {STUB_ROUTES.map((route) => (
             <Route
               key={route.path}
@@ -176,15 +189,20 @@ export default function App() {
           ))}
           <Route path="/brand" element={<BrandPage />} />
           <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
+          <Route path="/manifesto" element={<ManifestoPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/charter" element={<CharterPage />} />
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/developers/documentation" element={<Navigate to="/developers/docs" replace />} />
           <Route path="/developers/docs" element={<DocsLayout />}>
             <Route index element={<DocsOverviewPage />} />
-            <Route path="models" element={<DocsModelsPage />} />
             <Route path="quickstart" element={<DocsQuickstartPage />} />
-            <Route path="cookbook" element={<DocsCookbookPage />} />
+            <Route path="sdk" element={<DocsInfoPage pageId="sdk" />} />
+            <Route path="text" element={<DocsInfoPage pageId="text" />} />
+            <Route path="structured-output" element={<DocsInfoPage pageId="structured-output" />} />
+            <Route path="audio" element={<DocsInfoPage pageId="audio" />} />
+            <Route path="models" element={<Navigate to="/developers/docs" replace />} />
+            <Route path="cookbook" element={<Navigate to="/developers/docs" replace />} />
           </Route>
         </Routes>
       </Suspense>

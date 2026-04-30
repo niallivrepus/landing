@@ -31,10 +31,10 @@ function RecentNewsBentoCompact({ row, className }: { row: NewsRow; className?: 
         <NewsCardArt gradient={row.gradient} image={row.image} lavaLamp={row.lavaLamp} className="size-full" />
       </div>
       <div className="flex shrink-0 flex-col gap-1.5 pt-3 sm:pt-3">
-        <h3 className="line-clamp-3 font-sans text-[15px] font-semibold leading-[1.2] tracking-[-0.02em] text-light-space light:text-zinc-950 sm:text-lg sm:leading-[1.2]">
+        <h3 className="line-clamp-3 font-sans text-[15px] font-semibold leading-[1.2] tracking-[0em] text-light-space light:text-zinc-950 sm:text-lg sm:leading-[1.2]">
           {row.title}
         </h3>
-        <p className="font-sans text-[12px] leading-tight tracking-[-0.01em] sm:text-[13px]">
+        <p className="font-sans text-[12px] leading-tight tracking-[0em] sm:text-[13px]">
           <span className="text-light-space light:text-zinc-900">{row.category}</span>
           <span className="text-light-space/30 light:text-zinc-300"> · </span>
           <span className="text-light-space/45 light:text-zinc-500">{row.date}</span>
@@ -54,10 +54,10 @@ function NewsWallCard({ row }: { row: NewsRow }) {
         <NewsCardArt gradient={row.gradient} image={row.image} lavaLamp={row.lavaLamp} className="size-full" />
       </div>
       <div className="flex min-w-0 flex-col gap-1.5 pt-1">
-        <h3 className="line-clamp-2 font-sans text-[15px] font-semibold leading-[1.25] tracking-[-0.02em] text-light-space light:text-zinc-950 sm:text-base">
+        <h3 className="line-clamp-2 font-sans text-[15px] font-semibold leading-[1.25] tracking-[0em] text-light-space light:text-zinc-950 sm:text-base">
           {row.title}
         </h3>
-        <p className="font-sans text-[12px] leading-tight tracking-[-0.01em] sm:text-[13px]">
+        <p className="font-sans text-[12px] leading-tight tracking-[0em] sm:text-[13px]">
           <span className="text-light-space light:text-zinc-900">{row.category}</span>
           <span className="text-light-space/30 light:text-zinc-300"> · </span>
           <span className="text-light-space/45 light:text-zinc-500">{row.date}</span>
@@ -97,7 +97,7 @@ export function RecentNewsSection() {
     <section id="newsroom" className="scroll-mt-24 bg-dark-space px-4 py-16 light:bg-white md:px-8 md:py-20">
       <div className={CONTENT_SHELL_WIDE}>
         <div className="mb-10 flex items-end justify-between gap-4">
-          <h2 className="font-sans text-lg font-semibold tracking-tight text-light-space light:text-zinc-950 md:text-xl">Newsroom</h2>
+          <h2 className="font-sans text-lg font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-xl">Newsroom</h2>
           <Link
             to="/newsroom"
             className="shrink-0 font-sans text-sm font-semibold text-light-space transition-colors hover:text-light-space/88 light:text-zinc-950 light:hover:text-zinc-800"
@@ -121,10 +121,10 @@ export function RecentNewsSection() {
                       <NewsCardArt gradient={featured.gradient} image={featured.image} lavaLamp={featured.lavaLamp} className="size-full" />
                     </div>
                     <div className="flex flex-col gap-1.5 pt-5 sm:pt-5">
-                      <h3 className="font-sans text-xl font-semibold leading-[1.15] tracking-[-0.03em] text-light-space light:text-zinc-950 sm:text-2xl lg:text-[1.65rem] lg:leading-[1.12]">
+                      <h3 className="font-sans text-xl font-semibold leading-[1.15] tracking-[0em] text-light-space light:text-zinc-950 sm:text-2xl lg:text-[1.65rem] lg:leading-[1.12]">
                         {featured.title}
                       </h3>
-                      <p className="font-sans text-[12px] leading-tight tracking-[-0.01em] sm:text-[13px]">
+                      <p className="font-sans text-[12px] leading-tight tracking-[0em] sm:text-[13px]">
                         <span className="text-light-space light:text-zinc-900">{featured.category}</span>
                         <span className="text-light-space/30 light:text-zinc-300"> · </span>
                         <span className="text-light-space/45 light:text-zinc-500">{featured.date}</span>
@@ -166,7 +166,7 @@ export function RecentNewsSection() {
 
         {wallCards.length > 0 ? (
           <div className="mt-12 pt-10 md:mt-16 md:pt-12">
-            <h3 className="mb-8 font-sans text-lg font-semibold tracking-tight text-light-space light:text-zinc-950">
+            <h3 className="mb-8 font-sans text-lg font-semibold tracking-[0em] text-light-space light:text-zinc-950">
               Recent news
             </h3>
             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">

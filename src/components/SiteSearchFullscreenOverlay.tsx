@@ -1,18 +1,15 @@
 import { Logo, cn } from "@jokuh/gooey";
-import { ArrowUp, ChevronDown, Globe } from "lucide-react";
+import { ArrowUp, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { createPortal } from "react-dom";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { resolveRigidNavColumns } from "../config/site-subdomains";
 import { SITE_SEARCH_PLACEHOLDER_SUGGESTIONS } from "../data/site-search-suggestions";
 import { RIGID_NAV_COLUMNS } from "../data/rigid-sitemap";
-import { SITE_LANGUAGES, findSiteLanguageForActive } from "../data/site-languages";
 import { useGentleHoverSound } from "../hooks/useGentleHoverSound";
-import { getStoredLanguageKey } from "../lib/google-translate";
 import { rankSiteArticles, suggestSiteArticles, type SiteArticleHit } from "../lib/site-search-articles";
 import { CtaLordIcon } from "./CtaLordIcon";
-import { LanguageSelectModal } from "./LanguageSelectModal";
 import { SearchPanelToggleGlyph } from "./SearchPanelToggleGlyph";
 
 const SUMMARY_COLLAPSE_CHARS = 320;
@@ -130,7 +127,7 @@ function buildSearchContext(articles: SearchRequestArticle[]): string {
 function buildLocalSearchSummary(query: string, articles: SiteArticleHit[]): string {
   const top = articles.slice(0, 3);
   if (top.length === 0) {
-    return `I could not reach the live site search service, but the best local matches for "${query}" are the newsroom, product pages, stories, and docs. Try a more specific product or topic name for a tighter result.`;
+    return `I could not reach the live site search service, but the best local matches for "${query}" are the newsroom, stories, docs, and public product pages. Try a more specific topic name for a tighter result.`;
   }
 
   const headline = top
@@ -151,13 +148,13 @@ function ArticleRow({ hit, onClose }: { hit: SiteArticleHit; onClose: () => void
     <>
       <div className="min-w-0 flex-1">
         <p className="mb-1 font-sans text-[11px] text-light-space/40 light:text-zinc-400">{hit.meta}</p>
-        <span className="mb-2 block font-sans text-[17px] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
+        <span className="mb-2 block font-sans text-[17px] font-semibold tracking-[0em] text-light-space light:text-zinc-950">
           {hit.title}
         </span>
         <p className="font-sans text-[14px] leading-snug text-light-space/65 light:text-zinc-700">{hit.snippet}</p>
       </div>
       {hit.image ? (
-        <div className="shrink-0 overflow-hidden rounded-lg bg-white/[0.06] light:bg-zinc-100">
+        <div className="shrink-0 overflow-hidden rounded-lg bg-white/[0.06] light:bg-section-grey-light">
           <img
             src={hit.image}
             alt=""
@@ -171,7 +168,7 @@ function ArticleRow({ hit, onClose }: { hit: SiteArticleHit; onClose: () => void
   );
 
   const cls =
-    "grid grid-cols-1 gap-4 border-b border-light-space/10 py-8 text-left first:pt-0 last:border-b-0 light:border-zinc-200 md:grid-cols-[1fr_auto] md:items-start md:gap-6";
+    "grid grid-cols-1 gap-4 py-8 text-left first:pt-0 md:grid-cols-[1fr_auto] md:items-start md:gap-6";
 
   if (hit.external) {
     return (
@@ -218,13 +215,13 @@ function AutocompletePanel({
   onActiveIndexChange: (index: number) => void;
 }) {
   return (
-    <div className="mt-5 w-full max-w-[760px] overflow-hidden rounded-[1.5rem] border border-light-space/10 bg-white/[0.03] light:border-zinc-200 light:bg-zinc-50">
+    <div className="mt-5 w-full max-w-[760px] overflow-hidden rounded-[1.5rem] border border-light-space/10 bg-white/[0.03] light:border-zinc-200 light:bg-section-grey-light">
       <button
         type="button"
         onMouseEnter={() => onActiveIndexChange(0)}
         onClick={onAsk}
         className={cn(
-          "flex w-full items-center justify-between gap-4 border-b border-light-space/10 px-5 py-4 text-left transition-colors light:border-zinc-200",
+          "flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors",
           activeIndex === 0
             ? "bg-white/[0.08] light:bg-white"
             : "hover:bg-white/[0.05] light:hover:bg-white",
@@ -317,7 +314,7 @@ function SearchComposer({
       ) : null}
       <div
         className={cn(
-          "flex cursor-text items-end gap-3 border-b border-light-space/18 light:border-zinc-300",
+          "flex cursor-text items-end gap-3",
           large ? "pb-3 md:gap-5 md:pb-4" : "pb-3 md:gap-4 md:pb-3.5",
         )}
         onMouseDown={(e) => {
@@ -331,7 +328,7 @@ function SearchComposer({
             <RotatingPlaceholders
               suggestions={suggestions}
               textClassName={cn(
-                "font-sans tracking-[-0.035em] text-light-space/30 light:text-zinc-400",
+                "font-sans tracking-[0em] text-light-space/30 light:text-zinc-400",
                 large
                   ? "text-[clamp(1.5rem,4.5vw,4.75rem)] font-medium leading-[1.08]"
                   : "text-[clamp(1.25rem,3.2vw,2.3rem)] font-medium leading-[1.08]",
@@ -363,7 +360,7 @@ function SearchComposer({
               }
             }}
             className={cn(
-              "absolute inset-0 w-full bg-transparent font-sans tracking-[-0.035em] text-light-space outline-none placeholder:text-light-space/30 light:text-zinc-950 light:placeholder:text-zinc-400",
+              "absolute inset-0 w-full bg-transparent font-sans tracking-[0em] text-light-space outline-none placeholder:text-light-space/30 light:text-zinc-950 light:placeholder:text-zinc-400",
               large
                 ? "text-[clamp(1.5rem,4.5vw,4.75rem)] font-medium leading-[1.08]"
                 : "text-[clamp(1.25rem,3.2vw,2.3rem)] font-medium leading-[1.08]",
@@ -397,7 +394,6 @@ function SearchComposer({
 
 export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
-  const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -407,22 +403,12 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
   const [value, setValue] = useState("");
   const [turns, setTurns] = useState<SearchTurn[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
 
   const navGroups = useMemo(
     () => buildNavGroups(resolveRigidNavColumns(RIGID_NAV_COLUMNS, "primary")),
     [],
   );
-
-  const footerLang = useMemo(() => {
-    const k = getStoredLanguageKey();
-    if (k) {
-      const hit = SITE_LANGUAGES.find((l) => l.key === k);
-      if (hit) return hit;
-    }
-    return findSiteLanguageForActive();
-  }, [location.key, langOpen]);
 
   useEffect(() => {
     const t = window.setTimeout(() => inputRef.current?.focus(), 80);
@@ -569,7 +555,7 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-0 z-[200] flex flex-col bg-dark-space text-light-space light:bg-white light:text-zinc-950"
     >
-      <header className="shrink-0 border-b border-light-space/10 light:border-zinc-200/80">
+      <header className="shrink-0">
         <div className="relative mx-auto grid h-14 w-full max-w-[1240px] grid-cols-[2.5rem_1fr_2.5rem] items-center px-4 md:flex md:h-[60px] md:gap-3 md:px-8 lg:h-16 lg:px-12">
           <div className="md:hidden" aria-hidden />
           <Link to="/" onClick={onClose} className="flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2" aria-label="Jokuh home">
@@ -592,21 +578,21 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
           </nav>
           <div className="flex items-center justify-end gap-2 justify-self-end overflow-hidden">
             <Link
-              to="/waitlist"
+              to="/download"
               onClick={onClose}
               {...hoverSoundProps}
               className={cn(
-                "hidden h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 font-sans text-[12px] font-semibold tracking-tight text-white no-underline transition-[transform,background-color] duration-200 md:inline-flex",
-                "hover:scale-[0.98] hover:bg-zinc-800 active:scale-[0.97]",
+                "hidden h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-zinc-100 px-5 font-sans text-[12px] font-semibold tracking-tight text-zinc-950 no-underline transition-[transform,background-color] duration-200 light:bg-zinc-950 light:text-white md:inline-flex",
+                "hover:scale-[0.98] hover:bg-white active:scale-[0.97] light:hover:bg-zinc-800",
               )}
             >
-              <CtaLordIcon icon="logSignIn" size={16} darkColor="#ffffff" lightColor="#ffffff" />
+              <CtaLordIcon icon="logSignIn" size={16} darkColor="#111827" lightColor="#ffffff" />
               Try Jokuh
             </Link>
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-light-space/55 transition-colors hover:bg-white/[0.08] hover:text-light-space light:text-zinc-500 light:hover:bg-zinc-100 light:hover:text-zinc-900"
+              className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-light-space/55 transition-colors hover:bg-white/[0.08] hover:text-light-space light:text-zinc-500 light:hover:bg-zinc-200 light:hover:text-zinc-900"
               aria-label="Close search"
             >
               <SearchPanelToggleGlyph open whenOpen="close" />
@@ -661,11 +647,11 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
               </button>
 
               {turns.map((turn) => (
-                <section key={turn.id} className="mb-16 border-b border-light-space/10 pb-16 last:mb-0 last:border-b-0 last:pb-0 light:border-zinc-100">
+                <section key={turn.id} className="mb-16 pb-16 last:mb-0 last:pb-0">
                   <div className="mb-3 font-sans text-[11px] font-medium tracking-[0.06em] text-light-space/40 uppercase light:text-zinc-400">
                     Your search
                   </div>
-                  <h2 className="mb-10 font-sans text-[clamp(1.35rem,3.5vw,2rem)] font-semibold tracking-[-0.03em] text-light-space light:text-zinc-950">
+                  <h2 className="mb-10 font-sans text-[clamp(1.35rem,3.5vw,2rem)] font-semibold tracking-[0em] text-light-space light:text-zinc-950">
                     {turn.query}
                   </h2>
 
@@ -742,45 +728,9 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
             </section>
           )}
 
-          <div
-            className={cn(
-              "hidden pt-8 pb-[max(1rem,env(safe-area-inset-bottom))] md:flex",
-              turns.length === 0 ? "justify-start" : "max-w-[760px] justify-end",
-            )}
-          >
-            <button
-              type="button"
-              onClick={() => setLangOpen(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-light-space/10 bg-white/[0.05] py-2.5 px-4 font-sans text-[12px] text-light-space transition-colors hover:bg-white/[0.08] md:w-auto md:justify-start md:py-2 md:pr-3 md:pl-2.5 light:border-zinc-200 light:bg-zinc-50 light:text-zinc-900 light:hover:bg-zinc-100"
-              aria-haspopup="dialog"
-              aria-expanded={langOpen}
-            >
-              <Globe className="size-[15px] shrink-0 text-light-space/55 light:text-zinc-600" strokeWidth={1.75} aria-hidden />
-              <span className="font-semibold">{footerLang.native}</span>
-              <span className="text-light-space/40 light:text-zinc-500">{footerLang.region ?? footerLang.english}</span>
-            </button>
-          </div>
           <div ref={endRef} className="h-4 shrink-0" aria-hidden />
         </div>
       </div>
-
-      <div className="md:hidden shrink-0 bg-dark-space px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] light:bg-white">
-        <div className="mx-auto w-full max-w-[1240px]">
-          <button
-            type="button"
-            onClick={() => setLangOpen(true)}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-light-space/10 bg-white/[0.05] py-2.5 px-4 font-sans text-[12px] text-light-space transition-colors hover:bg-white/[0.08] light:border-zinc-200 light:bg-zinc-50 light:text-zinc-900 light:hover:bg-zinc-100"
-            aria-haspopup="dialog"
-            aria-expanded={langOpen}
-          >
-            <Globe className="size-[15px] shrink-0 text-light-space/55 light:text-zinc-600" strokeWidth={1.75} aria-hidden />
-            <span className="font-semibold">{footerLang.native}</span>
-            <span className="text-light-space/40 light:text-zinc-500">{footerLang.region ?? footerLang.english}</span>
-          </button>
-        </div>
-      </div>
-
-      <LanguageSelectModal open={langOpen} onClose={() => setLangOpen(false)} />
     </motion.div>
   );
 

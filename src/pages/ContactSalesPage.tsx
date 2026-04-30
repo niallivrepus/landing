@@ -1,5 +1,5 @@
 import { Button, cn } from "@jokuh/gooey";
-import { ArrowRight, LoaderCircle, ShieldCheck, Sparkles, Waypoints } from "lucide-react";
+import { LoaderCircle, ShieldCheck, Sparkles, Waypoints } from "lucide-react";
 import {
   CompanyPageClosingCta,
   CompanyPageLayout,
@@ -169,7 +169,7 @@ function FeatureRow({ feature }: { feature: Feature }) {
 
   return (
     <li className="flex gap-3 rounded-[18px] border border-light-space/[0.08] bg-white/[0.02] p-4 light:border-zinc-200 light:bg-white">
-      <span className="mt-0.5 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white/[0.06] light:bg-zinc-100">
+      <span className="mt-0.5 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white/[0.06] light:bg-section-grey-light">
         <Icon className="size-4.5" strokeWidth={1.8} aria-hidden />
       </span>
       <div>
@@ -241,7 +241,7 @@ export function ContactSalesPage() {
             Enterprise
           </p>
           <div className={cn(CONTENT_READING_MEASURE, "text-center")}>
-            <h1 className="mt-4 font-sans text-[2.1rem] font-semibold leading-[1.08] tracking-[-0.03em] text-light-space light:text-zinc-950 sm:mt-5 sm:text-5xl md:text-6xl">
+            <h1 className="mt-4 font-sans text-[2.1rem] font-semibold leading-[1.08] tracking-[0em] text-light-space light:text-zinc-950 sm:mt-5 sm:text-5xl md:text-6xl">
               Contact sales
             </h1>
             <p className="mt-6 text-[1.0625rem] font-normal leading-[1.65] text-light-space/60 light:text-zinc-600 md:mt-7 md:text-[1.125rem] md:leading-[1.62]">
@@ -254,7 +254,7 @@ export function ContactSalesPage() {
           <div className={cn(CONTENT_SHELL_WIDE, "grid items-start gap-12 md:grid-cols-2 md:gap-16")}>
             <div className="order-last md:order-first">
               <div className="max-w-lg">
-                <h2 className="font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-light-space light:text-zinc-950">
+                <h2 className="font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[0em] text-light-space light:text-zinc-950">
                   Start with the context
                 </h2>
                 <p className="mt-5 text-[1.0625rem] leading-[1.72] text-light-space/60 light:text-zinc-600 md:text-[1.125rem]">
@@ -262,7 +262,7 @@ export function ContactSalesPage() {
                 </p>
               </div>
 
-              <ul className="mt-8 space-y-3 max-w-xl border-t border-light-space/[0.08] pt-6 light:border-zinc-200">
+              <ul className="mt-8 space-y-3 max-w-xl pt-6">
                 {FEATURES.map((feature) => (
                   <FeatureRow key={feature.title} feature={feature} />
                 ))}
@@ -271,7 +271,7 @@ export function ContactSalesPage() {
 
             <div className="order-first md:order-last rounded-[24px] border border-light-space/[0.08] bg-white/[0.02] p-6 light:border-zinc-200 light:bg-white md:p-8">
               <div className="max-w-xl">
-                <h2 className="font-sans text-2xl font-semibold tracking-tight text-light-space light:text-zinc-950 md:text-3xl">
+                <h2 className="font-sans text-2xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-3xl">
                   Tell us what you need
                 </h2>
                 <p className="mt-3 text-[1rem] leading-[1.7] text-light-space/60 light:text-zinc-600">
@@ -417,10 +417,7 @@ export function ContactSalesPage() {
                           Sending
                         </>
                       ) : (
-                        <>
-                          Submit inquiry
-                          <ArrowRight className="size-4" strokeWidth={2} aria-hidden />
-                        </>
+                        "Submit inquiry"
                       )}
                     </Button>
                     <p className="text-[13px] text-light-space/50 light:text-zinc-500">
@@ -459,7 +456,7 @@ export function ContactSalesPage() {
 
         <section className="py-20 md:py-28">
           <div className={cn(CONTENT_SHELL_WIDE, "text-center")}>
-            <p className="max-w-3xl mx-auto font-sans text-[clamp(1.25rem,3vw,2rem)] font-semibold leading-snug tracking-[-0.02em] text-white light:text-zinc-900">
+            <p className="max-w-3xl mx-auto font-sans text-[clamp(1.25rem,3vw,2rem)] font-semibold leading-snug tracking-[0em] text-white light:text-zinc-900">
               Jokuh works best when deployment, governance, and adoption are designed together instead of handed off across separate teams.
             </p>
           </div>

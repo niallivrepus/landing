@@ -4,30 +4,23 @@ export type DocsNavItem = { label: string; to: string };
 
 export const DOCS_NAV_SECTIONS: { heading: string; items: DocsNavItem[] }[] = [
   {
-    heading: "Get started",
+    heading: "Docs",
     items: [
       { label: "Overview", to: "/developers/docs" },
-      { label: "Models", to: "/developers/docs/models" },
       { label: "Quickstart", to: "/developers/docs/quickstart" },
-      { label: "Cookbook", to: "/developers/docs/cookbook" },
     ],
   },
   {
-    heading: "Explore",
+    heading: "Build",
     items: [
-      { label: "Latest & digests", to: "/developers/learn" },
-      { label: "Developer blog", to: "/developers/blog" },
+      { label: "SDK & API", to: "/developers/docs/sdk" },
+      { label: "Text generation", to: "/developers/docs/text" },
+      { label: "Structured output", to: "/developers/docs/structured-output" },
+      { label: "Audio basics", to: "/developers/docs/audio" },
     ],
   },
   {
-    heading: "Reference",
-    items: [{ label: "SDK & API", to: "/developers/sdk" }],
-  },
-  {
-    heading: "Community & status",
-    items: [
-      { label: "Forum", to: "/developers/forum" },
-      { label: "System status", to: resolveStatusHref("/") },
-    ],
+    heading: "Status",
+    items: [{ label: "System status", to: resolveStatusHref("/") }],
   },
 ];

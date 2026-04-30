@@ -16,6 +16,28 @@ test('persists custom cookie preferences after reload and reopening the dialog',
   await dialog.getByRole('button', { name: 'Done' }).click();
 
   await expect(dialog).toBeHidden();
+  await expect
+    .poll(async () => page.context().cookies())
+    .toContainEqual(expect.objectContaining({ name: 'jokuh_cookie_consent' }));
+
+  const consentCookie = (await page.context().cookies()).find((cookie) => cookie.name === 'jokuh_cookie_consent');
+  expect(consentCookie).toBeTruthy();
+  expect(consentCookie).toEqual(
+    expect.objectContaining({
+      path: '/',
+      sameSite: 'Lax',
+    }),
+  );
+
+  const consentRecord = JSON.parse(decodeURIComponent(consentCookie!.value));
+  expect(consentRecord).toEqual(
+    expect.objectContaining({
+      version: 1,
+      prefs: { analytics: false, marketing: false },
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
+    }),
+  );
 
   await page.reload();
   await expect(dialog).toHaveCount(0);

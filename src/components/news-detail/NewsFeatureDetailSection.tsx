@@ -3,7 +3,6 @@ import {
   EditorialArticleHeadingSection,
   EditorialArticleMeasure,
   EditorialArticleProseSection,
-  EditorialArticleShellSection,
 } from "../system";
 import { ArticleListenBar } from "./ArticleListenBar";
 import { BenchmarkTable } from "./BenchmarkTable";
@@ -12,7 +11,6 @@ import {
   OsworldLineChart,
   SweBenchLineChart,
 } from "./NewsBenchmarkCharts";
-import { EndorsementSeal } from "../EndorsementSeal";
 import { RichParagraph } from "./RichParagraph";
 import { TestimonialPanels } from "./TestimonialPanels";
 
@@ -65,10 +63,6 @@ export function NewsFeatureDetailSection({ doc, durationLabel }: Props) {
         <SweBenchLineChart footnote={doc.chartFootnotes.swe} />
         <OsworldLineChart footnote={doc.chartFootnotes.osworld} />
       </EditorialArticleMeasure>
-
-      <EditorialArticleShellSection>
-        <EndorsementSeal className="pb-4 md:pb-6" />
-      </EditorialArticleShellSection>
 
       <EditorialArticleMeasure className="py-20 md:py-28">
         <TestimonialPanels entries={doc.testimonials} />

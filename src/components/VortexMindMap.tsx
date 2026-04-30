@@ -832,7 +832,7 @@ export function VortexMindMap({ className }: { className?: string }) {
   };
 
   return (
-    <div ref={rootRef} className={cn("relative h-full min-h-[280px] w-full bg-smoke-2 light:bg-zinc-100", className)}>
+    <div ref={rootRef} className={cn("relative h-full min-h-[280px] w-full bg-smoke-2 light:bg-section-grey-light", className)}>
       <div
         ref={tooltipRef}
         className="pointer-events-none fixed z-[100] max-w-[220px] rounded-lg border border-light-space/10 bg-[rgb(18,18,24)]/95 px-3.5 py-2 text-[13px] leading-snug text-[#e0e0e0] opacity-0 transition-opacity duration-300"

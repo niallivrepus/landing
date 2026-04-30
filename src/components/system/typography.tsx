@@ -62,6 +62,14 @@ export const bodySmClass =
 export const labelClass =
   `font-sans text-label font-semibold leading-[var(--line-height-label)] ${fg}`;
 
+/** Small label above page/section H1: semibold, full contrast (not muted) */
+export const pageHeroEyebrowClass =
+  "font-sans text-[12px] font-semibold tracking-[0.1em] text-light-space light:text-zinc-950";
+
+/** Same as `pageHeroEyebrowClass` with uppercase (company hero, tertiary pages, product intros) */
+export const pageHeroEyebrowUppercaseClass =
+  "font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-light-space light:text-zinc-950";
+
 /** Eyebrow — 11 px uppercase tracking wide */
 export const eyebrowClass =
   `font-sans text-overline font-normal tracking-[0.08em] uppercase ${fgDimmed}`;
@@ -172,7 +180,7 @@ export function MarketingDisplayTitle({ children, className }: TypoProps) {
   return (
     <h1
       className={cn(
-        "mt-3 font-sans text-[clamp(2.5rem,6vw,3.75rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-light-space light:text-zinc-950",
+        "mt-3 font-sans text-[clamp(2.5rem,6vw,3.75rem)] font-semibold leading-[1.05] tracking-[0em] text-light-space light:text-zinc-950",
         className,
       )}
     >
@@ -186,7 +194,7 @@ export function MarketingSimplePageTitle({ children, className }: TypoProps) {
   return (
     <h1
       className={cn(
-        "font-sans text-3xl font-semibold tracking-tight text-light-space light:text-zinc-950 md:text-4xl",
+        "font-sans text-3xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-4xl",
         className,
       )}
     >
@@ -198,7 +206,7 @@ export function MarketingSimplePageTitle({ children, className }: TypoProps) {
 /** @deprecated Use `Title2` or `Subheading` */
 export function MarketingSectionHeading({ children, className }: TypoProps) {
   return (
-    <h2 className={cn("font-sans text-xl font-semibold tracking-tight text-light-space light:text-zinc-950 md:text-2xl", className)}>
+    <h2 className={cn("font-sans text-xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-2xl", className)}>
       {children}
     </h2>
   );
@@ -206,16 +214,7 @@ export function MarketingSectionHeading({ children, className }: TypoProps) {
 
 /** @deprecated Use `Eyebrow` */
 export function MarketingEyebrow({ children, className }: TypoProps) {
-  return (
-    <p
-      className={cn(
-        "font-sans text-[11px] font-normal tracking-[0.08em] text-light-space/40 uppercase light:text-zinc-500",
-        className,
-      )}
-    >
-      {children}
-    </p>
-  );
+  return <p className={cn(pageHeroEyebrowUppercaseClass, className)}>{children}</p>;
 }
 
 /** @deprecated Use `MonoEyebrow` or `Label` */

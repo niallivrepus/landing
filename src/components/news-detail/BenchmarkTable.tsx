@@ -12,7 +12,7 @@ export function BenchmarkTable({ columns, rows, footnote }: Props) {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[520px] border-collapse font-sans text-sm">
           <thead>
-            <tr className="border-b border-light-space/[0.12] light:border-black/[0.08]">
+            <tr>
               {columns.map((col, i) => (
                 <th
                   key={col}
@@ -33,7 +33,7 @@ export function BenchmarkTable({ columns, rows, footnote }: Props) {
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.label} className="border-b border-light-space/[0.08] light:border-black/[0.06]">
+              <tr key={row.label}>
                 <td className="py-3.5 pr-4 text-left text-light-space/75 light:text-zinc-700">{row.label}</td>
                 <td className="py-3.5 px-2 text-center font-medium tabular-nums text-light-space light:text-zinc-950">{row.values[0]}</td>
                 <td className="py-3.5 px-2 text-center tabular-nums text-light-space/80 light:text-zinc-700">{row.values[1]}</td>

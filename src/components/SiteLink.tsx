@@ -12,7 +12,7 @@ function isExternalHref(href: string) {
 }
 
 function isInternalRouteHref(href: string) {
-  return href.startsWith("/") && !href.includes("#");
+  return href.startsWith("/") && !href.includes("#") && !/\.[a-z0-9]+(?:[?#]|$)/i.test(href);
 }
 
 export function SiteLink({ href, children, rel, target, ...props }: SiteLinkProps) {

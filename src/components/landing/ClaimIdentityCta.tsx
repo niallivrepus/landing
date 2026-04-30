@@ -12,7 +12,7 @@ export function ClaimIdentityCta({
   children?: ReactNode;
   className?: string;
 }) {
-  const hoverSoundProps = useGentleHoverSound();
+  const hoverSoundProps = useGentleHoverSound(true, "bubbly");
 
   return (
     <a

@@ -221,7 +221,7 @@ Main:
 Side menu: Products
 - Jokuh Business
 - Jokuh Enterprise
-- API Platform
+- Agent Portal
 
 Side menu: Solutions
 - Coding
@@ -231,7 +231,7 @@ Current route mapping:
 - `Overview` → `/chatgpt/business`
 - `Jokuh Business` → `/chatgpt/business`
 - `Jokuh Enterprise` → `/chatgpt/enterprise`
-- `API Platform` → `/developers/sdk`
+- `Agent Portal` → `/developers/sdk`
 - `Coding` → `/developers/sdk`
 - `Agents` → `/developers/agents`
 
@@ -272,7 +272,7 @@ Business:
 - Contact Sales
 - Jokuh Business
 - Jokuh Enterprise
-- API Platform
+- Agent Portal
 - Coding
 - Agents
 

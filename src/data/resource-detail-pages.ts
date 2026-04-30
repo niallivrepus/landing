@@ -5,8 +5,7 @@ export type ResourcePageId =
   | "explore-chatgpt"
   | "business"
   | "enterprise"
-  | "education"
-  | "pricing";
+  | "education";
 
 export type ResourceDetailPageDocument = {
   id: ResourcePageId;
@@ -310,51 +309,10 @@ export const RESOURCE_DETAIL_PAGES: Record<ResourcePageId, ResourceDetailPageDoc
       },
     ],
     cta: {
-      title: "Move to pricing",
-      body: "Pricing closes the temporary ChatGPT set and keeps the same polished-but-generic editorial treatment.",
-      label: "Pricing",
-      href: "/pricing",
-    },
-  },
-  pricing: {
-    id: "pricing",
-    metaLine: "ChatGPT · Pricing",
-    title: "Pricing",
-    subtitle:
-      "This pricing page is temporary editorial filler that gives the footer a complete destination while leaving final package language and commercial framing open.",
-    highlights: [
-      "The route is real even if the pricing copy is not final.",
-      "Temporary content should still feel premium.",
-      "The system is complete first; the sharper wording can follow.",
-    ],
-    sections: [
-      {
-        heading: "A complete endpoint",
-        paragraphs: [
-          "Pricing often changes late, so this page is intentionally flexible. It gives the footer a stable endpoint without forcing product packaging decisions into the build too early.",
-          "That makes the current implementation cleaner and easier to maintain.",
-        ],
-      },
-      {
-        heading: "Neutral by design",
-        paragraphs: [
-          "The copy is broad enough to avoid unnecessary rework later. At the same time, it still feels composed enough to belong inside the site without reading like a plain placeholder.",
-          "That is the balance this version is meant to hold.",
-        ],
-      },
-      {
-        heading: "Ready for the final draft",
-        paragraphs: [
-          "Once pricing language is approved, the structure here can support it immediately. Until then, the page exists to complete the navigation system and keep the build-up clean.",
-          "That is exactly what a good interim page should do.",
-        ],
-      },
-    ],
-    cta: {
-      title: "Return to the overview",
-      body: "The overview page stays at the top of this temporary set and makes a clean loop back through the section.",
-      label: "Explore ChatGPT",
-      href: "/chatgpt/explore",
+      title: "Talk to the team",
+      body: "For rollout, procurement, or deployment questions, contact the team directly while public plan details remain private.",
+      label: "Contact sales",
+      href: "/contact",
     },
   },
 };
