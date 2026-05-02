@@ -3,9 +3,8 @@ import {
   EditorialArticleProseSection,
   EditorialArticleShellSection,
   EditorialArticleTemplate,
-  pageHeroEyebrowUppercaseClass,
+  PillLink,
 } from "../components/system";
-import { SiteLink } from "../components/SiteLink";
 import { MANIFESTO } from "../data/manifesto";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
@@ -42,28 +41,19 @@ export function ManifestoPage() {
         </section>
       ))}
 
-      <EditorialArticleShellSection className="pb-14 pt-12 md:pb-20 md:pt-16">
-        <div className="rounded-[32px] border border-light-space/[0.08] bg-white/[0.03] px-6 py-7 md:px-8 md:py-8 light:border-black/[0.08] light:bg-section-grey-light">
-          <p className={pageHeroEyebrowUppercaseClass}>Next step</p>
-          <h2 className="mt-4 max-w-[32rem] font-sans text-[1.45rem] font-semibold leading-[1.14] tracking-[0em] text-light-space light:text-zinc-950 md:text-[1.8rem]">
+      <EditorialArticleShellSection className="pb-20 pt-12 md:pb-28 md:pt-16">
+        <div className="rounded-[6px] bg-white/[0.04] px-6 py-20 text-center light:bg-section-grey-light md:px-10 md:py-24">
+          <h2 className="mx-auto max-w-[720px] font-sans text-[clamp(2rem,4.5vw,2.75rem)] font-semibold leading-[1.08] tracking-[0em] text-light-space light:text-zinc-950">
             Claim your sovereignty.
           </h2>
-          <p className="news-detail-reading mt-4 max-w-[40rem] text-[1rem] leading-[1.72] text-light-space/72 light:text-zinc-700 md:text-[1.05rem]">
+          <p className="mx-auto mt-5 max-w-[34rem] font-sans text-[15px] leading-[1.65] text-light-space/64 light:text-zinc-600 md:text-[16px]">
             Forge your first sidekick. Reclaim your data, your time, and your freedom.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <SiteLink
-              href="/download"
-              className="premium-soft-button inline-flex items-center justify-center rounded-full bg-light-space px-5 py-3 font-sans text-[13px] font-semibold text-dark-space transition hover:opacity-88 light:bg-zinc-950 light:text-white"
-            >
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <PillLink href="/download" variant="primary">
               Download Jokuh
-            </SiteLink>
-            <SiteLink
-              href="/contact"
-              className="premium-soft-button inline-flex items-center justify-center rounded-full border border-light-space/[0.12] px-5 py-3 font-sans text-[13px] font-semibold text-light-space/80 transition hover:bg-light-space/[0.06] hover:text-light-space light:border-black/[0.12] light:text-zinc-800 light:hover:bg-black/[0.04] light:hover:text-zinc-950"
-            >
-              Talk to us
-            </SiteLink>
+            </PillLink>
+            <PillLink href="/contact">Talk to us</PillLink>
           </div>
         </div>
       </EditorialArticleShellSection>

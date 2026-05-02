@@ -341,7 +341,7 @@ function ProseBlock({ paragraphs }: { paragraphs: string[] }) {
 function SubheadBlock({ text }: { text: string }) {
   return (
     <div className={`${CONTENT_SHELL_WIDE} pt-8 pb-1 md:pt-10 md:pb-2`}>
-      <h2 className={`${articleColumn} text-balance font-sans text-[2.15rem] font-semibold leading-[1.05] tracking-[0em] text-light-space md:text-[3rem]`}>
+      <h2 className={`${articleColumn} text-balance font-sans text-[1.55rem] font-semibold leading-[1.15] tracking-[0em] text-light-space md:text-[2rem] md:leading-[1.12]`}>
         {text}
       </h2>
     </div>
@@ -358,7 +358,7 @@ function FeatureTextBlock({
   paragraphs: string[];
 }) {
   return (
-    <section className="bg-black py-28 md:py-36 lg:py-44 light:bg-section-grey-light light:ring-1 light:ring-inset light:ring-zinc-200/80">
+    <section className="bg-transparent py-28 md:py-36 lg:py-44">
       <div className={CONTENT_SHELL_WIDE}>
         <div className="mx-auto w-full max-w-[48rem]">
           <h2 className="max-w-[12ch] text-balance font-sans text-[3rem] font-semibold leading-[0.98] tracking-[0em] text-white light:text-zinc-950 md:text-[4.1rem]">
@@ -383,7 +383,7 @@ function FeatureTextBlock({
   );
 }
 
-const storyEditorialImageRadius = "rounded-2xl";
+const storyEditorialImageRadius = "rounded-[6px]";
 
 function AsymmetricImagesBlock({ large, small }: { large: StoryImageCaptioned; small: StoryImageCaptioned }) {
   if (small.hidden) {

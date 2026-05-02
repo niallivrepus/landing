@@ -1,5 +1,6 @@
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import {
+  BusinessSolutionsSection,
   GooeyBackdrop,
   IdentityBlock,
   LandingEditorialSection,
@@ -23,6 +24,7 @@ export default function Home() {
       <LandingEditorialSection />
       <RecentNewsSection />
       <StoriesSection />
+      <BusinessSolutionsSection />
       <IdentityBlock />
       <WaitlistSection />
     </MarketingPageFrame>

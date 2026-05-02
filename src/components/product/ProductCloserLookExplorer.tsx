@@ -63,7 +63,7 @@ export function ProductCloserLookExplorer({
             )}
           </div>
 
-          <div className="relative z-10 overflow-hidden p-6 md:p-8">
+          <div className="relative z-10 flex min-h-[30rem] flex-col justify-center overflow-hidden p-6 md:min-h-[36rem] md:p-8">
             <AnimatePresence initial={false}>
               {activeIndex !== null ? (
                 <motion.button
@@ -81,7 +81,7 @@ export function ProductCloserLookExplorer({
               ) : null}
             </AnimatePresence>
 
-            <div className="flex gap-4 xl:min-h-[34rem] xl:items-center">
+            <div className="flex items-center gap-4">
               <AnimatePresence initial={false}>
                 {activeIndex !== null ? (
                   <motion.div
@@ -121,34 +121,23 @@ export function ProductCloserLookExplorer({
                 {items.map((item, index) => {
                   const active = index === activeIndex;
                   return (
-                    <motion.div
+                    <motion.button
+                      type="button"
                       layout="position"
                       key={item.id}
                       custom={index}
                       variants={pillVariants}
                       transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }}
+                      onClick={() => setActiveIndex(active ? null : index)}
+                      aria-expanded={active}
                       className={cn(
-                        "overflow-hidden rounded-[24px] border border-zinc-200/60 bg-[#F5F5F7]/92 shadow-[0_10px_24px_rgba(15,23,42,0.05)] backdrop-blur-xl transition-[box-shadow,border-color] duration-300 dark:border-white/[0.08] dark:bg-[#232326]/88 dark:backdrop-blur-[50px]",
-                        active ? "shadow-[0_18px_30px_rgba(15,23,42,0.08)] dark:shadow-[0_18px_30px_rgba(0,0,0,0.42)]" : "",
+                        "block max-w-full overflow-hidden rounded-[24px] border border-zinc-200/60 bg-[#F5F5F7]/92 text-left shadow-[0_10px_24px_rgba(15,23,42,0.05)] backdrop-blur-xl transition-[box-shadow,border-color,color] duration-300 dark:border-white/[0.08] dark:bg-[#232326]/88 dark:backdrop-blur-[50px]",
+                        active
+                          ? "text-zinc-950 shadow-[0_18px_30px_rgba(15,23,42,0.08)] dark:text-zinc-100 dark:shadow-[0_18px_30px_rgba(0,0,0,0.42)]"
+                          : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-100",
                       )}
                     >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (active) {
-                            setActiveIndex(null);
-                            return;
-                          }
-                          setActiveIndex(index);
-                        }}
-                        className={cn(
-                          "flex items-center gap-3 px-4 py-3 text-left transition-colors duration-200",
-                          active
-                            ? "text-zinc-950 dark:text-zinc-100"
-                            : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-100",
-                        )}
-                        aria-expanded={active}
-                      >
+                      <div className="flex items-center gap-3 px-4 py-3">
                         <span
                           className={cn(
                             "inline-flex size-5 items-center justify-center rounded-full border text-[10px] transition-all duration-300",
@@ -169,7 +158,7 @@ export function ProductCloserLookExplorer({
                         >
                           {item.label}
                         </span>
-                      </button>
+                      </div>
 
                       <motion.div
                         initial={false}
@@ -189,7 +178,7 @@ export function ProductCloserLookExplorer({
                           </p>
                         </div>
                       </motion.div>
-                    </motion.div>
+                    </motion.button>
                   );
                 })}
               </motion.div>

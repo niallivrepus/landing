@@ -110,7 +110,7 @@ function mediumToNewsItem(entry: MediumFeedFile["items"][number]): NewsItem {
 const STATIC_NEWS_ITEMS: NewsItem[] = [
   {
     id: "jokuh-at-consensus-2026-miami",
-    title: "Jokuh at Consensus 2026 — Miami",
+    title: "Jokuh at Consensus 2026",
     excerpt: "Jokuh will be at Consensus 2026 in Miami to demonstrate the Sovereign Agentic Operating System and meet investors, builders, and partners working at the intersection of AI, identity, and on-chain settlement.",
     category: "Milestone",
     topics: ["Events", "Community"],

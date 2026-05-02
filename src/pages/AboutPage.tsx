@@ -1,42 +1,19 @@
 import { cn } from "@jokuh/gooey";
+import { useMemo } from "react";
 import { FaqSection } from "../components/FaqSection";
 import { NewsCardArt } from "../components/NewsCardArt";
 import { SiteLink } from "../components/SiteLink";
 import {
   EDITORIAL_MEDIA_RADIUS_CLASS,
+  PillLink,
+  SectionHeaderRow,
   TertiaryPageChrome,
   pageHeroEyebrowClass,
   proseBodyMutedClass,
 } from "../components/system";
 import { CONTENT_SHELL_COMPANY, CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-
-const ABOUT_LINKS = [
-  {
-    eyebrow: "Product",
-    title: "Spine",
-    href: "/spine",
-    description: "Spine, Calls, Messages, and the surfaces that make speech useful after it happens.",
-    gradient: "linear-gradient(135deg, #111113 0%, #232326 100%)",
-    lavaLamp: "aurora",
-  },
-  {
-    eyebrow: "Brand",
-    title: "Brand",
-    href: "/brand",
-    description: "Brand assets, marks, and guidance for partners and press.",
-    gradient: "linear-gradient(135deg, #111113 0%, #232326 100%)",
-    lavaLamp: "void",
-  },
-  {
-    eyebrow: "Careers",
-    title: "Careers",
-    href: "/careers",
-    description: "Open roles across engineering, product, research, and operations.",
-    gradient: "linear-gradient(135deg, #111113 0%, #232326 100%)",
-    lavaLamp: "coral",
-  },
-] as const;
+import { DEFAULT_NEWS_CARD_GRADIENT, NEWS_ITEMS, formatNewsDate, getNewsHref } from "../data/news";
 
 const ABOUT_FEATURES = [
   {
@@ -55,44 +32,46 @@ const ABOUT_FEATURES = [
     title: "Small systems, clear boundaries, and interfaces that show their trust model.",
     body:
       "We design from the moment a word is spoken through the moment it is found again. Latency, speaker identity, retention, encryption, and readable summaries all shape the same product decision.",
-    cta: "Read the charter",
-    href: "/charter",
+    cta: "Read the manifesto",
+    href: "/manifesto",
     image: "/download/mobile-preview.jpg",
     alt: "Jokuh mobile interface preview.",
     caption: "The product should make the architecture easier to understand.",
   },
 ] as const;
 
-function AboutPillLink({ href, children }: { href: string; children: string }) {
-  return (
-    <SiteLink
-      href={href}
-      className="inline-flex h-[50px] items-center rounded-full bg-white/[0.07] px-4 font-sans text-[12px] font-medium text-light-space transition-colors hover:bg-white/[0.12] light:bg-zinc-950/[0.06] light:text-zinc-950 light:hover:bg-zinc-950/[0.1]"
-    >
-      {children}
-    </SiteLink>
-  );
-}
+type AboutNewsCard = {
+  id: string;
+  title: string;
+  category: string;
+  date: string;
+  href: string;
+  gradient: string;
+  image?: string;
+  lavaLamp?: NonNullable<(typeof NEWS_ITEMS)[number]["lavaLamp"]>;
+};
 
-function AboutLinkCard({ link }: { link: (typeof ABOUT_LINKS)[number] }) {
+function AboutNewsroomCard({ row }: { row: AboutNewsCard }) {
   return (
     <article className="group flex h-full flex-col">
-      <SiteLink href={link.href} className="flex h-full flex-col no-underline">
+      <SiteLink href={row.href} className="flex h-full flex-col no-underline">
         <div
           className={cn(
             "aspect-square overflow-hidden border border-light-space/[0.08] bg-white/[0.03] light:border-black/[0.08] light:bg-section-grey-light/80",
             EDITORIAL_MEDIA_RADIUS_CLASS,
           )}
         >
-          <NewsCardArt gradient={link.gradient} lavaLamp={link.lavaLamp} className="size-full" />
+          <NewsCardArt gradient={row.gradient} image={row.image} lavaLamp={row.lavaLamp} className="size-full" />
         </div>
         <div className="mt-3 flex flex-1 flex-col gap-1.5 pt-0.5">
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-light-space/45 light:text-zinc-500">
-            {link.eyebrow}
+          <h3 className="line-clamp-2 font-sans text-[15px] font-semibold leading-[1.25] tracking-[0em] text-light-space transition-colors group-hover:text-light-space/80 light:text-zinc-950 sm:text-base">
+            {row.title}
+          </h3>
+          <p className="font-sans text-[12px] leading-tight tracking-[0em] sm:text-[13px]">
+            <span className="text-light-space light:text-zinc-900">{row.category}</span>
+            <span className="text-light-space/30 light:text-zinc-300"> · </span>
+            <span className="text-light-space/45 light:text-zinc-500">{row.date}</span>
           </p>
-          <h2 className="font-sans text-[0.9375rem] font-semibold leading-snug tracking-[0em] text-light-space transition-colors group-hover:text-light-space/80 light:text-zinc-950 md:text-[0.95rem]">
-            {link.title}
-          </h2>
         </div>
       </SiteLink>
     </article>
@@ -120,6 +99,28 @@ function AboutImage({
 export default function AboutPage() {
   useDocumentTitle("About Jokuh");
 
+  const newsroomCards = useMemo<AboutNewsCard[]>(
+    () =>
+      [...NEWS_ITEMS]
+        .sort(
+          (a, b) =>
+            new Date(b.publishedAt + "T12:00:00").getTime() -
+            new Date(a.publishedAt + "T12:00:00").getTime(),
+        )
+        .slice(0, 3)
+        .map((n) => ({
+          id: n.id,
+          title: n.title,
+          category: n.category,
+          date: formatNewsDate(n.publishedAt),
+          href: getNewsHref(n),
+          gradient: n.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT,
+          image: n.cardImage,
+          lavaLamp: n.lavaLamp,
+        })),
+    [],
+  );
+
   return (
     <TertiaryPageChrome>
       <main>
@@ -145,8 +146,8 @@ export default function AboutPage() {
                 control close to the user.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <AboutPillLink href="/spine">See what we build</AboutPillLink>
-                <AboutPillLink href="/careers">Join us</AboutPillLink>
+                <PillLink href="/spine">See what we build</PillLink>
+                <PillLink href="/careers">Join us</PillLink>
               </div>
             </div>
             <div className="flex min-w-0 justify-end">
@@ -159,44 +160,63 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="bg-white/[0.015] light:bg-section-grey-light/70">
-          <div className={cn(CONTENT_SHELL_COMPANY, "py-20 md:py-28")}>
-            <p className="mx-auto max-w-[760px] text-center font-sans text-[28px] font-medium leading-[1.18] tracking-[0em] text-light-space light:text-zinc-950 md:text-[42px]">
-              We care about reliability at the product layer and governance at the system layer. Latency, auditability,
-              privacy, and reading quality have to work together.
-            </p>
-          </div>
+        <section className={cn(CONTENT_SHELL_WIDE, "py-16 md:py-24")}>
+          <p className="mx-auto max-w-[640px] text-center font-sans text-[18px] font-medium leading-[1.4] tracking-[0em] text-light-space light:text-zinc-950 md:text-[22px] md:leading-[1.35]">
+            We care about reliability at the product layer and governance at the system layer. Latency, auditability,
+            privacy, and reading quality have to work together.
+          </p>
+          <figure
+            className={cn(
+              "mt-12 overflow-hidden border border-light-space/[0.08] bg-white/[0.04] light:border-zinc-200/80 light:bg-section-grey-light md:mt-16",
+              EDITORIAL_MEDIA_RADIUS_CLASS,
+            )}
+          >
+            <img
+              src="/story-art/aaron-nyc-midtown-aerial-grid.png"
+              alt="A wide-angle aerial of dense city blocks at dusk."
+              className="aspect-[21/9] w-full object-cover"
+              loading="lazy"
+            />
+          </figure>
         </section>
 
         <section className={cn(CONTENT_SHELL_COMPANY, "py-8 md:py-12")}>
-          {ABOUT_FEATURES.map((feature) => (
-            <article
-              key={feature.title}
-              className="grid gap-10 py-20 md:grid-cols-[0.78fr_1.22fr] md:items-center md:gap-16 md:py-24"
-            >
-              <div>
-                <h2 className="font-sans text-[27px] font-medium leading-[1.14] tracking-[0em] text-light-space light:text-zinc-950 md:text-[36px]">
-                  {feature.title}
-                </h2>
-                <p className={cn(proseBodyMutedClass, "mt-5 max-w-[440px]")}>{feature.body}</p>
-                <div className="mt-7">
-                  <AboutPillLink href={feature.href}>{feature.cta}</AboutPillLink>
+          {ABOUT_FEATURES.map((feature, index) => {
+            const imageLeft = index % 2 === 1;
+            return (
+              <article
+                key={feature.title}
+                className={cn(
+                  "grid gap-10 py-20 md:items-center md:gap-16 md:py-24",
+                  imageLeft
+                    ? "md:grid-cols-[1.22fr_0.78fr]"
+                    : "md:grid-cols-[0.78fr_1.22fr]",
+                )}
+              >
+                <div className={cn(imageLeft && "md:order-2")}>
+                  <h2 className="font-sans text-[27px] font-medium leading-[1.14] tracking-[0em] text-light-space light:text-zinc-950 md:text-[36px]">
+                    {feature.title}
+                  </h2>
+                  <p className={cn(proseBodyMutedClass, "mt-5 max-w-[440px]")}>{feature.body}</p>
+                  <div className="mt-7">
+                    <PillLink href={feature.href}>{feature.cta}</PillLink>
+                  </div>
                 </div>
-              </div>
-              <AboutImage src={feature.image} alt={feature.alt} />
-            </article>
-          ))}
+                <AboutImage
+                  src={feature.image}
+                  alt={feature.alt}
+                  className={cn(imageLeft && "md:order-1")}
+                />
+              </article>
+            );
+          })}
         </section>
 
-        <section className={cn(CONTENT_SHELL_WIDE, "px-4 py-16 md:px-8 md:py-24")}>
-          <div className="mb-10 md:mb-12">
-            <h2 className="font-sans text-lg font-semibold tracking-[0em] text-light-space/90 light:text-zinc-950 md:text-xl">
-              Learn more about what we do
-            </h2>
-          </div>
+        <section className={cn(CONTENT_SHELL_WIDE, "py-16 md:py-24")}>
+          <SectionHeaderRow title="From the newsroom" actionLabel="View all" actionTo="/newsroom" />
           <div className="mt-0 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-6 xl:gap-8">
-            {ABOUT_LINKS.map((link) => (
-              <AboutLinkCard key={link.href} link={link} />
+            {newsroomCards.map((row) => (
+              <AboutNewsroomCard key={row.id} row={row} />
             ))}
           </div>
         </section>
@@ -234,7 +254,7 @@ export default function AboutPage() {
               Join us in building speech systems people can actually trust.
             </h2>
             <div className="mt-8">
-              <AboutPillLink href="/careers">View careers</AboutPillLink>
+              <PillLink href="/careers">View careers</PillLink>
             </div>
           </div>
         </section>

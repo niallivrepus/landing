@@ -22,6 +22,53 @@ export function ProductHighlightsCarousel({
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  /** Avoid intersection observer fighting smooth scroll (intermediate slides become “active”). */
+  const suppressIntersectionRef = useRef(false);
+  const scrollSuppressTimeoutRef = useRef<number | null>(null);
+
+  const clearScrollSuppression = useCallback(() => {
+    suppressIntersectionRef.current = false;
+    if (scrollSuppressTimeoutRef.current) {
+      window.clearTimeout(scrollSuppressTimeoutRef.current);
+      scrollSuppressTimeoutRef.current = null;
+    }
+  }, []);
+
+  const scrollCardIntoView = useCallback(
+    (index: number, behavior: ScrollBehavior = "smooth") => {
+      const root = scrollRef.current;
+      if (!root) return;
+      const card = root.querySelector<HTMLElement>(`[data-slide-index="${index}"]`);
+      if (!card) return;
+
+      // Deterministic target: align card's start with the scroll container's start,
+      // accounting for `scroll-padding-inline-start` (which `scrollIntoView` ignores in some browsers).
+      const padLeft = parseFloat(getComputedStyle(root).scrollPaddingLeft) || 0;
+      const targetLeft = Math.max(0, card.offsetLeft - root.offsetLeft - padLeft);
+
+      suppressIntersectionRef.current = true;
+      if (scrollSuppressTimeoutRef.current) window.clearTimeout(scrollSuppressTimeoutRef.current);
+      scrollSuppressTimeoutRef.current = window.setTimeout(
+        clearScrollSuppression,
+        behavior === "smooth" ? 800 : 80,
+      );
+
+      // For instant jumps, `scroll-smooth` on the root wins over `behavior: "auto"`;
+      // briefly clear it so multi-dot jumps don't tween through intermediate slides.
+      if (behavior === "auto") {
+        const prevInline = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        root.scrollTo({ left: targetLeft, behavior: "auto" });
+        requestAnimationFrame(() => {
+          root.style.scrollBehavior = prevInline;
+        });
+        return;
+      }
+
+      root.scrollTo({ left: targetLeft, behavior: "smooth" });
+    },
+    [clearScrollSuppression],
+  );
 
   useEffect(() => {
     if (!isPlaying || slides.length <= 1) return;
@@ -30,13 +77,20 @@ export function ProductHighlightsCarousel({
       setProgress((current) => {
         const next = current + AUTOPLAY_STEP_MS / AUTOPLAY_DURATION_MS;
         if (next < 1) return next;
-        setActiveIndex((index) => (index + 1) % slides.length);
+        setActiveIndex((index) => {
+          const nextIndex = (index + 1) % slides.length;
+          // Schedule the scroll for the post-commit microtask so `activeIndex` and
+          // the carousel motion update together, even when `setActiveIndex` is
+          // dispatched from inside another updater.
+          queueMicrotask(() => scrollCardIntoView(nextIndex, "smooth"));
+          return nextIndex;
+        });
         return 0;
       });
     }, AUTOPLAY_STEP_MS);
 
     return () => window.clearInterval(tick);
-  }, [isPlaying, slides.length]);
+  }, [isPlaying, slides.length, scrollCardIntoView]);
 
   useEffect(() => {
     const root = scrollRef.current;
@@ -47,6 +101,7 @@ export function ProductHighlightsCarousel({
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (suppressIntersectionRef.current) return;
         const visible = entries
           .filter((e) => e.isIntersecting && e.intersectionRatio >= 0.45)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
@@ -62,18 +117,16 @@ export function ProductHighlightsCarousel({
     return () => observer.disconnect();
   }, [slides.length]);
 
-  const scrollCardIntoView = useCallback((index: number, behavior: ScrollBehavior = "smooth") => {
+  useEffect(() => {
     const root = scrollRef.current;
     if (!root) return;
-    const card = root.querySelector<HTMLElement>(`[data-slide-index="${index}"]`);
-    if (!card) return;
-    card.scrollIntoView({ behavior, block: "nearest", inline: "start" });
-  }, []);
-
-  useEffect(() => {
-    if (!isPlaying || slides.length <= 1) return;
-    scrollCardIntoView(activeIndex, "smooth");
-  }, [activeIndex, isPlaying, scrollCardIntoView, slides.length]);
+    const onScrollEnd = () => clearScrollSuppression();
+    root.addEventListener("scrollend", onScrollEnd);
+    return () => {
+      root.removeEventListener("scrollend", onScrollEnd);
+      clearScrollSuppression();
+    };
+  }, [slides.length, clearScrollSuppression]);
 
   return (
     <section className="py-20 md:py-28">
@@ -128,10 +181,13 @@ export function ProductHighlightsCarousel({
                   type="button"
                   aria-label={`Go to ${slide.title}`}
                   onClick={() => {
+                    const from = activeIndex;
                     setActiveIndex(index);
                     setProgress(0);
                     setIsPlaying(false);
-                    scrollCardIntoView(index, "smooth");
+                    // Skip more than one slide → jump there immediately (no scroll through intermediates).
+                    const behavior: ScrollBehavior = Math.abs(index - from) > 1 ? "auto" : "smooth";
+                    scrollCardIntoView(index, behavior);
                   }}
                   className={cn(
                     "relative h-2 overflow-hidden rounded-full bg-zinc-300/78 transition-all dark:bg-white/[0.14]",

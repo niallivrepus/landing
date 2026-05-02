@@ -3,7 +3,6 @@ import { Download } from "lucide-react";
 import { FaqSection } from "../components/FaqSection";
 import { EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
-import { SecondaryLink } from "../components/SecondaryLink";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const MOBILE_PREVIEW_IMAGE = "/download/mobile-preview.png";
@@ -50,9 +49,6 @@ function EarlyAccessButtons({ platform }: { platform: "mobile" | "desktop" }) {
         <Download className="size-4 shrink-0" strokeWidth={2} aria-hidden />
         {label}
       </a>
-      <span className="font-sans text-[13px] leading-relaxed text-light-space/50 light:text-[#5a4580]/75">
-        Early-access availability varies by platform and rollout wave.
-      </span>
     </div>
   );
 }
@@ -117,11 +113,6 @@ export function DownloadPage() {
               during onboarding.
             </p>
             <EarlyAccessButtons platform="desktop" />
-            <div className="mt-8">
-              <SecondaryLink to="/contact" className="text-light-space/90 hover:text-light-space light:text-[#402060]">
-                Talk to us about deployment
-              </SecondaryLink>
-            </div>
           </div>
         </div>
       </section>

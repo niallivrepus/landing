@@ -10,6 +10,7 @@ export {
 } from "./TertiaryHubBody";
 export { TertiaryDocBody, type TertiaryDocSection } from "./TertiaryDocBody";
 export { EDITORIAL_MEDIA_RADIUS_CLASS } from "./editorialMedia";
+export { PillLink, type PillLinkVariant } from "./PillLink";
 export {
   CONTENT_SHELL_COMPANY,
   CONTENT_SHELL_NARROW,

@@ -1,3 +1,4 @@
+export { BusinessSolutionsSection } from "./BusinessSolutionsSection";
 export { ClaimIdentityCta } from "./ClaimIdentityCta";
 export { FundersStrip } from "./FundersStrip";
 export { GooeyBackdrop } from "./GooeyBackdrop";

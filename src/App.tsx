@@ -15,10 +15,18 @@ function lazyNamed(loader: () => Promise<LazyModule>, exportName: string) {
 }
 
 const BrandPage = lazyNamed(() => import("./pages/BrandPage"), "BrandPage");
-const CharterPage = lazyNamed(() => import("./pages/CharterPage"), "CharterPage");
+const BusinessOverviewPage = lazyNamed(
+  () => import("./pages/BusinessOverviewPage"),
+  "BusinessOverviewPage",
+);
 const HomePage = lazy(() => import("./pages/Home"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const CareersPage = lazy(() => import("./pages/CareersPage"));
+const CareersRolesPage = lazyNamed(() => import("./pages/CareersRolesPage"), "CareersRolesPage");
+const CareersRoleDetailPage = lazyNamed(
+  () => import("./pages/CareersRoleDetailPage"),
+  "CareersRoleDetailPage",
+);
 const ContactSalesPage = lazyNamed(() => import("./pages/ContactSalesPage"), "ContactSalesPage");
 const DownloadPage = lazyNamed(() => import("./pages/DownloadPage"), "DownloadPage");
 const ManifestoPage = lazyNamed(() => import("./pages/ManifestoPage"), "ManifestoPage");
@@ -140,8 +148,11 @@ export default function App() {
           <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
           <Route path="/manifesto" element={<ManifestoPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/charter" element={<CharterPage />} />
+          <Route path="/business" element={<BusinessOverviewPage />} />
+          <Route path="/charter" element={<Navigate to="/manifesto" replace />} />
           <Route path="/careers" element={<CareersPage />} />
+          <Route path="/careers/roles" element={<CareersRolesPage />} />
+          <Route path="/careers/roles/:slug" element={<CareersRoleDetailPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

@@ -59,20 +59,16 @@ const sectionLabel =
 function FooterColumn({ col, className }: { col: (typeof FOOTER_COLUMNS)[number]; className?: string }) {
   return (
     <div className={className}>
-      <div className="flex flex-col gap-10">
-        {col.sections.map((sec, i) => (
-          <div key={sec.heading + i}>
-            <h3 className={sectionLabel}>{sec.heading}</h3>
-            <ul className="mt-4 space-y-0">
-              {sec.links.map((link) => (
-                <li key={link.label + link.href} className="py-[5px]">
-                  <DirectoryLink link={link} className={linkMuted} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      <h3 className={sectionLabel}>{col.heading}</h3>
+      <ul className="mt-4 space-y-0">
+        {col.sections.flatMap((sec) =>
+          sec.links.map((link) => (
+            <li key={link.label + link.href} className="py-[5px]">
+              <DirectoryLink link={link} className={linkMuted} />
+            </li>
+          )),
+        )}
+      </ul>
     </div>
   );
 }
@@ -139,28 +135,23 @@ export function MegaFooter() {
                     />
                   </summary>
                   <div className="accordion-fade-panel pb-5 pl-0.5">
-                    <div className="flex flex-col gap-8">
-                      {col.sections.map((sec, secIndex) => (
-                        <div
-                          key={sec.heading}
-                          className="accordion-fade-item"
-                          style={{ "--item-index": colIndex + secIndex } as CSSProperties}
-                        >
-                          <p className={sectionLabel}>{sec.heading}</p>
-                          <ul className="mt-3 space-y-0">
-                            {sec.links.map((link, linkIndex) => (
-                              <li
-                                key={link.label + link.href}
-                                className="accordion-fade-item py-[5px]"
-                                style={{ "--item-index": secIndex * 6 + linkIndex + 1 } as CSSProperties}
-                              >
-                                <DirectoryLink link={link} className={linkMuted} />
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
+                    <ul className="space-y-0">
+                      {col.sections.flatMap((sec, secIndex) =>
+                        sec.links.map((link, linkIndex) => (
+                          <li
+                            key={link.label + link.href}
+                            className="accordion-fade-item py-[5px]"
+                            style={
+                              {
+                                "--item-index": colIndex + secIndex * 6 + linkIndex + 1,
+                              } as CSSProperties
+                            }
+                          >
+                            <DirectoryLink link={link} className={linkMuted} />
+                          </li>
+                        )),
+                      )}
+                    </ul>
                   </div>
                 </details>
               ))}

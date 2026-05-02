@@ -12,7 +12,7 @@ export function EditorialQuoteBlock({
 }) {
   return (
     <div
-      className={cn("w-full bg-dark-space py-28 text-light-space light:bg-section-grey-light light:text-zinc-950 md:py-36", className)}
+      className={cn("w-full bg-transparent py-28 text-light-space light:text-zinc-950 md:py-36", className)}
     >
       <div className={cn(CONTENT_SHELL_WIDE, "text-center")}>
         <blockquote className="mx-auto max-w-[min(100%,40rem)]">

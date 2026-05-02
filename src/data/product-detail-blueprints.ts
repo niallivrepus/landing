@@ -165,7 +165,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
     centerpiece: {
       title: "Identity, your way.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "pods-corner-1",
@@ -327,7 +327,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Talk becomes copy.",
       body: "Blurbs gives speech a second life. The interesting part is not just drafting faster, but keeping the soul of what was said while the copy gets sharper.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [],
     },
     reveal: {
@@ -442,7 +442,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Memory with shape.",
       body: "Spine keeps time readable. It is the difference between a feed that erases context and a history you can actually work with.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "spine-corner-1",
@@ -602,7 +602,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Conversation with memory.",
       body: "Calls gives live conversation a durable shape so the best parts do not vanish when the room closes.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "calls-corner-1",
@@ -762,7 +762,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Threads with memory.",
       body: "Messages makes communication feel less scattered by keeping the human context close to every exchange.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "messages-corner-1",
@@ -920,7 +920,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
     centerpiece: {
       title: "Identity, your way.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "profile-corner-1",
@@ -1077,7 +1077,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
     centerpiece: {
       title: "One question. Fewer tabs.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "vortex-corner-1",
@@ -1237,7 +1237,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Your identity. Everywhere.",
       body: "Passport collapses fragmented identities into one portable layer. The goal is not another login—it is proving who you are without starting over.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "passport-corner-1",
@@ -1397,7 +1397,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Forged in opposition.",
       body: "V1llains exist because the best ideas are the ones that survive their toughest critic. This is not about negativity—it is about pressure-tested clarity.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "v1llains-corner-1",
@@ -1557,7 +1557,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Your world. Your rules.",
       body: "Realms collapse the gap between identity and community. The space shapes itself around the people inside it.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "realms-corner-1",
@@ -1717,7 +1717,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "The show lands here.",
       body: "Orb is what happens when a concert and an alien encounter share the same coordinates. The stage is infinite, the crowd is everywhere, and the music shapes the world.",
       ctaLabel: "Join Beta",
-      ctaTo: "/#start",
+      ctaTo: "/download",
       items: [
         {
           id: "orb-corner-1",

@@ -9,7 +9,6 @@ import { PRODUCT_DETAIL_BLUEPRINTS } from "../data/product-detail-blueprints";
 import { PRODUCTS, type ProductId } from "../data/products";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { cn, useTheme } from "@jokuh/gooey";
-import { Link } from "react-router-dom";
 
 const PRODUCT_FAQ_SUMMARIES: Partial<Record<ProductId, string>> = {
   blurbs:
@@ -87,22 +86,6 @@ export function ProductPage({ productId }: { productId: ProductId }) {
             },
           ]}
         />
-      </div>
-
-      <div className="px-4 py-10 text-center font-sans text-[13px] text-zinc-500 dark:text-light-space/40 md:px-8">
-        <Link
-          to={`/#${productId}`}
-          className="underline-offset-4 hover:text-zinc-950 hover:underline dark:hover:text-light-space"
-        >
-          On the home overview
-        </Link>
-        <span className="text-zinc-300 dark:text-light-space/20"> · </span>
-        <Link
-          to="/about"
-          className="underline-offset-4 hover:text-zinc-950 hover:underline dark:hover:text-light-space"
-        >
-          What Jokuh is building
-        </Link>
       </div>
     </MarketingPageFrame>
   );
