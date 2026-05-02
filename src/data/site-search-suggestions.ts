@@ -17,5 +17,5 @@ export const SITE_SEARCH_PLACEHOLDER_SUGGESTIONS = [
   "Ask me about research at Jokuh",
   "Ask what our team is thinking",
   "Ask about Blurbs, Spine, or Calls",
-  "Ask where to start with Jokuh SDK",
+  "Ask what is coming for Jokuh developers",
 ];

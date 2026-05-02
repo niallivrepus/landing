@@ -1,7 +1,6 @@
 import { cn } from "@jokuh/gooey";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   hasCookieConsentDecision,
   readCookiePrefsWithDefaults,
@@ -101,13 +100,7 @@ export function CookieBanner() {
 
         <p className="mt-4 font-sans text-[13px] leading-relaxed text-light-space/64 light:text-zinc-600">
           We use cookies to run the site, understand usage, and improve your experience. You can change optional
-          categories anytime.{" "}
-          <Link
-            to="/privacy"
-            className="font-medium text-light-space underline decoration-light-space/30 underline-offset-[3px] hover:decoration-light-space/65 light:text-zinc-900 light:decoration-zinc-300 light:hover:decoration-zinc-500"
-          >
-            Learn more
-          </Link>
+          categories anytime. Privacy questions can be sent to privacy@jokuh.com.
         </p>
 
         <ul className="mt-8 space-y-0">

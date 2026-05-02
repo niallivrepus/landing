@@ -5,10 +5,8 @@ import { cn } from "@jokuh/gooey";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const kw = "text-[#DF3079] light:text-[#C01961]";
-const fn = "text-[#2E95D3] light:text-[#0F6FBE]";
 const str = "text-[#05A57E] light:text-[#087F63]";
 const id = "text-[#E9950D] light:text-[#A76700]";
-const w = "text-white/90 light:text-zinc-900";
 const op = "text-white/70 light:text-zinc-700";
 const cm = "text-white/32 light:text-zinc-400";
 
@@ -110,46 +108,8 @@ const apiKeyWin = (
   </>
 );
 
-const installNpm = (
-  <>
-    <L n={1}><span className={id}>npm</span> <span className={id}>install</span> <span className={str}>@jokuh/sdk</span></L>
-  </>
-);
-
-const installPip = (
-  <>
-    <L n={1}><span className={id}>pip</span> <span className={id}>install</span> <span className={str}>jokuh</span></L>
-  </>
-);
-
-const firstRequestJs = (
-  <>
-    <L n={1}><span className={kw}>import</span> <span className={w}>Jokuh</span> <span className={kw}>from</span> <span className={str}>"@jokuh/sdk"</span><span className={op}>;</span></L>
-    <L n={2}><span className={kw}>const</span> <span className={w}>client</span> <span className={op}>=</span> <span className={kw}>new</span> <span className={fn}>Jokuh</span><span className={op}>();</span></L>
-    <L n={3}> </L>
-    <L n={4}><span className={kw}>const</span> <span className={w}>response</span> <span className={op}>=</span> <span className={kw}>await</span> <span className={w}>client</span><span className={op}>.</span><span className={w}>responses</span><span className={op}>.</span><span className={fn}>create</span><span className={op}>({"{"}</span></L>
-    <L n={5}>{"  "}<span className={w}>input</span><span className={op}>:</span> <span className={str}>"Summarize these notes and list blockers."</span><span className={op}>,</span></L>
-    <L n={6}><span className={op}>{"}"});</span></L>
-    <L n={7}> </L>
-    <L n={8}><span className={id}>console</span><span className={op}>.</span><span className={fn}>log</span><span className={op}>(</span><span className={w}>response</span><span className={op}>.</span><span className={w}>output_text</span><span className={op}>);</span></L>
-  </>
-);
-
-const firstRequestPy = (
-  <>
-    <L n={1}><span className={kw}>from</span> <span className={w}>jokuh</span> <span className={kw}>import</span> <span className={w}>Jokuh</span></L>
-    <L n={2}><span className={w}>client</span> <span className={op}>=</span> <span className={fn}>Jokuh</span><span className={op}>()</span></L>
-    <L n={3}> </L>
-    <L n={4}><span className={w}>response</span> <span className={op}>=</span> <span className={w}>client</span><span className={op}>.</span><span className={w}>responses</span><span className={op}>.</span><span className={fn}>create</span><span className={op}>(</span></L>
-    <L n={5}>{"    "}<span className={w}>input</span><span className={op}>=</span><span className={str}>"Summarize these notes and list blockers."</span></L>
-    <L n={6}><span className={op}>)</span></L>
-    <L n={7}> </L>
-    <L n={8}><span className={fn}>print</span><span className={op}>(</span><span className={w}>response</span><span className={op}>.</span><span className={w}>output_text</span><span className={op}>)</span></L>
-  </>
-);
-
 export function DocsQuickstartPage() {
-  useDocumentTitle("Quickstart — Jokuh");
+  useDocumentTitle("Jokuh Quickstart");
 
   return (
     <article className="w-full max-w-[770px] pb-16">
@@ -184,23 +144,12 @@ export function DocsQuickstartPage() {
 
       <section className="mt-10">
         <h2 className="font-sans text-[20px] font-semibold tracking-[0em] text-white light:text-zinc-950">
-          Install the SDK and run an API call
+          Install the SDK
         </h2>
         <p className="mt-2 max-w-[60ch] font-sans text-[14px] leading-6 text-white/50 light:text-zinc-600">
-          Install the Jokuh package for your language, then make one request against the responses API.
+          SDK package names, registry access, and install commands are private during early access. We provide
+          the correct language package and version after onboarding.
         </p>
-        <CodeBlock
-          tabs={[
-            { label: "npm", lines: installNpm, raw: "npm install @jokuh/sdk" },
-            { label: "pip", lines: installPip, raw: "pip install jokuh" },
-          ]}
-        />
-        <CodeBlock
-          tabs={[
-            { label: "JavaScript", lines: firstRequestJs, raw: 'import Jokuh from "@jokuh/sdk";\n\nconst client = new Jokuh();\n\nconst response = await client.responses.create({\n  input: "Summarize these notes and list blockers.",\n});\n\nconsole.log(response.output_text);' },
-            { label: "Python", lines: firstRequestPy, raw: 'from jokuh import Jokuh\nclient = Jokuh()\n\nresponse = client.responses.create(\n    input="Summarize these notes and list blockers."\n)\n\nprint(response.output_text)' },
-          ]}
-        />
         <div className="mt-4 grid gap-2 md:grid-cols-2">
           <LinkCard href="/developers/docs/text">
             Start building with the Responses API
@@ -216,8 +165,8 @@ export function DocsQuickstartPage() {
           Extend the model with tools
         </h2>
         <p className="mt-2 max-w-[60ch] font-sans text-[14px] leading-6 text-white/50 light:text-zinc-600">
-          Give the model access to external data and functions by attaching tools. Use built-in tools like web search or
-          define your own for calling APIs and integrating with third-party systems.
+          Give the model access to external data and functions by attaching supported tools when they are enabled
+          for your workspace.
         </p>
         <div className="mt-4 grid gap-2 md:grid-cols-2">
           <LinkCard href="/developers/docs/sdk">

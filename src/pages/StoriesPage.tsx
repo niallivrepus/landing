@@ -97,7 +97,7 @@ function IndexStoryCardCompact({ story }: { story: (typeof HOME_STORIES)[number]
 }
 
 export function StoriesPage() {
-  useDocumentTitle("Stories — Jokuh");
+  useDocumentTitle("Jokuh Stories");
   const items = [...HOME_STORIES];
   const featured = items[0];
   const support = items.slice(1, 4);

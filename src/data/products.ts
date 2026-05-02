@@ -38,7 +38,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     body: [
       "Blurbs are short, AI-crystallized seeds pulled from the conversations you are already having. You choose what stays private and what you publish.",
       "Posting becomes a routing decision, not a creation chore. Private by default. Public only when you say so.",
-      "They inherit Spine’s confidentiality: source material is processed the same way the rest of your memory is—yours, not the company’s.",
+      "They inherit Spine’s privacy model: source material is handled with the same scoped controls as the rest of your memory.",
     ],
   },
   spine: {
@@ -46,8 +46,8 @@ export const PRODUCTS: Record<ProductId, Product> = {
     title: "Spine",
     summary: "The encrypted memory layer at the core of Jokuh.",
     body: [
-      "Spine is persistent memory your agents read and write. Conversations, decisions, documents, and signals you keep—encrypted at rest, in motion, and in compute—crystallize into your Knowledge Pool.",
-      "It is built so the company that ships it cannot read what it stores. Keys are yours. Forgetting is one click, and it is real.",
+      "Spine is persistent memory your agents read and write. Conversations, decisions, documents, and signals you keep are designed to become structured context under clear access controls.",
+      "It is built to minimize routine company plaintext access. Deletion behavior follows the retention model and controls available to your account.",
       "From Calls and Messages to Blurbs and connected tools, Spine is the vault that learns on your terms.",
     ],
   },
@@ -56,8 +56,8 @@ export const PRODUCTS: Record<ProductId, Product> = {
     title: "Calls",
     summary: "Encrypted voice that flows into your Knowledge Pool.",
     body: [
-      "End-to-end encrypted voice: audio is private on the wire, and the transcript and summary live in your Spine, not a vendor’s model farm.",
-      "Transcription and crystallization run in a trusted execution path so plaintext never becomes someone else’s product.",
+      "Voice is designed for encrypted transport, and transcripts and summaries are scoped to your Spine instead of treated as generic model-training material.",
+      "Transcription and crystallization are designed around bounded execution paths and explicit retention controls.",
       "Search past calls, spin Blurbs from highlights, and let your Sidekick join quietly—all without giving up the room.",
     ],
   },
@@ -66,9 +66,9 @@ export const PRODUCTS: Record<ProductId, Product> = {
     title: "Messages",
     summary: "Encrypted threads that compound in your Spine.",
     body: [
-      "The wire is end-to-end encrypted; the thread persists in your Spine where only you and the people you addressed can read it.",
+      "Threads are designed for encrypted transport and scoped persistence in Spine for the people you address.",
       "Text, files, voice memos, and value can share one thread. Your agent can search and act inside the same confidentiality model as the rest of Jokuh.",
-      "Forget a thread and the keys are gone. The pattern mainstream messengers use—encrypted today, forgotten tomorrow—is not the trade here.",
+      "Thread deletion follows the retention model and controls available to your account.",
     ],
   },
   profile: {

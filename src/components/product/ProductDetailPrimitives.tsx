@@ -43,9 +43,7 @@ export function ProductSectionIntro({
   return (
     <div className={cn(centered && "mx-auto text-center", className)}>
       {eyebrow ? (
-        <p className={cn(pageHeroEyebrowUppercaseClass, tone === "light" && "text-zinc-950")}>
-          {eyebrow}
-        </p>
+        <p className={cn(pageHeroEyebrowUppercaseClass, "text-zinc-950 dark:text-zinc-100")}>{eyebrow}</p>
       ) : null}
       <h2
         className={cn(

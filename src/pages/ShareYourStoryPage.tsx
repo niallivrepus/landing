@@ -65,7 +65,7 @@ function FieldLabel({ htmlFor, children, required }: { htmlFor: string; children
 }
 
 export function ShareYourStoryPage() {
-  useDocumentTitle("Share your story — Jokuh");
+  useDocumentTitle("Share Your Story Jokuh");
 
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [selectedProducts, setSelectedProducts] = useState<Set<ProductId>>(() => new Set());
@@ -416,15 +416,8 @@ export function ShareYourStoryPage() {
                 required
               />
               <span>
-                By submitting this form, you agree that Jokuh may contact you about this submission, and you acknowledge that we will use it in
-                line with our{" "}
-                <Link
-                  to="/privacy"
-                  className="font-medium text-light-space underline decoration-light-space/25 underline-offset-2 hover:decoration-light-space/50 light:text-zinc-900 light:decoration-zinc-300 light:hover:decoration-zinc-600"
-                >
-                  Privacy Policy
-                </Link>
-                .
+                By submitting this form, you agree that Jokuh may contact you about this submission and use the
+                details to review, edit, or publish a story with your permission.
               </span>
             </label>
           </div>

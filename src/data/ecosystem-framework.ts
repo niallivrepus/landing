@@ -49,7 +49,7 @@ export const REFERENCE_ECOSYSTEMS: ReferenceEcosystem[] = [
       {
         name: "Community & programs",
         paths: ["/learn"],
-        notes: "Help center (help.openai.com), forum (community.openai.com), startups (openai.com/startups).",
+        notes: "Reference help-center, forum, and startup-program patterns without publishing unused local pages.",
       },
       {
         name: "Trust & reliability",
@@ -108,13 +108,13 @@ export const JOKUH_PORTAL_PARITY: JokuhPortalSurface[] = [
   {
     id: "status-trust",
     intent: "Uptime, incidents, history, email/RSS subscribe",
-    jokuhRouteOrEnv: "VITE_ORIGIN_STATUS (e.g. status.jokuh.com); fallback /system-status",
+    jokuhRouteOrEnv: "VITE_ORIGIN_STATUS (e.g. status.jokuh.com); no local status page fallback",
     referenceIds: ["openai-status"],
   },
   {
     id: "product-legal-links",
     intent: "Thin product shell linking to centralized policies",
-    jokuhRouteOrEnv: "Future app surfaces → /terms, /privacy",
+    jokuhRouteOrEnv: "Future app surfaces can link to counsel-approved policy surfaces when ready",
     referenceIds: ["chatgpt-product"],
   },
 ];

@@ -33,14 +33,13 @@ export const HERO_PRIMARY_QUICK_LINKS: HeroQuickLink[] = [
   { label: "Download Jokuh", href: "/download", icon: { lucide: Download, lordicon: "downloadSave" } },
   { label: "Search with Jokuh", href: "/#prompt", icon: { lucide: Search, lordicon: "search" } },
   { label: "Talk with Jokuh", href: buildAppHandoffUrl(""), icon: { lucide: MessageCircle, lordicon: "chatEmpty" } },
-  { label: "Ethics & compliance", href: "/ethics", icon: { lucide: FileText, lordicon: "domainVerification" } },
   { label: "Read the newsroom", href: "/newsroom", icon: { lucide: Newspaper, lordicon: "newspaper" } },
   { label: "More", action: "expand", icon: { lucide: MoreHorizontal, lordicon: "plus" } },
 ];
 
 export const HERO_OVERFLOW_QUICK_LINKS: HeroQuickLink[] = [
   { label: "Browse stories", href: "/stories", icon: { lucide: FileText, lordicon: "arrowLongRight" } },
-  { label: "Open docs", href: "/developers/docs", icon: { lucide: BookOpen, lordicon: "downloadSave" } },
+  { label: "Docs soon", href: "/contact", icon: { lucide: BookOpen, lordicon: "downloadSave" } },
   { label: "Meet the team", href: "/about", icon: { lucide: Users, lordicon: "worldGlobeWikis" } },
   { label: "See careers", href: "/careers", icon: { lucide: Sparkles, lordicon: "logSignIn" } },
   { label: "Contact sales", href: "/contact", icon: { lucide: HeartHandshake, lordicon: "arrowLongRight" } },

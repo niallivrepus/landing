@@ -44,7 +44,7 @@ export function ProductDetailMedia({
     if (media.gradient === "none" || !media.gradient.trim()) {
       return null;
     }
-    const background = resolvedTheme === "dark" ? (media.darkGradient ?? media.gradient) : media.gradient;
+    const background = resolvedTheme === "dark" ? "#232326" : media.gradient;
     return (
       <div
         className={cn("size-full", className)}

@@ -1,8 +1,8 @@
-/** Long-form company pages (About, Careers): ~980px */
-export const CONTENT_SHELL_COMPANY = "mx-auto w-full max-w-[980px] px-4 md:px-8";
-
 /** Marketing grids, home, journal listing, product: ~1380px */
 export const CONTENT_SHELL_WIDE = "mx-auto w-full max-w-[1380px] px-4 md:px-8";
+
+/** Long-form company pages (About, Careers): same desktop rail as the landing page */
+export const CONTENT_SHELL_COMPANY = CONTENT_SHELL_WIDE;
 
 /** Stub, prompt bar, tight layouts: ~720px */
 export const CONTENT_SHELL_NARROW = "mx-auto w-full max-w-[720px] px-4 md:px-8";

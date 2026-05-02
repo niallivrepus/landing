@@ -1,6 +1,6 @@
 /** Data-room: bottom signature above the legal/meta row. */
 export const FOOTER_SIGNATURE =
-  "Jokuh — The Sovereign Agentic Operating System. Verify ↔ Trust.";
+  "Jokuh — A private AI workspace for memory, identity, and agent workflows.";
 
 /** Multi-paragraph fine print (Apple-style) above mega footer link columns. */
 export const FOOTER_FINE_PRINT = {

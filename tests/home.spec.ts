@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 
 test('renders the landing hero and waitlist prompt', async ({ page }) => {
   await expect(page).toHaveTitle(/Jokuh/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Your thinking is the product.' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Your mind. Your math. Your machine.' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Download Jokuh' })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Get a note when the next batch opens.' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Email' })).toBeVisible();

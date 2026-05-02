@@ -62,7 +62,7 @@ export function DocsInfoPage({ pageId }: { pageId: DocsInfoPageId }) {
     return <Navigate to="/developers/docs" replace />;
   }
 
-  useDocumentTitle(`${page.title} — Jokuh Docs`);
+  useDocumentTitle(`${page.title} Jokuh Docs`);
 
   return (
     <article className="w-full max-w-[770px] pb-16">

@@ -1,7 +1,15 @@
 import { Logo, cn } from "@jokuh/gooey";
 import { ArrowLeft, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSiteSearch } from "../context/SiteSearchContext";
 import { resolveRigidNavColumns } from "../config/site-subdomains";
@@ -142,6 +150,10 @@ export function SiteTopBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [primaryHoverKey, setPrimaryHoverKey] = useState<string | null>(null);
   const closeT = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileDialogRef = useRef<HTMLDivElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const cancelClose = useCallback(() => {
     if (closeT.current) {
@@ -165,7 +177,73 @@ export function SiteTopBar() {
     if (!mobileOpen) setPrimaryHoverKey(null);
   }, [mobileOpen]);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(() => closeButtonRef.current?.focus());
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
   const openGroup = navGroups.find((g) => g.id === openId);
+
+  const openMobileMenu = useCallback(() => {
+    returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setMobileOpen(true);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileOpen(false);
+    setOpenId(null);
+    setPrimaryHoverKey(null);
+    window.requestAnimationFrame(() => {
+      const target = returnFocusRef.current ?? menuButtonRef.current;
+      target?.focus();
+      returnFocusRef.current = null;
+    });
+  }, []);
+
+  const handleMobileDialogKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeMobileMenu();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const dialog = mobileDialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((node) => !node.hasAttribute("disabled") && !node.getAttribute("aria-hidden"));
+
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    },
+    [closeMobileMenu],
+  );
 
   return (
     <div
@@ -182,10 +260,13 @@ export function SiteTopBar() {
         <div className="relative z-[1] mx-auto h-14 w-full max-w-[1240px] px-4 md:h-[60px] md:px-5 lg:h-16 lg:pl-[48px] lg:pr-[56px]">
           <div className="grid h-full w-full grid-cols-[2.5rem_1fr_2.5rem] items-center md:hidden">
             <button
+              ref={menuButtonRef}
               type="button"
               className="premium-soft-button flex size-10 items-center justify-center rounded-full text-light-space hover:bg-white/[0.05] light:text-zinc-950 light:hover:bg-black/[0.05]"
               aria-label="Open menu"
-              onClick={() => setMobileOpen(true)}
+              aria-expanded={mobileOpen}
+              aria-controls="jokuh-mobile-menu"
+              onClick={openMobileMenu}
             >
               <Menu className="size-[22px]" strokeWidth={1.75} aria-hidden />
             </button>
@@ -380,6 +461,12 @@ export function SiteTopBar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            ref={mobileDialogRef}
+            id="jokuh-mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Primary menu"
+            onKeyDown={handleMobileDialogKeyDown}
             key="mobile-menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -394,14 +481,15 @@ export function SiteTopBar() {
               className="grid h-14 shrink-0 grid-cols-[2.5rem_1fr_2.5rem] items-center px-4"
             >
               <div />
-              <Link to="/" className="flex justify-center" aria-label="Jokuh home">
+              <Link to="/" className="flex justify-center" aria-label="Jokuh home" onClick={closeMobileMenu}>
                 <Logo width={32} height={20} />
               </Link>
               <button
+                ref={closeButtonRef}
                 type="button"
                 className="premium-soft-button flex size-10 items-center justify-center justify-self-end rounded-full text-light-space hover:bg-white/[0.05] light:text-zinc-950 light:hover:bg-zinc-200"
                 aria-label="Close menu"
-                onClick={() => setMobileOpen(false)}
+                onClick={closeMobileMenu}
               >
                 <X className="size-[22px]" strokeWidth={1.75} aria-hidden />
               </button>
@@ -476,7 +564,7 @@ export function SiteTopBar() {
                             <TopNavAnchor
                               href={item.href}
                               className="block py-3 font-sans text-[2.25rem] font-semibold tracking-[0em] text-light-space light:text-zinc-950"
-                              onClick={() => { setMobileOpen(false); setOpenId(null); }}
+                              onClick={closeMobileMenu}
                             >
                               <span className="inline-flex items-center gap-2">
                                 {item.label}
@@ -500,7 +588,7 @@ export function SiteTopBar() {
             >
               <TryJokuhCta
                 className="nav-fade-item w-full"
-                onNavigate={() => { setMobileOpen(false); setOpenId(null); }}
+                onNavigate={closeMobileMenu}
               />
             </motion.div>
           </motion.div>

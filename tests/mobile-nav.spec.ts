@@ -22,5 +22,5 @@ test('opens the mobile menu and navigates to the About page', async ({ page }) =
   await aboutLink.click({ force: true });
 
   await expect(page).toHaveURL(/\/about$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'About Jokuh' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'About' })).toBeVisible();
 });

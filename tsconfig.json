@@ -21,7 +21,9 @@
   },
   "include": [
     "src",
+    "api",
     "vite.config.ts",
+    "contact-sales-service.ts",
     "site-search-middleware.ts",
     "contact-sales-middleware.ts",
     "playwright.config.ts"

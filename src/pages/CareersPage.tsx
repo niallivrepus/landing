@@ -45,7 +45,7 @@ function ValueBlock({
 }
 
 export default function CareersPage() {
-  useDocumentTitle("Careers — Jokuh");
+  useDocumentTitle("Jokuh Careers");
   const hoverSoundProps = useGentleHoverSound();
 
   return (
@@ -159,11 +159,11 @@ export default function CareersPage() {
 
           <figure className="mt-16 rounded-2xl border border-light-space/[0.08] bg-white/[0.02] p-8 light:border-black/[0.08] light:bg-section-grey-light md:p-10">
             <blockquote className="font-sans text-[18px] font-medium leading-snug tracking-[0em] text-light-space/90 light:text-zinc-900 md:text-[20px]">
-              “The team treats the transcript as infrastructure, not a feature checkbox—and that shows up in how
-              we think about consent, retention, and what ‘good’ actually means for customers.”
+              We treat transcripts as infrastructure, not a feature checkbox. That standard shapes how we think
+              about consent, retention, and what good actually means for customers.
             </blockquote>
             <figcaption className="mt-6 font-sans text-[13px] text-light-space/45 light:text-zinc-500">
-              — Placeholder attribution, Engineering at Jokuh
+              Engineering principle at Jokuh
             </figcaption>
           </figure>
         </div>
@@ -191,23 +191,23 @@ export default function CareersPage() {
           items={[
             {
               question: "How do I apply?",
-              answer: "Browse our open roles and submit your application through the listed email. Include your resume and a brief note about what draws you to Jokuh.",
+              answer: "Pick the role that fits, submit the form, and attach work that proves you can do the job: repo, portfolio, writing, designs, or whatever is strongest. We read every submission. Generic resumes without proof of work get deprioritized.",
             },
             {
               question: "What is the interview process like?",
-              answer: "Our process typically includes an introductory call, a technical or portfolio review, a team conversation, and a values alignment discussion. We aim to be respectful of your time.",
+              answer: "Three stages on average: a written or recorded intro to align on context, a paid or scoped craft exercise tied to the actual role, and a final conversation with the founder and at least one team lead. We move fast, usually two to three weeks end-to-end.",
             },
             {
               question: "Do you offer remote positions?",
-              answer: "Yes. Jokuh is distributed by default. Most roles are fully remote, though some may involve occasional in-person collaboration.",
+              answer: "Yes. Jokuh is remote-first across compatible time zones. Some roles benefit from periodic in-person sprints; those are clearly flagged on the job post.",
             },
             {
               question: "What benefits do you offer?",
-              answer: "We offer competitive compensation, equity, health coverage, generous PTO, learning budgets, and home office support. Details vary by role and region.",
+              answer: "Equity in Jokuh LLC, competitive cash, and the operating budget to do your craft well: devices, tools, conferences. Specific health, time-off, and stipend details are confirmed at offer stage and depend on country of residence.",
             },
             {
               question: "I don't see a role that fits me. Can I still apply?",
-              answer: "Absolutely. Send a general application to careers@jokuh.com. We're always interested in people who are passionate about speech infrastructure and identity systems.",
+              answer: "Yes. Use the open application and tell us the smallest, sharpest version of what you'd own. We hire ahead of formal job posts when the right operator shows up.",
             },
           ]}
         />

@@ -54,7 +54,7 @@ export function NewsDetailPage() {
     return <Navigate to="/newsroom" replace />;
   }
 
-  useDocumentTitle(`${doc.title} — Jokuh`);
+  useDocumentTitle(`${doc.title} Jokuh`);
 
   if (doc.kind === "brief") {
     const speechText = [

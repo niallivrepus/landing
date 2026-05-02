@@ -96,7 +96,11 @@ Copy `.env.example` to `.env` for local development:
 | Variable           | Purpose |
 | ------------------ | ------- |
 | `GROQ_API_KEY` | Used by the dev/preview site-search middleware at `POST /api/site-search`. |
-| `CONTACT_SALES_WEBHOOK_URL` | Optional server-side webhook target for `POST /api/contact-sales` during dev/preview. |
+| `RESEND_API_KEY` | Server-side Resend key used by `POST /api/contact-sales` to email the inbox. Required for real contact delivery. |
+| `CONTACT_SALES_TO_EMAIL` | Inbox for contact sales submissions. Defaults to `hello@jokuh.com`. Supports comma-separated recipients. |
+| `CONTACT_SALES_FROM_EMAIL` | Verified sender for Resend, e.g. `Jokuh <hello@jokuh.com>`. |
+| `CONTACT_SALES_WEBHOOK_URL` | Optional server-side webhook target for CRM/logging after the contact email is accepted. |
+| `CONTACT_SALES_DEV_MODE` | Optional local-only `log` mode for testing without Resend. Do not use in production. |
 | `VITE_CONTACT_SALES_ENDPOINT` | Optional client-side override for the contact sales form endpoint. Defaults to `/api/contact-sales`. |
 | `VITE_ORIGIN_DEVELOPERS` | Optional absolute origin for the developer portal, e.g. `https://developers.jokuh.com`. |
 | `VITE_ORIGIN_HELP` | Optional absolute origin for the help center, e.g. `https://help.jokuh.com`. |

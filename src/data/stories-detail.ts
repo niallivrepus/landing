@@ -51,7 +51,7 @@ export type StoryDetail = {
 export const STORY_DETAILS: Record<string, StoryDetail> = {
   "made-from-memory": {
     slug: "made-from-memory",
-    metaLine: "March 29, 2026 · Jokuh Stories · Field story",
+    metaLine: "March 29, 2026 · Jokuh Stories · Illustrative scenario",
     title: "Made from Memory",
     dek: "How a Tulum designer keeps every word her clients ever told her.",
     heroGallery: [
@@ -141,14 +141,14 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
         paragraphs: [
           "The clothes I make are simple. Linen, cotton, hand-finished, nothing flashy. But the depth behind each piece, the years of conversations, the remembered details, the context that never gets lost, that's the thing my clients pay for, and that's the thing I couldn't deliver without Jokuh.",
           "I don't worry about forgetting anymore. I don't search through old messages. I don't lose what someone told me a year ago. I just listen, save it, and let it become part of how I see her. That's the work. That's the whole thing.",
-          "Maren Côté is a Canadian clothing designer based in Tulum, Mexico, and a Jokuh user since the closed beta.",
+          "This is an illustrative designer scenario for client-memory workflows, not a published customer claim.",
         ],
       },
     ],
   },
   "made-from-memory-ii": {
     slug: "made-from-memory-ii",
-    metaLine: "March 29, 2026 · Jokuh Stories · Field story",
+    metaLine: "March 29, 2026 · Jokuh Stories · Illustrative scenario",
     title: "Made from Memory",
     dek: "How a Tulum designer keeps every word her clients ever told her.",
     heroGallery: [
@@ -238,16 +238,16 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
         paragraphs: [
           "The clothes I make are simple. Linen, cotton, hand-finished, nothing flashy. But the depth behind each piece, the years of conversations, the remembered details, the context that never gets lost, that's the thing my clients pay for, and that's the thing I couldn't deliver without Jokuh.",
           "I don't worry about forgetting anymore. I don't search through old messages. I don't lose what someone told me a year ago. I just listen, save it, and let it become part of how I see her. That's the work. That's the whole thing.",
-          "Maren Côté is a Canadian clothing designer based in Tulum, Mexico, and a Jokuh user since the closed beta.",
+          "This is an illustrative designer scenario for client-memory workflows, not a published customer claim.",
         ],
       },
     ],
   },
   "aaron-liebowitz-psychotherapy-nyc": {
     slug: "aaron-liebowitz-psychotherapy-nyc",
-    metaLine: "April 1, 2026 · Jokuh Stories · Field story",
+    metaLine: "April 1, 2026 · Jokuh Stories · Illustrative scenario",
     title: "A psychotherapy practice in New York",
-    dek: "A federal privilege ruling and a preservation order made mainstream AI a liability in the consulting room, so Aaron moved the arc of his practice into keys only he holds.",
+    dek: "Recent AI privilege and preservation rulings raised new confidentiality questions for clinical notes, so this scenario explores what safer memory infrastructure could look like.",
     heroGallery: [
       { src: "/story-art/aaron-nyc-central-park-lawn.png", alt: "Central Park lawn with the Manhattan skyline beyond the trees", label: "Central Park" },
       { src: "/story-art/aaron-nyc-waterfront-skyline.avif", alt: "Lower Manhattan skyline across the water on a clear day", label: "Lower Manhattan" },
@@ -261,8 +261,8 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
       {
         kind: "prose",
         paragraphs: [
-          "Few professions sit under more legal pressure around AI than mental health. A federal court has ruled that conversations with mainstream AI systems carry no privilege and are admissible as evidence in litigation, and a separate preservation order has forced one major provider to retain every consumer chat indefinitely, making the most popular AI tools effectively radioactive inside a clinical practice.",
-          "Aaron Liebowitz is a psychotherapist in private practice on the Upper West Side. Trained psychoanalytically, he has kept the same office for nearly thirty years and a list of about twenty-eight long-term patients, some of them in their tenth, twelfth, or fifteenth year with him. Along with the practice he has inherited the quiet burden every long-tenured therapist knows: a locked filing cabinet of handwritten session notes that he stopped trusting himself to remember by year two. Rather than let that history stay trapped on paper or migrate it into mainstream AI that could one day be subpoenaed, Aaron decided to consolidate the entire arc of his practice inside Jokuh: an encrypted dataroom whose keys he, and only he, holds.",
+          "Few professions sit under more legal pressure around AI than mental health. Recent privilege and preservation rulings have raised serious confidentiality questions for clinical workflows, especially when notes or transcripts are handed to consumer AI systems without a clear data boundary.",
+          "In this illustrative scenario, Aaron Liebowitz is a psychotherapist in private practice on the Upper West Side. Trained psychoanalytically, he has kept the same office for nearly thirty years and a small list of long-term patients. Along with the practice he has inherited the quiet burden every long-tenured therapist knows: a locked filing cabinet of handwritten session notes that he stopped trusting himself to remember by year two. Rather than let that history stay trapped on paper or migrate it into tools with unclear retention, Aaron explores consolidating the arc of his practice inside Jokuh: an encrypted workspace designed around clinician-held access.",
         ],
       },
       {
@@ -282,20 +282,20 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
       {
         kind: "quote",
         text: "My memory used to be the bottleneck. The cabinet used to be a liability. Jokuh is the first piece of software I have ever trusted enough to put a patient's name into.",
-        attribution: "Aaron Liebowitz, private practice, New York",
+        attribution: "Illustrative clinician scenario",
       },
       {
         kind: "prose",
         paragraphs: [
           "What used to live in fading ink and unreliable recall now lives in sealed, dated, queryable tiles. Past dreams, prescribed medications, the names of the dead and the years they died, the patient's own words from a session in 2019. Aaron can reference any of it instantly without ever leaving the room. Day to day, the workflow runs on the fifty minutes between sessions: a session ends, the recording is sealed and tagged, the next patient's history is surfaced before they knock. Voice mode handles most of it. The clock the patient is not supposed to see no longer counts down to lost detail.",
-          "The Anthropic privilege ruling and the Southern District of New York's preservation order against OpenAI both happened blocks from Aaron's office. He has no intention of becoming the test case that drags either precedent into therapy. With Jokuh, the encryption keys are his alone. The company is mathematically incapable of producing a transcript under subpoena, which means there is nothing to produce. What used to require a locked drawer and a careful conscience now requires only cryptography.",
+          "Recent privilege and preservation rulings make the risk concrete enough to change behavior. With Jokuh, the intended data boundary is narrower: protected notes are designed to stay encrypted and outside routine company plaintext access. What used to require a locked drawer and a careful conscience now requires a workflow that makes access, retention, and review explicit.",
           "In a profession where the difference between a useful session and a forgotten one is often a single remembered detail from years ago, that continuity is no longer something Aaron has to hold in his head. The room hasn't changed since he trained. The work hasn't changed. What has changed is how much of the patient he can keep with him, and how safely he can keep it.",
         ],
       },
       {
         kind: "prose",
         paragraphs: [
-          "Aaron Liebowitz, private practice psychotherapist, Upper West Side, Manhattan. Voice mode runs in the fifty-minute gap between sessions, sealing recordings, surfacing patient history, logging impressions while the work is still fresh. Patient tiles are encrypted with keys held solely by the clinician; Jokuh itself has no decryption capability.",
+          "Illustrative private-practice workflow, Upper West Side, Manhattan. Voice mode runs in the fifty-minute gap between sessions, sealing recordings, surfacing patient history, and logging impressions while the work is still fresh. Patient tiles are designed for clinician-scoped access rather than routine company plaintext access.",
         ],
       },
       {
@@ -327,23 +327,23 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
       {
         kind: "prose",
         paragraphs: [
-          "Confirm the cryptographic status of my patient data. Who holds the keys? What happens if Jokuh is served a subpoena?",
-          "You hold the only keys. All patient tiles are encrypted at rest and in transit inside a Trusted Execution Environment. Jokuh has no decryption capability. Under court order, there is no plaintext we could produce. Attestation logs available for audit. Sovereignty: confirmed.",
+          "Confirm the status of my patient data. Who can access this tile, and what logs are available for review?",
+          "Patient tiles are designed for encrypted storage and scoped key handling. Jokuh is designed not to retain plaintext patient tiles in company-accessible systems. Attestation and access logs can be reviewed where enabled for the workspace.",
         ],
       },
       {
         kind: "prose",
         paragraphs: [
-          "Aaron Liebowitz is a New York-based psychotherapist in private practice and a Jokuh user since the closed beta.",
+          "This is an illustrative clinical-memory scenario, not a published customer claim.",
         ],
       },
     ],
   },
   "tomas-aldaz": {
     slug: "tomas-aldaz",
-    metaLine: "April 8, 2026 · Jokuh Stories · Field story",
+    metaLine: "April 8, 2026 · Jokuh Stories · Illustrative scenario",
     title: "A regenerative grain cooperative in the High Plains",
-    dek: "Registries, green-claims rules, and greenwashing suits turned every soil panel and grower call into potential evidence, so the cooperative's memory had to be as defensible as its carbon math.",
+    dek: "Registries, green-claims rules, and greenwashing suits can turn soil panels and grower calls into evidence, so this scenario explores defensible cooperative memory.",
     heroGallery: [
       { src: "/story-art/tomas-aldaz-aerial-farm.png", alt: "Aerial view of farm fields, roads, and grain silos in the High Plains", label: "A cooperative seen from above: roads, silos, and fields that all need one defensible memory." },
       { src: "/story-art/tomas-aldaz-savannah-field.png", alt: "Wide dirt field under a bright blue sky with trees along the edge", label: "Open soil under a clear sky, the long-horizon record behind every carbon claim." },
@@ -354,8 +354,8 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
       {
         kind: "prose",
         paragraphs: [
-          "Few sectors face more aggressive scrutiny over data integrity than regenerative agriculture. Carbon-credit registries, FTC green-claims rulemaking, and a wave of greenwashing class actions have turned every soil panel, drone scan, and farmer conversation into potential evidence in an audit, and a single missing record can cost a cooperative its certification and its buyer list overnight.",
-          "Tomás Aldaz is the director of a regenerative grain cooperative spanning the High Plains of Kansas, Nebraska, and eastern Colorado. The grandson of Basque sheep ranchers and a Wageningen-trained agronomist, Tomás coordinates 340 family farms across roughly 1.2 million MRV-certified acres. The cooperative sells into a buyer book that includes Patagonia Provisions, General Mills, and a French banking carbon ledger, counterparties that demand audit-grade documentation on every ton of soil carbon claimed. Rather than continue patching together spreadsheets, drone footage, and grower phone calls across thirty-six different filing systems, Tomás moved the cooperative's entire operational record into Jokuh, with each farm running as its own encrypted node and contributing to a shared knowledge pool only the cooperative can read.",
+          "Few sectors face more scrutiny over data integrity than regenerative agriculture. Carbon-credit registries, green-claims rules, and greenwashing litigation can turn soil panels, drone scans, and farmer conversations into evidence in an audit, and a missing record can undermine buyer confidence.",
+          "In this illustrative scenario, Tomás Aldaz directs a regenerative grain cooperative spanning the High Plains of Kansas, Nebraska, and eastern Colorado. The cooperative manages a large MRV program across many farms and sells into buyer relationships that require audit-grade documentation for soil-carbon claims. Rather than continue patching together spreadsheets, drone footage, and grower phone calls across disconnected filing systems, Tomás evaluates moving the cooperative's operational record into Jokuh, with farm records scoped into encrypted workspaces and contributing to a shared knowledge pool for authorized cooperative users.",
         ],
       },
       {
@@ -374,13 +374,13 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
       {
         kind: "quote",
         text: "Soil takes decades to remember anything. Our software finally takes the same view. Every acre, every season, every farmer's voice, sealed, indexed, ours.",
-        attribution: "Tomás Aldaz, Director, High Plains Regenerative Cooperative",
+        attribution: "Illustrative cooperative director",
       },
       {
         kind: "prose",
         paragraphs: [
-          "Day to day, the cooperative now runs on continuous capture. Farmers leave voice memos from the cab of a tractor; agronomists upload soil-panel results from the field; drones stream NDVI scans straight into the relevant farm's tile. The Vortex compresses all of it (voice, image, sensor, document) into queryable history that compounds with every season. When a buyer's auditor asks for evidence on a specific 47,000-acre block, Tomás does not assemble a binder over two weeks. He queries the pool. The agentic identity, trained on the cooperative's established voice and methodology, drafts the response in hours. Nothing leaves the encrypted environment. Nothing is paraphrased by a third-party model that could later be subpoenaed.",
-          "The regulatory horizon is what makes this architecture non-negotiable. The EU CSRD, the SEC's climate disclosure framework, and the parallel rise of greenwashing litigation have collapsed the gap between agricultural marketing claims and securities-grade evidence. A cooperative that cannot reproduce the chain of custody on its carbon math is not just losing a buyer; it is exposed. With Jokuh, the cryptographic keys to every farm tile sit with the cooperative. Jokuh itself is mathematically incapable of producing the data under subpoena, and every record carries an attestation log a third-party auditor can verify without ever decrypting the underlying content. Sovereignty and audit-readiness in the same architecture.",
+          "Day to day, the cooperative runs on continuous capture. Farmers leave voice memos from the cab of a tractor; agronomists upload soil-panel results from the field; drones stream imagery into the relevant farm's tile. The workspace compresses voice, image, sensor, and document inputs into queryable history that compounds with every season. When a buyer's auditor asks for evidence on a specific block, Tomás does not assemble a binder from scratch. He queries the pool and reviews a draft response against the underlying records.",
+          "The regulatory horizon is what makes this architecture important. The EU CSRD, climate-disclosure rules, and the parallel rise of greenwashing litigation have narrowed the gap between agricultural marketing claims and evidence. A cooperative that cannot reproduce the chain of custody on its carbon math is exposed. With Jokuh, farm records are designed for scoped access, reviewable logs, and evidence packets that can be shared without exposing unrelated cooperative data.",
           "In a discipline where the most important records take half a century to mature, what changed was not the science. The science is older than the cooperative. What changed is that the cooperative now has a memory as long as the soil it stewards, and a confidentiality envelope strong enough to defend it.",
         ],
       },
@@ -400,7 +400,7 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
       {
         kind: "prose",
         paragraphs: [
-          "Tomás Aldaz, Director, High Plains Regenerative Cooperative: 340 farms, 1.2 million acres, MRV-certified. Each farm operates as an encrypted Galaxy Node; voice memos, drone scans, and soil panels are sealed into the relevant farm's tile in real time. The cooperative's shared knowledge pool can only be read by members; Jokuh holds no key and has no decryption capability of its own.",
+          "Illustrative High Plains cooperative workflow: each farm record can be scoped into its own workspace; voice memos, drone scans, and soil panels are attached to the relevant farm tile as they arrive. The cooperative's shared knowledge pool is designed for authorized users and reviewable access.",
         ],
       },
       {
@@ -411,7 +411,7 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
         kind: "prose",
         paragraphs: [
           "A buyer's auditor is challenging the soil-carbon math on Block 47-K: 47,000 acres, six member farms, four growing seasons. Pull every piece of evidence supporting the claim. Voice memos, soil panels, drone scans, weather records, cover-crop logs.",
-          "1,847 records assembled from Block 47-K, Q1 2022 through Q4 2025. Soil panels: 312. NDVI scans: 1,104. Farmer voice memos: 287. Cover-crop attestations: 144. Cryptographic attestation logs attached to each record. Knowledge pool synthesis ready in cooperative voice. Draft response prepared.",
+          "Supporting records assembled from the block history, including soil panels, imagery, farmer voice memos, weather records, and cover-crop attestations. Access logs and source links are attached for review. Draft response prepared for human approval.",
         ],
       },
       {
@@ -422,7 +422,7 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
         kind: "prose",
         paragraphs: [
           "Show me the microbial-diversity trajectory across all member farms running cover-crop-plus-no-till since the 2019 baseline. Surface the outliers in both directions and what those farmers said about their seasons.",
-          "178 farms qualify. Mean Shannon diversity index up 41% since baseline. Top decile: 14 farms above 2.1x baseline, all running multi-species cover with managed grazing. Bottom decile: 9 farms flat or declining, six of them citing drought-shortened cover windows in 2023 voice memos. Full timeline and grower commentary ready in the pool.",
+          "Qualifying farms surfaced with trend lines, outlier groups, and the grower notes attached to each season. Full timeline and commentary ready for agronomist review.",
         ],
       },
       {
@@ -433,13 +433,13 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
         kind: "prose",
         paragraphs: [
           "Draft the buyer's annual sustainability letter using our 2025 data. Match the voice we established in the 2022 and 2023 letters. Surface the three highest-conviction findings and flag anything I should review before it goes out.",
-          "Draft complete. Voice match score: 0.94 against prior letters. Three findings surfaced: soil-carbon retention up 12.3% above baseline projection, on-farm biodiversity index outperforming control plots by 1.8x, water-use efficiency up 18% on irrigated acres. Two passages flagged for your review. Both touch claims that may require additional auditor sign-off before publication.",
+          "Draft complete. Three evidence-backed findings surfaced with source links. Two passages are flagged for review because they touch claims that may require auditor sign-off before publication.",
         ],
       },
       {
         kind: "prose",
         paragraphs: [
-          "Tomás Aldaz is the director of a regenerative grain cooperative in the High Plains and a Jokuh enterprise customer since the private beta.",
+          "This is an illustrative cooperative scenario for regulated evidence workflows, not a published customer claim.",
         ],
       },
     ],

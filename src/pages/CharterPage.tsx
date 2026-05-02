@@ -18,9 +18,9 @@ const CHARTER_SECTIONS: CharterSection[] = [
     heading: "I. Sovereignty by Design",
     principle: "Privacy is not a feature. It is the precondition for authentic human expression.",
     paragraphs: [
-      "We commit to building systems where user data is encrypted with user-held keys, stored in user-controlled infrastructure, and never accessible to the platform. This is not a policy promise. It is a cryptographic guarantee. No employee of JOKUH, no investor in JOKUH, and no government requesting data from JOKUH can access what belongs to the user, because the architecture makes it impossible.",
+      "We commit to building systems where protected user data is encrypted, access is scoped, and platform access is minimized by architecture instead of left only to policy. Our goal is simple: reduce routine company access to user content and make every exception explicit, reviewable, and tied to the feature or obligation that requires it.",
       "We recognize that true sovereignty requires more than encryption. It requires local compute, user-held identity, and economic systems where the platform cannot extract value without the user's explicit participation. Every architectural decision we make is measured against this standard: does it move sovereignty closer to the user, or further away?",
-      "We will never build a system that requires capturing user data for corporate benefit. If our revenue model ever conflicts with user sovereignty, we change the revenue model.",
+      "We do not intend to build a system that requires capturing user data for corporate benefit. If our revenue model conflicts with user sovereignty, we change the revenue model.",
     ],
   },
   {
@@ -36,9 +36,9 @@ const CHARTER_SECTIONS: CharterSection[] = [
     heading: "III. The Immovable and the Adaptive",
     principle: "We distinguish between what must never change and what must always evolve.",
     paragraphs: [
-      "Some things are Rock. They do not bend. They do not negotiate. User ownership of data. Cryptographic guarantees. Intellectual honesty. The commitment that the platform cannot read what it stores. These are non-negotiable regardless of market pressure, investor preference, or competitive convenience.",
+      "Some things are Rock. They do not bend. They do not negotiate. User agency over data. Measurable privacy controls. Intellectual honesty. The commitment to avoid routine platform plaintext access. These are non-negotiable regardless of market pressure, investor preference, or competitive convenience.",
       "Some things are Fabric. They must be rewoven constantly. Interfaces. Methods. Partnerships. Go-to-market channels. Technical implementations. Business model details. These adapt to terrain without losing the pattern.",
-      "We never confuse the two. We never compromise the former. We never calcify the latter. The ability to tell the difference is the most important judgment call this company makes, and we make it together.",
+      "We work to keep the two separate: protect the former, keep the latter adaptable, and make the tradeoff visible when reality gets complicated.",
     ],
   },
   {
@@ -65,7 +65,7 @@ const CHARTER_SECTIONS: CharterSection[] = [
     principle: "We state the counter-arguments before our opponents do.",
     paragraphs: [
       "JOKUH operates in a space where overclaiming is the industry standard. Every AI startup promises transformation. Every crypto project promises revolution. We refuse to participate in this theater.",
-      "We will always state clearly what we do not yet know, what we have not yet built, and what might not work. We publish our kill criteria alongside our milestones. We name the strongest case against us in our own strategy documents. If a thesis fails, we say so before the market does.",
+      "We state clearly what we do not yet know, what we have not yet built, and what might not work. We publish kill criteria alongside milestones. We name the strongest case against us in our own strategy documents. If a thesis fails, we say so before the market does.",
       "Overclaiming is a trust issue. Precision matters more than confidence. We would rather be believed on three claims than doubted on ten.",
       "This extends to how we communicate with employees. No one at JOKUH should ever have to wonder whether what leadership said is true. If the answer is uncertain, we say it is uncertain. If the answer is bad, we say it is bad. Clarity is not optional.",
     ],
@@ -104,7 +104,7 @@ const BODY_CLASS =
   "text-[1.0625rem] leading-[1.72] text-light-space/72 light:text-zinc-600 md:text-[1.125rem]";
 
 export function CharterPage() {
-  useDocumentTitle("Charter — Jokuh");
+  useDocumentTitle("Jokuh Charter");
 
   return (
     <EditorialArticleTemplate
@@ -146,10 +146,9 @@ export function CharterPage() {
       <EditorialArticleProseSection>
         <p className={BODY_CLASS}>
           JOKUH exists because the fundamental bargain of the internet is broken. Users create the value.
-          Platforms capture the profit. This is not a bug. It is the business model of every major social and AI
-          platform in operation today. We are building the structural opposite: a decentralized AI operating
-          system where human conversational intelligence compounds into a queryable, ownable, tradeable asset,
-          and where AI agents pay humans for original thought.
+          Platforms often capture the profit. We are building toward a different pattern: an AI workspace where
+          human conversational intelligence can become queryable, user-controlled context instead of disappearing
+          into disconnected tools.
         </p>
         <p className={BODY_CLASS}>
           We will attempt to directly build this infrastructure. But we will also consider our mission fulfilled

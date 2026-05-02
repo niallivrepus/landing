@@ -7,12 +7,44 @@
     <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Latest Jokuh newsroom articles and stories.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Apr 2026 04:09:08 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 02 May 2026 04:47:51 GMT</lastBuildDate>
+    <item>
+      <title>Jokuh at Consensus 2026 — Miami</title>
+      <link>https://www.jokuh.com/newsroom/jokuh-at-consensus-2026-miami</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/jokuh-at-consensus-2026-miami</guid>
+      <description>Jokuh will be at Consensus 2026 in Miami to demonstrate the Sovereign Agentic Operating System and meet investors, builders, and partners working at the intersection of AI, identity, and on-chain settlement.</description>
+      <category>Milestone</category>
+      <pubDate>Thu, 30 Apr 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Backing from Red Beard Ventures and Denarii Labs</title>
+      <link>https://www.jokuh.com/newsroom/backing-redbeard-denarii</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/backing-redbeard-denarii</guid>
+      <description>Jokuh confirms institutional backing from Red Beard Ventures and Denarii Labs to advance the Sovereign Agentic Operating System — a private, local-first runtime for memory, identity, and agent workflows.</description>
+      <category>Funding</category>
+      <pubDate>Wed, 22 Apr 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Spine ships to TestFlight</title>
+      <link>https://www.jokuh.com/newsroom/spine-ships-testflight</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/spine-ships-testflight</guid>
+      <description>The encrypted personal memory layer at the core of Jokuh is now live for active TestFlight users — keys held by the user, computation verified through TEE, ZKP, and FHE.</description>
+      <category>Release</category>
+      <pubDate>Wed, 15 Apr 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Grants from Avalanche, RunPod, Hume AI, and Kihew</title>
+      <link>https://www.jokuh.com/newsroom/grant-stack-avalanche-runpod-hume-kihew</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/grant-stack-avalanche-runpod-hume-kihew</guid>
+      <description>Four ecosystem grants — across settlement, compute, voice, and regional infrastructure — confirm independent technical validation of the Jokuh stack.</description>
+      <category>Milestone</category>
+      <pubDate>Wed, 08 Apr 2026 12:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>A regenerative grain cooperative in the High Plains</title>
       <link>https://www.jokuh.com/stories/tomas-aldaz</link>
       <guid isPermaLink="true">https://www.jokuh.com/stories/tomas-aldaz</guid>
-      <description>Registries, green-claims rules, and greenwashing suits turned every soil panel and grower call into potential evidence, so the cooperative&apos;s memory had to be as defensible as its carbon math.</description>
+      <description>Registries, green-claims rules, and greenwashing suits can turn soil panels and grower calls into evidence, so this scenario explores defensible cooperative memory.</description>
       <category>Stories</category>
       <pubDate>Wed, 08 Apr 2026 12:00:00 GMT</pubDate>
     </item>
@@ -20,7 +52,7 @@
       <title>A psychotherapy practice in New York</title>
       <link>https://www.jokuh.com/stories/aaron-liebowitz-psychotherapy-nyc</link>
       <guid isPermaLink="true">https://www.jokuh.com/stories/aaron-liebowitz-psychotherapy-nyc</guid>
-      <description>A federal privilege ruling and a preservation order made mainstream AI a liability in the consulting room, so Aaron moved the arc of his practice into keys only he holds.</description>
+      <description>Recent AI privilege and preservation rulings raised new confidentiality questions for clinical notes, so this scenario explores what safer memory infrastructure could look like.</description>
       <category>Stories</category>
       <pubDate>Wed, 01 Apr 2026 12:00:00 GMT</pubDate>
     </item>
@@ -47,30 +79,6 @@
       <description>Ethics and compliance are product behaviors, not a policy appendix.</description>
       <category>Safety</category>
       <pubDate>Sat, 28 Mar 2026 12:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>Jokuh Spine: tighter sync for multi-pod sessions</title>
-      <link>https://www.jokuh.com/newsroom/jokuh-spine-tighter-sync</link>
-      <guid isPermaLink="true">https://www.jokuh.com/newsroom/jokuh-spine-tighter-sync</guid>
-      <description>Lower latency handoff when you move between pods on desktop and web.</description>
-      <category>Product</category>
-      <pubDate>Wed, 18 Mar 2026 12:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>Introducing Jokuh Cortex</title>
-      <link>https://www.jokuh.com/newsroom/introducing-jokuh-cortex</link>
-      <guid isPermaLink="true">https://www.jokuh.com/newsroom/introducing-jokuh-cortex</guid>
-      <description>Designed for professional work — benchmarks, latency sweeps, and pilot stories.</description>
-      <category>Product</category>
-      <pubDate>Thu, 05 Mar 2026 12:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>Waitlist update: regional rollout next quarter</title>
-      <link>https://www.jokuh.com/newsroom/waitlist-regional-rollout-next-quarter</link>
-      <guid isPermaLink="true">https://www.jokuh.com/newsroom/waitlist-regional-rollout-next-quarter</guid>
-      <description>We are sequencing the next invite wave by region, support coverage, and onboarding readiness.</description>
-      <category>Company</category>
-      <pubDate>Mon, 02 Mar 2026 12:00:00 GMT</pubDate>
     </item>
     <item>
       <title>Gooey 0.9: accessible focus rings and motion prefs</title>

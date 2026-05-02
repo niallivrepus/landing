@@ -36,7 +36,7 @@ const STATUS_ITEMS = [
 ] as const;
 
 export function DocsOverviewPage() {
-  useDocumentTitle("Documentation — Jokuh");
+  useDocumentTitle("Jokuh Documentation");
 
   return (
     <article className="w-full max-w-[770px] pb-16">

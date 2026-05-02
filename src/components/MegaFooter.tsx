@@ -1,6 +1,6 @@
 import { ChevronDown, Globe } from "lucide-react";
 import { useEffect, useMemo, useState, type ComponentType, type CSSProperties } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { SITE_LANGUAGES, findSiteLanguageForActive } from "../data/site-languages";
 import { getStoredLanguageKey } from "../lib/google-translate";
 import { SiteLink } from "./SiteLink";
@@ -30,25 +30,14 @@ const FOOTER_COLUMNS = resolveRigidNavColumns(RIGID_NAV_COLUMNS, "footer").sort(
 });
 
 function DirectoryLink({ link, className }: { link: RigidLink; className?: string }) {
-  const location = useLocation();
   const { href, label } = link;
   const showGlyph = showOffSiteNavGlyph(link);
-  const sitemapScroll =
-    location.pathname === "/sitemap" && (href === "/sitemap" || href.startsWith("/sitemap#"));
 
   const suffix = showGlyph ? <OffSiteGlyph className="ml-0.5" /> : null;
   return (
     <SiteLink
       href={href}
       className={className}
-      onClick={(e) => {
-        if (sitemapScroll) {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          window.history.replaceState(null, "", href.includes("#") ? href : "/sitemap#sitemap-top");
-          document.getElementById("sitemap-top")?.focus({ preventScroll: true });
-        }
-      }}
     >
       <span className="inline-flex items-center gap-1">
         {label}
@@ -215,35 +204,6 @@ export function MegaFooter() {
               >
                 Manage cookies
               </button>
-              <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
-                ·
-              </span>
-              <Link to="/privacy" className={footerMetaLink}>
-                Privacy
-              </Link>
-              <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
-                ·
-              </span>
-              <Link to="/terms" className={footerMetaLink}>
-                Terms
-              </Link>
-              <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
-                ·
-              </span>
-              <Link
-                to="/sitemap#sitemap-top"
-                onClick={(e) => {
-                  if (location.pathname === "/sitemap") {
-                    e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                    window.history.replaceState(null, "", "/sitemap#sitemap-top");
-                    document.getElementById("sitemap-top")?.focus({ preventScroll: true });
-                  }
-                }}
-                className={footerMetaLink}
-              >
-                Site map
-              </Link>
             </p>
 
             <button

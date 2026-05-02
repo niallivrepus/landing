@@ -10,7 +10,7 @@ import { MANIFESTO } from "../data/manifesto";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function ManifestoPage() {
-  useDocumentTitle(`${MANIFESTO.title} — ${MANIFESTO.subtitle}`);
+  useDocumentTitle("Jokuh Manifesto");
 
   return (
     <EditorialArticleTemplate

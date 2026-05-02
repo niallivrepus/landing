@@ -11,6 +11,10 @@ import {
   CONTENT_SHELL_WIDE,
 } from "../components/system/shells";
 import { resolveHelpHref } from "../config/site-subdomains";
+import {
+  CONTACT_SALES_COMPANY_SIZE_OPTIONS,
+  CONTACT_SALES_INTEREST_OPTIONS,
+} from "../data/contact-sales";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { useId, useState, type ChangeEvent, type ComponentType, type FormEvent } from "react";
 
@@ -35,6 +39,11 @@ type SubmitState =
   | { kind: "success"; message: string }
   | { kind: "error"; message: string };
 
+type ContactSalesResponse = {
+  error?: string;
+  message?: string;
+};
+
 type Feature = {
   title: string;
   copy: string;
@@ -53,23 +62,6 @@ const INITIAL_FORM: ContactSalesFormState = {
   marketingOptIn: true,
   website: "",
 };
-
-const INTEREST_OPTIONS = [
-  "Jokuh enterprise platform",
-  "AI deployment for a specific team",
-  "Identity, governance, and controls",
-  "Custom integrations and rollout",
-  "Migration from existing tooling",
-] as const;
-
-const COMPANY_SIZE_OPTIONS = [
-  "1-20 employees",
-  "21-100 employees",
-  "101-500 employees",
-  "501-1,000 employees",
-  "1,001-5,000 employees",
-  "5,001+ employees",
-] as const;
 
 const FEATURES: readonly Feature[] = [
   {
@@ -108,6 +100,7 @@ function TextField({
   type = "text",
   autoComplete,
   placeholder,
+  required = false,
 }: {
   id: string;
   name: keyof ContactSalesFormState;
@@ -116,6 +109,7 @@ function TextField({
   type?: string;
   autoComplete?: string;
   placeholder?: string;
+  required?: boolean;
 }) {
   return (
     <input
@@ -126,6 +120,8 @@ function TextField({
       onChange={onChange}
       autoComplete={autoComplete}
       placeholder={placeholder}
+      required={required}
+      aria-required={required}
       className={INPUT_CLASS}
     />
   );
@@ -138,6 +134,7 @@ function SelectField({
   onChange,
   placeholder,
   options,
+  required = false,
 }: {
   id: string;
   name: keyof ContactSalesFormState;
@@ -145,6 +142,7 @@ function SelectField({
   onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
   placeholder: string;
   options: readonly string[];
+  required?: boolean;
 }) {
   return (
     <select
@@ -152,6 +150,8 @@ function SelectField({
       name={name}
       value={value}
       onChange={onChange}
+      required={required}
+      aria-required={required}
       className={cn(INPUT_CLASS, "appearance-none")}
     >
       <option value="">{placeholder}</option>
@@ -192,6 +192,7 @@ export function ContactSalesPage() {
   const phoneId = useId();
   const needsId = useId();
   const consentId = useId();
+  const noticeId = useId();
 
   const [form, setForm] = useState<ContactSalesFormState>(INITIAL_FORM);
   const [submitState, setSubmitState] = useState<SubmitState>({ kind: "idle" });
@@ -199,36 +200,54 @@ export function ContactSalesPage() {
 
   function updateField<K extends keyof ContactSalesFormState>(name: K, value: ContactSalesFormState[K]) {
     setForm((current) => ({ ...current, [name]: value }));
+    setSubmitState((current) => (current.kind === "submitting" ? current : { kind: "idle" }));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!event.currentTarget.reportValidity()) return;
     setSubmitState({ kind: "submitting" });
 
     try {
+      const payload: ContactSalesFormState = {
+        interest: form.interest.trim(),
+        workEmail: form.workEmail.trim(),
+        companySize: form.companySize.trim(),
+        companyName: form.companyName.trim(),
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        phoneNumber: form.phoneNumber.trim(),
+        needs: form.needs.trim(),
+        marketingOptIn: form.marketingOptIn,
+        website: form.website.trim(),
+      };
+
       const response = await fetch(CONTACT_SALES_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
-      const result = (await response.json().catch(() => null)) as { error?: string } | null;
+      const result = (await response.json().catch(() => null)) as ContactSalesResponse | null;
 
       if (!response.ok) {
-        throw new Error(result?.error || "Unable to submit right now.");
+        throw new Error(result?.error || "We could not send your inquiry right now.");
       }
 
       setForm(INITIAL_FORM);
       setSubmitState({
         kind: "success",
-        message: "Thanks. Our sales team will review your details and follow up using your work email.",
+        message: result?.message || "Thanks. Your inquiry was sent to Jokuh and our team will follow up by email.",
       });
     } catch (error) {
       setSubmitState({
         kind: "error",
-        message: error instanceof Error ? error.message : "Unable to submit right now.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "We could not send your inquiry right now. Please email hello@jokuh.com directly.",
       });
     }
   }
@@ -279,7 +298,7 @@ export function ContactSalesPage() {
                 </p>
               </div>
 
-              <form className="mt-8" onSubmit={handleSubmit}>
+              <form className="mt-8" onSubmit={handleSubmit} aria-describedby={submitState.kind !== "idle" ? noticeId : undefined}>
                 <div className="grid gap-5 md:grid-cols-2">
                   <div>
                     <FieldLabel htmlFor={interestId}>What are you interested in? *</FieldLabel>
@@ -289,7 +308,8 @@ export function ContactSalesPage() {
                       value={form.interest}
                       onChange={(event) => updateField("interest", event.target.value)}
                       placeholder="Select one"
-                      options={INTEREST_OPTIONS}
+                      options={CONTACT_SALES_INTEREST_OPTIONS}
+                      required
                     />
                   </div>
 
@@ -303,6 +323,7 @@ export function ContactSalesPage() {
                       onChange={(event) => updateField("workEmail", event.target.value)}
                       autoComplete="email"
                       placeholder="you@company.com"
+                      required
                     />
                   </div>
 
@@ -314,7 +335,8 @@ export function ContactSalesPage() {
                       value={form.companySize}
                       onChange={(event) => updateField("companySize", event.target.value)}
                       placeholder="Please select"
-                      options={COMPANY_SIZE_OPTIONS}
+                      options={CONTACT_SALES_COMPANY_SIZE_OPTIONS}
+                      required
                     />
                   </div>
 
@@ -327,6 +349,7 @@ export function ContactSalesPage() {
                       onChange={(event) => updateField("companyName", event.target.value)}
                       autoComplete="organization"
                       placeholder="Company name"
+                      required
                     />
                   </div>
 
@@ -339,6 +362,7 @@ export function ContactSalesPage() {
                       onChange={(event) => updateField("firstName", event.target.value)}
                       autoComplete="given-name"
                       placeholder="First name"
+                      required
                     />
                   </div>
 
@@ -351,6 +375,7 @@ export function ContactSalesPage() {
                       onChange={(event) => updateField("lastName", event.target.value)}
                       autoComplete="family-name"
                       placeholder="Last name"
+                      required
                     />
                   </div>
                 </div>
@@ -365,6 +390,7 @@ export function ContactSalesPage() {
                     onChange={(event) => updateField("phoneNumber", event.target.value)}
                     autoComplete="tel"
                     placeholder="+31 6 12 34 56 78"
+                    required
                   />
                 </div>
 
@@ -421,17 +447,17 @@ export function ContactSalesPage() {
                       )}
                     </Button>
                     <p className="text-[13px] text-light-space/50 light:text-zinc-500">
-                      We usually respond within one business day.
+                      We aim to respond within one business day.
                     </p>
                   </div>
 
                   <p className="max-w-[28ch] text-[13px] leading-relaxed text-light-space/50 light:text-zinc-500">
-                    For other inquiries, visit our{" "}
+                    For other inquiries, contact{" "}
                     <SiteLink
                       href={helpCenterHref}
                       className="font-medium text-light-space underline decoration-light-space/25 underline-offset-4 hover:decoration-light-space/60 light:text-zinc-950 light:decoration-zinc-300 light:hover:decoration-zinc-700"
                     >
-                      help center
+                      support
                     </SiteLink>
                     .
                   </p>
@@ -439,6 +465,9 @@ export function ContactSalesPage() {
 
                 {submitState.kind !== "idle" && submitState.kind !== "submitting" ? (
                   <div
+                    id={noticeId}
+                    role={submitState.kind === "error" ? "alert" : "status"}
+                    aria-live="polite"
                     className={cn(
                       "mt-5 rounded-[18px] px-4 py-3 font-sans text-[13px] leading-relaxed",
                       submitState.kind === "success"
@@ -467,23 +496,23 @@ export function ContactSalesPage() {
             items={[
               {
                 question: "How long does it take to hear back?",
-                answer: "Our sales team usually responds within one business day. We'll follow up at the work email you provided.",
+                answer: "One business day for serious inbound: investors, enterprise pilots, ecosystem partners. Set expectations in the first message and you'll get a real human response, not a sequence.",
               },
               {
                 question: "What should I prepare for the first call?",
-                answer: "A rough sense of team size, current tooling, and the workflows you'd like to improve. We'll handle the rest.",
+                answer: "A clear sentence on what you're trying to do with Jokuh, who's involved on your side, and the constraint that matters most: timeline, security, integration, scale. The sharper your context, the more value you get from 30 minutes.",
               },
               {
                 question: "Is there a minimum company size?",
-                answer: "No. We work with teams of all sizes. The form helps us route your inquiry to the right person regardless of scale.",
+                answer: "No hard minimum. We work with serious solo operators, teams under 50, and larger orgs with security and procurement requirements. The filter is fit, not headcount.",
               },
               {
                 question: "Can I get a demo before committing?",
-                answer: "Yes. After submitting the form, let your sales contact know you'd like a walkthrough. We're happy to show you the platform.",
+                answer: "Yes. Every qualified inbound gets a private walkthrough of the live MVP. We don't ship pre-recorded demos; you see the actual product on a real call.",
               },
               {
-                question: "What if I need support, not sales?",
-                answer: "Head to our help center or support page for technical assistance, account issues, and documentation.",
+                question: "I need support, not sales. Where do I go?",
+                answer: "Use the Support page. Sales is for partnerships, pilots, investor conversations, and integrations; everything else routes faster through Support.",
               },
             ]}
           />
@@ -491,7 +520,7 @@ export function ContactSalesPage() {
 
         <CompanyPageClosingCta
           headline="Need support instead of sales?"
-          buttonLabel="Visit help center"
+          buttonLabel="Contact support"
           buttonHref={helpCenterHref}
         />
       </>

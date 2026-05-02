@@ -32,14 +32,14 @@ export function buildAppHandoffUrl(prompt: string): string {
 }
 
 export function resolveStatusHref(href: string = "/"): string {
-  if (!STATUS_PORTAL_ORIGIN) return "/system-status";
+  if (!STATUS_PORTAL_ORIGIN) return "/";
   const raw = href && href !== "/" ? href : "";
   const path = raw === "" ? "" : raw.startsWith("/") ? raw : `/${raw}`;
   return path === "" ? `${STATUS_PORTAL_ORIGIN}/` : `${STATUS_PORTAL_ORIGIN}${path}`;
 }
 
 export function resolveHelpHref(href: string = "/"): string {
-  if (!HELP_PORTAL_ORIGIN) return "/support";
+  if (!HELP_PORTAL_ORIGIN) return "mailto:support@jokuh.com?subject=Support%20request";
   const raw = href && href !== "/" ? href : "";
   const path = raw === "" ? "" : raw.startsWith("/") ? raw : `/${raw}`;
   return path === "" ? `${HELP_PORTAL_ORIGIN}/` : `${HELP_PORTAL_ORIGIN}${path}`;

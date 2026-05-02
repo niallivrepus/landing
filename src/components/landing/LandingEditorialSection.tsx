@@ -12,10 +12,9 @@ export function LandingEditorialSection() {
           Today&apos;s AI runs on you. Jokuh runs for you.
         </h2>
         <p className="mt-6 text-[15px] leading-relaxed text-light-space/70 light:text-zinc-600 md:text-base">
-          Every prompt you type into a mainstream model is logged and retained. Privacy by policy
-          changes at 2 a.m. Privacy by mathematics does not. Jokuh is built so the company cannot read
-          your data: keys stay with you, computation runs in a Trusted Execution Environment, and
-          verification is mathematical—not promised.
+          Many mainstream AI services may log or retain prompts depending on plan, settings, and policy.
+          Jokuh is designed to reduce company access to user content through encryption, scoped key handling,
+          and execution paths built for stronger verification.
         </p>
       </div>
     </section>

@@ -56,110 +56,79 @@ export type NewsBriefDetailDocument = {
 
 export type NewsDetailDocument = NewsFeatureDetailDocument | NewsBriefDetailDocument;
 
-export const NEWS_DETAIL_BY_SLUG: Record<string, NewsFeatureDetailDocument> = {
-  "introducing-jokuh-cortex": {
-    kind: "feature",
-    slug: "introducing-jokuh-cortex",
-    metaLine: "March 5, 2026 · Product · Release",
-    title: "Introducing Jokuh Cortex",
-    subtitle: "Designed for professional work.",
-    speechText: [
-      "Introducing Jokuh Cortex, designed for professional work.",
-      "Cortex is our new reasoning and tool-use stack for pods and blurbs.",
-      "On PodBench Verified, Cortex reaches seventy eight point four percent, up from sixty one point two on the prior generation.",
-      "On Threadathlon, it scores fifty two point one percent versus forty four point eight.",
-      "BrowseComp for deep research improves to seventy nine percent.",
-      "Knowledge work tasks show Cortex winning or tying on eighty three percent of GDPval scenarios against practicing professionals.",
-      "Teams at Northline, Harbor, and Signal Desk report faster turnaround on long horizon deliverables.",
-      "Cortex runs with lower median latency than frontier baselines at matched accuracy on SWE Bench style tasks.",
-    ].join(" "),
-    introParagraphs: [
-      "**Jokuh Cortex** is our next-generation assistant stack for pods, blurbs, and API workloads—tuned for **long-horizon professional work**: research memos, product specs, incident timelines, and multi-step tool use without losing the thread.",
-      "It improves on **Cortex Preview** across coding, browsing, and knowledge benchmarks while staying calmer under parallel tool calls. **Cortex Pro** adds higher reasoning depth for the heaviest workflows.",
-    ],
-    benchmarkTable: {
-      columns: ["Benchmark", "Cortex", "Cortex Preview", "Baseline"],
-      rows: [
-        { label: "GDPval (wins or ties)", values: ["83.0%", "70.9%", "62.4%"] },
-        { label: "SWE-Bench Pro (public)", values: ["57.7%", "52.1%", "48.9%"] },
-        { label: "PodBench-Verified", values: ["78.4%", "74.0%*", "61.2%"] },
-        { label: "Threadathlon", values: ["52.1%", "48.6%", "44.8%"] },
-        { label: "BrowseComp", values: ["79.0%", "71.2%", "58.5%"] },
-      ],
-      footnote:
-        "* PodBench-Verified score for Cortex Preview measured on the January 2026 harness revision; all other cells on the March 2026 suite.",
-    },
-    knowledgeWork: {
-      title: "Knowledge work",
-      paragraphs: [
-        "On **GDPval**, Cortex now **wins or ties** professionals on **83.0%** of blind-reviewed tasks, up from **70.9%** for Preview. The gains concentrate in synthesis, stakeholder-ready writing, and constraint-heavy planning where small mistakes are costly.",
-        "The chart below breaks out **win rate vs industry professionals** across representative bundles—**wins** in light blue, **ties** in deep blue—so you can see where the model is decisive versus merely acceptable.",
-      ],
-    },
-    chartFootnotes: {
-      gdpval:
-        "GDPval tasks are sampled from anonymized pod transcripts and reviewed by domain leads. “Tie” means both outputs met rubric without a clear preference.",
-      swe: "Points are Pareto-optimal configurations from internal latency sweeps; latency is end-to-end wall clock on standard hardware.",
-      osworld:
-        "A tool yield is when the assistant yields to await tool responses. Parallel tool batches count as one yield. Yields proxy latency better than raw call counts.",
-    },
-    testimonials: [
-      {
-        id: "northline",
-        company: "Northline",
-        quote:
-          "Cortex is the best stack we've shipped against internally. It's at the top of our Apex Agents board for professional services-style work—long decks, diligence packs, and legal first drafts—with lower median latency than the models we replaced.",
-        attribution: "Morgan Ellis, VP Eng at Northline",
-        followUp:
-          "Their Apex suite now reports a mean **87.3%** pass rate on rubric checks, with **68.0%** of runs needing no human rewrite on first submission.",
-        sparkline: [
-          { step: 1, cortex: 62, prior: 54 },
-          { step: 2, cortex: 71, prior: 58 },
-          { step: 3, cortex: 78, prior: 61 },
-          { step: 4, cortex: 84, prior: 63 },
-          { step: 5, cortex: 87, prior: 65 },
-        ],
-      },
-      {
-        id: "harbor",
-        company: "Harbor",
-        quote:
-          "We stress multi-tab research and CRM writes. Cortex holds context across twelve-plus tool yields without spiraling. That's the difference between 'demo good' and 'Monday morning good.'",
-        attribution: "Riley Park, Platform Lead at Harbor",
-        followUp:
-          "Harbor's pilot cut median research-to-memo time by **34%** while keeping human sign-off on every external send.",
-        sparkline: [
-          { step: 1, cortex: 55, prior: 52 },
-          { step: 2, cortex: 64, prior: 53 },
-          { step: 3, cortex: 72, prior: 55 },
-          { step: 4, cortex: 79, prior: 56 },
-          { step: 5, cortex: 83, prior: 57 },
-        ],
-      },
-      {
-        id: "signal-desk",
-        company: "Signal Desk",
-        quote:
-          "We wanted fewer 'almost right' answers in compliance-heavy threads. Cortex Pro's depth mode is the first time our reviewers voluntarily asked to keep a model in the loop.",
-        attribution: "Ava Nguyen, Risk Product at Signal Desk",
-        followUp:
-          "Escalations to secondary review dropped **21%** quarter over quarter in the Cortex arm of the trial.",
-        sparkline: [
-          { step: 1, cortex: 58, prior: 56 },
-          { step: 2, cortex: 66, prior: 57 },
-          { step: 3, cortex: 74, prior: 59 },
-          { step: 4, cortex: 81, prior: 60 },
-          { step: 5, cortex: 86, prior: 61 },
-        ],
-      },
-    ],
-  },
-};
+export const NEWS_DETAIL_BY_SLUG: Record<string, NewsFeatureDetailDocument> = {};
 
 const NEWSROOM_BRIEF_BY_SLUG: Record<
   string,
   Omit<NewsBriefDetailDocument, "kind" | "slug" | "metaLine" | "title">
 > = {
+  "jokuh-at-consensus-2026-miami": {
+    subtitle: "The team building the Sovereign Agentic Operating System is heading to Miami.",
+    introParagraphs: [
+      "Jokuh will be at Consensus 2026 in Miami. The team is bringing live demos of Spine, Blurbs, Calls, and the ARC Terminal — the surfaces that make up the Sovereign Agentic Operating System — and is opening private sessions for investors, ecosystem partners, and builders working on identity, agent runtimes, and on-chain settlement.",
+      "Consensus is the venue where the Web3 stack meets capital. We are showing up because the conversation about agents, memory, and sovereign identity has moved past slideware. People want to touch the product. They want to see encryption that actually holds. They want to understand how an agent inherits a Knowledge Pool without leaking it back into a centralized log. We are bringing the answers — and the device — to the room.",
+    ],
+    bodyTitle: "What we are showing",
+    bodyParagraphs: [
+      "The Miami sessions will walk through three demonstrations. First, **Spine** — encrypted personal memory, with keys held by the user and computation verified through the Trusted Execution Environment, Zero-Knowledge Proofs, and Fully Homomorphic Encryption layer. Second, **Sigil** — the living digital identity object surfaced through Profile. Third, the **ARC Terminal** — the desktop interface where Sidekick executes on the user's behalf with scoped permissions and reviewable audit trails.",
+      "We will also be running closed-door briefings on the agent runtime architecture, the wallet settlement layer, and the marketplace for agents, themes, and identities. These sessions are by request only.",
+      "\"Consensus is where serious builders show their hand,\" said **Sean Rock**, Founder & CEO. \"We are not going to Miami to pitch a vision. We are going to demonstrate that the math works, that the product runs, and that sovereign agentic computing is not a thesis anymore — it is a thing you can install.\"",
+      "Investors, partners, and press attending Consensus 2026 in Miami can request a slot via sean@sierri.com. Slots are limited and will be assigned by relevance to the round, the integration, or the story.",
+      "Jokuh is in early access. Access, features, availability, and offers may change and may vary by region, device, account, or plan.",
+      "Jokuh — The Sovereign Agentic Operating System. Verify ↔ Trust.",
+    ],
+  },
+  "backing-redbeard-denarii": {
+    subtitle: "Two operators with a long view on Web3 infrastructure are now on the cap table.",
+    introParagraphs: [
+      "Jokuh has confirmed institutional backing from **Red Beard Ventures** and **Denarii Labs**. Both firms have invested into the company building the Sovereign Agentic Operating System — a private, local-first runtime for memory, identity, and agent workflows on mobile, desktop, and the SDK.",
+      "The backing follows months of technical diligence on the Spine memory layer, the agent runtime, and the privacy stack — Trusted Execution Environment, end-to-end encryption between identities, Zero-Knowledge Proofs verifying computation, and Fully Homomorphic Encryption for data in untrusted environments. Encryption keys are held by the user. The company cannot read user data. That is a design constraint, not a marketing line.",
+    ],
+    bodyTitle: "Why these two",
+    bodyParagraphs: [
+      "Red Beard Ventures and Denarii Labs are not generalist tourists. They have stayed close to operators across multiple Web3 cycles and they invest where the architecture is doing the work. Jokuh is in the same posture. We are not asking the market to take privacy on faith. The math is auditable, and the surfaces — Spine, Blurbs, Calls, Messages, Profile — are designed so that the user, not the platform, holds the keys.",
+      "\"We took the meeting because the architecture is real,\" said a representative familiar with the diligence process. **Sean Rock**, Founder & CEO of Jokuh, added: \"Red Beard and Denarii were not buying a deck. They reviewed the runtime, the encryption stack, and the live MVP in TestFlight. The backing reflects what is already shipping, not what we are promising.\"",
+      "Capital from this backing supports continued engineering across the live MVP in TestFlight, the ARC Terminal desktop interface, the Chrome capture plugin, and the marketplace surface for agents, themes, and identities. It also supports security work and audit prep ahead of broader public availability.",
+      "Jokuh — operating company — is structured to be insulated from token and accelerator obligations. Investors deal with Jokuh.",
+      "Jokuh is in early access. Access, features, availability, and offers may change and may vary by region, device, account, or plan.",
+      "Jokuh — The Sovereign Agentic Operating System. Verify ↔ Trust.",
+    ],
+  },
+  "spine-ships-testflight": {
+    subtitle: "The encrypted memory layer at the core of Jokuh is now in the hands of active users.",
+    introParagraphs: [
+      "Spine — Jokuh's encrypted personal memory and storage layer — is now live for active TestFlight users on iOS. Spine is the substrate beneath every other surface in the Sovereign Agentic Operating System: Blurbs are scoped from it, Calls and Messages sync into it, Sidekick reads from it under user-granted permission, and Sigil is anchored to it. If Jokuh is the operating system, Spine is the disk.",
+    ],
+    bodyTitle: "What ships",
+    bodyParagraphs: [
+      "This release puts the full privacy stack into production for early-access users: **Trusted Execution Environment (TEE)** at the core of computation; **end-to-end encryption** between identities, with no server-side break-glass; **Zero-Knowledge Proofs** verifying that computation ran as specified; **Fully Homomorphic Encryption** protecting data in untrusted environments; and **user-held keys**. Jokuh the company cannot read user data. The math holds whether you trust us or not.",
+      "Spine integrates with the Chrome capture plugin so meeting transcripts flow into the Knowledge Pool without ever transiting an unencrypted store. From there, Blurbs are generated against the user's own corpus — scoped, attributable, and revocable.",
+      "Spine reframes what \"memory\" means inside an AI workspace. Most products treat your conversation history as their inventory. Jokuh treats it as your property. Active users in TestFlight can already feel the difference: continuity across surfaces, recall without leakage, and a Knowledge Pool that grows on the device — not in a vendor's training pipeline.",
+      "\"Spine is the part of Jokuh that decides whether the rest of the product is honest,\" said **Hyke Vlas**, Web3 / AI Lead and UX/UI. \"We designed it so that the moment a user opens Calls, runs a Blurb, or hands a task to Sidekick, the trust contract is already settled in cryptography — not in a privacy policy. The interface is quiet. The architecture is the loud part.\"",
+      "The team is staging the desktop ARC Terminal connection to Spine, expanding Knowledge Pool sync into Calls and Messages, and preparing third-party verification work that will be communicated through the AUDIT tag when ready.",
+      "Jokuh is in early access. Access, features, availability, and offers may change and may vary by region, device, account, or plan.",
+      "Jokuh — The Sovereign Agentic Operating System. Verify ↔ Trust.",
+    ],
+  },
+  "grant-stack-avalanche-runpod-hume-kihew": {
+    subtitle: "Four ecosystem partners — covering settlement, compute, voice, and regional infrastructure — have backed Jokuh with non-dilutive grants.",
+    introParagraphs: [
+      "Jokuh has received grants from **Avalanche**, **RunPod**, **Hume AI**, and **Kihew**. Each grant maps to a load-bearing layer of the Sovereign Agentic Operating System. Together, they signal something a deck cannot fake: independent technical validation from the ecosystems that would feel the impact first if the architecture did not work.",
+    ],
+    bodyTitle: "What each grant supports",
+    bodyParagraphs: [
+      "**Avalanche** supports settlement-layer integration for the native multi-chain wallet and the marketplace surface where agents, themes, and identities are exchanged.",
+      "**RunPod** supports compute for the agent runtime that executes on the user's behalf, with Trusted Execution Environment isolation and signed action logs.",
+      "**Hume AI** supports voice intelligence for Calls, Jokuh's encrypted voice product with Knowledge Pool sync.",
+      "**Kihew** supports regional infrastructure and onboarding, aligning with the staged availability rollout described in our company updates.",
+      "The grants are non-dilutive and arrived after technical reviews specific to each layer. We are publishing them together because, read as a stack, they describe the product more honestly than any single benchmark.",
+      "Jokuh is not a thin wrapper on a public API. The product runs across encrypted memory, an agent runtime, a privacy stack (TEE, ZKP, FHE), a wallet, and a marketplace. Each of those layers has its own correctness bar. When four independent ecosystems back four independent layers, the conclusion is simple: the architecture survives outside its own marketing.",
+      "\"Grants are not press points for us. They are receipts,\" said **Sean Rock**, Founder & CEO. \"Avalanche reviewed settlement. RunPod reviewed compute. Hume AI reviewed voice. Kihew reviewed our regional rollout posture. None of them needed to like our slides — they needed the engineering to hold. It does.\"",
+      "The team continues to ship across mobile, the ARC Terminal desktop, and the SDK. Future updates on integration depth — including any third-party verification work — will be communicated under the AUDIT and PARTNERSHIP tags as appropriate.",
+      "Jokuh is in early access. Access, features, availability, and offers may change and may vary by region, device, account, or plan.",
+      "Jokuh — The Sovereign Agentic Operating System. Verify ↔ Trust.",
+    ],
+  },
   "ethics-compliance-responsible-deployment": {
     subtitle: "Ethics and compliance are product behaviors, not a policy appendix.",
     introParagraphs: [
@@ -171,23 +140,23 @@ const NEWSROOM_BRIEF_BY_SLUG: Record<
     bodyParagraphs: [
       "We optimize for outputs that are **useful and reviewable.** Speed without provenance is not a product — it is a liability. A client must be able to see where a claim came from, what assumptions shaped it, and the precise threshold at which the system should have paused and asked for human judgment.",
       "In practice, this means we prefer **constrained autonomy** to performative autonomy. In legal, clinical, financial, identity, security-sensitive, or on-chain settlement contexts, our workflows escalate early rather than improvise through ambiguity. Improvisation is acceptable on ideation surfaces; it is not acceptable where the cost of being wrong is asymmetric.",
-      "**Operational controls.** Our control plane aligns with established frameworks — **SOC 2 Type II control objectives, ISO/IEC 27001 information security practices, the NIST AI Risk Management Framework, EU AI Act risk-tiering, and GDPR data minimization principles** — adapted for AI-native, Web3-adjacent workflows.",
-      "Inside the product, this surfaces as scoped permission boundaries, role-based access controls, approval checkpoints for destructive or externally consequential actions, immutable audit trails, signed action logs, and disclosure rules covering inferred intent, generated summaries, and model uncertainty. Cryptographic operations follow standard custody hygiene: keys are segregated, rotated, and never co-located with model context. Experimentation and production are separated by policy and by infrastructure — promotion into customer-facing surfaces requires narrower scopes, additional review, and full auditability beyond what an internal prototype needs.",
+      "**Operational controls.** Our product direction is informed by control themes from SOC 2, ISO/IEC 27001, the NIST AI Risk Management Framework, EU AI Act risk-tiering, and GDPR data minimization principles. That language describes a design influence, not a claim of certification.",
+      "Inside the product, this surfaces as scoped permission boundaries, role-based access controls, approval checkpoints for destructive or externally consequential actions, reviewable audit trails, signed action logs, and disclosure rules covering inferred intent, generated summaries, and model uncertainty. Experimentation and production are separated by policy and by infrastructure so customer-facing surfaces can use narrower scopes and additional review.",
       "**Human review and escalation.** Some tasks must never quietly auto-complete. If a workflow touches regulated content, personal data, account access, policy interpretation, financial settlement, or irreversible system state, the product routes to human confirmation rather than hiding the handoff.",
       "Escalation is not failure. It is a product behavior. Mature systems recognize when evidence is thin, when instructions conflict, and when the cost of being approximately right is materially higher than the cost of asking. We instrument these handoffs explicitly so reviewers can see what triggered the escalation, what the system inferred, and what remains unverified.",
       "**Privacy, security, and evidence.** We treat privacy and security as components of model quality. A polished answer is low quality if it relied on data outside the agreed boundary, accessed information too broadly, or made claims unsupported by retrievable evidence.",
       "Our approach: **data minimization by default, auditable access paths, source-aware reasoning, retrieval grounding, and explicit scoping.** The system makes it easier — not harder — to see what it knows, what it inferred, and what still requires verification. We red-team for direct and indirect prompt injection, retrieval poisoning, and adversarial input shaping. Output provenance and citation are treated as first-class product surfaces, not afterthoughts.",
-      "For Web3 surfaces specifically, we apply additional controls: sanctions and OFAC screening on counterparty interactions, smart-contract interaction allowlists, custody isolation, and a hard separation between informational output and any action that moves value.",
+      "For Web3 workflows, we can scope additional controls such as screening, allowlists, custody separation, and human approval where a deployment requires them.",
       "**What this means for clients and partners.** For Web3 communities, biotech teams, and enterprise operators, the bar is the same: **the product must support speed without weakening defensibility.** Workflows for policy-sensitive research, launch readiness, support operations, and internal knowledge work are designed around the actual risk profile of the task — not a uniform assumption that every action is low risk.",
-      "For procurement and diligence, we maintain a structured controls package — data flow diagrams, subprocessor list, model governance documentation, incident response procedures, and DPIA templates — available to qualified counterparties under NDA.",
+      "For procurement and diligence, we can provide structured security and architecture materials to qualified counterparties under NDA.",
       "**Contact:** For a controls review, implementation walkthrough, or procurement-ready answers on responsible use, privacy, or security posture, route the request to our team and it will be assigned to the appropriate operator.",
     ],
   },
   "jokuh-spine-tighter-sync": {
-    subtitle: "Lower latency handoff when you move between pods on desktop and web.",
+    subtitle: "Cleaner handoff when active context moves between workspace surfaces.",
     introParagraphs: [
-      "This release tightens how active context follows people between pods. Session state, tool permissions, and in-progress timelines now reconcile faster when a user moves from one surface to another.",
-      "The goal is simple: fewer moments where the interface feels like it forgot what you were doing. That means quicker sync on pod handoff, less duplicate setup, and cleaner recovery when multiple devices are involved.",
+      "This release tightens how active context follows people between workspace surfaces. Session state, tool permissions, and in-progress timelines are designed to reconcile more cleanly when a user moves from one surface to another.",
+      "The goal is simple: fewer moments where the interface feels like it forgot what you were doing. That means less duplicate setup and cleaner recovery when multiple devices are involved.",
     ],
     bodyTitle: "Why it matters",
     bodyParagraphs: [
@@ -332,25 +301,8 @@ export function estimateSpeechDurationLabel(text: string): string {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-export const GDPVAL_BAR_DATA = [
-  { name: "Cortex Pro", wins: 74, ties: 14 },
-  { name: "Cortex", wins: 68, ties: 18 },
-  { name: "Preview Pro", wins: 61, ties: 12 },
-  { name: "Preview", wins: 55, ties: 10 },
-];
+export const GDPVAL_BAR_DATA: { name: string; wins: number; ties: number }[] = [];
 
-export const SWE_LINE_DATA = [
-  { latency: 280, cortex: 54.2, preview: 52.1, baseline: 47.8 },
-  { latency: 520, cortex: 55.8, preview: 53.4, baseline: 49.1 },
-  { latency: 880, cortex: 56.9, preview: 54.2, baseline: 50.2 },
-  { latency: 1200, cortex: 57.7, preview: 54.8, baseline: 51.0 },
-  { latency: 1680, cortex: 58.1, preview: 55.1, baseline: 51.4 },
-];
+export const SWE_LINE_DATA: { latency: number; cortex: number; preview: number; baseline: number }[] = [];
 
-export const OSWORLD_LINE_DATA = [
-  { yields: 9, cortex: 41, baseline: 28 },
-  { yields: 12, cortex: 58, baseline: 35 },
-  { yields: 15, cortex: 72, baseline: 42 },
-  { yields: 18, cortex: 76, baseline: 44 },
-  { yields: 22, cortex: 78, baseline: 46 },
-];
+export const OSWORLD_LINE_DATA: { yields: number; cortex: number; baseline: number }[] = [];

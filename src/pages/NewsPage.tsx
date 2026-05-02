@@ -303,7 +303,7 @@ function JournalList({ items }: { items: NewsItem[] }) {
 }
 
 export function NewsPage() {
-  useDocumentTitle("Newsroom — Jokuh");
+  useDocumentTitle("Jokuh Newsroom");
 
   const [category, setCategory] = useState<NewsCategory | "All">("All");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");

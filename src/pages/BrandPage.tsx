@@ -125,7 +125,7 @@ function BrandSection({
 /* ── Page ─────────────────────────────────────────────────────────────── */
 
 export function BrandPage() {
-  useDocumentTitle("Brand — Jokuh");
+  useDocumentTitle("Jokuh Brand");
 
   return (
     <CompanyPageLayout>
@@ -437,24 +437,24 @@ export function BrandPage() {
           <FaqSection
             items={[
               {
-                question: "How do I use the logo?",
-                answer: "The Jokuh logo should be used in its original form without any modifications. It should be clearly visible and not distorted. The logo should also maintain a minimum clear space around it to ensure it stands out.",
+                question: "How can I use the Jokuh logo?",
+                answer: "You can use the official logo to reference Jokuh in editorial, press, integrations, or partner contexts. Don't recolor it, distort it, place it on busy backgrounds, or imply endorsement. Always pull from the brand kit; never recreate the mark.",
               },
               {
-                question: "Can I use Jokuh brand elements for my own project?",
-                answer: "You can use the Jokuh logo on your website or promotional materials, provided your usage doesn't misrepresent the Jokuh brand. Visual assets should not be altered, combined with other logos, or used in a way that misrepresents the Jokuh brand.",
+                question: "Can I use Jokuh brand elements in my own project?",
+                answer: "Only for clearly identifying Jokuh: partnership pages, integration docs, write-ups, and demos. You can't use the brand to imply Jokuh built, endorses, or stands behind your project. For co-branding or commercial use, contact sean@sierri.com.",
               },
               {
                 question: "Can I create my own assets using the Jokuh brand elements?",
-                answer: "Yes, we encourage you to stay true to the Jokuh brand while creating your own assets. Start with the logomark and follow the color, typography, and spacing guidelines on this page.",
+                answer: "You can build user-generated work that references Jokuh, including fan art, commentary, and integrations. You can't ship products, merch, or content that uses the wordmark, monogram, or visual system as if it were yours. When in doubt, ask.",
               },
               {
                 question: "What typefaces does Jokuh use?",
-                answer: "Jokuh uses three typefaces: Satoshi for headlines and body text, Rock Salt for expressive display moments, and Red Hat Mono for code and agentic workforce representation. All three are free to use.",
+                answer: "Jokuh's typographic system is documented on the brand page itself, with download links and usage rules. Pair the display face for headlines and the working face for body; never swap them.",
               },
               {
                 question: "Where can I download brand assets?",
-                answer: "You can download the logomark SVGs directly from the top of this page. Both white and black variants are available for immediate download.",
+                answer: "All current logos, wordmarks, color tokens, and templates live in the downloadable brand kit on this page. Anything not in the kit isn't approved for external use.",
               },
             ]}
           />

@@ -1,5 +1,5 @@
 /**
- * Rigid sitemap spec v1 — single source for top nav, mega footer, and /sitemap.
+ * Rigid navigation spec v1 — single source for top nav, mega footer, and search.
  * @see JOKUH_Rigid_Sitemap_Spec_v1
  */
 
@@ -86,19 +86,6 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
     ],
   },
   {
-    id: "ecosystem",
-    heading: "Ecosystem",
-    sections: [
-      {
-        heading: "Ecosystem",
-        links: [
-          { label: "Community", href: "/ecosystem/community", surfaces: ["sitemap"] },
-          { label: "Partnerships", href: "/ecosystem/partnerships", surfaces: ["sitemap"] },
-        ],
-      },
-    ],
-  },
-  {
     id: "company",
     heading: "Company",
     sections: [
@@ -109,7 +96,6 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
           { label: "Manifesto", href: "/manifesto", surfaces: ALL_SOURCES },
           { label: "Brand", href: "/brand", surfaces: ["footer", "sitemap"] },
           { label: "Stories", href: "/stories", surfaces: ALL_SOURCES },
-          { label: "Company", href: "/charter", surfaces: ALL_SOURCES },
           { label: "News", href: "/newsroom", surfaces: ALL_SOURCES },
           { label: "Career", href: "/careers", surfaces: ALL_SOURCES },
         ],
@@ -125,7 +111,6 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
         links: [
           { label: "Overview", href: "/about", surfaces: ALL_SOURCES },
           { label: "Customer Stories", href: "/stories", surfaces: ALL_SOURCES },
-          { label: "Resources", href: "/developers/docs", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
           { label: "Contact Sales", href: "/contact", surfaces: ALL_SOURCES },
         ],
       },
@@ -134,7 +119,12 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
         links: [
           { label: "Jokuh Business", href: "/contact", surfaces: ALL_SOURCES },
           { label: "Jokuh Enterprise", href: "/contact", surfaces: ALL_SOURCES },
-          { label: "SDK & API", href: "/developers/docs/sdk", surfaces: ALL_SOURCES },
+          {
+            label: "SDK & API (soon)",
+            href: "/contact",
+            summary: "Public SDK and API access is not live yet.",
+            surfaces: ALL_SOURCES,
+          },
         ],
       },
     ],
@@ -142,43 +132,14 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
   {
     id: "more",
     heading: "More",
-    surfaces: ["footer", "sitemap"],
+    surfaces: ["footer"],
     sections: [
       {
         heading: "More",
         links: [
-          { label: "News", href: "/newsroom", surfaces: ["footer", "sitemap"] },
-          { label: "Stories", href: "/stories", surfaces: ["footer", "sitemap"] },
-          { label: "RSS", href: "/rss.xml", surfaces: ["footer", "sitemap"] },
-        ],
-      },
-    ],
-  },
-  {
-    id: "safety",
-    heading: "Safety",
-    surfaces: ["sitemap"],
-    sections: [
-      {
-        heading: "Safety",
-        links: [
-          { label: "Safety Approach", href: "/safety/approach", surfaces: ["footer", "sitemap"] },
-          { label: "Security & Privacy", href: "/safety/security-privacy", surfaces: ["footer", "sitemap"] },
-          { label: "Trust & Transparency", href: "/safety/trust-transparency", surfaces: ["footer", "sitemap"] },
-        ],
-      },
-    ],
-  },
-  {
-    id: "terms-policies",
-    heading: "Terms & Policies",
-    surfaces: ["sitemap"],
-    sections: [
-      {
-        heading: "Terms & Policies",
-        links: [
-          { label: "Terms of Service", href: "/terms", surfaces: ["footer", "sitemap"] },
-          { label: "Privacy Policy", href: "/privacy", surfaces: ["footer", "sitemap"] },
+          { label: "News", href: "/newsroom", surfaces: ["footer"] },
+          { label: "Stories", href: "/stories", surfaces: ["footer"] },
+          { label: "RSS", href: "/rss.xml", surfaces: ["footer"] },
         ],
       },
     ],
@@ -190,14 +151,12 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       {
         heading: "Explore Developers",
         links: [
-          { label: "Jokuh SDK", href: "/developers/sdk", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
-        ],
-      },
-      {
-        heading: "Resources",
-        links: [
-          { label: "Quickstart", href: "/developers/docs/quickstart", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
-          { label: "Docs", href: "/developers/docs", host: "developers", navGlyph: "launch", surfaces: ALL_SOURCES },
+          {
+            label: "Jokuh SDK (soon)",
+            href: "/contact",
+            summary: "Developer docs and SDK access are planned, not public yet.",
+            surfaces: ALL_SOURCES,
+          },
         ],
       },
     ],

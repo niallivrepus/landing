@@ -196,13 +196,6 @@ const CURATED: SiteArticleHit[] = [
     external: false,
   },
   {
-    href: "/developers/docs",
-    title: "Developer documentation",
-    snippet: "Quickstart, cookbook, and guides for building on Jokuh.",
-    meta: "Developers",
-    external: false,
-  },
-  {
     href: "/download",
     title: "Waitlist",
     snippet: "Request early access and regional rollout updates.",

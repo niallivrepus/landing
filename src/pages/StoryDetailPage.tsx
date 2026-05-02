@@ -597,7 +597,7 @@ export function StoryDetailPage() {
     return <Navigate to="/stories" replace />;
   }
 
-  useDocumentTitle(`${story.title} · Jokuh`);
+  useDocumentTitle(`${story.title} Jokuh`);
 
   return (
     <MarketingPageFrame>

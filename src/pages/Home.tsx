@@ -12,7 +12,7 @@ import {
 import { MarketingPageFrame } from "../components/system";
 
 export default function Home() {
-  useDocumentTitle("Jokuh — The Sovereign Agentic Operating System");
+  useDocumentTitle("Jokuh");
 
   return (
     <MarketingPageFrame

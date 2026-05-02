@@ -7,6 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { createContactSalesMiddleware } from "./contact-sales-middleware";
+import { resolveContactSalesEnv } from "./contact-sales-service";
 import { createStorySubmissionsMiddleware } from "./story-submissions-middleware";
 import { createSiteSearchMiddleware } from "./site-search-middleware";
 
@@ -61,7 +62,7 @@ function jokuhAsciiLogoBanner() {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const groqKey = env.GROQ_API_KEY;
-  const contactSalesWebhookUrl = env.CONTACT_SALES_WEBHOOK_URL;
+  const contactSalesEnv = resolveContactSalesEnv(env);
   const supabaseUrl = env.SUPABASE_URL;
   const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY;
   const storySubmissionsEnv =
@@ -98,12 +99,12 @@ export default defineConfig(({ mode }) => {
         name: "site-apis",
         configureServer(server) {
           server.middlewares.use(createSiteSearchMiddleware(groqKey));
-          server.middlewares.use(createContactSalesMiddleware(contactSalesWebhookUrl));
+          server.middlewares.use(createContactSalesMiddleware(contactSalesEnv));
           server.middlewares.use(createStorySubmissionsMiddleware(storySubmissionsEnv));
         },
         configurePreviewServer(server) {
           server.middlewares.use(createSiteSearchMiddleware(groqKey));
-          server.middlewares.use(createContactSalesMiddleware(contactSalesWebhookUrl));
+          server.middlewares.use(createContactSalesMiddleware(contactSalesEnv));
           server.middlewares.use(createStorySubmissionsMiddleware(storySubmissionsEnv));
         },
       },

@@ -25,21 +25,9 @@ const ManifestoPage = lazyNamed(() => import("./pages/ManifestoPage"), "Manifest
 const NewsDetailPage = lazyNamed(() => import("./pages/NewsDetailPage"), "NewsDetailPage");
 const NewsPage = lazyNamed(() => import("./pages/NewsPage"), "NewsPage");
 const ProductPage = lazyNamed(() => import("./pages/ProductPage"), "ProductPage");
-const ResourceDetailPage = lazyNamed(() => import("./pages/ResourceDetailPage"), "ResourceDetailPage");
-const SitemapPage = lazyNamed(() => import("./pages/SitemapPage"), "SitemapPage");
 const StoryDetailPage = lazyNamed(() => import("./pages/StoryDetailPage"), "StoryDetailPage");
 const ShareYourStoryPage = lazyNamed(() => import("./pages/ShareYourStoryPage"), "ShareYourStoryPage");
 const StoriesPage = lazyNamed(() => import("./pages/StoriesPage"), "StoriesPage");
-const StubPage = lazyNamed(() => import("./pages/StubPage"), "StubPage");
-const SupportPage = lazyNamed(() => import("./pages/SupportPage"), "SupportPage");
-const SystemStatusPage = lazyNamed(() => import("./pages/SystemStatusPage"), "SystemStatusPage");
-const DocsLayout = lazyNamed(() => import("./pages/docs/DocsLayout"), "DocsLayout");
-const DocsInfoPage = lazyNamed(() => import("./pages/docs/DocsInfoPage"), "DocsInfoPage");
-const DocsOverviewPage = lazyNamed(() => import("./pages/docs/DocsOverviewPage"), "DocsOverviewPage");
-const DocsQuickstartPage = lazyNamed(() => import("./pages/docs/DocsQuickstartPage"), "DocsQuickstartPage");
-const EthicsPage = lazyNamed(() => import("./pages/EthicsPage"), "EthicsPage");
-const LegalPrivacyPage = lazyNamed(() => import("./pages/legal/LegalPrivacyPage"), "LegalPrivacyPage");
-const LegalTermsPage = lazyNamed(() => import("./pages/legal/LegalTermsPage"), "LegalTermsPage");
 
 const PRODUCT_ROUTES = [
   { path: "/blurbs", productId: "blurbs" },
@@ -47,10 +35,6 @@ const PRODUCT_ROUTES = [
   { path: "/calls", productId: "calls" },
   { path: "/messages", productId: "messages" },
   { path: "/profile", productId: "profile" },
-  { path: "/vortex", productId: "vortex" },
-  { path: "/passport", productId: "passport" },
-  { path: "/realms", productId: "realms" },
-  { path: "/orb", productId: "orb" },
 ] as const;
 
 /** Unpublished marketing URLs → home; do not register these paths as public stubs. */
@@ -66,34 +50,18 @@ const REDIRECT_HOME_PATHS = [
   "/developers/apps",
   "/developers/agents",
   "/developers/blog",
+  "/developers/documentation",
+  "/developers/docs",
+  "/developers/docs/*",
   "/developers/forum",
   "/developers/learn",
   "/developers/open-models",
+  "/developers/sdk",
   "/developers/accessibility",
   "/chatgpt/explore",
   "/chatgpt/business",
   "/chatgpt/enterprise",
   "/chatgpt/education",
-] as const;
-
-const STUB_ROUTES = [
-  { path: "/ecosystem/community", title: "Community" },
-  { path: "/ecosystem/partnerships", title: "Partnerships" },
-  { path: "/waitlist", title: "Waitlist" },
-  { path: "/startups", title: "Jokuh for startups" },
-  { path: "/account", title: "Account" },
-  { path: "/livestreams", title: "Livestreams" },
-  { path: "/podcast", title: "Podcast" },
-] as const;
-
-const LEGAL_ROUTES = [
-  { path: "/privacy", element: <LegalPrivacyPage /> },
-  { path: "/terms", element: <LegalTermsPage /> },
-  { path: "/legal", element: <Navigate to="/privacy" replace /> },
-  { path: "/legal/terms", element: <Navigate to="/terms" replace /> },
-  { path: "/legal/privacy", element: <Navigate to="/privacy" replace /> },
-  { path: "/legal/privacy/*", element: <Navigate to="/privacy" replace /> },
-  { path: "/legal/*", element: <Navigate to="/terms" replace /> },
 ] as const;
 
 function LegacyNewsRedirect() {
@@ -137,11 +105,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/download" element={<DownloadPage />} />
-          <Route path="/sitemap" element={<SitemapPage />} />
-
-          {LEGAL_ROUTES.map((route) => (
-            <Route key={route.path} path={route.path} element={route.element} />
-          ))}
 
           <Route path="/newsroom" element={<NewsPage />} />
           <Route path="/newsroom/:slug" element={<NewsDetailPage />} />
@@ -159,9 +122,6 @@ export default function App() {
             element={<Navigate to="/stories/tomas-aldaz" replace />}
           />
           <Route path="/stories/:slug" element={<StoryDetailPage />} />
-          <Route path="/safety/approach" element={<ResourceDetailPage resourceId="safety-approach" />} />
-          <Route path="/safety/security-privacy" element={<ResourceDetailPage resourceId="security-privacy" />} />
-          <Route path="/safety/trust-transparency" element={<ResourceDetailPage resourceId="trust-transparency" />} />
           {PRODUCT_ROUTES.map((route) => (
             <Route
               key={route.path}
@@ -176,34 +136,13 @@ export default function App() {
           <Route path="/prompt" element={<Navigate to="/#prompt" replace />} />
           <Route path="/research" element={<Navigate to="/about" replace />} />
           <Route path="/contact" element={<ContactSalesPage />} />
-          <Route path="/support" element={<SupportPage />} />
-          <Route path="/system-status" element={<SystemStatusPage />} />
-          <Route path="/ethics" element={<EthicsPage />} />
-          <Route path="/developers/sdk" element={<Navigate to="/developers/docs/sdk" replace />} />
-          {STUB_ROUTES.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={<StubPage title={route.title} />}
-            />
-          ))}
           <Route path="/brand" element={<BrandPage />} />
           <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
           <Route path="/manifesto" element={<ManifestoPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/charter" element={<CharterPage />} />
           <Route path="/careers" element={<CareersPage />} />
-          <Route path="/developers/documentation" element={<Navigate to="/developers/docs" replace />} />
-          <Route path="/developers/docs" element={<DocsLayout />}>
-            <Route index element={<DocsOverviewPage />} />
-            <Route path="quickstart" element={<DocsQuickstartPage />} />
-            <Route path="sdk" element={<DocsInfoPage pageId="sdk" />} />
-            <Route path="text" element={<DocsInfoPage pageId="text" />} />
-            <Route path="structured-output" element={<DocsInfoPage pageId="structured-output" />} />
-            <Route path="audio" element={<DocsInfoPage pageId="audio" />} />
-            <Route path="models" element={<Navigate to="/developers/docs" replace />} />
-            <Route path="cookbook" element={<Navigate to="/developers/docs" replace />} />
-          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </>

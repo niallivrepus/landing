@@ -18,7 +18,10 @@ export type NewsCategory =
   | "Product"
   | "Engineering"
   | "Safety"
-  | "Community";
+  | "Community"
+  | "Funding"
+  | "Release"
+  | "Milestone";
 
 export const NEWS_CATEGORIES: (NewsCategory | "All")[] = [
   "Company",
@@ -26,6 +29,9 @@ export const NEWS_CATEGORIES: (NewsCategory | "All")[] = [
   "Engineering",
   "Safety",
   "Community",
+  "Funding",
+  "Release",
+  "Milestone",
   "All",
 ];
 
@@ -103,6 +109,62 @@ function mediumToNewsItem(entry: MediumFeedFile["items"][number]): NewsItem {
 
 const STATIC_NEWS_ITEMS: NewsItem[] = [
   {
+    id: "jokuh-at-consensus-2026-miami",
+    title: "Jokuh at Consensus 2026 — Miami",
+    excerpt: "Jokuh will be at Consensus 2026 in Miami to demonstrate the Sovereign Agentic Operating System and meet investors, builders, and partners working at the intersection of AI, identity, and on-chain settlement.",
+    category: "Milestone",
+    topics: ["Events", "Community"],
+    publishedAt: "2026-04-30",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(160deg, #020617 0%, #0f172a 45%, #1e3a5f 100%)",
+    cardImage: "/journal-art/news-prism-fold.png",
+    lavaLamp: "aurora",
+    slug: "jokuh-at-consensus-2026-miami",
+    internalHref: newsroomPath("jokuh-at-consensus-2026-miami"),
+  },
+  {
+    id: "backing-redbeard-denarii",
+    title: "Backing from Red Beard Ventures and Denarii Labs",
+    excerpt: "Jokuh confirms institutional backing from Red Beard Ventures and Denarii Labs to advance the Sovereign Agentic Operating System — a private, local-first runtime for memory, identity, and agent workflows.",
+    category: "Funding",
+    topics: ["Community"],
+    publishedAt: "2026-04-22",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(145deg, #020617 0%, #0f3d3e 42%, #152238 100%)",
+    cardImage: "/journal-art/news-green-flow.png",
+    lavaLamp: "jungle",
+    slug: "backing-redbeard-denarii",
+    internalHref: newsroomPath("backing-redbeard-denarii"),
+  },
+  {
+    id: "spine-ships-testflight",
+    title: "Spine ships to TestFlight",
+    excerpt: "The encrypted personal memory layer at the core of Jokuh is now live for active TestFlight users — keys held by the user, computation verified through TEE, ZKP, and FHE.",
+    category: "Release",
+    topics: ["Agent Portal"],
+    publishedAt: "2026-04-15",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(145deg, #020617 0%, #1e1b4b 50%, #312e81 100%)",
+    cardImage: "/journal-art/news-blue-lens.png",
+    lavaLamp: "arctic",
+    slug: "spine-ships-testflight",
+    internalHref: newsroomPath("spine-ships-testflight"),
+  },
+  {
+    id: "grant-stack-avalanche-runpod-hume-kihew",
+    title: "Grants from Avalanche, RunPod, Hume AI, and Kihew",
+    excerpt: "Four ecosystem grants — across settlement, compute, voice, and regional infrastructure — confirm independent technical validation of the Jokuh stack.",
+    category: "Milestone",
+    topics: ["Community", "Events"],
+    publishedAt: "2026-04-08",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(135deg, #020617 0%, #0c4a6e 55%, #164e63 100%)",
+    cardImage: "/journal-art/news-coral-wash.png",
+    lavaLamp: "coral",
+    slug: "grant-stack-avalanche-runpod-hume-kihew",
+    internalHref: newsroomPath("grant-stack-avalanche-runpod-hume-kihew"),
+  },
+  {
     id: "ethics-compliance-operating-principles",
     title: "Ethics, Compliance & Responsible Deployment",
     excerpt: "Ethics and compliance are product behaviors, not a policy appendix.",
@@ -115,48 +177,6 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
     lavaLamp: "jungle",
     slug: "ethics-compliance-responsible-deployment",
     internalHref: newsroomPath("ethics-compliance-responsible-deployment"),
-  },
-  {
-    id: "introducing-jokuh-cortex",
-    title: "Introducing Jokuh Cortex",
-    excerpt: "Designed for professional work — benchmarks, latency sweeps, and pilot stories.",
-    category: "Product",
-    topics: ["Agent Portal", "Pods"],
-    publishedAt: "2026-03-05",
-    readMinutes: 14,
-    cardGradient: "linear-gradient(160deg, #020617 0%, #0f172a 45%, #1e3a5f 100%)",
-    cardImage: "/journal-art/news-prism-fold.png",
-    lavaLamp: "aurora",
-    slug: "introducing-jokuh-cortex",
-    internalHref: newsroomPath("introducing-jokuh-cortex"),
-  },
-  {
-    id: "1",
-    title: "Jokuh Spine: tighter sync for multi-pod sessions",
-    excerpt: "Lower latency handoff when you move between pods on desktop and web.",
-    category: "Product",
-    topics: ["Pods", "Agent Portal"],
-    publishedAt: "2026-03-18",
-    readMinutes: 4,
-    cardGradient: "linear-gradient(145deg, #020617 0%, #1e1b4b 50%, #312e81 100%)",
-    cardImage: "/journal-art/news-blue-lens.png",
-    lavaLamp: "arctic",
-    slug: "jokuh-spine-tighter-sync",
-    internalHref: newsroomPath("jokuh-spine-tighter-sync"),
-  },
-  {
-    id: "2",
-    title: "Waitlist update: regional rollout next quarter",
-    excerpt: "We are sequencing the next invite wave by region, support coverage, and onboarding readiness.",
-    category: "Company",
-    topics: ["Community", "Events"],
-    publishedAt: "2026-03-02",
-    readMinutes: 3,
-    cardGradient: "linear-gradient(135deg, #020617 0%, #0c4a6e 55%, #164e63 100%)",
-    cardImage: "/journal-art/news-coral-wash.png",
-    lavaLamp: "coral",
-    slug: "waitlist-regional-rollout-next-quarter",
-    internalHref: newsroomPath("waitlist-regional-rollout-next-quarter"),
   },
   {
     id: "3",

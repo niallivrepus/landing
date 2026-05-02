@@ -32,7 +32,7 @@ export const CAREERS_OPERATING_PRINCIPLES = [
   },
   {
     title: "Intense focus",
-    body: "We work hard on a small number of bets. Saying no protects depth on pods, spine, vortex, and the graph that ties them together.",
+    body: "We work hard on a small number of bets. Saying no protects depth on memory, identity, and the graph that ties them together.",
   },
 ] as const;
 
@@ -80,9 +80,9 @@ export const CAREERS_FEATURED_PROGRAMS = [
 ] as const;
 
 export const CAREERS_RESOURCES = [
-  { label: "Terms of Service", href: "/terms", tag: "Company" },
-  { label: "Ethics & compliance", href: "/ethics", tag: "Trust" },
-  { label: "Developer docs", href: "/developers/docs", tag: "Build" },
+  { label: "Developer docs (soon)", href: "/contact", tag: "Planned" },
+  { label: "Contact sales", href: "/contact", tag: "Teams" },
+  { label: "About Jokuh", href: "/about", tag: "Company" },
 ] as const;
 
 export const CAREERS_CLOSING_CTA = {
