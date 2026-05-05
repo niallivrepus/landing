@@ -1,14 +1,54 @@
 import { ProductCenteredShowcase } from "../components/product/ProductCenteredShowcase";
 import { ProductCloserLookExplorer } from "../components/product/ProductCloserLookExplorer";
+import { ProductDetailTopBar } from "../components/product/ProductDetailTopBar";
+import { ProductHeroFullscreen } from "../components/product/ProductHeroFullscreen";
 import { ProductHighlightsCarousel } from "../components/product/ProductHighlightsCarousel";
-import { ClaimIdentityCta } from "../components/landing/ClaimIdentityCta";
 import { FaqSection } from "../components/FaqSection";
+import { LAVA_LAMP_STYLES } from "../components/LavaLamp";
+import { Link } from "react-router-dom";
 import { MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { PRODUCT_DETAIL_BLUEPRINTS } from "../data/product-detail-blueprints";
 import { PRODUCTS, type ProductId } from "../data/products";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { cn, useTheme } from "@jokuh/gooey";
+
+const PRODUCT_HERO_IMAGE: Partial<Record<ProductId, string>> = {
+  blurbs: "/product-hero/blurbs.jpg",
+  spine: "/product-hero/spine.jpg",
+  calls: "/product-hero/calls.jpg",
+  messages: "/product-hero/texts.jpg",
+  profile: "/product-hero/profile.png",
+};
+
+const PRODUCT_HERO_LAVA: Record<ProductId, keyof typeof LAVA_LAMP_STYLES> = {
+  pods: "aurora",
+  blurbs: "sunrise",
+  spine: "aurora",
+  calls: "ember",
+  messages: "arctic",
+  profile: "ultraviolet",
+  vortex: "void",
+  passport: "glacier",
+  realms: "nebula",
+  orb: "electric",
+  v1llains: "crimson",
+};
+
+/** Hero CTA per product: a short value-prop label on the left, and a verb that responds. */
+const PRODUCT_HERO_CTA: Record<ProductId, { label: string; action: string }> = {
+  pods: { label: "Build your profile", action: "Compose" },
+  blurbs: { label: "Capture the spark", action: "Post" },
+  spine: { label: "Hold every memory", action: "Save" },
+  calls: { label: "Keep every word", action: "Listen" },
+  messages: { label: "Stay in the loop", action: "Send" },
+  profile: { label: "Own your identity", action: "Claim" },
+  vortex: { label: "One question, all of it", action: "Ask" },
+  passport: { label: "Carry your identity", action: "Verify" },
+  realms: { label: "Shape your space", action: "Enter" },
+  orb: { label: "A show, in another dimension", action: "Tune in" },
+  v1llains: { label: "Sharpen your thinking", action: "Spar" },
+};
 
 const PRODUCT_FAQ_SUMMARIES: Partial<Record<ProductId, string>> = {
   blurbs:
@@ -34,7 +74,6 @@ const PRODUCT_FAQ_SUMMARIES: Partial<Record<ProductId, string>> = {
 export function ProductPage({ productId }: { productId: ProductId }) {
   const product = PRODUCTS[productId];
   const detail = PRODUCT_DETAIL_BLUEPRINTS[productId];
-  const heroSentence = product.summary.match(/^[^.]+\./)?.[0] ?? product.summary;
   const { resolvedTheme } = useTheme();
 
   useDocumentTitle(`${product.title} Jokuh`);
@@ -44,24 +83,41 @@ export function ProductPage({ productId }: { productId: ProductId }) {
       withAntialiased
       withFontSans
       theme={resolvedTheme === "light" ? "light" : "dark"}
+      topBar={<ProductDetailTopBar productTitle={product.title} cta={PRODUCT_HERO_CTA[productId]} />}
     >
-      <section className="flex min-h-[100svh] flex-col pt-24 pb-6 md:pt-28 md:pb-8">
-        <div className={cn(CONTENT_SHELL_WIDE, "flex flex-col items-center py-[40px] text-center")}>
-          <h1 className="max-w-[min(100%,920px)] text-[clamp(2rem,5vw,3.9rem)] font-semibold leading-[1.02] tracking-[0em] text-zinc-950 dark:text-light-space">
-            {heroSentence}
-          </h1>
-          <div className="mt-8">
-            <ClaimIdentityCta href="/download">Build profile</ClaimIdentityCta>
-          </div>
-        </div>
+      <div id="overview" className="scroll-mt-24">
+      <ProductHeroFullscreen
+        title={product.title}
+        lavaLamp={PRODUCT_HERO_LAVA[productId]}
+        backgroundImage={PRODUCT_HERO_IMAGE[productId]}
+          trailing={
+            <div className="inline-flex h-12 items-center gap-3 rounded-full bg-black/40 pl-5 pr-1.5 backdrop-blur-md ring-1 ring-white/10">
+              <span className="font-sans text-[14px] font-medium text-white">
+                {PRODUCT_HERO_CTA[productId].label}
+              </span>
+              <Link
+                to="/download"
+                className="inline-flex h-10 items-center justify-center rounded-full bg-blue-500 px-5 font-sans text-[12px] font-semibold tracking-tight text-white transition-colors hover:bg-blue-600"
+              >
+                {PRODUCT_HERO_CTA[productId].action}
+              </Link>
+            </div>
+          }
+        />
+      </div>
+      <span id="product-hero-end" aria-hidden className="block h-px" />
 
-      </section>
+      <div id="highlights" className="scroll-mt-24">
+        <ProductHighlightsCarousel {...detail.highlights} />
+      </div>
+      <div id="closer-look" className="scroll-mt-24">
+        <ProductCloserLookExplorer {...detail.closerLook} />
+      </div>
+      <div id="showcase" className="scroll-mt-24">
+        <ProductCenteredShowcase {...detail.centerpiece} />
+      </div>
 
-      <ProductHighlightsCarousel {...detail.highlights} />
-      <ProductCloserLookExplorer {...detail.closerLook} />
-      <ProductCenteredShowcase {...detail.centerpiece} />
-
-      <div className={cn(CONTENT_SHELL_WIDE, "py-20 md:py-28")}>
+      <div className={cn(CONTENT_SHELL_WIDE, "scroll-mt-24 py-20 md:py-28")}>
         <FaqSection
           items={[
             {

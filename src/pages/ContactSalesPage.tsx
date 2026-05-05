@@ -1,11 +1,10 @@
-import { Button, cn } from "@jokuh/gooey";
-import { LoaderCircle, ShieldCheck, Sparkles, Waypoints } from "lucide-react";
+import { cn } from "@jokuh/gooey";
+import { Check, ChevronDown, LoaderCircle } from "lucide-react";
 import {
   CompanyPageClosingCta,
   CompanyPageLayout,
 } from "../components/CompanyPageLayout";
 import { FaqSection } from "../components/FaqSection";
-import { SiteLink } from "../components/SiteLink";
 import {
   CONTENT_READING_MEASURE,
   CONTENT_SHELL_WIDE,
@@ -16,7 +15,7 @@ import {
   CONTACT_SALES_INTEREST_OPTIONS,
 } from "../data/contact-sales";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-import { useId, useState, type ChangeEvent, type ComponentType, type FormEvent } from "react";
+import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 
 const CONTACT_SALES_ENDPOINT = import.meta.env.VITE_CONTACT_SALES_ENDPOINT?.trim() || "/api/contact-sales";
 
@@ -44,12 +43,6 @@ type ContactSalesResponse = {
   message?: string;
 };
 
-type Feature = {
-  title: string;
-  copy: string;
-  icon: ComponentType<{ className?: string; strokeWidth?: number }>;
-};
-
 const INITIAL_FORM: ContactSalesFormState = {
   interest: "",
   workEmail: "",
@@ -62,24 +55,6 @@ const INITIAL_FORM: ContactSalesFormState = {
   marketingOptIn: true,
   website: "",
 };
-
-const FEATURES: readonly Feature[] = [
-  {
-    title: "Governed deployment",
-    copy: "Bring privacy, identity, and oversight into the rollout from the start.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Operational rollout",
-    copy: "Map pilots, stakeholders, adoption, and team enablement into one plan.",
-    icon: Sparkles,
-  },
-  {
-    title: "Real systems fit",
-    copy: "Connect Jokuh to the workflows and tools your teams already depend on.",
-    icon: Waypoints,
-  },
-] as const;
 
 const INPUT_CLASS =
   "h-12 w-full rounded-[16px] border border-light-space/[0.1] bg-white/[0.03] px-4 font-sans text-[15px] text-light-space outline-none transition focus:border-light-space/25 focus:bg-white/[0.05] light:border-zinc-200 light:bg-white light:text-zinc-950 light:focus:border-zinc-400";
@@ -145,38 +120,29 @@ function SelectField({
   required?: boolean;
 }) {
   return (
-    <select
-      id={id}
-      name={name}
-      value={value}
-      onChange={onChange}
-      required={required}
-      aria-required={required}
-      className={cn(INPUT_CLASS, "appearance-none")}
-    >
-      <option value="">{placeholder}</option>
-      {options.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  );
-}
-
-function FeatureRow({ feature }: { feature: Feature }) {
-  const Icon = feature.icon;
-
-  return (
-    <li className="flex gap-3 rounded-[18px] border border-light-space/[0.08] bg-white/[0.02] p-4 light:border-zinc-200 light:bg-white">
-      <span className="mt-0.5 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white/[0.06] light:bg-section-grey-light">
-        <Icon className="size-4.5" strokeWidth={1.8} aria-hidden />
-      </span>
-      <div>
-        <p className="font-sans text-[14px] font-semibold text-light-space light:text-zinc-950">{feature.title}</p>
-        <p className="mt-1 text-[14px] leading-[1.6] text-light-space/60 light:text-zinc-600">{feature.copy}</p>
-      </div>
-    </li>
+    <div className="relative">
+      <select
+        id={id}
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        aria-required={required}
+        className={cn(INPUT_CLASS, "appearance-none pr-11")}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-light-space/55 light:text-zinc-500"
+        strokeWidth={2}
+        aria-hidden
+      />
+    </div>
   );
 }
 
@@ -269,26 +235,9 @@ export function ContactSalesPage() {
           </div>
         </header>
 
-        <section className="py-20 md:py-28">
-          <div className={cn(CONTENT_SHELL_WIDE, "grid items-start gap-12 md:grid-cols-2 md:gap-16")}>
-            <div className="order-last md:order-first">
-              <div className="max-w-lg">
-                <h2 className="font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[0em] text-light-space light:text-zinc-950">
-                  Start with the context
-                </h2>
-                <p className="mt-5 text-[1.0625rem] leading-[1.72] text-light-space/60 light:text-zinc-600 md:text-[1.125rem]">
-                  Share the team, company size, and business need. We use that to route your note to the right sales or solutions lead and come back with a concrete next step.
-                </p>
-              </div>
-
-              <ul className="mt-8 space-y-3 max-w-xl pt-6">
-                {FEATURES.map((feature) => (
-                  <FeatureRow key={feature.title} feature={feature} />
-                ))}
-              </ul>
-            </div>
-
-            <div className="order-first md:order-last rounded-[24px] border border-light-space/[0.08] bg-white/[0.02] p-6 light:border-zinc-200 light:bg-white md:p-8">
+        <section className="pb-12 pt-4 md:pb-16 md:pt-6">
+          <div className={cn(CONTENT_SHELL_WIDE, "flex justify-center")}>
+            <div className="w-full max-w-[44rem] rounded-[24px] border border-light-space/[0.08] bg-white/[0.02] p-6 light:border-zinc-200 light:bg-white md:p-8">
               <div className="max-w-xl">
                 <h2 className="font-sans text-2xl font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-3xl">
                   Tell us what you need
@@ -322,7 +271,6 @@ export function ContactSalesPage() {
                       value={form.workEmail}
                       onChange={(event) => updateField("workEmail", event.target.value)}
                       autoComplete="email"
-                      placeholder="you@company.com"
                       required
                     />
                   </div>
@@ -348,7 +296,6 @@ export function ContactSalesPage() {
                       value={form.companyName}
                       onChange={(event) => updateField("companyName", event.target.value)}
                       autoComplete="organization"
-                      placeholder="Company name"
                       required
                     />
                   </div>
@@ -361,7 +308,6 @@ export function ContactSalesPage() {
                       value={form.firstName}
                       onChange={(event) => updateField("firstName", event.target.value)}
                       autoComplete="given-name"
-                      placeholder="First name"
                       required
                     />
                   </div>
@@ -374,7 +320,6 @@ export function ContactSalesPage() {
                       value={form.lastName}
                       onChange={(event) => updateField("lastName", event.target.value)}
                       autoComplete="family-name"
-                      placeholder="Last name"
                       required
                     />
                   </div>
@@ -389,7 +334,6 @@ export function ContactSalesPage() {
                     value={form.phoneNumber}
                     onChange={(event) => updateField("phoneNumber", event.target.value)}
                     autoComplete="tel"
-                    placeholder="+31 6 12 34 56 78"
                     required
                   />
                 </div>
@@ -402,7 +346,6 @@ export function ContactSalesPage() {
                     value={form.needs}
                     onChange={(event) => updateField("needs", event.target.value)}
                     rows={6}
-                    placeholder="Tell us about the workflows, teams, systems, or rollout questions you want to solve."
                     className={cn(INPUT_CLASS, "min-h-[160px] px-4 py-3 h-auto")}
                   />
                 </div>
@@ -418,15 +361,25 @@ export function ContactSalesPage() {
                   aria-hidden
                 />
 
-                <div className="mt-5 rounded-[18px] border border-light-space/[0.08] p-4 light:border-zinc-200">
-                  <label htmlFor={consentId} className="flex gap-3 text-[13px] leading-relaxed text-light-space/60 light:text-zinc-600">
-                    <input
-                      id={consentId}
-                      type="checkbox"
-                      checked={form.marketingOptIn}
-                      onChange={(event) => updateField("marketingOptIn", event.target.checked)}
-                      className="mt-0.5 size-[18px] shrink-0 rounded border-light-space/20 accent-white light:border-zinc-300 light:accent-zinc-950"
-                    />
+                <div className="mt-5">
+                  <label
+                    htmlFor={consentId}
+                    className="flex cursor-pointer gap-3 text-[13px] leading-relaxed text-light-space/60 light:text-zinc-600"
+                  >
+                    <span className="relative mt-0.5 inline-flex size-4 shrink-0 items-center justify-center">
+                      <input
+                        id={consentId}
+                        type="checkbox"
+                        checked={form.marketingOptIn}
+                        onChange={(event) => updateField("marketingOptIn", event.target.checked)}
+                        className="peer absolute inset-0 size-4 cursor-pointer appearance-none rounded-[5px] border border-light-space/25 bg-transparent transition-colors checked:border-light-space checked:bg-light-space focus-visible:ring-2 focus-visible:ring-light-space/40 focus-visible:outline-none light:border-zinc-300 light:checked:border-zinc-950 light:checked:bg-zinc-950 light:focus-visible:ring-zinc-300"
+                      />
+                      <Check
+                        className="pointer-events-none relative size-3 text-dark-space opacity-0 transition-opacity peer-checked:opacity-100 light:text-white"
+                        strokeWidth={3}
+                        aria-hidden
+                      />
+                    </span>
                     <span>
                       I would like to receive marketing communications from Jokuh about products, services, and events.
                       You can unsubscribe at any time.
@@ -434,33 +387,21 @@ export function ContactSalesPage() {
                   </label>
                 </div>
 
-                <div className="mt-7 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <Button variant="primary-neutral" size="xl" className="px-8" type="submit" disabled={submitState.kind === "submitting"}>
-                      {submitState.kind === "submitting" ? (
-                        <>
-                          <LoaderCircle className="size-4 animate-spin" strokeWidth={2} aria-hidden />
-                          Sending
-                        </>
-                      ) : (
-                        "Submit inquiry"
-                      )}
-                    </Button>
-                    <p className="text-[13px] text-light-space/50 light:text-zinc-500">
-                      We aim to respond within one business day.
-                    </p>
-                  </div>
-
-                  <p className="max-w-[28ch] text-[13px] leading-relaxed text-light-space/50 light:text-zinc-500">
-                    For other inquiries, contact{" "}
-                    <SiteLink
-                      href={helpCenterHref}
-                      className="font-medium text-light-space underline decoration-light-space/25 underline-offset-4 hover:decoration-light-space/60 light:text-zinc-950 light:decoration-zinc-300 light:hover:decoration-zinc-700"
-                    >
-                      support
-                    </SiteLink>
-                    .
-                  </p>
+                <div className="mt-7">
+                  <button
+                    type="submit"
+                    disabled={submitState.kind === "submitting"}
+                    className="inline-flex h-[50px] items-center gap-2 rounded-full bg-light-space px-5 font-sans text-[13px] font-medium text-dark-space transition-colors hover:bg-light-space/90 disabled:opacity-60 light:bg-zinc-950 light:text-white light:hover:bg-zinc-800"
+                  >
+                    {submitState.kind === "submitting" ? (
+                      <>
+                        <LoaderCircle className="size-4 animate-spin" strokeWidth={2} aria-hidden />
+                        Sending
+                      </>
+                    ) : (
+                      "Submit"
+                    )}
+                  </button>
                 </div>
 
                 {submitState.kind !== "idle" && submitState.kind !== "submitting" ? (

@@ -10,6 +10,18 @@ export const HOME_PROMPT_SUGGESTIONS = [
   "Rédigez une note de remerciement",
 ];
 
+/** Phone hero prompt bar — short enough to stay fully legible beside the avatar and send button. */
+export const HOME_PROMPT_SUGGESTIONS_MOBILE = [
+  "Unify my knowledge",
+  "Plan my week",
+  "Find dinner ideas",
+  "Translate a recipe",
+  "Rank apartment dogs",
+  "Improve this job post",
+  "Train for a half marathon",
+  "Write a thank-you note",
+];
+
 /** Fullscreen site search overlay — product- and site-oriented prompts. */
 export const SITE_SEARCH_PLACEHOLDER_SUGGESTIONS = [
   "Ask me about our team",

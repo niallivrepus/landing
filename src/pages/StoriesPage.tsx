@@ -150,8 +150,8 @@ export function StoriesPage() {
             {support.length > 0 ? (
               <div
                 className={cn(
-                  "mt-6 flex gap-4 overflow-x-auto overscroll-x-contain lg:hidden",
-                  "snap-x snap-mandatory scroll-pl-0 scroll-pr-0 pb-2",
+                  "mt-6 -mx-3 flex gap-4 overflow-x-auto overscroll-x-contain px-3 md:mx-0 md:px-0 lg:hidden",
+                  "snap-x snap-mandatory scroll-pl-3 scroll-pr-3 pb-2 md:scroll-pl-0 md:scroll-pr-0",
                   "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
                 )}
               >

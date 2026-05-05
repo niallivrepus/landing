@@ -69,7 +69,7 @@ export function StoriesSection() {
   return (
     <section
       id="stories"
-      className="scroll-mt-24 bg-dark-space px-4 py-16 light:bg-white md:px-8 md:py-20"
+      className="scroll-mt-24 bg-dark-space px-0 py-16 light:bg-white md:px-8 md:py-20"
     >
       <div className={CONTENT_SHELL_WIDE}>
         <SectionHeaderRow title="Stories" actionLabel="View all" actionTo="/stories" />

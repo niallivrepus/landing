@@ -1,5 +1,8 @@
 import { Logo, cn } from "@jokuh/gooey";
-import { ArrowLeft, Menu, X } from "lucide-react";
+import { Player } from "@lordicon/react";
+import menuLordicon from "../../node_modules/@jokuh/gooey/src/assets/lordicon/filled/spinner-rain.json";
+import closeMenuLordicon from "../../node_modules/@jokuh/gooey/src/assets/lordicon/outline/cross.json";
+import searchLordicon from "../../node_modules/@jokuh/gooey/src/assets/lordicon/outline/search.json";
 import { AnimatePresence, motion } from "motion/react";
 import {
   useCallback,
@@ -8,18 +11,22 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type KeyboardEvent as ReactKeyboardEvent,
+  type Ref,
 } from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import { useSiteSearch } from "../context/SiteSearchContext";
 import { resolveRigidNavColumns } from "../config/site-subdomains";
 import { showOffSiteNavGlyph } from "../lib/off-site-href";
 import { useGentleHoverSound } from "../hooks/useGentleHoverSound";
-import { CtaLordIcon } from "./CtaLordIcon";
+import { NavSearchMegaPanel } from "./NavSearchMegaPanel";
 import { OffSiteGlyph } from "./OffSiteGlyph";
 import { SearchPanelToggleGlyph } from "./SearchPanelToggleGlyph";
 import { TopNavAnchor } from "./TopNavAnchor";
 import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
+
+/** Sentinel `openId` value used to render the inline search panel in the same mega-menu slot. */
+const SEARCH_NAV_ID = "__search__";
 
 function NavLogo({ width = 34, height = 20 }: { width?: number; height?: number }) {
   const { pathname } = useLocation();
@@ -73,6 +80,11 @@ function showOffSiteGroupGlyph(_groupId: string) {
   return false;
 }
 
+const overlayMegaSurface = {
+  open: "rgba(20, 20, 22, 0.92)",
+  rest: "rgba(255, 255, 255, 0.05)",
+};
+
 const megaSectionLabel =
   "nav-fade-item mb-4 font-sans text-[11px] font-semibold tracking-[0.08em] text-light-space/42 uppercase light:text-zinc-500";
 
@@ -81,13 +93,20 @@ function NavSearchButton({
   beforeOpen,
   style,
   whenOpenGlyph = "square",
+  isOpen: controlledOpen,
+  onToggle: controlledToggle,
 }: {
   className?: string;
   beforeOpen?: () => void;
   style?: CSSProperties;
   whenOpenGlyph?: "square" | "close";
+  /** When provided, overrides the global SiteSearch context (used for the inline desktop panel). */
+  isOpen?: boolean;
+  onToggle?: () => void;
 }) {
-  const { isOpen, toggle } = useSiteSearch();
+  const ctx = useSiteSearch();
+  const isOpen = controlledOpen ?? ctx.isOpen;
+  const handleClick = controlledToggle ?? ctx.toggle;
 
   return (
     <button
@@ -95,11 +114,12 @@ function NavSearchButton({
       aria-label={isOpen ? "Close search" : "Open search"}
       onClick={() => {
         beforeOpen?.();
-        toggle();
+        handleClick();
       }}
       className={cn(
         "premium-soft-button inline-flex size-10 shrink-0 items-center justify-center rounded-full text-light-space/55",
         "hover:bg-white/[0.05] hover:text-light-space/92 focus-visible:ring-2 focus-visible:ring-light-space/30 focus-visible:outline-none",
+        isOpen && "text-light-space/92 light:text-zinc-950",
         "light:text-zinc-500 light:hover:bg-black/[0.05] light:hover:text-zinc-950 light:focus-visible:ring-black/20",
         className,
       )}
@@ -110,7 +130,54 @@ function NavSearchButton({
   );
 }
 
-export function TryJokuhCta({
+function LordiconNavButton({
+  label,
+  icon,
+  onClick,
+  className,
+  iconClassName,
+  buttonRef,
+  ariaControls,
+  ariaExpanded,
+}: {
+  label: string;
+  icon: object;
+  onClick?: () => void;
+  className?: string;
+  iconClassName?: string;
+  buttonRef?: Ref<HTMLButtonElement>;
+  ariaControls?: string;
+  ariaExpanded?: boolean;
+}) {
+  const playerRef = useRef<any>(null);
+
+  const play = () => playerRef.current?.playFromBeginning();
+
+  return (
+    <button
+      ref={buttonRef}
+      type="button"
+      aria-label={label}
+      aria-controls={ariaControls}
+      aria-expanded={ariaExpanded}
+      onClick={onClick}
+      onMouseEnter={play}
+      onFocus={play}
+      className={cn(
+        "premium-soft-button inline-flex size-10 shrink-0 items-center justify-center rounded-full text-light-space/72",
+        "hover:bg-white/[0.06] hover:text-light-space focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:outline-none",
+        "light:text-zinc-600 light:hover:bg-black/[0.05] light:hover:text-zinc-950 light:focus-visible:ring-black/20",
+        className,
+      )}
+    >
+      <span className={cn("inline-flex", iconClassName)}>
+        <Player key={label} ref={playerRef} icon={icon} size={24} colorize="currentColor" />
+      </span>
+    </button>
+  );
+}
+
+export function PrimaryNavCta({
   className,
   onNavigate,
   style,
@@ -126,22 +193,29 @@ export function TryJokuhCta({
       to="/download"
       onClick={onNavigate}
       style={style}
+      data-nav-cta="primary"
       {...hoverSoundProps}
       className={cn(
-        "inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 font-sans text-[12px] font-semibold tracking-tight text-black",
+        "inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-white px-5 font-sans text-[12px] font-semibold tracking-tight text-black",
         "premium-soft-button shadow-[0_12px_30px_-22px_rgba(0,0,0,0.72)] hover:bg-white/92 hover:shadow-[0_18px_36px_-24px_rgba(0,0,0,0.72)] active:translate-y-px",
         "light:bg-black light:text-white light:hover:bg-zinc-900 light:hover:shadow-[0_16px_34px_-26px_rgba(0,0,0,0.32)]",
         "focus-visible:ring-2 focus-visible:ring-white/35 focus-visible:outline-none light:focus-visible:ring-black/25",
         className,
       )}
     >
-      <CtaLordIcon icon="logSignIn" size={16} darkColor="#000000" lightColor="#ffffff" />
-      Try Jokuh
+      Start
     </Link>
   );
 }
 
-export function SiteTopBar() {
+export function SiteTopBar({
+  transparent = false,
+  hidden = false,
+}: {
+  transparent?: boolean;
+  hidden?: boolean;
+} = {}) {
+  const siteSearch = useSiteSearch();
   const navGroups = useMemo(
     () => buildNavGroups(resolveRigidNavColumns(RIGID_NAV_COLUMNS, "primary")),
     [],
@@ -151,8 +225,6 @@ export function SiteTopBar() {
   const [primaryHoverKey, setPrimaryHoverKey] = useState<string | null>(null);
   const closeT = useRef<ReturnType<typeof setTimeout> | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const mobileDialogRef = useRef<HTMLDivElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const cancelClose = useCallback(() => {
@@ -164,7 +236,7 @@ export function SiteTopBar() {
 
   const scheduleClose = useCallback(() => {
     cancelClose();
-    closeT.current = setTimeout(() => setOpenId(null), 140);
+    setOpenId(null);
   }, [cancelClose]);
 
   useEffect(() => () => cancelClose(), [cancelClose]);
@@ -174,25 +246,18 @@ export function SiteTopBar() {
   }, [openId]);
 
   useEffect(() => {
-    if (!mobileOpen) setPrimaryHoverKey(null);
-  }, [mobileOpen]);
+    if (hidden) setOpenId(null);
+  }, [hidden]);
 
   useEffect(() => {
-    if (!mobileOpen) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.requestAnimationFrame(() => closeButtonRef.current?.focus());
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
+    if (!mobileOpen) setPrimaryHoverKey(null);
   }, [mobileOpen]);
 
   const openGroup = navGroups.find((g) => g.id === openId);
 
   const openMobileMenu = useCallback(() => {
     returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setOpenId(null);
     setMobileOpen(true);
   }, []);
 
@@ -207,8 +272,33 @@ export function SiteTopBar() {
     });
   }, []);
 
-  const handleMobileDialogKeyDown = useCallback(
-    (event: ReactKeyboardEvent<HTMLDivElement>) => {
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const getFocusable = () =>
+      Array.from(
+        document.querySelectorAll<HTMLElement>(
+          [
+            'a[aria-label="Jokuh home"]',
+            'button[aria-label="Open search"]',
+            'button[aria-label="Close menu"]',
+            "#jokuh-mobile-menu a[href]",
+            "#jokuh-mobile-menu button:not([disabled])",
+            '#jokuh-mobile-menu [tabindex]:not([tabindex="-1"])',
+          ].join(", "),
+        ),
+      ).filter((node) => {
+        const rect = node.getBoundingClientRect();
+        return (
+          rect.width > 0 &&
+          rect.height > 0 &&
+          !node.hasAttribute("disabled") &&
+          node.getAttribute("aria-hidden") !== "true"
+        );
+      });
+
+    const handleWindowKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
         closeMobileMenu();
@@ -217,14 +307,7 @@ export function SiteTopBar() {
 
       if (event.key !== "Tab") return;
 
-      const dialog = mobileDialogRef.current;
-      if (!dialog) return;
-      const focusable = Array.from(
-        dialog.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
-        ),
-      ).filter((node) => !node.hasAttribute("disabled") && !node.getAttribute("aria-hidden"));
-
+      const focusable = getFocusable();
       if (focusable.length === 0) {
         event.preventDefault();
         return;
@@ -234,20 +317,39 @@ export function SiteTopBar() {
       const last = focusable[focusable.length - 1];
       const active = document.activeElement;
 
-      if (event.shiftKey && active === first) {
+      if (!focusable.includes(active as HTMLElement)) {
+        event.preventDefault();
+        first.focus();
+      } else if (event.shiftKey && active === first) {
         event.preventDefault();
         last.focus();
       } else if (!event.shiftKey && active === last) {
         event.preventDefault();
         first.focus();
       }
-    },
-    [closeMobileMenu],
-  );
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleWindowKeyDown);
+    window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleWindowKeyDown);
+    };
+  }, [closeMobileMenu, mobileOpen]);
 
   return (
     <div
-      className="fixed top-0 right-0 left-0 z-[100]"
+      data-mega-open={openGroup ? "true" : undefined}
+      aria-hidden={hidden || undefined}
+      inert={hidden}
+      className={cn(
+        "nav-topbar-glass fixed top-0 right-0 left-0 z-[100] overflow-visible text-light-space light:text-zinc-950",
+        transparent && "site-topbar-overlay",
+        mobileOpen && "z-[320]",
+        hidden && "site-topbar-hidden pointer-events-none",
+      )}
       onMouseEnter={cancelClose}
       onMouseLeave={scheduleClose}
     >
@@ -255,30 +357,43 @@ export function SiteTopBar() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.68, ease: [0.22, 1, 0.36, 1] }}
-        className="nav-topbar-glass overflow-visible text-light-space light:text-zinc-950"
       >
-        <div className="relative z-[1] mx-auto h-14 w-full max-w-[1240px] px-4 md:h-[60px] md:px-5 lg:h-16 lg:pl-[48px] lg:pr-[56px]">
-          <div className="grid h-full w-full grid-cols-[2.5rem_1fr_2.5rem] items-center md:hidden">
-            <button
-              ref={menuButtonRef}
-              type="button"
-              className="premium-soft-button flex size-10 items-center justify-center rounded-full text-light-space hover:bg-white/[0.05] light:text-zinc-950 light:hover:bg-black/[0.05]"
-              aria-label="Open menu"
-              aria-expanded={mobileOpen}
-              aria-controls="jokuh-mobile-menu"
-              onClick={openMobileMenu}
+        <div className="relative z-[1] mx-auto h-14 w-full max-w-[1240px] px-3 md:h-[60px] md:px-5 min-[1200px]:h-16 min-[1200px]:pl-[48px] min-[1200px]:pr-[56px]">
+          <div className="grid h-full w-full grid-cols-[5rem_1fr_5rem] items-center md:hidden">
+            <div />
+            <Link
+              to="/"
+              className="flex justify-center"
+              aria-label="Jokuh home"
+              onClick={mobileOpen ? closeMobileMenu : undefined}
             >
-              <Menu className="size-[22px]" strokeWidth={1.75} aria-hidden />
-            </button>
-            <Link to="/" className="flex justify-center" aria-label="Jokuh home">
               <NavLogo width={34} height={20} />
             </Link>
-            <div className="flex justify-end">
-              <NavSearchButton beforeOpen={() => setMobileOpen(false)} whenOpenGlyph="close" />
+            <div className="flex justify-end gap-1">
+              <LordiconNavButton
+                label="Open search"
+                icon={searchLordicon}
+                onClick={() => {
+                  setMobileOpen(false);
+                  setOpenId(null);
+                  setPrimaryHoverKey(null);
+                  siteSearch.open();
+                }}
+              />
+              <LordiconNavButton
+                label={mobileOpen ? "Close menu" : "Open menu"}
+                icon={mobileOpen ? closeMenuLordicon : menuLordicon}
+                onClick={mobileOpen ? closeMobileMenu : openMobileMenu}
+                buttonRef={menuButtonRef}
+                ariaControls="jokuh-mobile-menu"
+                ariaExpanded={mobileOpen}
+                className="text-light-space light:text-zinc-950"
+                iconClassName={mobileOpen ? undefined : "rotate-90"}
+              />
             </div>
           </div>
 
-          <div className="hidden h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-2 md:grid md:gap-x-3 lg:gap-x-4">
+          <div className="hidden h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-2 md:grid min-[1200px]:gap-x-3 xl:gap-x-4">
             <nav
               className="group/nav flex min-w-0 items-stretch gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               aria-label="Primary"
@@ -310,7 +425,7 @@ export function SiteTopBar() {
                       onMouseEnter={() => setOpenId(g.id)}
                       onClick={() => {
                         cancelClose();
-                        setOpenId((current) => (current === g.id ? null : g.id));
+                        setOpenId(g.id);
                       }}
                       aria-expanded={openId === g.id}
                     >
@@ -333,11 +448,15 @@ export function SiteTopBar() {
             </Link>
             <div className="flex min-w-0 items-center justify-end justify-self-end gap-1.5 md:gap-2">
               <NavSearchButton
-                beforeOpen={() => setMobileOpen(false)}
+                isOpen={openId === SEARCH_NAV_ID}
+                onToggle={() => {
+                  cancelClose();
+                  setOpenId((current) => (current === SEARCH_NAV_ID ? null : SEARCH_NAV_ID));
+                }}
                 className="nav-fade-item shrink-0"
                 style={{ "--item-index": navGroups.length + 1 } as CSSProperties}
               />
-              <TryJokuhCta
+              <PrimaryNavCta
                 className="nav-fade-item shrink-0"
                 style={{ "--item-index": navGroups.length + 2 } as CSSProperties}
               />
@@ -346,19 +465,76 @@ export function SiteTopBar() {
         </div>
 
         <AnimatePresence>
-          {openGroup && (
+          {!mobileOpen && openId === SEARCH_NAV_ID && (
+            <motion.div
+              key="nav-search"
+              role="region"
+              aria-label="Search Jokuh"
+              initial={{
+                opacity: 0,
+                y: -10,
+                ...(transparent ? { backgroundColor: overlayMegaSurface.open } : {}),
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                ...(transparent ? { backgroundColor: overlayMegaSurface.open } : {}),
+                transition: {
+                  opacity: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
+                  y: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
+                  backgroundColor: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              exit={{
+                opacity: 0,
+                y: -10,
+                ...(transparent ? { backgroundColor: overlayMegaSurface.rest } : {}),
+                transition: {
+                  opacity: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+                  y: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+                  backgroundColor: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              className="nav-topbar-mega hidden md:block"
+              onMouseEnter={cancelClose}
+            >
+              <NavSearchMegaPanel onNavigate={() => setOpenId(null)} />
+            </motion.div>
+          )}
+          {!mobileOpen && openGroup && (
             <motion.div
               key="nav-mega"
               role="region"
               aria-label={`${openGroup.label} menu`}
-              initial={{ opacity: 0, y: -14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.68, ease: [0.22, 1, 0.36, 1] }}
-              className="nav-topbar-mega"
+              initial={{
+                opacity: 0,
+                y: -10,
+                ...(transparent ? { backgroundColor: overlayMegaSurface.open } : {}),
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                ...(transparent ? { backgroundColor: overlayMegaSurface.open } : {}),
+                transition: {
+                  opacity: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
+                  y: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
+                  backgroundColor: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              exit={{
+                opacity: 0,
+                y: -10,
+                ...(transparent ? { backgroundColor: overlayMegaSurface.rest } : {}),
+                transition: {
+                  opacity: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+                  y: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+                  backgroundColor: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              className="nav-topbar-mega hidden md:block"
               onMouseEnter={cancelClose}
             >
-              <div className="mx-auto w-full max-w-[1240px] px-4 pb-12 md:px-5 lg:pl-[48px] lg:pr-[56px]">
+              <div className="mx-auto w-full max-w-[1240px] px-3 pb-12 md:px-5 min-[1200px]:pl-[48px] min-[1200px]:pr-[56px]">
                 <div
                   className={cn(
                     "grid gap-8",
@@ -458,142 +634,137 @@ export function SiteTopBar() {
         </AnimatePresence>
       </motion.header>
 
+      {typeof document !== "undefined" ? createPortal(
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            ref={mobileDialogRef}
             id="jokuh-mobile-menu"
+            key="mobile-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Primary menu"
-            onKeyDown={handleMobileDialogKeyDown}
-            key="mobile-menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-[110] flex flex-col bg-dark-space light:bg-white md:hidden"
+            className="fixed inset-0 z-[300] isolate flex h-[100dvh] w-screen flex-col overflow-hidden bg-black/78 text-light-space backdrop-blur-[44px] light:bg-white/82 light:text-zinc-950 md:hidden"
           >
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="grid h-14 shrink-0 grid-cols-[2.5rem_1fr_2.5rem] items-center px-4"
-            >
-              <div />
-              <Link to="/" className="flex justify-center" aria-label="Jokuh home" onClick={closeMobileMenu}>
-                <Logo width={32} height={20} />
-              </Link>
-              <button
-                ref={closeButtonRef}
-                type="button"
-                className="premium-soft-button flex size-10 items-center justify-center justify-self-end rounded-full text-light-space hover:bg-white/[0.05] light:text-zinc-950 light:hover:bg-zinc-200"
-                aria-label="Close menu"
-                onClick={closeMobileMenu}
-              >
-                <X className="size-[22px]" strokeWidth={1.75} aria-hidden />
-              </button>
-            </motion.div>
+            <div className="absolute inset-0 z-0 bg-black/58 backdrop-blur-[44px] light:bg-white/58" aria-hidden />
 
-            <div className="flex-1 overflow-y-auto px-4 pb-24">
-              <AnimatePresence mode="popLayout" initial={false}>
-                {openId === null ? (
-                  <motion.ul
-                    key="top-level"
-                    initial={{ opacity: 0, x: -24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -24 }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    className="py-6"
-                  >
-                    {navGroups.map((g, i) => (
-                      <motion.li
-                        key={g.id}
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.35, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => setOpenId(g.id)}
-                          className="block w-full py-3 text-left font-sans text-[2.25rem] font-semibold tracking-[0em] text-light-space light:text-zinc-950"
-                        >
-                          <span className="inline-flex items-center gap-2">
-                            {g.label}
-                            {showOffSiteGroupGlyph(g.id) ? <OffSiteGlyph className="translate-y-px" /> : null}
-                          </span>
-                        </button>
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                ) : (() => {
-                  const active = navGroups.find((g) => g.id === openId);
-                  if (!active) return null;
+            <div className="relative z-[1] flex-1 overflow-y-auto px-3 pb-8 pt-28 sm:px-8 sm:pt-32 md:px-10">
+              <motion.nav
+                key="mobile-expanded-menu"
+                aria-label="Primary navigation"
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-col"
+              >
+                {navGroups.map((group, groupIndex) => {
                   const allLinks = [
-                    ...active.primary,
-                    ...(active.secondary ?? []).flatMap((col) => col.links),
-                  ];
+                    {
+                      heading: group.primaryHeading ?? group.label,
+                      links: group.primary,
+                    },
+                    ...(group.secondary ?? []),
+                  ]
+                    .filter((section) => section.links.length > 0)
+                    .flatMap((section) => section.links);
+                  const isExpanded = openId === group.id;
+                  const mobileLabel = group.id === "product" ? "Products" : group.label;
+
                   return (
                     <motion.div
-                      key={`sub-${openId}`}
-                      initial={{ opacity: 0, x: 24 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 24 }}
-                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                      className="py-6"
+                      key={group.id}
+                      initial={{ opacity: 0, y: 18 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.36, delay: groupIndex * 0.045, ease: [0.22, 1, 0.36, 1] }}
+                      className="min-w-0"
                     >
                       <button
                         type="button"
-                        onClick={() => setOpenId(null)}
-                        className="mb-4 inline-flex items-center gap-2 font-sans text-[14px] font-medium text-light-space/60 transition-colors hover:text-light-space light:text-zinc-500 light:hover:text-zinc-950"
+                        aria-expanded={isExpanded}
+                        onClick={() => setOpenId((current) => (current === group.id ? null : group.id))}
+                        className="premium-soft-fade flex w-full items-center justify-between py-2 text-left font-sans text-[2.75rem] leading-[1.06] font-normal tracking-[0em] text-light-space hover:text-light-space/72 focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:outline-none light:text-zinc-950 light:hover:text-zinc-600 light:focus-visible:ring-black/20 sm:text-[4rem] md:text-[4.75rem]"
                       >
-                        <ArrowLeft className="size-4" strokeWidth={2} />
-                        Home
+                        <span className="inline-flex min-w-0 items-center gap-3">
+                          {mobileLabel}
+                          {showOffSiteGroupGlyph(group.id) ? <OffSiteGlyph className="translate-y-px" /> : null}
+                        </span>
+                        <span
+                          aria-hidden
+                          className={cn(
+                            "ml-4 inline-flex size-8 shrink-0 items-center justify-center text-[2rem] leading-none text-light-space/42 transition-transform duration-300 light:text-zinc-500",
+                            isExpanded && "rotate-45",
+                          )}
+                        >
+                          +
+                        </span>
                       </button>
-                      <p className="mb-3 font-sans text-[11px] font-normal uppercase tracking-[0.06em] text-light-space/40 light:text-zinc-500">
-                        {active.label}
-                      </p>
-                      <ul>
-                        {allLinks.map((item, i) => (
-                          <motion.li
-                            key={item.label}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: i * 0.035, ease: [0.22, 1, 0.36, 1] }}
+                      <AnimatePresence initial={false}>
+                        {isExpanded ? (
+                          <motion.ul
+                            key={`${group.id}-links`}
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                            className="overflow-hidden pb-3 pt-1"
                           >
-                            <TopNavAnchor
-                              href={item.href}
-                              className="block py-3 font-sans text-[2.25rem] font-semibold tracking-[0em] text-light-space light:text-zinc-950"
-                              onClick={closeMobileMenu}
-                            >
-                              <span className="inline-flex items-center gap-2">
-                                {item.label}
-                                {showOffSiteNavGlyph(item) ? <OffSiteGlyph className="translate-y-px" /> : null}
-                              </span>
-                            </TopNavAnchor>
-                          </motion.li>
-                        ))}
-                      </ul>
+                            {allLinks.map((item, itemIndex) => (
+                              <motion.li
+                                key={`${group.id}:${item.label}`}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.24, delay: itemIndex * 0.025, ease: [0.22, 1, 0.36, 1] }}
+                              >
+                                <TopNavAnchor
+                                  href={item.href}
+                                  className="premium-soft-fade block rounded-lg py-1.5 font-sans text-[1.05rem] leading-tight font-medium tracking-[0em] text-light-space/58 hover:text-light-space focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:outline-none light:text-zinc-500 light:hover:text-zinc-950 light:focus-visible:ring-black/20 sm:text-[1.5rem]"
+                                  onClick={closeMobileMenu}
+                                >
+                                  <span className="inline-flex min-w-0 items-center gap-2">
+                                    <span className="min-w-0 break-words">{item.label}</span>
+                                    {showOffSiteNavGlyph(item) ? <OffSiteGlyph className="shrink-0 translate-y-px" /> : null}
+                                  </span>
+                                </TopNavAnchor>
+                              </motion.li>
+                            ))}
+                          </motion.ul>
+                        ) : null}
+                      </AnimatePresence>
                     </motion.div>
                   );
-                })()}
-              </AnimatePresence>
-            </div>
+                })}
 
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="shrink-0 bg-dark-space px-4 py-4 light:bg-white"
-            >
-              <TryJokuhCta
-                className="nav-fade-item w-full"
-                onNavigate={closeMobileMenu}
-              />
-            </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.36, delay: navGroups.length * 0.045, ease: [0.22, 1, 0.36, 1] }}
+                  className="mt-8 border-t border-white/22 pt-6 light:border-black/15"
+                >
+                  <TopNavAnchor
+                    href="/download"
+                    className="premium-soft-fade block py-1.5 font-sans text-[2rem] leading-tight font-normal tracking-[0em] text-light-space hover:text-light-space/72 focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:outline-none light:text-zinc-950 light:hover:text-zinc-600 light:focus-visible:ring-black/20 sm:text-[3.25rem]"
+                    onClick={closeMobileMenu}
+                  >
+                    Start
+                  </TopNavAnchor>
+                  <TopNavAnchor
+                    href="/contact"
+                    className="premium-soft-fade block py-1.5 font-sans text-[2rem] leading-tight font-normal tracking-[0em] text-light-space/48 hover:text-light-space focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:outline-none light:text-zinc-400 light:hover:text-zinc-950 light:focus-visible:ring-black/20 sm:text-[3.25rem]"
+                    onClick={closeMobileMenu}
+                  >
+                    Contact sales
+                  </TopNavAnchor>
+                </motion.div>
+              </motion.nav>
+            </div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body,
+      ) : null}
     </div>
   );
 }

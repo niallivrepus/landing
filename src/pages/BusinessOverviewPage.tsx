@@ -61,7 +61,13 @@ function SolutionCard({ card }: { card: BusinessSolutionCard }) {
             EDITORIAL_MEDIA_RADIUS_CLASS,
           )}
         >
-          <NewsCardArt gradient={card.gradient} lavaLamp={card.lavaLamp} className="size-full" />
+          <NewsCardArt
+            gradient={card.gradient}
+            lavaLamp={card.lavaLamp}
+            image={card.image}
+            imageClassName={card.imageClassName}
+            className="size-full"
+          />
         </div>
         <div className="mt-4 flex flex-1 flex-col gap-1.5">
           <h3 className="font-sans text-[15px] font-semibold leading-snug tracking-[0em] text-light-space transition-colors group-hover:text-light-space/80 light:text-zinc-950">

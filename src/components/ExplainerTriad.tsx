@@ -99,7 +99,7 @@ export function ExplainerTriad({ className }: { className?: string }) {
   return (
     <section
       className={cn(
-        "bg-dark-space px-4 py-16 md:px-8 md:py-20 light:bg-white",
+        "bg-dark-space px-3 py-16 md:px-8 md:py-20 light:bg-white",
         className,
       )}
       aria-labelledby="explainer-triad-heading"

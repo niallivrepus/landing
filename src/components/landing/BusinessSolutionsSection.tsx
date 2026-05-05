@@ -6,6 +6,11 @@ import { EDITORIAL_MEDIA_RADIUS_CLASS } from "../system";
 import { SectionHeaderRow } from "../system/sections";
 import { CONTENT_SHELL_WIDE } from "../system/shells";
 
+const PHONE_CARD_RAIL_CLASS =
+  "-mx-3 flex snap-x snap-mandatory scroll-pl-3 scroll-pr-3 gap-4 overflow-x-auto overscroll-x-contain px-3 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0 md:scroll-pl-0 md:scroll-pr-0";
+
+const PHONE_CARD_WIDTH_CLASS = "w-[72vw] max-w-[280px] shrink-0 snap-start sm:w-[52vw] sm:max-w-[300px] md:!w-auto md:!max-w-none md:shrink";
+
 function SolutionCard({ card }: { card: BusinessSolutionCard }) {
   return (
     <article className="group flex h-full flex-col">
@@ -16,7 +21,13 @@ function SolutionCard({ card }: { card: BusinessSolutionCard }) {
             EDITORIAL_MEDIA_RADIUS_CLASS,
           )}
         >
-          <NewsCardArt gradient={card.gradient} lavaLamp={card.lavaLamp} className="size-full" />
+          <NewsCardArt
+            gradient={card.gradient}
+            lavaLamp={card.lavaLamp}
+            image={card.image}
+            imageClassName={card.imageClassName}
+            className="size-full"
+          />
         </div>
         <div className="mt-3 flex flex-1 flex-col gap-1.5 pt-0.5">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-light-space/45 light:text-zinc-500">
@@ -39,9 +50,11 @@ export function BusinessSolutionsSection() {
     >
       <div className={CONTENT_SHELL_WIDE}>
         <SectionHeaderRow title="Jokuh for Business" actionLabel="Overview" actionTo="/business" />
-        <div className="mt-0 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-6 xl:gap-8">
+        <div className={cn("mt-0 md:grid-cols-4 md:gap-6 xl:gap-8", PHONE_CARD_RAIL_CLASS)}>
           {BUSINESS_SOLUTIONS.map((card) => (
-            <SolutionCard key={card.title} card={card} />
+            <div key={card.title} className={PHONE_CARD_WIDTH_CLASS}>
+              <SolutionCard card={card} />
+            </div>
           ))}
         </div>
       </div>

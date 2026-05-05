@@ -1,10 +1,10 @@
 export function LandingEditorialSection() {
   return (
     <section
-      className="px-4 py-20 md:px-8 md:py-28"
+      className="px-3 py-20 md:px-8 md:py-28"
       aria-labelledby="editorial-heading"
     >
-      <div className="mx-auto max-w-[min(calc(100vw-2rem),720px)] text-center md:max-w-[min(calc(100vw-4rem),820px)]">
+      <div className="mx-auto max-w-[min(calc(100vw-1.5rem),720px)] text-center md:max-w-[min(calc(100vw-4rem),820px)]">
         <h2
           id="editorial-heading"
           className="font-sans text-2xl font-semibold leading-tight tracking-[0em] text-light-space light:text-zinc-950 md:text-3xl"

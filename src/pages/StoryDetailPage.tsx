@@ -217,7 +217,7 @@ function StoryGallery({ images }: { images: StoryDetail["heroGallery"] }) {
         ref={scrollRef}
         dir="ltr"
         className={cn(
-          "overflow-x-auto overscroll-x-contain px-4 md:px-6",
+          "overflow-x-auto overscroll-x-contain px-3 md:px-6",
           "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         )}
         style={{ WebkitOverflowScrolling: "touch" }}
@@ -361,10 +361,10 @@ function FeatureTextBlock({
     <section className="bg-transparent py-28 md:py-36 lg:py-44">
       <div className={CONTENT_SHELL_WIDE}>
         <div className="mx-auto w-full max-w-[48rem]">
-          <h2 className="max-w-[12ch] text-balance font-sans text-[3rem] font-semibold leading-[0.98] tracking-[0em] text-white light:text-zinc-950 md:text-[4.1rem]">
+          <h2 className="max-w-[12ch] text-balance font-sans text-[2.4rem] font-semibold leading-[1] tracking-[0em] text-white light:text-zinc-950 md:text-[3.25rem]">
             {title}
           </h2>
-          <p className="mt-8 max-w-[42rem] text-pretty font-sans text-[1.45rem] leading-[1.28] font-medium tracking-[0em] text-white/90 light:text-zinc-800 md:text-[2rem] md:leading-[1.24]">
+          <p className="mt-8 max-w-[42rem] text-pretty font-sans text-[1.2rem] leading-[1.32] font-medium tracking-[0em] text-white/90 light:text-zinc-800 md:text-[1.55rem] md:leading-[1.28]">
             {subtitle}
           </p>
           <div className="mt-16 space-y-8 md:mt-20 md:space-y-9">
@@ -548,7 +548,7 @@ function MoreStories({ currentSlug }: { currentSlug: string }) {
   if (others.length === 0) return null;
 
   return (
-    <section className="bg-dark-space px-4 py-16 md:px-8 md:py-20" aria-labelledby="more-stories-heading">
+    <section className="bg-dark-space px-0 py-16 md:px-8 md:py-20" aria-labelledby="more-stories-heading">
       <div className={CONTENT_SHELL_WIDE}>
         <SectionHeaderRow title="More stories" actionLabel="View all" actionTo="/stories" />
         <div className="mt-0 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 xl:gap-8">

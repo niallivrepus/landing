@@ -21,11 +21,11 @@ export function ArticleMetaRow({
   const tags = parts.slice(1);
 
   const row = cn(
-    "flex flex-wrap items-baseline font-sans font-normal tracking-normal",
+    "flex flex-wrap items-baseline font-sans font-semibold tracking-normal",
     align === "center" ? "justify-center text-center" : "justify-start text-left",
     size === "compact"
       ? "gap-x-3 gap-y-0.5 text-[11px] leading-snug text-light-space/42 light:text-zinc-500 md:text-[12px]"
-      : "gap-x-5 gap-y-1 text-[13px] leading-[1.45] text-light-space/44 light:text-zinc-500 sm:gap-x-6 md:text-[0.9375rem]",
+      : "gap-x-5 gap-y-1 text-[13px] leading-[1.45] text-light-space/70 light:text-zinc-700 sm:gap-x-6 md:text-[0.9375rem]",
   );
 
   const dateCls =

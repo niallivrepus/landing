@@ -7,9 +7,17 @@
     <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Latest Jokuh newsroom articles and stories.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 02 May 2026 04:47:51 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 05 May 2026 01:39:40 GMT</lastBuildDate>
     <item>
-      <title>Jokuh at Consensus 2026 — Miami</title>
+      <title>Jokuh and BNB Chain Align Ahead of Consensus Miami</title>
+      <link>https://www.jokuh.com/newsroom/bnb-chain-partnership-discussions</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/bnb-chain-partnership-discussions</guid>
+      <description>BNB Chain&apos;s ecosystem team has opened technical alignment with Jokuh ahead of Consensus 2026 in Miami, with Jokuh architecting natively across BSC, opBNB, and Greenfield from day one.</description>
+      <category>Milestone</category>
+      <pubDate>Mon, 04 May 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Jokuh at Consensus 2026</title>
       <link>https://www.jokuh.com/newsroom/jokuh-at-consensus-2026-miami</link>
       <guid isPermaLink="true">https://www.jokuh.com/newsroom/jokuh-at-consensus-2026-miami</guid>
       <description>Jokuh will be at Consensus 2026 in Miami to demonstrate the Sovereign Agentic Operating System and meet investors, builders, and partners working at the intersection of AI, identity, and on-chain settlement.</description>
@@ -20,7 +28,7 @@
       <title>Backing from Red Beard Ventures and Denarii Labs</title>
       <link>https://www.jokuh.com/newsroom/backing-redbeard-denarii</link>
       <guid isPermaLink="true">https://www.jokuh.com/newsroom/backing-redbeard-denarii</guid>
-      <description>Jokuh confirms institutional backing from Red Beard Ventures and Denarii Labs to advance the Sovereign Agentic Operating System — a private, local-first runtime for memory, identity, and agent workflows.</description>
+      <description>Jokuh confirms institutional backing from Red Beard Ventures and Denarii Labs to advance the Sovereign Agentic Operating System, a private, local-first runtime for memory, identity, and agent workflows.</description>
       <category>Funding</category>
       <pubDate>Wed, 22 Apr 2026 12:00:00 GMT</pubDate>
     </item>
@@ -28,7 +36,7 @@
       <title>Spine ships to TestFlight</title>
       <link>https://www.jokuh.com/newsroom/spine-ships-testflight</link>
       <guid isPermaLink="true">https://www.jokuh.com/newsroom/spine-ships-testflight</guid>
-      <description>The encrypted personal memory layer at the core of Jokuh is now live for active TestFlight users — keys held by the user, computation verified through TEE, ZKP, and FHE.</description>
+      <description>The encrypted personal memory layer at the core of Jokuh is now live for active TestFlight users, keys held by the user, computation verified through TEE, ZKP, and FHE.</description>
       <category>Release</category>
       <pubDate>Wed, 15 Apr 2026 12:00:00 GMT</pubDate>
     </item>
@@ -36,7 +44,7 @@
       <title>Grants from Avalanche, RunPod, Hume AI, and Kihew</title>
       <link>https://www.jokuh.com/newsroom/grant-stack-avalanche-runpod-hume-kihew</link>
       <guid isPermaLink="true">https://www.jokuh.com/newsroom/grant-stack-avalanche-runpod-hume-kihew</guid>
-      <description>Four ecosystem grants — across settlement, compute, voice, and regional infrastructure — confirm independent technical validation of the Jokuh stack.</description>
+      <description>Four ecosystem grants, across settlement, compute, voice, and regional infrastructure, confirm independent technical validation of the Jokuh stack.</description>
       <category>Milestone</category>
       <pubDate>Wed, 08 Apr 2026 12:00:00 GMT</pubDate>
     </item>

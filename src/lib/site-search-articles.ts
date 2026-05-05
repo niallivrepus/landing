@@ -1,4 +1,11 @@
-import { formatNewsDate, getNewsHref, type NewsItem, NEWS_ITEMS } from "../data/news";
+import {
+  formatNewsDate,
+  getNewsCardArt,
+  getNewsHref,
+  type NewsCardArtDescriptor,
+  type NewsItem,
+  NEWS_ITEMS,
+} from "../data/news";
 import { HOME_STORIES, type HomeStory } from "../data/home-stories";
 import { type ProductId, PRODUCTS } from "../data/products";
 import { STORY_DETAILS } from "../data/stories-detail";
@@ -10,6 +17,7 @@ export type SiteArticleHit = {
   /** e.g. "Newsroom · Mar 5, 2026" or "Product" */
   meta: string;
   image?: string;
+  art?: NewsCardArtDescriptor;
   external: boolean;
   /** ISO date for tie-break sort */
   publishedAt?: string;
@@ -130,6 +138,7 @@ function newsToHit(n: NewsItem): SiteArticleHit {
   const { href, external } = hrefForNews(n);
   const dateLabel = formatNewsDate(n.publishedAt);
   const meta = external ? `Article · ${dateLabel}` : `Newsroom · ${dateLabel}`;
+  const art = getNewsCardArt(n);
   return {
     href,
     title: n.title,
@@ -137,7 +146,8 @@ function newsToHit(n: NewsItem): SiteArticleHit {
       n.excerpt?.trim() ||
       `${n.category}${n.topics.length ? ` · ${n.topics.join(", ")}` : ""} · ${n.readMinutes} min read`,
     meta,
-    image: n.cardImage,
+    image: art.image,
+    art,
     external,
     publishedAt: n.publishedAt,
   };

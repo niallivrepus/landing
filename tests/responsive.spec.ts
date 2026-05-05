@@ -24,7 +24,11 @@ async function scrollPageBy(page: Page, amount: number) {
 test.describe('homepage responsiveness', () => {
   const cases = [
     { name: 'mobile', viewport: { width: 390, height: 844 }, expectMenuButton: true },
+    { name: 'pre-desktop-threshold', viewport: { width: 799, height: 900 }, expectMenuButton: true },
+    { name: 'desktop-threshold', viewport: { width: 800, height: 900 }, expectMenuButton: false },
     { name: 'tablet', viewport: { width: 834, height: 1194 }, expectMenuButton: false },
+    { name: 'wide-tablet', viewport: { width: 1120, height: 900 }, expectMenuButton: false },
+    { name: 'large-desktop-threshold', viewport: { width: 1200, height: 900 }, expectMenuButton: false },
     { name: 'desktop', viewport: { width: 1440, height: 1100 }, expectMenuButton: false },
   ] as const;
 
@@ -34,7 +38,7 @@ test.describe('homepage responsiveness', () => {
       await primeCookieConsent(page);
       await page.goto('/');
 
-      await expect(page.getByRole('heading', { level: 1, name: 'Your thinking is the product.' })).toBeVisible();
+      await expect(page.getByRole('heading', { level: 1, name: 'Your mind. Your machine.' })).toBeVisible();
       await expect(page.getByRole('textbox', { name: 'Email' })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Notify me' })).toBeVisible();
 
@@ -49,6 +53,35 @@ test.describe('homepage responsiveness', () => {
       await expectNoHorizontalOverflow(page);
     });
   }
+});
+
+test.describe('homepage mobile card rails', () => {
+  test('uses matching horizontal card rails for newsroom and business cards', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await primeCookieConsent(page);
+    await page.goto('/');
+
+    const businessFirst = page.locator('#business a[href="/spine"]').first();
+    const businessSecond = page.locator('#business a[href="/calls"]').first();
+    const newsFirst = page.locator('#newsroom a[href="/newsroom/backing-redbeard-denarii"]').last();
+    const newsSecond = page.locator('#newsroom a[href="/newsroom/spine-ships-testflight"]').last();
+
+    await businessFirst.scrollIntoViewIfNeeded();
+    const businessFirstBox = await bounds(businessFirst);
+    const businessSecondBox = await bounds(businessSecond);
+
+    expect(Math.abs(businessFirstBox.y - businessSecondBox.y)).toBeLessThan(8);
+    expect(businessSecondBox.x).toBeGreaterThan(businessFirstBox.x + businessFirstBox.width - 12);
+
+    await newsFirst.scrollIntoViewIfNeeded();
+    const newsFirstBox = await bounds(newsFirst);
+    const newsSecondBox = await bounds(newsSecond);
+
+    expect(Math.abs(newsFirstBox.y - newsSecondBox.y)).toBeLessThan(8);
+    expect(newsSecondBox.x).toBeGreaterThan(newsFirstBox.x + newsFirstBox.width - 12);
+    expect(Math.abs(businessFirstBox.width - newsFirstBox.width)).toBeLessThan(2);
+    await expectNoHorizontalOverflow(page);
+  });
 });
 
 test.describe('contact form responsiveness', () => {

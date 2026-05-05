@@ -10,7 +10,7 @@ const pillClassName = cn(
   "sm:px-5 sm:py-[8px] sm:text-sm",
   "border border-[#3A3A3C] bg-[#111111]/88 text-light-space backdrop-blur-[25px]",
   "hover:border-[#4A4A4D] hover:bg-white/[0.08] active:border-[#4A4A4D] active:bg-white/[0.06] active:scale-[0.99]",
-  "light:border light:border-[#D7D7DB] light:bg-section-grey-light light:text-zinc-700 light:backdrop-blur-none",
+  "light:border light:border-[#D7D7DB] light:bg-section-grey-light/88 light:text-zinc-700",
   "light:shadow-[0_1px_2px_rgba(0,0,0,0.02),0_4px_14px_rgba(0,0,0,0.04)]",
   "light:hover:border-[#CCCCD1] light:hover:bg-zinc-200/85 light:hover:text-zinc-900 light:hover:shadow-[0_1px_2px_rgba(0,0,0,0.02),0_5px_18px_rgba(0,0,0,0.045)]",
   "light:active:border-[#CCCCD1] light:active:bg-zinc-200/95 light:active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] light:active:scale-[0.995]",
@@ -159,7 +159,7 @@ export function HeroQuickPills({
           : undefined;
 
   return (
-    <div className="w-full max-w-[min(calc(100vw-2rem),900px)]">
+    <div className="w-full max-w-[min(calc(100vw-1.5rem),900px)]">
       <nav
         ref={scrollRef}
         onScroll={updateScrollState}

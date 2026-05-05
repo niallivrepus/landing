@@ -26,7 +26,7 @@ export function ProductFullBleedReveal({
   return (
     <section ref={ref} className="relative h-[160vh]">
       <div className="sticky top-20">
-        <div className="mx-auto max-w-[58rem] px-4 pt-10 text-center md:px-8 md:pt-14">
+        <div className="mx-auto max-w-[58rem] px-3 pt-10 text-center md:px-8 md:pt-14">
           <ProductSectionIntro title={title} body={body} align="center" />
         </div>
 

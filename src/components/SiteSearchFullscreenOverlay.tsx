@@ -10,6 +10,7 @@ import { RIGID_NAV_COLUMNS } from "../data/rigid-sitemap";
 import { useGentleHoverSound } from "../hooks/useGentleHoverSound";
 import { rankSiteArticles, suggestSiteArticles, type SiteArticleHit } from "../lib/site-search-articles";
 import { CtaLordIcon } from "./CtaLordIcon";
+import { NewsCardArt } from "./NewsCardArt";
 import { SearchPanelToggleGlyph } from "./SearchPanelToggleGlyph";
 
 const SUMMARY_COLLAPSE_CHARS = 320;
@@ -153,7 +154,11 @@ function ArticleRow({ hit, onClose }: { hit: SiteArticleHit; onClose: () => void
         </span>
         <p className="font-sans text-[14px] leading-snug text-light-space/65 light:text-zinc-700">{hit.snippet}</p>
       </div>
-      {hit.image ? (
+      {hit.art ? (
+        <div className="size-20 shrink-0 overflow-hidden rounded-lg bg-white/[0.06] light:bg-section-grey-light md:size-24">
+          <NewsCardArt {...hit.art} className="size-full rounded-lg" />
+        </div>
+      ) : hit.image ? (
         <div className="shrink-0 overflow-hidden rounded-lg bg-white/[0.06] light:bg-section-grey-light">
           <img
             src={hit.image}
@@ -553,10 +558,10 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-0 z-[200] flex flex-col bg-dark-space text-light-space light:bg-white light:text-zinc-950"
+      className="fixed inset-0 z-[200] flex flex-col bg-black/78 text-light-space backdrop-blur-[44px] light:bg-white/82 light:text-zinc-950"
     >
       <header className="shrink-0">
-        <div className="relative mx-auto grid h-14 w-full max-w-[1240px] grid-cols-[2.5rem_1fr_2.5rem] items-center px-4 md:flex md:h-[60px] md:gap-3 md:px-8 lg:h-16 lg:px-12">
+        <div className="relative mx-auto grid h-14 w-full max-w-[1240px] grid-cols-[2.5rem_1fr_2.5rem] items-center px-3 md:flex md:h-[60px] md:gap-3 md:px-8 lg:h-16 lg:px-12">
           <div className="md:hidden" aria-hidden />
           <Link to="/" onClick={onClose} className="flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2" aria-label="Jokuh home">
             <Logo width={34} height={20} />
@@ -602,7 +607,7 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
       </header>
 
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-        <div className="mx-auto w-full max-w-[1240px] px-4 py-8 md:px-8 md:py-10 lg:px-12">
+        <div className="mx-auto w-full max-w-[1240px] px-3 py-8 md:px-8 md:py-10 lg:px-12">
           {turns.length === 0 ? (
             <section className="pt-6 md:pt-16">
               <div className="max-w-[1120px]">

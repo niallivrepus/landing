@@ -9,6 +9,10 @@ export type BusinessSolutionCard = {
   href: string;
   gradient: string;
   lavaLamp: LavaStyle;
+  /** Optional cover photo (used on the home + overview cards when provided). */
+  image?: string;
+  /** Tailwind classes appended to the cover photo (e.g. "object-right"). */
+  imageClassName?: string;
 };
 
 const dark = "linear-gradient(135deg, #111113 0%, #232326 100%)";
@@ -31,6 +35,15 @@ export const BUSINESS_PLATFORM_HEADING = "The platform behind every conversation
 
 export const BUSINESS_SOLUTIONS: BusinessSolutionCard[] = [
   {
+    title: "Texts",
+    caption: "Threads that stay connected to the people, projects, and recordings behind them.",
+    tag: "Product",
+    href: "/messages",
+    gradient: dark,
+    lavaLamp: "arctic",
+    image: "/product-hero/texts.jpg",
+  },
+  {
     title: "Spine",
     caption: "Threaded recall across every call, message, and note your team produces.",
     tag: "Product",
@@ -39,28 +52,22 @@ export const BUSINESS_SOLUTIONS: BusinessSolutionCard[] = [
     lavaLamp: "aurora",
   },
   {
-    title: "Calls",
-    caption: "Encrypted realtime audio with diarization and consent built into the protocol.",
-    tag: "Product",
-    href: "/calls",
-    gradient: dark,
-    lavaLamp: "ember",
-  },
-  {
-    title: "Messages",
-    caption: "Threads that stay connected to the people, projects, and recordings behind them.",
-    tag: "Product",
-    href: "/messages",
-    gradient: dark,
-    lavaLamp: "arctic",
-  },
-  {
     title: "Profile",
     caption: "Portable, cryptographically verifiable identity for everyone in your workspace.",
     tag: "Product",
     href: "/profile",
     gradient: dark,
     lavaLamp: "ultraviolet",
+  },
+  {
+    title: "Calls",
+    caption: "Encrypted realtime audio with diarization and consent built into the protocol.",
+    tag: "Product",
+    href: "/calls",
+    gradient: dark,
+    lavaLamp: "ember",
+    image: "/product-hero/calls.jpg",
+    imageClassName: "object-[35%_center]",
   },
 ] as const;
 

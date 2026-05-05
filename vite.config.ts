@@ -10,6 +10,7 @@ import { createContactSalesMiddleware } from "./contact-sales-middleware";
 import { resolveContactSalesEnv } from "./contact-sales-service";
 import { createStorySubmissionsMiddleware } from "./story-submissions-middleware";
 import { createSiteSearchMiddleware } from "./site-search-middleware";
+import { createArticleAudioMiddleware } from "./article-audio-middleware";
 
 /** Tailwind/Vite may resolve url(/pods-bento/*.svg) from scanned classes; ensure files exist for fresh clones. */
 function ensurePodsBentoPublicAssets() {
@@ -69,6 +70,12 @@ export default defineConfig(({ mode }) => {
     supabaseUrl && supabaseServiceKey
       ? { supabaseUrl, supabaseServiceKey }
       : { supabaseUrl: "", supabaseServiceKey: "" };
+  const articleAudioEnv = {
+    apiKey: env.ELEVENLABS_API_KEY ?? env.VITE_ELEVENLABS_API_KEY ?? "",
+    voiceId: env.VITE_ELEVENLABS_VOICE_ID ?? "tMXujoAjiboschVOhAnk",
+    modelId: env.VITE_ELEVENLABS_MODEL_ID ?? "eleven_turbo_v2_5",
+    publicDir: resolve(__dirname, "public"),
+  };
   const gooeyWorkspaceRoot = resolve(__dirname, "../gooey");
   const gooeyPackageRoot = resolve(gooeyWorkspaceRoot, "packages/gooey");
   const gooeySourceRoot = resolve(gooeyPackageRoot, "src");
@@ -101,11 +108,13 @@ export default defineConfig(({ mode }) => {
           server.middlewares.use(createSiteSearchMiddleware(groqKey));
           server.middlewares.use(createContactSalesMiddleware(contactSalesEnv));
           server.middlewares.use(createStorySubmissionsMiddleware(storySubmissionsEnv));
+          server.middlewares.use(createArticleAudioMiddleware(articleAudioEnv));
         },
         configurePreviewServer(server) {
           server.middlewares.use(createSiteSearchMiddleware(groqKey));
           server.middlewares.use(createContactSalesMiddleware(contactSalesEnv));
           server.middlewares.use(createStorySubmissionsMiddleware(storySubmissionsEnv));
+          server.middlewares.use(createArticleAudioMiddleware(articleAudioEnv));
         },
       },
     ],

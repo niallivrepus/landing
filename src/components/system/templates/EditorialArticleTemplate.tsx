@@ -8,6 +8,7 @@ export function EditorialArticleTemplate({
   metaLine,
   title,
   subtitle,
+  hero,
   afterMain,
   children,
   mainClassName,
@@ -16,6 +17,7 @@ export function EditorialArticleTemplate({
   metaLine: string;
   title: string;
   subtitle: string;
+  hero?: ReactNode;
   afterMain?: ReactNode;
   children: ReactNode;
   mainClassName?: string;
@@ -33,11 +35,13 @@ export function EditorialArticleTemplate({
           <h1 className="mt-4 font-sans text-[2.1rem] font-semibold leading-[1.08] tracking-[0em] text-light-space light:text-zinc-950 sm:mt-5 sm:text-5xl md:text-6xl">
             {title}
           </h1>
-          <p className="news-detail-reading mt-6 text-[1.0625rem] font-normal leading-[1.65] text-light-space/72 light:text-zinc-600 md:mt-7 md:text-[1.125rem] md:leading-[1.62]">
+          <p className="news-detail-reading mx-auto mt-6 max-w-[42rem] text-balance text-[1rem] font-semibold leading-[1.45] text-light-space light:text-zinc-950 md:mt-7 md:text-[1.0625rem] md:leading-[1.42]">
             {subtitle}
           </p>
         </div>
       </header>
+
+      {hero}
 
       {children}
     </MarketingPageFrame>

@@ -758,7 +758,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       ],
     },
     centerpiece: {
-      eyebrow: "Messages",
+      eyebrow: "Texts",
       title: "Threads with memory.",
       body: "Messages makes communication feel less scattered by keeping the human context close to every exchange.",
       ctaLabel: "Join Beta",

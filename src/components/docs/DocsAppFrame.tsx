@@ -246,7 +246,7 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-[#050505] text-white antialiased light:bg-white light:text-zinc-950">
       <header className="sticky top-0 z-[100] bg-black/88 backdrop-blur-xl light:bg-white/88">
         {/* Mobile / tablet header */}
-        <div className="mx-auto grid h-14 w-full grid-cols-[2.5rem_1fr_2.5rem] items-center px-4 md:h-16 md:px-6 lg:hidden">
+        <div className="mx-auto grid h-14 w-full grid-cols-[2.5rem_1fr_2.5rem] items-center px-3 md:h-16 md:px-6 lg:hidden">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
@@ -354,7 +354,7 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
       {/* Mobile menu drawer */}
       {mobileMenuOpen ? (
         <div className="fixed inset-0 z-[150] lg:hidden" role="dialog" aria-modal="true" aria-label="Documentation menu">
-          <div className="relative z-[1] flex h-full w-full flex-col overflow-y-auto bg-black px-4 py-5 light:bg-white sm:px-6 sm:py-6">
+          <div className="relative z-[1] flex h-full w-full flex-col overflow-y-auto bg-black px-3 py-5 light:bg-white sm:px-6 sm:py-6">
             <div className="mb-6 flex items-center justify-center relative">
               <Logo width={34} height={20} />
               <button
@@ -423,7 +423,7 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
         </div>
       ) : null}
 
-      <div className="mx-auto w-full max-w-[1560px] px-4 md:px-6 lg:grid lg:grid-cols-[180px_minmax(0,1fr)] lg:gap-6 lg:px-8">
+      <div className="mx-auto w-full max-w-[1560px] px-3 md:px-6 lg:grid lg:grid-cols-[180px_minmax(0,1fr)] lg:gap-6 lg:px-8">
         <aside className="sticky top-16 hidden max-h-[calc(100dvh-4rem)] overflow-y-auto pt-6 lg:block [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <nav aria-label="Documentation" className="space-y-6 pb-8">
             {DOCS_NAV_SECTIONS.map((section) => (
@@ -445,7 +445,7 @@ export function DocsAppFrame({ children }: { children: ReactNode }) {
 
         <main className="min-w-0 pb-24 pt-8 lg:pl-8 lg:pt-8">
           <nav
-            className="-mx-4 flex gap-2 overflow-x-auto overscroll-x-contain px-4 pb-2 lg:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="-mx-3 flex gap-2 overflow-x-auto overscroll-x-contain px-3 pb-2 lg:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             aria-label="Documentation sections"
           >
             {DOCS_NAV_SECTIONS.flatMap((section) => section.items).map((item) =>

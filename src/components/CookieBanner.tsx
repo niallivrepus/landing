@@ -77,10 +77,7 @@ export function CookieBanner() {
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6"
     >
-      <div
-        className="absolute inset-0 bg-black/85 light:bg-black/[0.35] light:backdrop-blur-[32px]"
-        aria-hidden
-      />
+      <div className="absolute inset-0 bg-black/85 backdrop-blur-[32px] light:bg-black/[0.35]" aria-hidden />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.98, y: 8 }}

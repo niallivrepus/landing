@@ -20,9 +20,9 @@ type Blob = {
 export type LavaLampStyle = {
   name: string;
   blobs: Blob[];
-  /** SVG gooey filter stdDeviation — default 16 */
+  /** SVG liquid-field blur stdDeviation — default 30 */
   blur?: number;
-  /** feColorMatrix alpha multiplier/offset — default [20, -9] */
+  /** feColorMatrix alpha threshold. Higher multiplier keeps liquid curves but snaps edges crisp. */
   matrix?: [number, number];
   /** wrapper opacity — default 0.85 */
   opacity?: number;
@@ -165,6 +165,25 @@ export const LAVA_LAMP_STYLES: Record<string, LavaLampStyle> = {
 
 export const LAVA_LAMP_STYLE_KEYS = Object.keys(LAVA_LAMP_STYLES) as (keyof typeof LAVA_LAMP_STYLES)[];
 
+function fluidBlobSize(pos: string) {
+  const size = pos.match(/\bsize-\[([^\]]+)\]/)?.[1];
+  if (!size?.endsWith("%")) return undefined;
+
+  const value = size.slice(0, -1);
+  return `calc((${value}cqw + ${value}cqh) / 2)`;
+}
+
+function crispBlobGradient(gradient: string) {
+  const match = gradient.match(/,\s*(#[0-9a-fA-F]{3,8})\s+(\d+)%\s*,\s*transparent\s+(\d+)%\s*\)$/);
+  if (!match?.[1] || !match[2] || !match[3]) return gradient;
+
+  const solidStop = Number(match[2]);
+  const transparentStop = Number(match[3]);
+  const crispStop = `${Math.round((solidStop + transparentStop) / 2)}%`;
+
+  return gradient.replace(/,\s*transparent\s+\d+%\s*\)$/, `, ${match[1]} ${crispStop}, transparent ${crispStop})`);
+}
+
 /** Deterministic style picker based on a string seed */
 export function lavaLampStyleForSeed(seed: string): keyof typeof LAVA_LAMP_STYLES {
   let h = 0;
@@ -186,12 +205,13 @@ export function LavaLamp({
   const s = LAVA_LAMP_STYLES[styleName] ?? LAVA_LAMP_STYLES.aurora;
   const filterId = useId();
   const blur = s.blur ?? 30;
-  const [alphaM, alphaO] = s.matrix ?? [18, -7];
+  const [alphaM, alphaO] = s.matrix ?? [32, -15];
 
   const blobEls = useMemo(
     () =>
       s.blobs.map((b, i) => {
         const Comp = animated ? motion.div : "div";
+        const blobSize = fluidBlobSize(b.pos);
         const animProps = animated
           ? {
               animate: { x: b.x, y: b.y },
@@ -206,7 +226,11 @@ export function LavaLamp({
           <Comp
             key={i}
             className={cn("absolute rounded-full", b.pos)}
-            style={{ background: b.gradient }}
+            style={{
+              background: crispBlobGradient(b.gradient),
+              width: blobSize,
+              height: blobSize,
+            }}
             {...animProps}
           />
         );
@@ -226,36 +250,25 @@ export function LavaLamp({
     >
       <svg className="absolute h-0 w-0" aria-hidden>
         <defs>
-          <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%"
-            colorInterpolationFilters="sRGB">
-            {/* Phase 1: Wide blur for smooth metaball merge zones */}
-            <feGaussianBlur in="SourceGraphic" stdDeviation={blur} result="blur1" />
+          <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+            {/* Blur merges the blobs; the alpha matrix snaps the resulting silhouette sharp. */}
+            <feGaussianBlur in="SourceGraphic" stdDeviation={blur} result="liquidBlur" />
             <feColorMatrix
-              in="blur1"
+              in="liquidBlur"
               mode="matrix"
               values={`1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${alphaM} ${alphaO}`}
-              result="gooey"
-            />
-            <feComposite in="SourceGraphic" in2="gooey" operator="atop" result="merged" />
-
-            {/* Phase 2: Anti-alias pass — soften the contour edge */}
-            <feGaussianBlur in="merged" stdDeviation="2" result="smooth" />
-            <feColorMatrix
-              in="smooth"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 4 -0.8"
-              result="crisp"
+              result="liquidField"
             />
 
-            {/* Phase 3: Saturation boost for vivid color */}
-            <feColorMatrix in="crisp" type="saturate" values="1.5" />
+            {/* Gentle saturation boost without restoring hard source edges. */}
+            <feColorMatrix in="liquidField" type="saturate" values="1.45" />
           </filter>
         </defs>
       </svg>
 
       {/* Blobs — single pass, 3D lighting baked into the filter */}
       <div
-        className="absolute inset-[-30%]"
+        className="absolute inset-[-30%] [container-type:size]"
         style={{ filter: `url(#${CSS.escape(filterId)})`, opacity: s.opacity ?? 0.95 }}
       >
         {blobEls}

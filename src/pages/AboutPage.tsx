@@ -13,7 +13,7 @@ import {
 } from "../components/system";
 import { CONTENT_SHELL_COMPANY, CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-import { DEFAULT_NEWS_CARD_GRADIENT, NEWS_ITEMS, formatNewsDate, getNewsHref } from "../data/news";
+import { NEWS_ITEMS, formatNewsDate, getNewsCardArt, getNewsHref, type NewsCardArtDescriptor } from "../data/news";
 
 const ABOUT_FEATURES = [
   {
@@ -46,9 +46,7 @@ type AboutNewsCard = {
   category: string;
   date: string;
   href: string;
-  gradient: string;
-  image?: string;
-  lavaLamp?: NonNullable<(typeof NEWS_ITEMS)[number]["lavaLamp"]>;
+  art: NewsCardArtDescriptor;
 };
 
 function AboutNewsroomCard({ row }: { row: AboutNewsCard }) {
@@ -61,7 +59,7 @@ function AboutNewsroomCard({ row }: { row: AboutNewsCard }) {
             EDITORIAL_MEDIA_RADIUS_CLASS,
           )}
         >
-          <NewsCardArt gradient={row.gradient} image={row.image} lavaLamp={row.lavaLamp} className="size-full" />
+          <NewsCardArt {...row.art} className="size-full" />
         </div>
         <div className="mt-3 flex flex-1 flex-col gap-1.5 pt-0.5">
           <h3 className="line-clamp-2 font-sans text-[15px] font-semibold leading-[1.25] tracking-[0em] text-light-space transition-colors group-hover:text-light-space/80 light:text-zinc-950 sm:text-base">
@@ -114,9 +112,7 @@ export default function AboutPage() {
           category: n.category,
           date: formatNewsDate(n.publishedAt),
           href: getNewsHref(n),
-          gradient: n.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT,
-          image: n.cardImage,
-          lavaLamp: n.lavaLamp,
+          art: getNewsCardArt(n),
         })),
     [],
   );

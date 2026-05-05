@@ -13,9 +13,9 @@ import {
   Users,
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { buildAppHandoffUrl } from "../../config/site-subdomains";
-import { HOME_PROMPT_SUGGESTIONS } from "../../data/site-search-suggestions";
+import { HOME_PROMPT_SUGGESTIONS, HOME_PROMPT_SUGGESTIONS_MOBILE } from "../../data/site-search-suggestions";
 import { HeroQuickPills } from "./HeroQuickPills";
 import { LANDING_PROMPT_BORDER_CLASS } from "./promptChrome";
 
@@ -45,8 +45,24 @@ export const HERO_OVERFLOW_QUICK_LINKS: HeroQuickLink[] = [
   { label: "Contact sales", href: "/contact", icon: { lucide: HeartHandshake, lordicon: "arrowLongRight" } },
 ];
 
+function useIsCompactPromptViewport() {
+  const [compact, setCompact] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 479px)");
+    const update = () => setCompact(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return compact;
+}
+
 export function LandingHero() {
   const ref = useRef<HTMLElement>(null);
+  const isCompactPromptViewport = useIsCompactPromptViewport();
+  const promptSuggestions = isCompactPromptViewport ? HOME_PROMPT_SUGGESTIONS_MOBILE : HOME_PROMPT_SUGGESTIONS;
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -57,14 +73,14 @@ export function LandingHero() {
   return (
     <section
       ref={ref}
-      className="relative flex min-h-[100svh] flex-col px-4 pt-24 pb-12 md:px-8 md:pt-28 md:pb-16"
+      className="relative flex min-h-[100svh] flex-col px-3 pt-24 pb-12 md:px-8 md:pt-28 md:pb-16"
     >
       <motion.div
         style={{ opacity: heroFade, y: heroY }}
-        className="landing-hero-chrome flex min-h-0 w-full flex-1 flex-col px-1"
+        className="landing-hero-chrome flex min-h-0 w-full flex-1 flex-col"
       >
         <div className="flex min-h-[min(100%,calc(100svh-6rem))] w-full flex-1 flex-col items-center md:min-h-[min(100%,calc(100svh-7rem))]">
-          <div className="flex w-full max-w-[min(calc(100vw-2rem),400px)] flex-1 flex-col items-center justify-end gap-3 pb-6 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),770px)]">
+          <div className="flex w-full max-w-[min(calc(100vw-1.5rem),400px)] flex-1 flex-col items-center justify-end gap-3 pb-6 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),770px)]">
             <h1 className="max-w-none whitespace-nowrap text-center font-sans text-[1.25rem] font-semibold leading-[1.1] tracking-[0em] text-light-space light:text-zinc-950 sm:text-[2.75rem] md:text-[2.75rem] md:leading-[1.1] lg:text-[3.25rem] lg:leading-[1.08]">
               Your mind. Your machine.
             </h1>
@@ -72,7 +88,7 @@ export function LandingHero() {
 
           <div
             id="prompt"
-            className="flex w-full max-w-[min(calc(100vw-2rem),400px)] shrink-0 flex-col items-center scroll-mt-32 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),770px)]"
+            className="flex w-full max-w-[min(calc(100vw-1.5rem),400px)] shrink-0 flex-col items-center scroll-mt-32 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),770px)]"
           >
             <div className="w-full">
               <InteractivePromptBar
@@ -81,7 +97,7 @@ export function LandingHero() {
                   "!w-full !max-w-none",
                   LANDING_PROMPT_BORDER_CLASS,
                 )}
-                previewSuggestions={HOME_PROMPT_SUGGESTIONS}
+                previewSuggestions={promptSuggestions}
                 heroSendOnly
                 onSend={(text: string) => {
                   window.location.assign(buildAppHandoffUrl(text));
@@ -90,7 +106,7 @@ export function LandingHero() {
             </div>
           </div>
 
-          <div className="flex w-full max-w-[min(calc(100vw-2rem),400px)] flex-1 flex-col items-center justify-start pt-6 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),900px)]">
+          <div className="flex w-full max-w-[min(calc(100vw-1.5rem),400px)] flex-1 flex-col items-center justify-start pt-6 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),900px)]">
             <HeroQuickPills items={HERO_PRIMARY_QUICK_LINKS} overflowItems={HERO_OVERFLOW_QUICK_LINKS} />
           </div>
         </div>

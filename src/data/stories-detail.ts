@@ -249,10 +249,8 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
     title: "A psychotherapy practice in New York",
     dek: "Recent AI privilege and preservation rulings raised new confidentiality questions for clinical notes, so this scenario explores what safer memory infrastructure could look like.",
     heroGallery: [
-      { src: "/story-art/aaron-nyc-central-park-lawn.png", alt: "Central Park lawn with the Manhattan skyline beyond the trees", label: "Central Park" },
       { src: "/story-art/aaron-nyc-waterfront-skyline.avif", alt: "Lower Manhattan skyline across the water on a clear day", label: "Lower Manhattan" },
       { src: "/story-art/aaron-nyc-central-park-lake.avif", alt: "Central Park lake reflecting the Manhattan skyline", label: "Park reflections" },
-      { src: "/story-art/aaron-nyc-midtown-aerial-grid.png", alt: "Aerial view of dense Midtown Manhattan blocks and towers", label: "Midtown grid" },
       { src: "/story-art/aaron-nyc-neighborhood-aerial.png", alt: "Aerial view of Manhattan residential towers, streets, and trees", label: "City blocks" },
       { src: "/story-art/aaron-nyc-lower-manhattan-water.png", alt: "New York City skyline above the waterfront", label: "Waterline" },
       { src: "/story-art/aaron-nyc-central-park-reservoir.png", alt: "Wide Central Park water view with skyline reflections", label: "Reservoir" },
@@ -347,7 +345,6 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
     heroGallery: [
       { src: "/story-art/tomas-aldaz-aerial-farm.png", alt: "Aerial view of farm fields, roads, and grain silos in the High Plains", label: "A cooperative seen from above: roads, silos, and fields that all need one defensible memory." },
       { src: "/story-art/tomas-aldaz-savannah-field.png", alt: "Wide dirt field under a bright blue sky with trees along the edge", label: "Open soil under a clear sky, the long-horizon record behind every carbon claim." },
-      { src: "/story-art/tomas-aldaz-green-fields.png", alt: "Large green and yellow farmland rows rolling toward a line of trees", label: "Regrowth is a pattern across seasons, not a single snapshot for a sustainability deck." },
       { src: "/story-art/tomas-aldaz-plowed-field.png", alt: "Freshly plowed field rows stretching toward the horizon beneath a blue sky", label: "Rows stretching to the horizon: the scale that makes memory infrastructure necessary." },
     ],
     sections: [
@@ -402,6 +399,19 @@ export const STORY_DETAILS: Record<string, StoryDetail> = {
         paragraphs: [
           "Illustrative High Plains cooperative workflow: each farm record can be scoped into its own workspace; voice memos, drone scans, and soil panels are attached to the relevant farm tile as they arrive. The cooperative's shared knowledge pool is designed for authorized users and reviewable access.",
         ],
+      },
+      {
+        kind: "imagesAsymmetric",
+        large: {
+          src: "/story-art/tomas-aldaz-handshake.png",
+          alt: "Tomás Aldaz shaking hands with a member farmer beside a grain silo at sunset",
+          caption: "Trust between Tomás and member farmers is the human layer the cooperative's encrypted record is built to defend.",
+        },
+        small: {
+          src: "/story-art/tomas-aldaz-savannah-field.png",
+          alt: "Wide dirt field under a bright blue sky with trees along the edge",
+          caption: "Every handshake at the silo connects to seasons of soil panels, drone scans, and voice memos in the same pool.",
+        },
       },
       {
         kind: "subhead",

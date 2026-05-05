@@ -107,7 +107,7 @@ export function MegaFooter() {
 
   return (
     <footer className="bg-dark-space text-light-space light:bg-white light:text-zinc-900">
-      <div className="px-4 pt-10 pb-2 md:px-8 md:pt-14 lg:pt-[4.5rem]">
+      <div className="px-3 pt-10 pb-2 md:px-8 md:pt-14 lg:pt-[4.5rem]">
         <div className="mx-auto w-full max-w-[1240px]">
           <div className="space-y-5 py-10 font-sans text-[11px] leading-relaxed text-light-space/48 md:space-y-6 md:py-14 md:text-[12px] md:leading-relaxed lg:py-16 light:text-zinc-500">
             {FOOTER_FINE_PRINT.paragraphs.map((block, i) => (
@@ -160,7 +160,7 @@ export function MegaFooter() {
         </div>
       </div>
 
-      <div className="px-5 pb-8 pt-2 md:px-10 md:pb-10 lg:px-14">
+      <div className="px-3 pb-8 pt-2 md:px-10 md:pb-10 lg:px-14">
         <div className="mx-auto w-full max-w-[1240px] pt-8 md:pt-9">
           <p className="mb-6 text-center font-sans text-[12px] font-medium leading-snug text-light-space/60 md:mb-7 light:text-zinc-500">
             {FOOTER_SIGNATURE}

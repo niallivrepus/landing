@@ -72,10 +72,10 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       {
         heading: "Products",
         links: [
+          { label: "Calls", href: "/calls", summary: "Capture conversations without losing the room.", surfaces: ALL_SOURCES },
+          { label: "Texts", href: "/messages", summary: "Stay in the loop with the people who matter.", surfaces: ALL_SOURCES },
           { label: "Spine", href: "/spine", summary: "See time more clearly.", surfaces: ALL_SOURCES },
           { label: "Blurbs", href: "/blurbs", summary: "Turn talk into clean copy.", surfaces: ALL_SOURCES },
-          { label: "Calls", href: "/calls", summary: "Capture conversations without losing the room.", surfaces: ALL_SOURCES },
-          { label: "Messages", href: "/messages", summary: "Keep every thread close to the people behind it.", surfaces: ALL_SOURCES },
           { label: "Profile", href: "/profile", summary: "Build a living identity people can actually use.", surfaces: ALL_SOURCES },
         ],
       },
@@ -112,19 +112,6 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
           { label: "Overview", href: "/business", surfaces: ALL_SOURCES },
           { label: "Customer Stories", href: "/stories", surfaces: ALL_SOURCES },
           { label: "Contact Sales", href: "/contact", surfaces: ALL_SOURCES },
-        ],
-      },
-      {
-        heading: "Products",
-        links: [
-          { label: "Jokuh Business", href: "/contact", surfaces: ALL_SOURCES },
-          { label: "Jokuh Enterprise", href: "/contact", surfaces: ALL_SOURCES },
-          {
-            label: "SDK & API (soon)",
-            href: "/contact",
-            summary: "Public SDK and API access is not live yet.",
-            surfaces: ALL_SOURCES,
-          },
         ],
       },
     ],

@@ -1,0 +1,14 @@
+<svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="spine-title">
+  <title id="spine-title">Spine</title>
+  <rect x="22" y="22" width="176" height="176" rx="42" fill="black" fill-opacity="0.18"/>
+  <rect x="22" y="22" width="176" height="176" rx="42" stroke="white" stroke-opacity="0.32" stroke-width="2"/>
+  <path d="M110 54C94.536 54 82 66.536 82 82V138C82 153.464 94.536 166 110 166C125.464 166 138 153.464 138 138V82C138 66.536 125.464 54 110 54Z" stroke="white" stroke-width="10" stroke-linecap="round"/>
+  <path d="M110 74V146" stroke="white" stroke-width="10" stroke-linecap="round"/>
+  <path d="M89 86H131" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <path d="M89 110H131" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <path d="M89 134H131" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <path d="M62 108H78" stroke="white" stroke-opacity="0.72" stroke-width="8" stroke-linecap="round"/>
+  <path d="M142 108H158" stroke="white" stroke-opacity="0.72" stroke-width="8" stroke-linecap="round"/>
+  <path d="M110 34V44" stroke="white" stroke-opacity="0.56" stroke-width="8" stroke-linecap="round"/>
+  <path d="M110 176V186" stroke="white" stroke-opacity="0.56" stroke-width="8" stroke-linecap="round"/>
+</svg>

@@ -1,10 +1,9 @@
 import {
-  DEFAULT_NEWS_CARD_GRADIENT,
-  NEWS_CATEGORIES,
   NEWS_FILTER_TOPICS,
   NEWS_FILTER_YEARS,
   NEWS_ITEMS,
   formatNewsDate,
+  getNewsCardArt,
   getNewsHref,
   type NewsCategory,
   type NewsItem,
@@ -17,8 +16,8 @@ import { NewsCardArt } from "../components/NewsCardArt";
 import { SiteLink } from "../components/SiteLink";
 import { EDITORIAL_MEDIA_RADIUS_CLASS, MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
-import { RSS_FEED_PATH } from "../config/rss";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
+import { preloadNewsArticleSlugs } from "../lib/article-audio";
 
 type SortOrder = "newest" | "oldest";
 type ViewMode = "grid" | "list";
@@ -74,11 +73,6 @@ function ListViewIcon({ active }: { active: boolean }) {
   );
 }
 
-const JOURNAL_CATEGORIES: Array<NewsCategory | "All"> = [
-  "All",
-  ...NEWS_CATEGORIES.filter((category): category is NewsCategory => category !== "All"),
-];
-
 function yearOf(iso: string) {
   return new Date(iso + "T12:00:00").getFullYear();
 }
@@ -100,6 +94,8 @@ function JournalMeta({ item }: { item: NewsItem }) {
 }
 
 function JournalGridCard({ item, featured = false }: { item: NewsItem; featured?: boolean }) {
+  const art = getNewsCardArt(item);
+
   return (
     <article className="group flex h-full flex-col">
       <SiteLink href={newsHref(item)} className="flex h-full flex-col no-underline">
@@ -111,9 +107,7 @@ function JournalGridCard({ item, featured = false }: { item: NewsItem; featured?
           )}
         >
           <NewsCardArt
-            gradient={item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT}
-            image={item.cardImage}
-            lavaLamp={item.lavaLamp}
+            {...art}
             className={EDITORIAL_MEDIA_RADIUS_CLASS}
           />
         </div>
@@ -139,6 +133,8 @@ function JournalGridCard({ item, featured = false }: { item: NewsItem; featured?
 }
 
 function JournalCompactCard({ item }: { item: NewsItem }) {
+  const art = getNewsCardArt(item);
+
   return (
     <article className="group flex h-full flex-col">
       <SiteLink href={newsHref(item)} className="flex h-full flex-col no-underline">
@@ -149,9 +145,7 @@ function JournalCompactCard({ item }: { item: NewsItem }) {
           )}
         >
           <NewsCardArt
-            gradient={item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT}
-            image={item.cardImage}
-            lavaLamp={item.lavaLamp}
+            {...art}
             className={EDITORIAL_MEDIA_RADIUS_CLASS}
           />
         </div>
@@ -167,14 +161,14 @@ function JournalCompactCard({ item }: { item: NewsItem }) {
 }
 
 function JournalListItem({ item }: { item: NewsItem }) {
+  const art = getNewsCardArt(item);
+
   return (
     <article className="grid gap-5 py-6 first:pt-0 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 lg:py-8">
       <SiteLink href={newsHref(item)} className={cn("block overflow-hidden", EDITORIAL_MEDIA_RADIUS_CLASS)}>
         <div className={cn("aspect-[4/3] border border-light-space/[0.08] bg-white/[0.03] light:border-black/[0.08] light:bg-section-grey-light/80", EDITORIAL_MEDIA_RADIUS_CLASS)}>
           <NewsCardArt
-            gradient={item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT}
-            image={item.cardImage}
-            lavaLamp={item.lavaLamp}
+            {...art}
             className={EDITORIAL_MEDIA_RADIUS_CLASS}
           />
         </div>
@@ -198,9 +192,11 @@ function JournalListItem({ item }: { item: NewsItem }) {
 function JournalFeedGrid({ items }: { items: NewsItem[] }) {
   if (items.length === 0) return null;
 
-  const featured = items[0];
-  const support = items.slice(1, 4);
-  const remainder = items.slice(4);
+  const pinnedIndex = items.findIndex((item) => item.pinFeatured);
+  const featured = pinnedIndex >= 0 ? items[pinnedIndex] : items[0];
+  const rest = pinnedIndex >= 0 ? items.filter((_, i) => i !== pinnedIndex) : items.slice(1);
+  const support = rest.slice(0, 3);
+  const remainder = rest.slice(3);
 
   function FeedWall({
     wallItems,
@@ -267,8 +263,8 @@ function JournalFeedGrid({ items }: { items: NewsItem[] }) {
           {support.length > 0 ? (
             <div
               className={cn(
-                "mt-6 flex gap-4 overflow-x-auto overscroll-x-contain lg:hidden",
-                "snap-x snap-mandatory scroll-pl-0 scroll-pr-0 pb-2",
+                "mt-6 -mx-3 flex gap-4 overflow-x-auto overscroll-x-contain px-3 md:mx-0 md:px-0 lg:hidden",
+                "snap-x snap-mandatory scroll-pl-3 scroll-pr-3 pb-2 md:scroll-pl-0 md:scroll-pr-0",
                 "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
               )}
             >
@@ -304,6 +300,14 @@ function JournalList({ items }: { items: NewsItem[] }) {
 
 export function NewsPage() {
   useDocumentTitle("Jokuh Newsroom");
+
+  useEffect(() => {
+    const slugs = NEWS_ITEMS
+      .filter((n) => n.slug && n.internalHref && !n.externalUrl)
+      .slice(0, 12)
+      .map((n) => n.slug as string);
+    preloadNewsArticleSlugs(slugs);
+  }, []);
 
   const [category, setCategory] = useState<NewsCategory | "All">("All");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
@@ -425,37 +429,9 @@ export function NewsPage() {
             <h1 className="font-sans text-[2.5rem] font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-[3.25rem] md:leading-[1.05]">
               Newsroom
             </h1>
-            <SiteLink
-              href={RSS_FEED_PATH}
-              className="inline-flex w-fit items-center rounded-full border border-light-space/[0.12] px-4 py-2 font-sans text-[13px] font-semibold text-light-space/70 transition-colors hover:border-light-space/[0.22] hover:text-light-space light:border-black/[0.1] light:bg-section-grey-light light:text-zinc-700 light:hover:border-black/[0.16] light:hover:text-zinc-950"
-            >
-              RSS feed
-            </SiteLink>
           </div>
 
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
-            <div
-              className={cn(
-                "flex min-w-0 items-center gap-x-5 gap-y-2 font-sans text-[15px] md:text-[16px]",
-                "w-full overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-                "lg:w-auto lg:flex-wrap lg:overflow-visible",
-              )}
-            >
-              {JOURNAL_CATEGORIES.map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => setCategory(item)}
-                  className={cn(
-                    "shrink-0 transition-colors",
-                    item === category ? "text-light-space light:text-zinc-950" : "text-light-space/45 hover:text-light-space/75 light:text-zinc-500 light:hover:text-zinc-900",
-                  )}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-end lg:gap-8">
             <div className="flex w-full items-center justify-between gap-4 font-sans text-[14px] text-light-space lg:w-auto lg:justify-start lg:gap-6 xl:gap-7">
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 md:gap-x-7">
                 <div className="relative">
