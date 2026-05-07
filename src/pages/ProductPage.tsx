@@ -5,6 +5,7 @@ import { ProductHeroFullscreen } from "../components/product/ProductHeroFullscre
 import { ProductHighlightsCarousel } from "../components/product/ProductHighlightsCarousel";
 import { FaqSection } from "../components/FaqSection";
 import { LAVA_LAMP_STYLES } from "../components/LavaLamp";
+import { preload } from "react-dom";
 import { Link } from "react-router-dom";
 import { MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
@@ -14,11 +15,16 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { cn, useTheme } from "@jokuh/gooey";
 
 const PRODUCT_HERO_IMAGE: Partial<Record<ProductId, string>> = {
-  blurbs: "/product-hero/blurbs.jpg",
+  blurbs: "/product-hero/blurbs-poster.jpg",
   spine: "/product-hero/spine.jpg",
   calls: "/product-hero/calls.jpg",
   messages: "/product-hero/texts.jpg",
   profile: "/product-hero/profile.png",
+};
+
+const PRODUCT_HERO_VIDEO: Partial<Record<ProductId, string>> = {
+  blurbs: "/product-hero/blurbs-header.mp4",
+  messages: "/product-hero/texts-header.mp4",
 };
 
 const PRODUCT_HERO_LAVA: Record<ProductId, keyof typeof LAVA_LAMP_STYLES> = {
@@ -71,11 +77,26 @@ const PRODUCT_FAQ_SUMMARIES: Partial<Record<ProductId, string>> = {
     "Orb is Jokuh's wallet and settlement layer: native multi-chain custody, payments, and on-chain actions executed by agents you authorize.",
 };
 
+function preloadProductHeroVideo(productId: ProductId) {
+  const video = PRODUCT_HERO_VIDEO[productId];
+
+  if (!video) return;
+
+  const poster = PRODUCT_HERO_IMAGE[productId];
+
+  if (poster) {
+    preload(poster, { as: "image", fetchPriority: "high" });
+  }
+
+  preload(video, { as: "video", type: "video/mp4", fetchPriority: "high" });
+}
+
 export function ProductPage({ productId }: { productId: ProductId }) {
   const product = PRODUCTS[productId];
   const detail = PRODUCT_DETAIL_BLUEPRINTS[productId];
   const { resolvedTheme } = useTheme();
 
+  preloadProductHeroVideo(productId);
   useDocumentTitle(`${product.title} Jokuh`);
 
   return (
@@ -86,10 +107,11 @@ export function ProductPage({ productId }: { productId: ProductId }) {
       topBar={<ProductDetailTopBar productTitle={product.title} cta={PRODUCT_HERO_CTA[productId]} />}
     >
       <div id="overview" className="scroll-mt-24">
-      <ProductHeroFullscreen
-        title={product.title}
-        lavaLamp={PRODUCT_HERO_LAVA[productId]}
-        backgroundImage={PRODUCT_HERO_IMAGE[productId]}
+        <ProductHeroFullscreen
+          title={product.title}
+          lavaLamp={PRODUCT_HERO_LAVA[productId]}
+          backgroundImage={PRODUCT_HERO_IMAGE[productId]}
+          backgroundVideo={PRODUCT_HERO_VIDEO[productId]}
           trailing={
             <div className="inline-flex h-12 items-center gap-3 rounded-full bg-black/40 pl-5 pr-1.5 backdrop-blur-md ring-1 ring-white/10">
               <span className="font-sans text-[14px] font-medium text-white">
@@ -110,9 +132,11 @@ export function ProductPage({ productId }: { productId: ProductId }) {
       <div id="highlights" className="scroll-mt-24">
         <ProductHighlightsCarousel {...detail.highlights} />
       </div>
-      <div id="closer-look" className="scroll-mt-24">
-        <ProductCloserLookExplorer {...detail.closerLook} />
-      </div>
+      {productId !== "profile" ? (
+        <div id="closer-look" className="scroll-mt-24">
+          <ProductCloserLookExplorer {...detail.closerLook} />
+        </div>
+      ) : null}
       <div id="showcase" className="scroll-mt-24">
         <ProductCenteredShowcase {...detail.centerpiece} />
       </div>

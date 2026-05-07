@@ -11,6 +11,36 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
+    <script>
+      (function () {
+        var mediaByPath = {
+          "/blurbs": {
+            poster: "/product-hero/blurbs-poster.jpg",
+            video: "/product-hero/blurbs-header.mp4",
+          },
+          "/messages": {
+            poster: "/product-hero/texts.jpg",
+            video: "/product-hero/texts-header.mp4",
+          },
+        };
+        var path = window.location.pathname.replace(/\/+$/, "") || "/";
+        var media = mediaByPath[path];
+        if (!media) return;
+
+        function preloadHeroAsset(href, as, type, fetchPriority) {
+          var link = document.createElement("link");
+          link.rel = "preload";
+          link.as = as;
+          link.href = href;
+          if (type) link.type = type;
+          if (fetchPriority) link.setAttribute("fetchpriority", fetchPriority);
+          document.head.appendChild(link);
+        }
+
+        preloadHeroAsset(media.poster, "image", "", "high");
+        preloadHeroAsset(media.video, "video", "video/mp4", "high");
+      })();
+    </script>
     <link rel="preload" as="image" href="/story-art/maren-workspace.png" fetchpriority="high" />
     <link rel="preload" as="image" href="/story-art/story-office-focus.png" fetchpriority="high" />
     <link rel="preload" as="image" href="/story-art/story-office-smile.png" fetchpriority="high" />

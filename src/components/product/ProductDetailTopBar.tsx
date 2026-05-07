@@ -3,6 +3,7 @@ import { cn } from "@jokuh/gooey";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Link } from "react-router-dom";
 import { SiteTopBar } from "../SiteTopBar";
+import { CONTENT_SHELL_WIDE } from "../system/shells";
 
 export type ProductHeroCta = {
   label: string;
@@ -98,7 +99,7 @@ export function ProductDetailTopBar({
                 "light:border-black/[0.08] light:bg-white/75 light:text-zinc-950 light:shadow-[0_18px_34px_-28px_rgba(15,23,42,0.18)]",
             )}
           >
-            <div className="mx-auto flex h-16 w-full max-w-[1240px] items-center gap-4 px-3 md:px-5 lg:pl-[48px] lg:pr-[56px]">
+            <div className={cn(CONTENT_SHELL_WIDE, "flex h-16 items-center gap-4")}>
               <a
                 href="#overview"
                 onClick={handleAnchorClick("#overview")}

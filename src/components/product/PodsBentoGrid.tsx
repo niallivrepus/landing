@@ -30,7 +30,7 @@ function BentoTile({
   /** App theme from MarketingPageFrame — avoids OS `prefers-color-scheme` vs `dark:` mismatch. */
   resolvedTheme: "light" | "dark";
 }) {
-  const surface = resolvedTheme === "light" ? "bg-[#F5F5F7]" : "bg-[#1C1C1E]";
+  const surface = resolvedTheme === "light" ? "bg-[#FBFBFC]" : "bg-[#1C1C1E]";
   const objectFit = imgFit === "contain" ? "object-contain" : "object-cover";
   const src = srcDark ? (resolvedTheme === "light" ? srcLight : srcDark) : srcLight;
 

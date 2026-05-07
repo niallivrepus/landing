@@ -1,6 +1,7 @@
 import { cn } from "@jokuh/gooey";
 import type { ReactNode } from "react";
 import { LavaLamp, type LAVA_LAMP_STYLES } from "../LavaLamp";
+import { CONTENT_SHELL_WIDE } from "../system/shells";
 
 type LavaStyle = keyof typeof LAVA_LAMP_STYLES;
 
@@ -15,6 +16,8 @@ export function ProductHeroFullscreen({
   lavaLamp = "aurora",
   /** Optional override image (rendered behind the lava lamp). */
   backgroundImage,
+  /** Optional video rendered above the image; image remains as poster/fallback. */
+  backgroundVideo,
   trailing,
   className,
 }: {
@@ -22,6 +25,7 @@ export function ProductHeroFullscreen({
   title: string;
   lavaLamp?: LavaStyle;
   backgroundImage?: string;
+  backgroundVideo?: string;
   trailing?: ReactNode;
   className?: string;
 }) {
@@ -49,6 +53,20 @@ export function ProductHeroFullscreen({
         />
       ) : null}
 
+      {backgroundVideo ? (
+        <video
+          src={backgroundVideo}
+          poster={backgroundImage}
+          className="absolute inset-0 size-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden
+        />
+      ) : null}
+
       {/* Layer 3 — bottom gradient for legibility behind the title */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[55%]"
@@ -60,7 +78,7 @@ export function ProductHeroFullscreen({
       />
 
       {/* Title block bottom-left */}
-      <div className="relative z-20 mx-auto flex w-full max-w-[1380px] flex-col justify-end px-3 pb-12 pt-32 md:px-12 md:pb-16 md:pt-40">
+      <div className={cn(CONTENT_SHELL_WIDE, "relative z-20 flex flex-col justify-end pb-12 pt-32 md:pb-16 md:pt-40")}>
         <div className="flex w-full flex-col items-start gap-6 md:flex-row md:items-end md:justify-between">
           <div className="min-w-0">
             {eyebrow ? (

@@ -3,10 +3,12 @@ declare module "@jokuh/gooey" {
   import type { LucideIcon } from "lucide-react";
 
   export const Button: ComponentType<any>;
+  export const ActiveCalls: ComponentType<any>;
   export const InteractivePromptBar: ComponentType<any>;
   export const Logo: ComponentType<any>;
   export const OO: ComponentType<any>;
   export const PillWheel: ComponentType<any>;
+  export const Soundwave: ComponentType<any>;
   export const ThemeProvider: ComponentType<any>;
   export const lordiconAssets: {
     arrowLongRight: unknown;

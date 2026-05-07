@@ -47,9 +47,9 @@ export function ProductSectionIntro({
       ) : null}
       <h2
         className={cn(
-          "font-sans text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[1.04] tracking-[0em]",
+          "whitespace-pre-line font-sans text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[1.04] tracking-[0em]",
           eyebrow ? "mt-4" : "",
-          centered && "mx-auto max-w-[16ch]",
+          centered && "mx-auto max-w-[24ch]",
           titleColor,
         )}
       >
@@ -80,8 +80,8 @@ export function ProductShowcaseSurface({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[32px] border border-zinc-200/80 bg-[#F5F5F7] shadow-[0_24px_80px_rgba(15,23,42,0.05)]",
-        "dark:border-white/[0.08] dark:bg-[#1C1C1E] dark:shadow-[0_24px_80px_rgba(0,0,0,0.42)]",
+        "overflow-hidden rounded-[32px] border border-zinc-200/80 bg-[#FBFBFC]",
+        "dark:border-white/[0.08] dark:bg-[#1C1C1E]",
         className,
       )}
     >

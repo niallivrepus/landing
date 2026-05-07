@@ -117,7 +117,7 @@
   --site-nav-dark-surface: rgba(0, 0, 0, 0.55);
   --site-nav-dark-shadow: 0 22px 44px -40px rgba(0, 0, 0, 0.45);
   --site-nav-overlay-rest-surface: rgba(255, 255, 255, 0.05);
-  --site-nav-overlay-open-surface: rgba(20, 20, 22, 0.92);
+  --site-nav-overlay-open-surface: rgba(28, 28, 30, 0.94);
   --site-nav-overlay-shadow: 0 22px 44px -40px rgba(0, 0, 0, 0.6);
 }
 
@@ -172,6 +172,7 @@ textarea,
   transition:
     background-color 180ms var(--premium-ease),
     box-shadow 180ms var(--premium-ease),
+    backdrop-filter 180ms var(--premium-ease),
     transform var(--premium-duration-fast) var(--premium-ease);
   transform: translateY(0);
 }
@@ -218,21 +219,13 @@ textarea,
   background-color: rgba(255, 255, 255, 0.92) !important;
 }
 
-/* Mega menu (dropdown panel) — stealth dark grey when topbar is in overlay mode. */
-.nav-topbar-glass.site-topbar-overlay .nav-topbar-mega,
-.light .nav-topbar-glass.site-topbar-overlay .nav-topbar-mega {
-  background-color: rgba(20, 20, 22, 0.84);
-  backdrop-filter: saturate(180%) blur(56px);
-  -webkit-backdrop-filter: saturate(180%) blur(56px);
-  color: rgb(255, 255, 255);
-  box-shadow: var(--site-nav-overlay-shadow);
-}
-
-/* When a mega menu is open in overlay mode, one parent surface paints the full bar + dropdown. */
+/* One expanded surface: the fixed topbar owns the only glass background. */
 .nav-topbar-glass.site-topbar-overlay[data-mega-open="true"],
 .light .nav-topbar-glass.site-topbar-overlay[data-mega-open="true"] {
   background-color: var(--site-nav-overlay-open-surface);
-  box-shadow: var(--site-nav-overlay-shadow);
+  backdrop-filter: saturate(140%) brightness(0.72) blur(72px);
+  -webkit-backdrop-filter: saturate(140%) brightness(0.72) blur(72px);
+  box-shadow: 0 32px 44px -42px rgba(0, 0, 0, 0.6);
 }
 
 .nav-topbar-glass.site-topbar-overlay .nav-topbar-mega,
@@ -279,31 +272,41 @@ textarea,
   opacity: 0;
 }
 
+.nav-topbar-glass[data-mega-open="true"] {
+  background-color: rgba(10, 10, 11, 0.86);
+  backdrop-filter: saturate(145%) brightness(0.78) blur(72px);
+  -webkit-backdrop-filter: saturate(145%) brightness(0.78) blur(72px);
+  box-shadow: 0 32px 44px -42px rgba(0, 0, 0, 0.45);
+}
+
+.light .nav-topbar-glass[data-mega-open="true"]:not(.site-topbar-overlay) {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: saturate(145%) brightness(1.02) blur(72px);
+  -webkit-backdrop-filter: saturate(145%) brightness(1.02) blur(72px);
+}
+
 .light .nav-topbar-glass:not(.site-topbar-overlay) {
   background: var(--site-nav-light-surface);
   box-shadow: none;
 }
 
 .nav-topbar-mega {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  left: 0;
+  position: relative;
   z-index: 1;
   padding-top: 56px;
   border: none;
-  box-shadow: var(--site-nav-dark-shadow);
-  background: rgba(0, 0, 0, 0.58);
-  backdrop-filter: saturate(190%) blur(52px);
-  -webkit-backdrop-filter: saturate(190%) blur(52px);
+  box-shadow: none;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .light .nav-topbar-mega {
-  background: rgba(255, 255, 255, 0.74);
-  box-shadow: var(--site-nav-light-shadow);
+  background: transparent;
+  box-shadow: none;
   border-top: none;
-  backdrop-filter: saturate(190%) blur(52px);
-  -webkit-backdrop-filter: saturate(190%) blur(52px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .premium-soft-fade {

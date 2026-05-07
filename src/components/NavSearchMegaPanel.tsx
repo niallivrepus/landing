@@ -1,6 +1,8 @@
+import { cn } from "@jokuh/gooey";
 import { ArrowRight, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SiteLink } from "./SiteLink";
+import { CONTENT_SHELL_WIDE } from "./system/shells";
 import { suggestSiteArticles, type SiteArticleHit } from "../lib/site-search-articles";
 
 const QUICK_LINKS: { label: string; href: string }[] = [
@@ -55,7 +57,7 @@ export function NavSearchMegaPanel({ onNavigate }: { onNavigate: () => void }) {
   const showInitial = query.trim().length === 0;
 
   return (
-    <div className="mx-auto w-full max-w-[1240px] px-3 pb-12 pt-6 md:px-5 lg:pl-[48px] lg:pr-[56px]">
+    <div className={cn(CONTENT_SHELL_WIDE, "pb-12 pt-6")}>
       {/* Search input row */}
       <label className="flex items-center gap-3 border-b border-light-space/[0.1] pb-4 light:border-zinc-200">
         <Search

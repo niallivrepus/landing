@@ -8,7 +8,7 @@ import { LanguageSelectModal } from "./LanguageSelectModal";
 import { resolveRigidNavColumns } from "../config/site-subdomains";
 import { showOffSiteNavGlyph } from "../lib/off-site-href";
 import { OffSiteGlyph } from "./OffSiteGlyph";
-import { FOOTER_FINE_PRINT, FOOTER_SIGNATURE } from "../data/site-directory";
+import { FOOTER_SIGNATURE } from "../data/site-directory";
 import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
 import {
   IconX,
@@ -109,14 +109,9 @@ export function MegaFooter() {
     <footer className="bg-dark-space text-light-space light:bg-white light:text-zinc-900">
       <div className="px-3 pt-10 pb-2 md:px-8 md:pt-14 lg:pt-[4.5rem]">
         <div className="mx-auto w-full max-w-[1240px]">
-          <div className="space-y-5 py-10 font-sans text-[11px] leading-relaxed text-light-space/48 md:space-y-6 md:py-14 md:text-[12px] md:leading-relaxed lg:py-16 light:text-zinc-500">
-            {FOOTER_FINE_PRINT.paragraphs.map((block, i) => (
-              <p key={i}>{block}</p>
-            ))}
-          </div>
           <div className="pb-12 pt-12 md:pb-16 md:pt-14 lg:pb-20 lg:pt-16">
             <div
-              className="hidden items-start lg:grid lg:gap-x-14 lg:gap-y-14 xl:gap-x-20"
+              className="hidden items-start md:grid md:gap-x-10 md:gap-y-12 lg:gap-x-14 lg:gap-y-14 xl:gap-x-20"
               style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}
             >
               {FOOTER_COLUMNS.map((col) => (
@@ -124,7 +119,7 @@ export function MegaFooter() {
               ))}
             </div>
 
-            <div className="lg:hidden">
+            <div className="md:hidden">
               {FOOTER_COLUMNS.map((col, colIndex) => (
                 <details key={col.id} className="group">
                   <summary className="premium-soft-fade flex cursor-pointer list-none items-center justify-between py-4 font-sans text-[13px] font-semibold leading-tight text-light-space light:text-zinc-950 [&::-webkit-details-marker]:hidden">
@@ -162,7 +157,7 @@ export function MegaFooter() {
 
       <div className="px-3 pb-8 pt-2 md:px-10 md:pb-10 lg:px-14">
         <div className="mx-auto w-full max-w-[1240px] pt-8 md:pt-9">
-          <p className="mb-6 text-center font-sans text-[12px] font-medium leading-snug text-light-space/60 md:mb-7 light:text-zinc-500">
+          <p className="mb-6 whitespace-pre-line text-center font-sans text-[12px] font-medium leading-snug text-light-space/60 md:mb-7 light:text-zinc-500">
             {FOOTER_SIGNATURE}
           </p>
           <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-between md:gap-8">

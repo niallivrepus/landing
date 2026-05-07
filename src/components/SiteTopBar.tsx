@@ -24,6 +24,7 @@ import { OffSiteGlyph } from "./OffSiteGlyph";
 import { SearchPanelToggleGlyph } from "./SearchPanelToggleGlyph";
 import { TopNavAnchor } from "./TopNavAnchor";
 import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
+import { CONTENT_SHELL_WIDE } from "./system/shells";
 
 /** Sentinel `openId` value used to render the inline search panel in the same mega-menu slot. */
 const SEARCH_NAV_ID = "__search__";
@@ -79,11 +80,6 @@ function buildNavGroups(cols: ReturnType<typeof resolveRigidNavColumns>): MegaGr
 function showOffSiteGroupGlyph(_groupId: string) {
   return false;
 }
-
-const overlayMegaSurface = {
-  open: "rgba(20, 20, 22, 0.92)",
-  rest: "rgba(255, 255, 255, 0.05)",
-};
 
 const megaSectionLabel =
   "nav-fade-item mb-4 font-sans text-[11px] font-semibold tracking-[0.08em] text-light-space/42 uppercase light:text-zinc-500";
@@ -341,7 +337,7 @@ export function SiteTopBar({
 
   return (
     <div
-      data-mega-open={openGroup ? "true" : undefined}
+      data-mega-open={openId !== null ? "true" : undefined}
       aria-hidden={hidden || undefined}
       inert={hidden}
       className={cn(
@@ -358,7 +354,7 @@ export function SiteTopBar({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.68, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="relative z-[1] mx-auto h-14 w-full max-w-[1240px] px-3 md:h-[60px] md:px-5 min-[1200px]:h-16 min-[1200px]:pl-[48px] min-[1200px]:pr-[56px]">
+        <div className={cn(CONTENT_SHELL_WIDE, "relative z-[1] h-14 md:h-[60px] min-[1200px]:h-16")}>
           <div className="grid h-full w-full grid-cols-[5rem_1fr_5rem] items-center md:hidden">
             <div />
             <Link
@@ -395,7 +391,7 @@ export function SiteTopBar({
 
           <div className="hidden h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-2 md:grid min-[1200px]:gap-x-3 xl:gap-x-4">
             <nav
-              className="group/nav flex min-w-0 items-stretch gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="group/nav flex min-w-0 items-stretch gap-0 overflow-x-auto md:-ml-3 lg:-ml-3.5 xl:-ml-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               aria-label="Primary"
             >
               {navGroups.map((g, index) => {
@@ -473,26 +469,21 @@ export function SiteTopBar({
               initial={{
                 opacity: 0,
                 y: -10,
-                ...(transparent ? { backgroundColor: overlayMegaSurface.open } : {}),
               }}
               animate={{
                 opacity: 1,
                 y: 0,
-                ...(transparent ? { backgroundColor: overlayMegaSurface.open } : {}),
                 transition: {
                   opacity: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
                   y: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
-                  backgroundColor: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
                 },
               }}
               exit={{
                 opacity: 0,
                 y: -10,
-                ...(transparent ? { backgroundColor: overlayMegaSurface.rest } : {}),
                 transition: {
                   opacity: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
                   y: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
-                  backgroundColor: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
                 },
               }}
               className="nav-topbar-mega hidden md:block"
@@ -509,32 +500,27 @@ export function SiteTopBar({
               initial={{
                 opacity: 0,
                 y: -10,
-                ...(transparent ? { backgroundColor: overlayMegaSurface.open } : {}),
               }}
               animate={{
                 opacity: 1,
                 y: 0,
-                ...(transparent ? { backgroundColor: overlayMegaSurface.open } : {}),
                 transition: {
                   opacity: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
                   y: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
-                  backgroundColor: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
                 },
               }}
               exit={{
                 opacity: 0,
                 y: -10,
-                ...(transparent ? { backgroundColor: overlayMegaSurface.rest } : {}),
                 transition: {
                   opacity: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
                   y: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
-                  backgroundColor: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
                 },
               }}
               className="nav-topbar-mega hidden md:block"
               onMouseEnter={cancelClose}
             >
-              <div className="mx-auto w-full max-w-[1240px] px-3 pb-12 md:px-5 min-[1200px]:pl-[48px] min-[1200px]:pr-[56px]">
+              <div className={cn(CONTENT_SHELL_WIDE, "pb-12")}>
                 <div
                   className={cn(
                     "grid gap-8",

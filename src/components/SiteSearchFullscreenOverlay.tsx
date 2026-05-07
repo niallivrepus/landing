@@ -12,6 +12,7 @@ import { rankSiteArticles, suggestSiteArticles, type SiteArticleHit } from "../l
 import { CtaLordIcon } from "./CtaLordIcon";
 import { NewsCardArt } from "./NewsCardArt";
 import { SearchPanelToggleGlyph } from "./SearchPanelToggleGlyph";
+import { CONTENT_SHELL_WIDE } from "./system/shells";
 
 const SUMMARY_COLLAPSE_CHARS = 320;
 
@@ -561,7 +562,7 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
       className="fixed inset-0 z-[200] flex flex-col bg-black/78 text-light-space backdrop-blur-[44px] light:bg-white/82 light:text-zinc-950"
     >
       <header className="shrink-0">
-        <div className="relative mx-auto grid h-14 w-full max-w-[1240px] grid-cols-[2.5rem_1fr_2.5rem] items-center px-3 md:flex md:h-[60px] md:gap-3 md:px-8 lg:h-16 lg:px-12">
+        <div className={cn(CONTENT_SHELL_WIDE, "relative grid h-14 grid-cols-[2.5rem_1fr_2.5rem] items-center md:flex md:h-[60px] md:gap-3 lg:h-16")}>
           <div className="md:hidden" aria-hidden />
           <Link to="/" onClick={onClose} className="flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2" aria-label="Jokuh home">
             <Logo width={34} height={20} />
@@ -607,7 +608,7 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
       </header>
 
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-        <div className="mx-auto w-full max-w-[1240px] px-3 py-8 md:px-8 md:py-10 lg:px-12">
+        <div className={cn(CONTENT_SHELL_WIDE, "py-8 md:py-10")}>
           {turns.length === 0 ? (
             <section className="pt-6 md:pt-16">
               <div className="max-w-[1120px]">

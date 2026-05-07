@@ -13,18 +13,67 @@ export type ProductDetailMedia =
       src: string;
       alt: string;
       objectPosition?: string;
+      flipX?: boolean;
+    }
+  | {
+      kind: "themeImage";
+      lightSrc: string;
+      darkSrc: string;
+      alt: string;
+      objectPosition?: string;
     }
   | {
       kind: "video";
       src: string;
       poster?: string;
       alt?: string;
+    }
+  | {
+      kind: "blurbSequence";
+      items: {
+        lightSrc: string;
+        darkSrc: string;
+        alt: string;
+      }[];
+    }
+  | {
+      kind: "blurbTravelFlow";
+    }
+  | {
+      kind: "blurbCallScene";
+      panelPlacement?: "center" | "closerLookRight";
+      backgroundImage?: string;
+      callTitle: string;
+      callStatus: string;
+      participants: {
+        src: string;
+        borderColor: string;
+        alt: string;
+      }[];
+      subtitles: {
+        speaker: string;
+        text: string;
+      }[];
+    }
+  | {
+      kind: "blurbImageCarousel";
+      items: {
+        lightSrc: string;
+        darkSrc: string;
+        alt: string;
+      }[];
+    }
+  | {
+      kind: "blurbPublishButton";
     };
 
 export type ProductHighlightSlide = {
   id: string;
   eyebrow?: string;
   title: string;
+  titleAlign?: "left" | "center";
+  titlePosition?: "top" | "bottom" | "left-center" | "right-center";
+  titleTone?: "default" | "light";
   body: string;
   media: ProductDetailMedia;
 };
@@ -60,6 +109,8 @@ export type ProductDetailBlueprint = {
     ctaLabel?: string;
     ctaTo?: string;
     items: ProductCenterpieceItem[];
+    backgroundImage?: string;
+    surfaceTone?: "default" | "neutral";
   };
   reveal: {
     eyebrow?: string;
@@ -231,40 +282,91 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
         {
           id: "blurbs-source",
           eyebrow: "Source",
-          title: "Start with what was said.",
+          title: "Born from the calls and chats you're already in.",
           body: "Blurbs begin from real meetings, chats, and voice notes instead of a blank page.",
           media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #ecfeff 0%, #eff6ff 100%)",
-            darkGradient: "linear-gradient(180deg, #071a1f 0%, #101827 100%)",
-            accent: "#10b981",
+            kind: "blurbImageCarousel",
+            items: [
+              {
+                lightSrc: "/blurbs/light-1.png",
+                darkSrc: "/blurbs/dark-1.png",
+                alt: "Blurb card preview 1",
+              },
+              {
+                lightSrc: "/blurbs/light-2.png",
+                darkSrc: "/blurbs/dark-2.png",
+                alt: "Blurb card preview 2",
+              },
+              {
+                lightSrc: "/blurbs/light-3.png",
+                darkSrc: "/blurbs/dark-3.png",
+                alt: "Blurb card preview 3",
+              },
+              {
+                lightSrc: "/blurbs/light-4.png",
+                darkSrc: "/blurbs/dark-4.png",
+                alt: "Blurb card preview 4",
+              },
+            ],
           },
         },
         {
           id: "blurbs-rewrite",
           eyebrow: "Rewrite",
-          title: "Keep your voice.",
+          title: "Capture your data as it happens.",
+          titleAlign: "left",
+          titlePosition: "left-center",
+          titleTone: "light",
           body: "Shift tone and structure while keeping the original signal intact.",
           media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #ecfdf5 0%, #f0fdfa 100%)",
-            darkGradient: "linear-gradient(180deg, #061b14 0%, #0b1f1d 100%)",
-            accent: "#14b8a6",
+            kind: "blurbCallScene",
+            panelPlacement: "closerLookRight",
+            callTitle: "Blurb review",
+            callStatus: "Live call",
+            participants: [
+              {
+                src: "/aliens/alien-0001.jpg",
+                borderColor: "#77FF00",
+                alt: "Call participant one",
+              },
+              {
+                src: "/aliens/alien-0002.jpg",
+                borderColor: "#00D4FF",
+                alt: "Call participant two",
+              },
+              {
+                src: "/aliens/alien-0003.jpg",
+                borderColor: "#FF00E5",
+                alt: "Call participant three",
+              },
+            ],
+            subtitles: [
+              {
+                speaker: "Maya",
+                text: "That phrase is the update.",
+              },
+              {
+                speaker: "You",
+                text: "Keep the tone casual, but make it usable.",
+              },
+              {
+                speaker: "Maya",
+                text: "Save both versions before we hang up.",
+              },
+            ],
           },
         },
         {
           id: "blurbs-publish",
           eyebrow: "Shipping",
-          title: "Ship faster.",
+          title: "Yours by the time\nyou hang up.",
+          titleTone: "light",
           body: "Move from transcript to usable draft to final publish flow without losing context.",
           media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #f0fdf4 0%, #eff6ff 100%)",
-            darkGradient: "linear-gradient(180deg, #071a12 0%, #101827 100%)",
-            accent: "#059669",
+            kind: "video",
+            src: "/blurbs/yours-by-the-time-you-hang-up.mp4",
+            poster: "/blurbs/hang-up-background.jpg",
+            alt: "Young woman in a candid call moment",
           },
         },
       ],
@@ -276,59 +378,91 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           id: "blurbs-transcript",
           label: "Transcript",
           title: "Keep the source close.",
-          body: "You can trace every line of copy back to what was actually said, not to a disconnected prompt.",
+          body: "Real talk with people you already know, captured, not invented.",
           media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #f0fdfa 0%, #f8fafc 100%)",
-            accent: "#0f766e",
+            kind: "blurbCallScene",
+            panelPlacement: "closerLookRight",
+            backgroundImage: "/blurbs/transcript-background.png",
+            callTitle: "Transcript capture",
+            callStatus: "Live call",
+            participants: [
+              {
+                src: "/aliens/alien-0001.jpg",
+                borderColor: "#77FF00",
+                alt: "Call participant one",
+              },
+              {
+                src: "/aliens/alien-0002.jpg",
+                borderColor: "#00D4FF",
+                alt: "Call participant two",
+              },
+              {
+                src: "/aliens/alien-0003.jpg",
+                borderColor: "#FF00E5",
+                alt: "Call participant three",
+              },
+            ],
+            subtitles: [
+              {
+                speaker: "Maya",
+                text: "This is the part we should keep.",
+              },
+              {
+                speaker: "You",
+                text: "Capture it with the context around it.",
+              },
+              {
+                speaker: "OO",
+                text: "Saved to the transcript. Ready to turn into a blurb.",
+              },
+            ],
           },
         },
         {
           id: "blurbs-audience",
           label: "Audience",
-          title: "Write for each audience.",
-          body: "Keep the message intact while adjusting framing for investors, builders, customers, or friends.",
+          title: "Only for the right people.",
+          body: "Every blurb lands with the audience allowed to see it, friends, founders, customers, or family.",
           media: {
-            kind: "gradient",
-            variant: "fan",
-            gradient: "linear-gradient(180deg, #ecfeff 0%, #f0fdf4 100%)",
-            accent: "#0ea5e9",
+            kind: "themeImage",
+            lightSrc: "/blurbs/audience-responses-light.png",
+            darkSrc: "/blurbs/audience-responses-dark.png",
+            alt: "Audience-specific blurb responses",
+            objectPosition: "center",
           },
         },
         {
           id: "blurbs-approval",
           label: "Approval",
           title: "A calmer review.",
-          body: "Tighten the text, compare variants, and only publish once it sounds like something you would actually say.",
+          body: "Pick the version that sounds like you, not the model.",
           media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #f0fdfa 0%, #eef2ff 100%)",
-            accent: "#14b8a6",
+            kind: "themeImage",
+            lightSrc: "/blurbs/approval-interests-light.png",
+            darkSrc: "/blurbs/approval-interests-dark.png",
+            alt: "Interest selection cards for approval",
+            objectPosition: "center",
           },
         },
         {
           id: "blurbs-publishing",
           label: "Publishing",
           title: "From talk to publish.",
-          body: "The final move from spoken context into a clean outward-facing update can stay in one place.",
+          body: "Back to the same circle. One tap out, one tap back.",
           media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #ecfdf5 0%, #eff6ff 100%)",
-            accent: "#22c55e",
+            kind: "blurbPublishButton",
           },
         },
       ],
     },
     centerpiece: {
       eyebrow: "Blurbs",
-      title: "Talk becomes copy.",
-      body: "Blurbs gives speech a second life. The interesting part is not just drafting faster, but keeping the soul of what was said while the copy gets sharper.",
+      title: "Talk becomes your product data.",
+      body: "When Jokuh is with you in the conversation, every blurb becomes useful context for you and your community. The right people can prompt against what was said, improve the shared memory, and turn everyday talk into momentum.",
       ctaLabel: "Join Beta",
       ctaTo: "/download",
       items: [],
+      surfaceTone: "neutral",
     },
     reveal: {
       eyebrow: "Draft flow",
