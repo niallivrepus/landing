@@ -100,6 +100,7 @@ export type ProductDetailBlueprint = {
   };
   closerLook: {
     title: string;
+    defaultMedia?: ProductDetailMedia;
     items: ProductCloserLookItem[];
   };
   centerpiece: {
@@ -373,6 +374,11 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
     },
     closerLook: {
       title: "Closer look.",
+      defaultMedia: {
+        kind: "video",
+        src: "/blurbs/closer-look-default.mp4",
+        alt: "Blurbs product preview video",
+      },
       items: [
         {
           id: "blurbs-transcript",

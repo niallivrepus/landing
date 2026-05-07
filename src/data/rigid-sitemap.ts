@@ -92,11 +92,16 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       {
         heading: "Company",
         links: [
-          { label: "About us", href: "/about", surfaces: ALL_SOURCES },
           { label: "Manifesto", href: "/manifesto", surfaces: ALL_SOURCES },
           { label: "Brand", href: "/brand", surfaces: ["footer", "sitemap"] },
           { label: "Stories", href: "/stories", surfaces: ALL_SOURCES },
           { label: "News", href: "/newsroom", surfaces: ALL_SOURCES },
+        ],
+      },
+      {
+        heading: "Company links",
+        links: [
+          { label: "About us", href: "/about", surfaces: ALL_SOURCES },
           { label: "Careers", href: "/careers", surfaces: ALL_SOURCES },
         ],
       },
@@ -112,6 +117,15 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
           { label: "Overview", href: "/business", surfaces: ALL_SOURCES },
           { label: "Customer Stories", href: "/stories", surfaces: ALL_SOURCES },
           { label: "Contact Sales", href: "/contact", surfaces: ALL_SOURCES },
+        ],
+      },
+      {
+        heading: "Business resources",
+        links: [
+          { label: "Brand Book", href: "/brand", surfaces: ["primary"] },
+          { label: "Pitch Deck", href: "/pitch-deck", surfaces: ["primary"] },
+          { label: "Data Room", href: "/dataroom", surfaces: ["primary"] },
+          { label: "Invest", href: "/contact", surfaces: ["primary"] },
         ],
       },
     ],

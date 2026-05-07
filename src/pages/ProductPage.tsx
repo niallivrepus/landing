@@ -16,7 +16,7 @@ import { cn, useTheme } from "@jokuh/gooey";
 
 const PRODUCT_HERO_IMAGE: Partial<Record<ProductId, string>> = {
   blurbs: "/product-hero/blurbs-poster.jpg",
-  spine: "/product-hero/spine.jpg",
+  spine: "/product-hero/spine-featured-hero.png",
   calls: "/product-hero/calls.jpg",
   messages: "/product-hero/texts.jpg",
   profile: "/product-hero/profile.png",
@@ -132,7 +132,7 @@ export function ProductPage({ productId }: { productId: ProductId }) {
       <div id="highlights" className="scroll-mt-24">
         <ProductHighlightsCarousel {...detail.highlights} />
       </div>
-      {productId !== "profile" ? (
+      {productId !== "profile" && productId !== "messages" ? (
         <div id="closer-look" className="scroll-mt-24">
           <ProductCloserLookExplorer {...detail.closerLook} />
         </div>

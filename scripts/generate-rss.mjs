@@ -76,6 +76,47 @@ function extractBlock(source, marker) {
   return "";
 }
 
+function extractObjectLiteral(source, marker) {
+  const markerIndex = source.indexOf(marker);
+  if (markerIndex === -1) return "";
+  const assignmentIndex = source.indexOf("=", markerIndex);
+  if (assignmentIndex === -1) return "";
+  const objectStart = source.indexOf("{", assignmentIndex);
+  if (objectStart === -1) return "";
+
+  let depth = 0;
+  let inString = false;
+  let quote = "";
+  let escaped = false;
+
+  for (let i = objectStart; i < source.length; i += 1) {
+    const char = source[i];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (char === "\\") {
+        escaped = true;
+      } else if (char === quote) {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === '"' || char === "'" || char === "`") {
+      inString = true;
+      quote = char;
+      continue;
+    }
+
+    if (char === "{") depth += 1;
+    if (char === "}") depth -= 1;
+    if (depth === 0) return source.slice(objectStart + 1, i);
+  }
+
+  return "";
+}
+
 function extractObjects(block) {
   const objects = [];
   let start = -1;
@@ -119,16 +160,52 @@ function extractObjects(block) {
   return objects;
 }
 
+function stringConstants(source) {
+  const constants = new Map();
+  const pattern = /const\s+([A-Za-z_$][\w$]*)\s*=\s*(["'`])([\s\S]*?)\2\s*;/g;
+  for (const match of source.matchAll(pattern)) {
+    constants.set(match[1], match[3]);
+  }
+  return constants;
+}
+
+function literalValue(value, constants = new Map()) {
+  const trimmed = String(value ?? "").trim().replace(/,$/, "");
+  const quoted = trimmed.match(/^(["'`])([\s\S]*?)\1$/);
+  if (quoted) return quoted[2].replace(/\\(["'`])/g, "$1");
+  return constants.get(trimmed);
+}
+
+function record(source, marker, constants = new Map()) {
+  const objectLiteral = extractObjectLiteral(source, marker);
+  const entries = new Map();
+  const entryPattern = /(["'`])([^"'`]+)\1\s*:\s*([^,\n]+)/g;
+
+  for (const match of objectLiteral.matchAll(entryPattern)) {
+    const value = literalValue(match[3], constants);
+    if (value) entries.set(match[2], value);
+  }
+
+  return entries;
+}
+
 function field(objectSource, name) {
   const match = objectSource.match(new RegExp(`${name}:\\s*(["'\`])([\\s\\S]*?)\\1`));
   return match?.[2]?.replace(/\\(["'`])/g, "$1");
 }
 
+function storyCardImages() {
+  const artSource = readFileSync(join(root, "src/data/editorial-art.ts"), "utf8");
+  return record(artSource, "STORY_CARD_IMAGE_BY_SLUG", stringConstants(artSource));
+}
+
 function newsItems() {
   const newsSource = readFileSync(join(root, "src/data/news.ts"), "utf8");
+  const lockedImages = record(newsSource, "LOCKED_CARD_IMAGES_BY_NEWS_ID");
   const staticBlock = extractBlock(newsSource, "const STATIC_NEWS_ITEMS");
   const staticItems = extractObjects(staticBlock)
     .map((objectSource) => {
+      const rawId = field(objectSource, "id");
       const slug = field(objectSource, "slug");
       const internalHref = field(objectSource, "internalHref");
       const externalUrl = field(objectSource, "externalUrl");
@@ -138,12 +215,13 @@ function newsItems() {
       if (!title || !publishedAt) return null;
 
       return {
-        id: `news-${slug || field(objectSource, "id") || title}`,
+        id: `news-${slug || rawId || title}`,
         title,
         description: field(objectSource, "excerpt") || "Latest update from Jokuh's newsroom.",
         category: field(objectSource, "category") || "Newsroom",
         publishedAt,
         url: externalUrl || internalHref || (slug ? `/newsroom/${slug}` : "/newsroom"),
+        image: lockedImages.get(rawId) || field(objectSource, "cardImage") || field(objectSource, "cardOverlayImage"),
       };
     })
     .filter(Boolean);
@@ -156,6 +234,7 @@ function newsItems() {
     category: "Newsroom",
     publishedAt: item.publishedAt,
     url: item.url,
+    image: item.cardImage,
   }));
 
   const seenUrls = new Set(mediumItems.map((item) => item.url));
@@ -164,6 +243,7 @@ function newsItems() {
 
 function storyItems() {
   const storiesSource = readFileSync(join(root, "src/data/stories-detail.ts"), "utf8");
+  const imagesBySlug = storyCardImages();
   const storyPattern =
     /"([^"]+)":\s*\{[\s\S]*?slug:\s*"([^"]+)"[\s\S]*?metaLine:\s*"([^"]+)"[\s\S]*?title:\s*"([^"]+)"[\s\S]*?dek:\s*"([^"]+)"/g;
 
@@ -174,6 +254,7 @@ function storyItems() {
     category: "Stories",
     publishedAt: new Date(`${match[3].split(" · ")[0]} 12:00:00 UTC`).toISOString().slice(0, 10),
     url: `/stories/${match[2]}`,
+    image: imagesBySlug.get(match[2]),
   }));
 }
 
@@ -183,7 +264,7 @@ const items = [...newsItems(), ...storyItems()].sort(
 
 const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="/rss.xsl"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>Jokuh newsroom and stories</title>
     <link>${xmlEscape(siteUrl)}</link>
@@ -201,7 +282,7 @@ ${items
       <description>${xmlEscape(stripMarkdown(item.description))}</description>
       <category>${xmlEscape(item.category)}</category>
       <pubDate>${new Date(`${item.publishedAt}T12:00:00Z`).toUTCString()}</pubDate>
-    </item>`;
+${item.image ? `      <media:thumbnail url="${xmlEscape(absoluteUrl(item.image))}" />\n` : ""}    </item>`;
   })
   .join("\n")}
   </channel>

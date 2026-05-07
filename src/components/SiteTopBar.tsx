@@ -571,6 +571,9 @@ export function SiteTopBar({
                   </div>
                   {(openGroup.secondary ?? []).map((col, colIndex) => {
                     const isCompactResources = col.heading === "Resources";
+                    const isSmallSideLinks =
+                      (openGroup.id === "business" && col.heading === "Business resources") ||
+                      (openGroup.id === "company" && col.heading === "Company links");
                     const columnOffset =
                       openGroup.primary.length +
                       2 +
@@ -595,9 +598,11 @@ export function SiteTopBar({
                               <TopNavAnchor
                                 href={link.href}
                                 className={cn(
-                                  "premium-soft-fade block rounded-md font-sans text-[16px] hover:text-light-space/96 light:hover:text-zinc-900",
+                                  "premium-soft-fade block rounded-md font-sans hover:text-light-space/96 light:hover:text-zinc-900",
                                   isCompactResources
-                                    ? "py-0 font-medium text-light-space light:text-zinc-900"
+                                    ? "py-0 text-[16px] font-medium text-light-space light:text-zinc-900"
+                                    : isSmallSideLinks
+                                      ? "py-1 text-[13px] font-semibold text-light-space/72 light:text-zinc-600"
                                     : "py-2 font-semibold text-light-space/80 light:text-zinc-600",
                                 )}
                                 onClick={() => setOpenId(null)}

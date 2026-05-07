@@ -142,14 +142,15 @@ export function BrandPage() {
           {/* Bento grid */}
           <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-[1fr_320px]">
             {/* Large logo card with lava lamp */}
-            <div className="relative flex min-h-[400px] items-center justify-center overflow-hidden rounded-[20px] bg-[#0a0a0a] md:row-span-2">
+            <div className="relative isolate flex min-h-[400px] items-center justify-center overflow-hidden rounded-[20px] bg-[#0a0a0a] md:row-span-2">
               <LavaLamp style="aurora" className="absolute inset-0" />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 38 22"
                 fill="none"
-                className="relative z-10 w-[clamp(100px,20vw,160px)] drop-shadow-[0_4px_24px_rgba(255,255,255,0.15)]"
+                className="relative z-10 w-[clamp(100px,20vw,160px)]"
               >
+                <path d={NEXUS_PATH} fill="black" opacity="0.92" />
                 <path d={NEXUS_PATH} fill="white" />
               </svg>
             </div>
@@ -235,9 +236,6 @@ export function BrandPage() {
           >
             <p className="max-w-[640px] font-sans text-[15px] leading-relaxed text-light-space/55 light:text-zinc-600">
               Gooey is not a UI kit. It is the visual language of a platform built to express human identity — where every color carries mood, every shape carries conviction, and every space between them creates the peace that lets people feel something real through a screen.
-            </p>
-            <p className="mt-8 font-display text-[clamp(1.5rem,4vw,2.5rem)] leading-none text-light-space/30 light:text-zinc-950/25">
-              Hyke
             </p>
           </BrandSection>
 
@@ -488,7 +486,9 @@ function GooeyEyes() {
   return (
     <span className="relative inline-block" style={{ width: "1.05em" }}>
       <span className="invisible" aria-hidden>oo</span>
-      <span className="absolute inset-0 text-center">{blinking ? "--" : "oo"}</span>
+      <span className="absolute inset-0 -translate-x-[0.06em] text-center tracking-[-0.025em]">
+        {blinking ? "--" : "oo"}
+      </span>
     </span>
   );
 }

@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@jokuh/gooey";
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { ChevronDown, ChevronUp, Minus, Plus, X } from "lucide-react";
-import type { ProductCloserLookItem } from "../../data/product-detail-blueprints";
+import type {
+  ProductCloserLookItem,
+  ProductDetailMedia as ProductDetailMediaConfig,
+} from "../../data/product-detail-blueprints";
 import { ProductDetailMedia } from "./ProductDetailMedia";
 import { ProductSectionIntro, ProductShowcaseSurface, ProductStorySection } from "./ProductDetailPrimitives";
 
@@ -29,18 +32,21 @@ const BUBBLE_BODY_CONTENT_TRANSITION = { duration: 0.44, ease: BUBBLE_EASE };
 
 export function ProductCloserLookExplorer({
   title,
+  defaultMedia,
   items,
 }: {
   title: string;
+  defaultMedia?: ProductDetailMediaConfig;
   items: ProductCloserLookItem[];
 }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const activeItem = activeIndex !== null ? items[activeIndex] : null;
+  const panelMedia = activeItem?.media ?? defaultMedia;
   const imageBackedPanel =
-    activeItem?.media.kind === "image" ||
-    activeItem?.media.kind === "video" ||
-    activeItem?.media.kind === "blurbCallScene" ||
-    activeItem?.media.kind === "blurbTravelFlow";
+    panelMedia?.kind === "image" ||
+    panelMedia?.kind === "video" ||
+    panelMedia?.kind === "blurbCallScene" ||
+    panelMedia?.kind === "blurbTravelFlow";
   const controlsRef = useRef<HTMLDivElement | null>(null);
   const surfaceRef = useRef<HTMLDivElement | null>(null);
   const controlsInView = useInView(surfaceRef, { amount: 0.35 });
@@ -68,6 +74,8 @@ export function ProductCloserLookExplorer({
           <div className="absolute inset-0">
             {activeItem ? (
               <ProductDetailMedia media={activeItem.media} active className="size-full" />
+            ) : defaultMedia ? (
+              <ProductDetailMedia media={defaultMedia} active className="size-full" />
             ) : (
               <div className="size-full bg-[#FBFBFC] dark:bg-[#1C1C1E]" />
             )}
