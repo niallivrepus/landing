@@ -11,6 +11,33 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
+    <!--
+      Drop legacy root-scoped service workers: the desktop web client used to register
+      `/sw.js` with scope `/` on jokuh.com. After the combined deploy, marketing HTML
+      lives at `/` while the client (and its PWA) lives under `/sandbox/`. A stale `/`
+      worker can keep serving cached client shell (wrong logo / not the landing site).
+      Only clear workers that control the site root; `/sandbox/*` registrations stay.
+    -->
+    <script>
+      (function () {
+        if (!("serviceWorker" in navigator)) return;
+        var path = window.location.pathname || "/";
+        if (path.startsWith("/sandbox")) return;
+        var origin = window.location.origin;
+        var rootScope = origin + "/";
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (regs) {
+            regs.forEach(function (reg) {
+              var scope = reg.scope || "";
+              if (scope === rootScope || scope === origin) {
+                reg.unregister();
+              }
+            });
+          })
+          .catch(function () {});
+      })();
+    </script>
     <script>
       (function () {
         var mediaByPath = {
