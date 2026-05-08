@@ -59,6 +59,17 @@ export const NEWS_FILTER_TOPICS = [
 
 const PUBLIC_NEWS_ITEM_LIMIT = 4;
 
+/**
+ * On-site news `id`s (same string as URL slug for these briefs) withheld from the public feed
+ * and from `/newsroom/:slug` until partners/events confirm we may name them on the marketing site.
+ * Remove an id from this set when clearance is granted.
+ */
+export const NEWS_ITEM_IDS_PENDING_PARTNER_PERMISSION: ReadonlySet<string> = new Set([
+  "bnb-chain-partnership-discussions",
+  "jokuh-at-consensus-2026-miami",
+  "backing-redbeard-denarii",
+]);
+
 export type NewsTopic = (typeof NEWS_FILTER_TOPICS)[number];
 export type NewsCardArtMode = "image" | "lavaLamp" | "gradient";
 export type NewsCardArtDescriptor = {
@@ -335,10 +346,14 @@ function mergeNews(): NewsItem[] {
   for (const item of merged) {
     item.cardImage = LOCKED_CARD_IMAGES_BY_NEWS_ID[item.id] ?? item.cardImage?.trim();
   }
-  return merged;
+  return merged.filter((item) => !NEWS_ITEM_IDS_PENDING_PARTNER_PERMISSION.has(item.id));
 }
 
-export const NEWS_ITEMS: NewsItem[] = mergeNews().slice(0, PUBLIC_NEWS_ITEM_LIMIT);
+/** Full public newsroom list (home, `/newsroom`, search) after permission filters. */
+export const NEWS_FEED_ITEMS: NewsItem[] = mergeNews();
+
+/** First `PUBLIC_NEWS_ITEM_LIMIT` entries for compact surfaces (e.g. home hero rail). */
+export const NEWS_ITEMS: NewsItem[] = NEWS_FEED_ITEMS.slice(0, PUBLIC_NEWS_ITEM_LIMIT);
 
 export function getNewsCardArt(item: NewsItem): NewsCardArtDescriptor {
   const mode = item.cardArtMode ?? (item.cardImage ? "image" : "gradient");
@@ -354,7 +369,7 @@ export function getNewsCardArt(item: NewsItem): NewsCardArtDescriptor {
 }
 
 const yearSet = new Set<number>();
-for (const n of NEWS_ITEMS) {
+for (const n of NEWS_FEED_ITEMS) {
   yearSet.add(new Date(n.publishedAt + "T12:00:00").getFullYear());
 }
 export const NEWS_FILTER_YEARS = [...yearSet].sort((a, b) => b - a);

@@ -7,34 +7,7 @@
     <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Latest Jokuh newsroom articles and stories.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 07 May 2026 21:33:11 GMT</lastBuildDate>
-    <item>
-      <title>Jokuh and BNB Chain Align Ahead of Consensus Miami</title>
-      <link>https://www.jokuh.com/newsroom/bnb-chain-partnership-discussions</link>
-      <guid isPermaLink="true">https://www.jokuh.com/newsroom/bnb-chain-partnership-discussions</guid>
-      <description>BNB Chain&apos;s ecosystem team has opened technical alignment with Jokuh ahead of Consensus 2026 in Miami, with Jokuh architecting natively across BSC, opBNB, and Greenfield from day one.</description>
-      <category>Milestone</category>
-      <pubDate>Mon, 04 May 2026 12:00:00 GMT</pubDate>
-      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-60a3c40e6d.jpg" />
-    </item>
-    <item>
-      <title>Jokuh at Consensus 2026</title>
-      <link>https://www.jokuh.com/newsroom/jokuh-at-consensus-2026-miami</link>
-      <guid isPermaLink="true">https://www.jokuh.com/newsroom/jokuh-at-consensus-2026-miami</guid>
-      <description>Jokuh will be at Consensus 2026 in Miami to demonstrate the Sovereign Agentic Operating System and meet investors, builders, and partners working at the intersection of AI, identity, and on-chain settlement.</description>
-      <category>Milestone</category>
-      <pubDate>Thu, 30 Apr 2026 12:00:00 GMT</pubDate>
-      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-a1e833939f.jpg" />
-    </item>
-    <item>
-      <title>Backing from Red Beard Ventures and Denarii Labs</title>
-      <link>https://www.jokuh.com/newsroom/backing-redbeard-denarii</link>
-      <guid isPermaLink="true">https://www.jokuh.com/newsroom/backing-redbeard-denarii</guid>
-      <description>Jokuh confirms institutional backing from Red Beard Ventures and Denarii Labs to advance the Sovereign Agentic Operating System, a private, local-first runtime for memory, identity, and agent workflows.</description>
-      <category>Funding</category>
-      <pubDate>Wed, 22 Apr 2026 12:00:00 GMT</pubDate>
-      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-6c8d0b8410.jpg" />
-    </item>
+    <lastBuildDate>Fri, 08 May 2026 00:17:18 GMT</lastBuildDate>
     <item>
       <title>Spine ships to TestFlight</title>
       <link>https://www.jokuh.com/newsroom/spine-ships-testflight</link>

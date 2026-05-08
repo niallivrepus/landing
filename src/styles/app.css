@@ -1,5 +1,7 @@
 @import "tailwindcss";
+/* Monorepo: Gooey lives under `frontend/`; standalone clone uses `gooey/`. */
 @source "../../../gooey/packages/gooey/src/**/*.tsx";
+@source "../../../frontend/packages/gooey/src/**/*.tsx";
 @source "../**/*.tsx";
 @import "@jokuh/gooey/styles/globals.css";
 

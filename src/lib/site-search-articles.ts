@@ -4,7 +4,7 @@ import {
   getNewsHref,
   type NewsCardArtDescriptor,
   type NewsItem,
-  NEWS_ITEMS,
+  NEWS_FEED_ITEMS,
 } from "../data/news";
 import { HOME_STORIES, type HomeStory } from "../data/home-stories";
 import { type ProductId, PRODUCTS } from "../data/products";
@@ -233,7 +233,7 @@ function entryForHit(hit: SiteArticleHit, searchText?: string): CorpusEntry {
 }
 
 function buildCorpus(): CorpusEntry[] {
-  const fromNews = NEWS_ITEMS
+  const fromNews = NEWS_FEED_ITEMS
     .filter((item) => !item.topics.some((topic) => HIDDEN_NEWS_TOPICS.has(topic)))
     .map((item) =>
       entryForHit(newsToHit(item), `${item.title} ${item.excerpt ?? ""} ${item.category} ${item.topics.join(" ")}`),

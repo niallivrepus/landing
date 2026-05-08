@@ -1,5 +1,31 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+
+/**
+ * Resolves the `@jokuh/gooey` package root and its workspace root for Vite `server.fs.allow`.
+ * Supports the upstream layout (`../gooey/packages/gooey`) and this monorepo (`../frontend/packages/gooey`).
+ * Inputs: `landingRoot` — absolute path to the landing repo root. Outputs: package root (contains `src/`) and workspace root (parent of `packages/`).
+ */
+function resolveGooeyRoots(landingRoot: string): {
+  gooeyWorkspaceRoot: string;
+  gooeyPackageRoot: string;
+} {
+  const candidates = [
+    resolve(landingRoot, "../gooey/packages/gooey"),
+    resolve(landingRoot, "../frontend/packages/gooey"),
+  ];
+  for (const gooeyPackageRoot of candidates) {
+    if (existsSync(join(gooeyPackageRoot, "src", "index.ts"))) {
+      const gooeyWorkspaceRoot = dirname(dirname(gooeyPackageRoot));
+      return { gooeyWorkspaceRoot, gooeyPackageRoot };
+    }
+  }
+  const gooeyPackageRoot = candidates[0]!;
+  return {
+    gooeyWorkspaceRoot: dirname(dirname(gooeyPackageRoot)),
+    gooeyPackageRoot,
+  };
+}
 import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 
@@ -76,8 +102,7 @@ export default defineConfig(({ mode }) => {
     modelId: env.VITE_ELEVENLABS_MODEL_ID ?? "eleven_turbo_v2_5",
     publicDir: resolve(__dirname, "public"),
   };
-  const gooeyWorkspaceRoot = resolve(__dirname, "../gooey");
-  const gooeyPackageRoot = resolve(gooeyWorkspaceRoot, "packages/gooey");
+  const { gooeyWorkspaceRoot, gooeyPackageRoot } = resolveGooeyRoots(__dirname);
   const gooeySourceRoot = resolve(gooeyPackageRoot, "src");
 
   return {

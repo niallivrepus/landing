@@ -199,14 +199,28 @@ function storyCardImages() {
   return record(artSource, "STORY_CARD_IMAGE_BY_SLUG", stringConstants(artSource));
 }
 
+/**
+ * Reads `NEWS_ITEM_IDS_PENDING_PARTNER_PERMISSION` from `news.ts` so RSS matches the public feed
+ * (items withheld until partner/event clearance stay out of `public/rss.xml`).
+ */
+function pendingPartnerNewsIds(newsSource) {
+  const inner = extractBlock(newsSource, "NEWS_ITEM_IDS_PENDING_PARTNER_PERMISSION");
+  if (!inner) return new Set();
+  const ids = [...inner.matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+  return new Set(ids);
+}
+
 function newsItems() {
   const newsSource = readFileSync(join(root, "src/data/news.ts"), "utf8");
+  const pendingIds = pendingPartnerNewsIds(newsSource);
   const lockedImages = record(newsSource, "LOCKED_CARD_IMAGES_BY_NEWS_ID");
   const staticBlock = extractBlock(newsSource, "const STATIC_NEWS_ITEMS");
   const staticItems = extractObjects(staticBlock)
     .map((objectSource) => {
       const rawId = field(objectSource, "id");
       const slug = field(objectSource, "slug");
+      if (pendingIds.has(rawId) || (slug && pendingIds.has(slug))) return null;
+
       const internalHref = field(objectSource, "internalHref");
       const externalUrl = field(objectSource, "externalUrl");
       const title = field(objectSource, "title");

@@ -2,7 +2,12 @@
  * Long-form on-site news articles (benchmark tables, charts, testimonials).
  */
 
-import { formatNewsDate, NEWS_ITEMS, type NewsItem } from "./news";
+import {
+  formatNewsDate,
+  NEWS_ITEM_IDS_PENDING_PARTNER_PERMISSION,
+  NEWS_FEED_ITEMS,
+  type NewsItem,
+} from "./news";
 
 export type BenchmarkRow = { label: string; values: [string, string, string] };
 
@@ -289,10 +294,11 @@ function fallbackBrief(item: NewsItem): NewsBriefDetailDocument {
 
 export function getNewsDetail(slug: string | undefined): NewsDetailDocument | undefined {
   if (!slug) return undefined;
+  if (NEWS_ITEM_IDS_PENDING_PARTNER_PERMISSION.has(slug)) return undefined;
   const feature = NEWS_DETAIL_BY_SLUG[slug];
   if (feature) return feature;
 
-  const item = NEWS_ITEMS.find((entry) => entry.slug === slug && entry.internalHref && !entry.externalUrl);
+  const item = NEWS_FEED_ITEMS.find((entry) => entry.slug === slug && entry.internalHref && !entry.externalUrl);
   if (!item || !item.slug) return undefined;
 
   const brief = NEWSROOM_BRIEF_BY_SLUG[item.slug];

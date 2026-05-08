@@ -63,8 +63,8 @@ test.describe('homepage mobile card rails', () => {
 
     const businessFirst = page.locator('#business a[href="/spine"]').first();
     const businessSecond = page.locator('#business a[href="/calls"]').first();
-    const newsFirst = page.locator('#newsroom a[href="/newsroom/backing-redbeard-denarii"]').last();
-    const newsSecond = page.locator('#newsroom a[href="/newsroom/spine-ships-testflight"]').last();
+    const newsFirst = page.locator('#newsroom a[href="/newsroom/grant-stack-avalanche-runpod-hume-kihew"]').last();
+    const newsSecond = page.locator('#newsroom a[href="/newsroom/ethics-compliance-responsible-deployment"]').last();
 
     await businessFirst.scrollIntoViewIfNeeded();
     const businessFirstBox = await bounds(businessFirst);
@@ -153,12 +153,12 @@ test.describe('landing newsroom sticky behavior', () => {
     await page.setViewportSize({ width: 1440, height: 1100 });
     await primeCookieConsent(page);
     await page.goto('/');
-    const featured = page.locator('#newsroom a[href="/newsroom/jokuh-spine-tighter-sync"]').first();
+    const featured = page.locator('#newsroom a[href="/newsroom/spine-ships-testflight"]').first();
     await expect(featured).toBeVisible();
 
     const read = () =>
       page.evaluate(() => {
-        const featuredEl = document.querySelector('#newsroom a[href="/newsroom/jokuh-spine-tighter-sync"]') as HTMLElement | null;
+        const featuredEl = document.querySelector('#newsroom a[href="/newsroom/spine-ships-testflight"]') as HTMLElement | null;
         const sticky = featuredEl?.parentElement as HTMLElement | null;
         const sideLinks = Array.from(
           document.querySelectorAll<HTMLElement>('#newsroom a[href^="/newsroom/"]'),

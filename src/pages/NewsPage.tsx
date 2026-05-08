@@ -1,7 +1,7 @@
 import {
+  NEWS_FEED_ITEMS,
   NEWS_FILTER_TOPICS,
   NEWS_FILTER_YEARS,
-  NEWS_ITEMS,
   formatNewsDate,
   getNewsCardArt,
   getNewsHref,
@@ -302,7 +302,7 @@ export function NewsPage() {
   useDocumentTitle("Jokuh Newsroom");
 
   useEffect(() => {
-    const slugs = NEWS_ITEMS
+    const slugs = NEWS_FEED_ITEMS
       .filter((n) => n.slug && n.internalHref && !n.externalUrl)
       .slice(0, 12)
       .map((n) => n.slug as string);
@@ -360,7 +360,7 @@ export function NewsPage() {
   }, [filterOpen, sortOpen]);
 
   const filtered = useMemo(() => {
-    let list: NewsItem[] = [...NEWS_ITEMS];
+    let list: NewsItem[] = [...NEWS_FEED_ITEMS];
 
     if (category !== "All") {
       list = list.filter((item) => item.category === category);
