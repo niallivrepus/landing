@@ -213,7 +213,7 @@ export function ContactSalesPage() {
         message:
           error instanceof Error
             ? error.message
-            : "We could not send your inquiry right now. Please email hello@jokuh.com directly.",
+            : "We could not send your inquiry right now. Please email sean@sierri.com directly.",
       });
     }
   }

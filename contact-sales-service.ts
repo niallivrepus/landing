@@ -42,8 +42,9 @@ export type ContactSalesHandlerResult = {
 };
 
 const RESEND_EMAILS_URL = "https://api.resend.com/emails";
-const DEFAULT_CONTACT_TO_EMAIL = "hello@jokuh.com";
-const DEFAULT_CONTACT_FROM_EMAIL = "Jokuh <hello@jokuh.com>";
+/** Default inbox and verified sender when env overrides are unset (Resend must allow `sean@sierri.com`). */
+const DEFAULT_CONTACT_TO_EMAIL = "sean@sierri.com";
+const DEFAULT_CONTACT_FROM_EMAIL = "Jokuh <sean@sierri.com>";
 const SUCCESS_MESSAGE = "Thanks. Your inquiry was sent to Jokuh and our team will follow up by email.";
 
 function nonEmpty(value: string | undefined) {
@@ -345,7 +346,7 @@ export async function handleContactSalesSubmission(
     return {
       status: 502,
       body: {
-        error: "We could not send your inquiry right now. Please email hello@jokuh.com directly.",
+        error: "We could not send your inquiry right now. Please email sean@sierri.com directly.",
       },
     };
   }

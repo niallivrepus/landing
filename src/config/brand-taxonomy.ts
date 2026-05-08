@@ -10,7 +10,8 @@ export const BRAND_NAMES = {
 } as const;
 
 export const PUBLIC_EMAILS = {
-  general: "hello@jokuh.com",
+  /** General and early-access contact surfaced across marketing (mailto, footers, errors). */
+  general: "sean@sierri.com",
   sales: "sales@jokuh.com",
   support: "support@jokuh.com",
   careers: "careers@jokuh.com",

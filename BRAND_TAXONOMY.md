@@ -56,17 +56,16 @@ Rules:
 
 Only these addresses may appear in public site copy:
 
-- `hello@jokuh.com` - general and early access
+- `sean@sierri.com` - general, early access, founder, investor, and strategic partner surfaces
 - `sales@jokuh.com` - sales and business requests
 - `support@jokuh.com` - support, privacy, account, and product help
 - `careers@jokuh.com` - hiring
-- `sean@sierri.com` - founder, investor, and strategic partner surfaces only
 
 Rules:
 
 - `privacy@jokuh.com` is not allowed.
 - Privacy contact routes to `support@jokuh.com`.
-- Brand, co-branding, docs, and support surfaces should not use `sean@sierri.com` unless the page is explicitly founder/investor-facing.
+- Prefer `sales@jokuh.com` for sales-specific flows, `support@jokuh.com` for product and account help, and `sean@sierri.com` for general or early-access outreach when a single mailbox is shown.
 
 ## Primitive Canonical Descriptions
 

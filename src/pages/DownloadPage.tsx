@@ -7,7 +7,8 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const MOBILE_PREVIEW_IMAGE = "/download/mobile-preview.png";
 const DESKTOP_PREVIEW_IMAGE = "/download/2.png";
-const EARLY_ACCESS_EMAIL = "mailto:hello@jokuh.com?subject=Jokuh%20early%20access";
+/** Mailto for TestFlight / early-access requests from the download surface. */
+const EARLY_ACCESS_EMAIL = "mailto:sean@sierri.com?subject=Jokuh%20early%20access";
 
 function DownloadPreviewCard({
   overlayImageSrc,
