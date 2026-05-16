@@ -1,9 +1,6 @@
 import { cn } from "@jokuh/gooey";
-import type { ReactNode } from "react";
-import { LavaLamp, type LAVA_LAMP_STYLES } from "../LavaLamp";
+import { useEffect, useState, type ReactNode } from "react";
 import { CONTENT_SHELL_WIDE } from "../system/shells";
-
-type LavaStyle = keyof typeof LAVA_LAMP_STYLES;
 
 /**
  * Apple-style fullscreen entrance for product detail pages.
@@ -13,8 +10,7 @@ type LavaStyle = keyof typeof LAVA_LAMP_STYLES;
 export function ProductHeroFullscreen({
   eyebrow,
   title,
-  lavaLamp = "aurora",
-  /** Optional override image (rendered behind the lava lamp). */
+  /** Optional poster / photo rendered above the solid hero base. */
   backgroundImage,
   /** Optional video rendered above the image; image remains as poster/fallback. */
   backgroundVideo,
@@ -23,12 +19,34 @@ export function ProductHeroFullscreen({
 }: {
   eyebrow?: string;
   title: string;
-  lavaLamp?: LavaStyle;
   backgroundImage?: string;
   backgroundVideo?: string;
   trailing?: ReactNode;
   className?: string;
 }) {
+  const [videoSrc, setVideoSrc] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (!backgroundVideo) {
+      setVideoSrc(undefined);
+      return;
+    }
+
+    const loadVideo = () => setVideoSrc(backgroundVideo);
+    const idleCallback =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback(loadVideo, { timeout: 900 })
+        : globalThis.setTimeout(loadVideo, 450);
+
+    return () => {
+      if ("cancelIdleCallback" in window && typeof idleCallback === "number") {
+        window.cancelIdleCallback(idleCallback);
+      } else {
+        window.clearTimeout(idleCallback);
+      }
+    };
+  }, [backgroundVideo]);
+
   return (
     <section
       className={cn(
@@ -36,12 +54,10 @@ export function ProductHeroFullscreen({
         className,
       )}
     >
-      {/* Layer 1 — base lava lamp (or solid black) */}
-      <div className="absolute inset-0">
-        <LavaLamp style={lavaLamp} />
-      </div>
+      {/* Layer 1 — solid base only. Product detail heroes must never show lava behind media. */}
+      <div className="absolute inset-0 bg-black" aria-hidden />
 
-      {/* Layer 2 — optional photo / poster on top of the lava lamp */}
+      {/* Layer 2 — optional photo / poster on top of the base */}
       {backgroundImage ? (
         <img
           src={backgroundImage}
@@ -55,14 +71,14 @@ export function ProductHeroFullscreen({
 
       {backgroundVideo ? (
         <video
-          src={backgroundVideo}
+          src={videoSrc}
           poster={backgroundImage}
           className="absolute inset-0 size-full object-cover"
           autoPlay
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           aria-hidden
         />
       ) : null}

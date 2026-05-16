@@ -75,15 +75,12 @@ export function ProductDetailMedia({
 
   if (media.kind === "video") {
     return (
-      <video
+      <LazyProductVideo
         src={media.src}
         poster={media.poster}
-        aria-label={media.alt}
-        className={cn("size-full object-cover", className)}
-        autoPlay
-        muted
-        loop
-        playsInline
+        alt={media.alt}
+        active={active}
+        className={className}
       />
     );
   }
@@ -157,6 +154,75 @@ export function ProductDetailMedia({
   }
 
   return null;
+}
+
+function LazyProductVideo({
+  src,
+  poster,
+  alt,
+  active,
+  className,
+}: {
+  src: string;
+  poster?: string;
+  alt?: string;
+  active: boolean;
+  className?: string;
+}) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [isNearViewport, setIsNearViewport] = useState(false);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    if (!("IntersectionObserver" in window)) {
+      setIsNearViewport(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setIsNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "240px 0px" },
+    );
+
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
+
+  const shouldLoadVideo = active && isNearViewport;
+
+  return (
+    <div ref={rootRef} className={cn("relative size-full overflow-hidden bg-black", className)}>
+      {poster && !shouldLoadVideo ? (
+        <img
+          src={poster}
+          alt={alt ?? ""}
+          className="size-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : null}
+      {shouldLoadVideo ? (
+        <video
+          src={src}
+          poster={poster}
+          aria-label={alt}
+          className="size-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+      ) : null}
+    </div>
+  );
 }
 
 function BlurbPublishButton({ active, className }: { active: boolean; className?: string }) {
