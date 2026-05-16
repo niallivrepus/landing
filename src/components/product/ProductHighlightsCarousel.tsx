@@ -26,7 +26,7 @@ export function ProductHighlightsCarousel({
   const scrollRef = useRef<HTMLDivElement>(null);
   /** Tracks autoplay progress in a ref so the interval tick stays a pure side effect outside updaters. */
   const progressRef = useRef(0);
-  /** Avoid active-state sync fighting smooth programmatic scroll. */
+  /** Avoid active-state sync fighting programmatic scroll. */
   const suppressIntersectionRef = useRef(false);
   const scrollSuppressTimeoutRef = useRef<number | null>(null);
 
@@ -100,7 +100,7 @@ export function ProductHighlightsCarousel({
   }, [activeIndex, shouldReduceMotion]);
 
   const scrollCardIntoView = useCallback(
-    (index: number, behavior: ScrollBehavior = "smooth") => {
+    (index: number, behavior: ScrollBehavior = "auto") => {
       const root = scrollRef.current;
       if (!root) return;
       const card = root.querySelector<HTMLElement>(`[data-slide-index="${index}"]`);
@@ -115,11 +115,10 @@ export function ProductHighlightsCarousel({
       if (scrollSuppressTimeoutRef.current) window.clearTimeout(scrollSuppressTimeoutRef.current);
       scrollSuppressTimeoutRef.current = window.setTimeout(
         clearScrollSuppression,
-        behavior === "smooth" ? 800 : 80,
+        80,
       );
 
-      // For instant jumps, `scroll-smooth` on the root wins over `behavior: "auto"`;
-      // briefly clear it so multi-dot jumps don't tween through intermediate slides.
+      // Keep carousel jumps instant so product-page scrolling stays native-feeling.
       if (behavior === "auto") {
         const prevInline = root.style.scrollBehavior;
         root.style.scrollBehavior = "auto";
@@ -130,7 +129,7 @@ export function ProductHighlightsCarousel({
         return;
       }
 
-      root.scrollTo({ left: targetLeft, behavior: "smooth" });
+      root.scrollTo({ left: targetLeft, behavior: "auto" });
     },
     [clearScrollSuppression],
   );
@@ -155,7 +154,7 @@ export function ProductHighlightsCarousel({
           setIsPlaying(false);
           return current;
         }
-        queueMicrotask(() => scrollCardIntoView(nextIndex, "smooth"));
+        queueMicrotask(() => scrollCardIntoView(nextIndex, "auto"));
         return nextIndex;
       });
     }, AUTOPLAY_STEP_MS);
@@ -214,7 +213,7 @@ export function ProductHighlightsCarousel({
         <div
           ref={scrollRef}
           className={cn(
-            "flex min-w-0 gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth pb-1 md:gap-5",
+            "flex min-w-0 gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-1 md:gap-5",
             "w-full max-w-[100vw] snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none]",
             "[&::-webkit-scrollbar]:hidden",
             "pl-3 pr-[calc((100vw-min(72rem,calc(100vw-3rem)))/2)] md:pl-[max(2rem,calc((100vw-86.25rem)/2+2rem))] md:pr-[calc((100vw-min(72rem,calc(100vw-9rem)))/2)]",
@@ -309,7 +308,7 @@ export function ProductHighlightsCarousel({
                     setProgress(0);
                     progressRef.current = 0;
                     setIsPlaying(false);
-                    scrollCardIntoView(index, "smooth");
+                    scrollCardIntoView(index, "auto");
                   }}
                   className={cn(
                     "relative h-2 overflow-hidden rounded-full bg-zinc-300/78 transition-all dark:bg-white/[0.14]",
@@ -333,7 +332,7 @@ export function ProductHighlightsCarousel({
                 setProgress(0);
                 progressRef.current = 0;
                 setIsPlaying(true);
-                scrollCardIntoView(0, "smooth");
+                scrollCardIntoView(0, "auto");
                 return;
               }
               setIsPlaying((value) => !value);

@@ -35,7 +35,7 @@ export function ProductDetailTopBar({
 
     event.preventDefault();
     target.scrollIntoView({
-      behavior: shouldReduceMotion ? "auto" : "smooth",
+      behavior: "auto",
       block: "start",
     });
     window.history.replaceState(null, "", href);

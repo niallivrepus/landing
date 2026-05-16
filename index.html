@@ -43,11 +43,9 @@
         var mediaByPath = {
           "/blurbs": {
             poster: "/product-hero/blurbs-poster.jpg",
-            video: "/product-hero/blurbs-header.mp4",
           },
           "/messages": {
             poster: "/product-hero/texts.jpg",
-            video: "/product-hero/texts-header.mp4",
           },
         };
         var path = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -65,7 +63,6 @@
         }
 
         preloadHeroAsset(media.poster, "image", "", "high");
-        preloadHeroAsset(media.video, "video", "video/mp4", "high");
       })();
     </script>
     <link rel="preload" as="image" href="/story-art/maren-workspace.png" fetchpriority="high" />
