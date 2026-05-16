@@ -4,10 +4,14 @@ declare module "@jokuh/gooey" {
 
   export const Button: ComponentType<any>;
   export const ActiveCalls: ComponentType<any>;
+  export const Avatar: ComponentType<any>;
   export const InteractivePromptBar: ComponentType<any>;
+  export const IncomingMessageBubble: ComponentType<any>;
   export const Logo: ComponentType<any>;
+  export const MessageBubble: ComponentType<any>;
   export const OO: ComponentType<any>;
   export const PillWheel: ComponentType<any>;
+  export const PromptBar: ComponentType<any>;
   export const Soundwave: ComponentType<any>;
   export const ThemeProvider: ComponentType<any>;
   export const lordiconAssets: {

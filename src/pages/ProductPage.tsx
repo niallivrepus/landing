@@ -23,8 +23,19 @@ const PRODUCT_HERO_IMAGE: Partial<Record<ProductId, string>> = {
 
 const PRODUCT_HERO_VIDEO: Partial<Record<ProductId, string>> = {
   blurbs: "/product-hero/blurbs-header.mp4",
+  calls: "/product-hero/calls-header.mp4",
   messages: "/product-hero/texts-header.mp4",
 };
+
+const CALLS_MESSAGE_SEQUENCE = [
+  "/product-hero/message-sequence/dark/1.png",
+  "/product-hero/message-sequence/dark/2.png",
+  "/product-hero/message-sequence/dark/3.png",
+  "/product-hero/message-sequence/dark/4.png",
+  "/product-hero/message-sequence/dark/5.png",
+  "/product-hero/message-sequence/dark/6.png",
+  "/product-hero/message-sequence/dark/7.png",
+];
 
 /** Hero CTA per product: a short value-prop label on the left, and a verb that responds. */
 const PRODUCT_HERO_CTA: Record<ProductId, { label: string; action: string }> = {
@@ -90,6 +101,13 @@ export function ProductPage({ productId }: { productId: ProductId }) {
           title={product.title}
           backgroundImage={PRODUCT_HERO_IMAGE[productId]}
           backgroundVideo={PRODUCT_HERO_VIDEO[productId]}
+          messageSequence={
+            productId === "calls"
+              ? {
+                  images: CALLS_MESSAGE_SEQUENCE,
+                }
+              : undefined
+          }
           trailing={
             <div className="inline-flex h-12 items-center gap-3 rounded-full bg-black/40 pl-5 pr-1.5 backdrop-blur-md ring-1 ring-white/10">
               <span className="font-sans text-[14px] font-medium text-white">

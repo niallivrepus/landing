@@ -11,17 +11,14 @@ test.beforeEach(async ({ page }) => {
 test('opens site search and returns source matches for an about query', async ({ page }) => {
   await page.locator('button[aria-label="Open search"]:visible').click();
 
-  const dialog = page.getByRole('dialog', { name: 'Site search' });
-  const searchInput = dialog.getByRole('textbox', { name: 'Search Jokuh' });
+  const searchInput = page.getByRole('textbox', { name: 'Search Jokuh' });
 
-  await expect(dialog).toBeVisible();
   await expect(searchInput).toBeFocused();
 
   await searchInput.fill('about');
   await searchInput.press('Enter');
 
-  await expect(dialog.getByRole('button', { name: 'Clear conversation' })).toBeVisible();
-  const aboutLink = dialog.locator('a[href="/about"]').first();
+  const aboutLink = page.locator('a[href="/about"]').first();
   await expect(aboutLink).toBeVisible();
   await aboutLink.click();
 

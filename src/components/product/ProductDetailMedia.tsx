@@ -1,5 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ActiveCalls, cn, Soundwave, useTheme } from "@jokuh/gooey";
+import {
+  ActiveCalls,
+  Avatar as GooeyAvatar,
+  cn,
+  IncomingMessageBubble,
+  MessageBubble,
+  PromptBar,
+  Soundwave,
+  useTheme,
+} from "@jokuh/gooey";
 import { Captions, Mic, PhoneOff, Sparkles } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import type { ProductDetailMedia as ProductDetailMediaConfig } from "../../data/product-detail-blueprints";
@@ -139,6 +148,10 @@ export function ProductDetailMedia({
     return <BlurbPublishButton active={active} className={className} />;
   }
 
+  if (media.kind === "promptBar") {
+    return <ProductPromptBarScene media={media} active={active} className={className} />;
+  }
+
   if (media.kind === "gradient") {
     if (media.gradient === "none" || !media.gradient.trim()) {
       return null;
@@ -154,6 +167,173 @@ export function ProductDetailMedia({
   }
 
   return null;
+}
+
+function ProductPromptBarScene({
+  media,
+  active,
+  className,
+}: {
+  media: Extract<ProductDetailMediaConfig, { kind: "promptBar" }>;
+  active: boolean;
+  className?: string;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  const [activeTurnIndex, setActiveTurnIndex] = useState(0);
+  const [typedValue, setTypedValue] = useState("");
+  const [visibleMessageCount, setVisibleMessageCount] = useState(0);
+
+  useEffect(() => {
+    const timers: number[] = [];
+    setActiveTurnIndex(0);
+    setTypedValue("");
+    setVisibleMessageCount(0);
+
+    if (!active || !media.turns.length) {
+      return;
+    }
+
+    if (shouldReduceMotion) {
+      setActiveTurnIndex(media.turns.length - 1);
+      setTypedValue(media.turns.at(-1)?.prompt ?? "");
+      setVisibleMessageCount(media.turns.length * 2);
+      return;
+    }
+
+    const startCycle = (turnIndex = 0) => {
+      const turn = media.turns[turnIndex] ?? media.turns[0];
+      if (!turn) return;
+
+      setActiveTurnIndex(turnIndex);
+      setTypedValue("");
+
+      let characterIndex = 0;
+      const typeNextCharacter = () => {
+        characterIndex += 1;
+        setTypedValue(turn.prompt.slice(0, characterIndex));
+
+        if (characterIndex < turn.prompt.length) {
+          timers.push(window.setTimeout(typeNextCharacter, 68));
+          return;
+        }
+
+        timers.push(window.setTimeout(() => {
+          setVisibleMessageCount((current) => Math.max(current, turnIndex * 2 + 1));
+        }, 360));
+
+        timers.push(window.setTimeout(() => {
+          setVisibleMessageCount((current) => Math.max(current, turnIndex * 2 + 2));
+        }, 520));
+
+        if (turnIndex < media.turns.length - 1) {
+          timers.push(window.setTimeout(() => startCycle(turnIndex + 1), 2200));
+          return;
+        }
+
+        timers.push(window.setTimeout(() => startCycle(0), 5200));
+      };
+
+      timers.push(window.setTimeout(typeNextCharacter, 460));
+    };
+
+    startCycle();
+
+    return () => {
+      for (const timer of timers) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, [active, media.turns, shouldReduceMotion]);
+
+  const visibleTurns = media.turns.flatMap((turn, index) => [
+    { id: `${index}-user`, kind: "user" as const, text: turn.prompt, index: index * 2 },
+    { id: `${index}-oo`, kind: "oo" as const, text: turn.response, index: index * 2 + 1 },
+  ]).filter((message) => message.index < visibleMessageCount && message.index >= visibleMessageCount - 2);
+
+  return (
+    <div
+      className={cn(
+        "relative flex size-full items-center justify-center overflow-hidden bg-[#FBFBFC] px-6 dark:bg-[#1C1C1E] md:px-12",
+        className,
+      )}
+    >
+      <div className="absolute inset-0 z-[1]">
+        <AnimatePresence initial={false}>
+          {visibleTurns.length ? (
+            <motion.div
+              key="prompt-transcript"
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 22, scale: 0.96 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { type: "spring", stiffness: 380, damping: 28, mass: 0.9 }
+              }
+              className="absolute inset-x-6 bottom-[76px] mx-auto flex w-full max-w-[30rem] flex-col gap-3 md:inset-x-12"
+            >
+              {visibleTurns.map((message) => (
+                <motion.div
+                  key={message.id}
+                  initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16, scale: 0.97 }}
+                  animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+                  exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -18, scale: 0.98 }}
+                  transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
+                  className={cn(
+                    "flex w-full items-start gap-3",
+                    message.kind === "user" && "justify-end",
+                  )}
+                >
+                  {message.kind === "oo" ? (
+                    <GooeyAvatar
+                      showOO
+                      ooExpression="default"
+                      size="small"
+                      borderStyle="origins"
+                      originColor="life"
+                      disableNavigation
+                      className="mt-1 shrink-0"
+                    />
+                  ) : null}
+                  {message.kind === "user" ? (
+                    <MessageBubble
+                      name="You"
+                      message={message.text}
+                      color="aether"
+                      className="max-w-[82%]"
+                    />
+                  ) : (
+                    <IncomingMessageBubble
+                      name="00"
+                      message={message.text}
+                      className="max-w-none flex-1"
+                    />
+                  )}
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+        <motion.div
+          animate={shouldReduceMotion ? { y: 0 } : { y: 0 }}
+          transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 360, damping: 30 }}
+          className="absolute bottom-6 left-1/2 w-full max-w-[450px] -translate-x-1/2"
+        >
+          <PromptBar
+            variant="desktop"
+            viewport="desktop"
+            className="!w-[450px]"
+            placeholder="Ask about the call"
+            value={typedValue}
+            onValueChange={setTypedValue}
+            isFocused
+            isTyping={typedValue.length > 0}
+            onSend={() => setVisibleMessageCount((current) => Math.max(current, activeTurnIndex * 2 + 2))}
+          />
+        </motion.div>
+      </div>
+    </div>
+  );
 }
 
 function LazyProductVideo({

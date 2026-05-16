@@ -343,6 +343,66 @@ textarea,
   }
 }
 
+@keyframes message-sequence-enter {
+  0% {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(44px) scale(0.93);
+  }
+
+  46% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(-7px) scale(1.035);
+  }
+
+  66% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(3px) scale(0.992);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes message-sequence-pushed {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(var(--message-push-distance)) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(-6px) scale(0.995);
+  }
+
+  100% {
+    opacity: 0.92;
+    filter: blur(0);
+    transform: translateY(0) scale(0.985);
+  }
+}
+
+.message-sequence-enter {
+  animation: message-sequence-enter 540ms var(--premium-ease) both;
+  will-change: transform, opacity, filter;
+}
+
+.message-sequence-enter-tall {
+  animation-duration: 680ms;
+}
+
+.message-sequence-pushed {
+  animation: message-sequence-pushed 540ms var(--premium-ease) both;
+  will-change: transform, opacity, filter;
+}
+
 .nav-fade-item {
   opacity: 0;
   transform: translateY(8px);
@@ -381,10 +441,13 @@ details[open] .accordion-fade-item {
   }
 
   .nav-fade-item,
-  .accordion-fade-item {
+  .accordion-fade-item,
+  .message-sequence-enter,
+  .message-sequence-pushed {
     opacity: 1;
     transform: none;
     animation: none;
+    filter: none;
   }
 }
 
