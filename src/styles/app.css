@@ -403,6 +403,10 @@ textarea,
   will-change: transform, opacity, filter;
 }
 
+.product-prompt-bar-scene [style*="box-shadow"] {
+  box-shadow: none !important;
+}
+
 .nav-fade-item {
   opacity: 0;
   transform: translateY(8px);

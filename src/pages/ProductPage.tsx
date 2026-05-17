@@ -128,7 +128,7 @@ export function ProductPage({ productId }: { productId: ProductId }) {
       <div id="highlights" className="scroll-mt-24">
         <ProductHighlightsCarousel {...detail.highlights} />
       </div>
-      {productId !== "profile" && productId !== "messages" ? (
+      {productId !== "profile" && productId !== "messages" && productId !== "calls" ? (
         <div id="closer-look" className="scroll-mt-24">
           <ProductCloserLookExplorer {...detail.closerLook} />
         </div>

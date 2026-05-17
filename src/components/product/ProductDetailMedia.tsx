@@ -253,7 +253,7 @@ function ProductPromptBarScene({
   return (
     <div
       className={cn(
-        "relative flex size-full items-center justify-center overflow-hidden bg-[#FBFBFC] px-6 dark:bg-[#1C1C1E] md:px-12",
+        "product-prompt-bar-scene relative flex size-full items-center justify-center overflow-hidden bg-[#FBFBFC] px-6 dark:bg-[#1C1C1E] md:px-12",
         className,
       )}
     >
@@ -269,7 +269,7 @@ function ProductPromptBarScene({
                   ? { duration: 0 }
                   : { type: "spring", stiffness: 380, damping: 28, mass: 0.9 }
               }
-              className="absolute inset-x-6 bottom-[76px] mx-auto flex w-full max-w-[30rem] flex-col gap-3 md:inset-x-12"
+              className="absolute inset-x-6 bottom-[88px] mx-auto flex w-full max-w-[30rem] flex-col gap-3 md:inset-x-12"
             >
               {visibleTurns.map((message) => (
                 <motion.div
@@ -305,7 +305,7 @@ function ProductPromptBarScene({
                     <IncomingMessageBubble
                       name="00"
                       message={message.text}
-                      className="max-w-none flex-1"
+                      className="max-w-none flex-1 !shadow-none"
                     />
                   )}
                 </motion.div>
@@ -322,7 +322,7 @@ function ProductPromptBarScene({
           <PromptBar
             variant="desktop"
             viewport="desktop"
-            className="!w-[450px]"
+            className="!w-[450px] !p-1 !shadow-none"
             placeholder="Ask about the call"
             value={typedValue}
             onValueChange={setTypedValue}
