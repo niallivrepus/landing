@@ -65,6 +65,13 @@ export type ProductDetailMedia =
     }
   | {
       kind: "blurbPublishButton";
+    }
+  | {
+      kind: "promptBar";
+      turns: {
+        prompt: string;
+        response: string;
+      }[];
     };
 
 export type ProductHighlightSlide = {
@@ -649,37 +656,94 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
         {
           id: "calls-room",
           eyebrow: "Room",
-          title: "Keep the room intact.",
-          body: "Calls captures what happened without flattening the people, tone, and timing that made it matter.",
+          title: "Close while the room is live.",
+          titleTone: "light",
+          body: "Calls keeps the full deal context intact: who pushed, who paused, and what changed before anyone left the room.",
           media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #eef2ff 0%, #ecfeff 100%)",
-            accent: "#2563eb",
+            kind: "blurbCallScene",
+            panelPlacement: "center",
+            backgroundImage: "/product-hero/calls-room-deal.png",
+            callTitle: "Sterling close",
+            callStatus: "Deal room",
+            participants: [
+              {
+                src: "/aliens/alien-0001.jpg",
+                borderColor: "#77FF00",
+                alt: "James on the call",
+              },
+              {
+                src: "/aliens/alien-0002.jpg",
+                borderColor: "#00D4FF",
+                alt: "Sterling on the call",
+              },
+              {
+                src: "/aliens/alien-0003.jpg",
+                borderColor: "#FF00E5",
+                alt: "OO listening to the close",
+              },
+            ],
+            subtitles: [
+              {
+                speaker: "Sterling",
+                text: "I can lead it if we close today.",
+              },
+              {
+                speaker: "James",
+                text: "Then name the blocker before six.",
+              },
+              {
+                speaker: "Sterling",
+                text: "Legal is clear. I need your yes.",
+              },
+              {
+                speaker: "James",
+                text: "Send the room the final terms.",
+              },
+              {
+                speaker: "OO",
+                text: "Drafting close notes and next steps.",
+              },
+            ],
           },
         },
         {
           id: "calls-moments",
           eyebrow: "Moments",
-          title: "Pull out what matters.",
-          body: "Decisions, questions, and follow-ups can surface without you replaying the whole conversation.",
+          title: "Pull Up What Matters.",
+          body: "Ask from the call context and OO returns the decision, blocker, and next move without replaying the room.",
           media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #eff6ff 0%, #f0fdfa 100%)",
-            accent: "#0ea5e9",
+            kind: "promptBar",
+            turns: [
+              {
+                prompt: "What did Emma schedule this week?",
+                response: "Emma moved your week around the close: office at 6pm today with Sterling, investor follow-up tomorrow morning, and a prep block before Friday's board update.",
+              },
+              {
+                prompt: "What do I owe Sterling?",
+                response: "Final terms, a yes on leadership, and the room notes before he arrives.",
+              },
+              {
+                prompt: "What did Sterling say on the closing call?",
+                response: "Sterling said he wants to lead, legal is clear, and he can close today if you approve final terms before he reaches your office.",
+              },
+              {
+                prompt: "What should I do next?",
+                response: "Stay off the flight, meet Sterling at 6pm, and send the final terms now.",
+              },
+            ],
           },
         },
         {
           id: "calls-action",
           eyebrow: "Action",
           title: "Move after the call.",
+          titleTone: "light",
           body: "Turn a good conversation into the next message, draft, or task while the context is still warm.",
           media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #ecfeff 0%, #eef2ff 100%)",
-            accent: "#06b6d4",
+            kind: "image",
+            src: "/product-hero/calls-move-after-call.png",
+            alt: "OO preparing the next action after a call.",
+            objectPosition: "center center",
           },
         },
       ],

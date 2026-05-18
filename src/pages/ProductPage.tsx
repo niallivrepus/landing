@@ -4,7 +4,6 @@ import { ProductDetailTopBar } from "../components/product/ProductDetailTopBar";
 import { ProductHeroFullscreen } from "../components/product/ProductHeroFullscreen";
 import { ProductHighlightsCarousel } from "../components/product/ProductHighlightsCarousel";
 import { FaqSection } from "../components/FaqSection";
-import { LAVA_LAMP_STYLES } from "../components/LavaLamp";
 import { preload } from "react-dom";
 import { Link } from "react-router-dom";
 import { MarketingPageFrame } from "../components/system";
@@ -24,22 +23,19 @@ const PRODUCT_HERO_IMAGE: Partial<Record<ProductId, string>> = {
 
 const PRODUCT_HERO_VIDEO: Partial<Record<ProductId, string>> = {
   blurbs: "/product-hero/blurbs-header.mp4",
+  calls: "/product-hero/calls-header.mp4",
   messages: "/product-hero/texts-header.mp4",
 };
 
-const PRODUCT_HERO_LAVA: Record<ProductId, keyof typeof LAVA_LAMP_STYLES> = {
-  pods: "aurora",
-  blurbs: "sunrise",
-  spine: "aurora",
-  calls: "ember",
-  messages: "arctic",
-  profile: "ultraviolet",
-  vortex: "void",
-  passport: "glacier",
-  realms: "nebula",
-  orb: "electric",
-  v1llains: "crimson",
-};
+const CALLS_MESSAGE_SEQUENCE = [
+  "/product-hero/message-sequence/dark/1.png",
+  "/product-hero/message-sequence/dark/2.png",
+  "/product-hero/message-sequence/dark/3.png",
+  "/product-hero/message-sequence/dark/4.png",
+  "/product-hero/message-sequence/dark/5.png",
+  "/product-hero/message-sequence/dark/6.png",
+  "/product-hero/message-sequence/dark/7.png",
+];
 
 /** Hero CTA per product: a short value-prop label on the left, and a verb that responds. */
 const PRODUCT_HERO_CTA: Record<ProductId, { label: string; action: string }> = {
@@ -77,18 +73,12 @@ const PRODUCT_FAQ_SUMMARIES: Partial<Record<ProductId, string>> = {
     "Orb is Jokuh's wallet and settlement layer: native multi-chain custody, payments, and on-chain actions executed by agents you authorize.",
 };
 
-function preloadProductHeroVideo(productId: ProductId) {
-  const video = PRODUCT_HERO_VIDEO[productId];
-
-  if (!video) return;
-
+function preloadProductHeroPoster(productId: ProductId) {
   const poster = PRODUCT_HERO_IMAGE[productId];
 
   if (poster) {
     preload(poster, { as: "image", fetchPriority: "high" });
   }
-
-  preload(video, { as: "video", type: "video/mp4", fetchPriority: "high" });
 }
 
 export function ProductPage({ productId }: { productId: ProductId }) {
@@ -96,7 +86,7 @@ export function ProductPage({ productId }: { productId: ProductId }) {
   const detail = PRODUCT_DETAIL_BLUEPRINTS[productId];
   const { resolvedTheme } = useTheme();
 
-  preloadProductHeroVideo(productId);
+  preloadProductHeroPoster(productId);
   useDocumentTitle(`${product.title} Jokuh`);
 
   return (
@@ -109,9 +99,15 @@ export function ProductPage({ productId }: { productId: ProductId }) {
       <div id="overview" className="scroll-mt-24">
         <ProductHeroFullscreen
           title={product.title}
-          lavaLamp={PRODUCT_HERO_LAVA[productId]}
           backgroundImage={PRODUCT_HERO_IMAGE[productId]}
           backgroundVideo={PRODUCT_HERO_VIDEO[productId]}
+          messageSequence={
+            productId === "calls"
+              ? {
+                  images: CALLS_MESSAGE_SEQUENCE,
+                }
+              : undefined
+          }
           trailing={
             <div className="inline-flex h-12 items-center gap-3 rounded-full bg-black/40 pl-5 pr-1.5 backdrop-blur-md ring-1 ring-white/10">
               <span className="font-sans text-[14px] font-medium text-white">
@@ -132,7 +128,7 @@ export function ProductPage({ productId }: { productId: ProductId }) {
       <div id="highlights" className="scroll-mt-24">
         <ProductHighlightsCarousel {...detail.highlights} />
       </div>
-      {productId !== "profile" && productId !== "messages" ? (
+      {productId !== "profile" && productId !== "messages" && productId !== "calls" ? (
         <div id="closer-look" className="scroll-mt-24">
           <ProductCloserLookExplorer {...detail.closerLook} />
         </div>
