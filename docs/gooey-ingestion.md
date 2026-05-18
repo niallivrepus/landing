@@ -16,7 +16,7 @@ The contract is:
 `package.json` keeps a local package dependency:
 
 ```json
-"@jokuh/gooey": "file:../gooey/packages/gooey"
+"@jokuh/gooey": "file:./packages/gooey"
 ```
 
 This is still useful for dependency installation and package resolution.
@@ -25,11 +25,11 @@ This is still useful for dependency installation and package resolution.
 
 `vite.config.ts` resolves Gooey directly to the sibling source tree:
 
-- `@jokuh/gooey` → `../gooey/packages/gooey/src/index.ts`
-- `@jokuh/gooey/styles/globals.css` → `../gooey/packages/gooey/src/styles/globals.css`
+- `@jokuh/gooey` → `packages/gooey/src/index.ts`
+- `@jokuh/gooey/styles/globals.css` → `packages/gooey/src/styles/globals.css`
 - `@gooey` → `../gooey/packages/gooey/src`
 
-This avoids treating the copied `node_modules/@jokuh/gooey` directory as the effective source of truth during development.
+This keeps the design system source co-located so CI and fresh clones work without external checkouts.
 
 ### Tailwind v4 Source Scanning
 

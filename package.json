@@ -22,7 +22,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@jokuh/gooey": "file:../gooey/packages/gooey",
+    "@jokuh/gooey": "file:./packages/gooey",
     "@lordicon/react": "^1.11.0",
     "@splinetool/react-spline": "^4.1.0",
     "@splinetool/runtime": "^1.12.73",

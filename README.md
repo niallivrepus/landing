@@ -32,26 +32,15 @@ Marketing and product surface for **[Jokuh](https://github.com/niallivrepus)** �
 
 ### `@jokuh/gooey` dependency
 
-`package.json` references the design system as a **local path**:
+`package.json` references the design system as a **vendored local path**:
 
 ```json
-"@jokuh/gooey": "file:../gooey/packages/gooey"
+"@jokuh/gooey": "file:./packages/gooey"
 ```
 
-Clone this repo **next to** the `gooey` monorepo so that path resolves, **or** change the dependency to a published tarball/Git tag once `gooey` is published.
-
-For local development, `landing` resolves Gooey directly from the sibling source tree instead of treating the copied `node_modules/@jokuh/gooey` folder as the effective source of truth. The package dependency remains in place for dependency installation, but the runtime/editor boundary points at `../gooey/packages/gooey/src`.
+This keeps CI self-contained. If/when `gooey` is published, swap the dependency to a versioned release.
 
 See [docs/gooey-ingestion.md](/Users/sonadin/Documents/code/jokuh/landing/docs/gooey-ingestion.md) for the repo contract.
-
-Suggested layout:
-
-```text
-code/
-├── gooey/
-│   └── packages/gooey/
-└── landing/          ← this repo
-```
 
 ---
 
