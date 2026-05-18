@@ -22,7 +22,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@jokuh/gooey": "file:../gooey/packages/gooey",
+    "@jokuh/gooey": "file:./packages/gooey",
     "@lordicon/react": "^1.11.0",
     "@splinetool/react-spline": "^4.1.0",
     "@splinetool/runtime": "^1.12.73",
@@ -45,6 +45,7 @@
     "@types/react-dom": "19.2.0",
     "@vitejs/plugin-react": "^4.5.2",
     "tailwindcss": "^4.1.11",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
   }

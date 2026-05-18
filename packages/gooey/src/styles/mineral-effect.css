@@ -1,0 +1,121 @@
+/**
+ * Mineral Effect - Multi-layer gradient overlay system
+ *
+ * Mimics Figma's fill layers with overlay blend modes:
+ * 1. Base layer: Mineral/material color (applied via bg-* class)
+ * 2. Layer 1: Linear gradient (bottom to middle) - 33% opacity, overlay blend
+ * 3. Layer 2: Radial gradient (center to right) - 33% opacity, overlay blend
+ *
+ * Usage: Add "mineral-effect" class to any div with a background color/gradient
+ */
+
+.mineral-effect {
+  position: relative;
+  isolation: isolate; /* Create stacking context for blend modes */
+}
+
+/* Layer 1: Linear gradient from bottom to middle */
+.mineral-effect::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /* Linear gradient: bottom (100% white) → middle (0% white) */
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 50%
+  );
+
+  /* Overlay blend mode */
+  mix-blend-mode: overlay;
+
+  /* 33% opacity for the entire gradient layer */
+  opacity: 0.33;
+
+  /* Match parent's border radius */
+  border-radius: inherit;
+}
+
+/* Layer 2: Radial gradient from center to right */
+.mineral-effect::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /* Radial gradient: center (0% white) → right edge (100% white) */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+
+  /* Overlay blend mode */
+  mix-blend-mode: overlay;
+
+  /* 33% opacity for the entire gradient layer */
+  opacity: 0.33;
+
+  /* Match parent's border radius */
+  border-radius: inherit;
+}
+
+/* Optional: Material effect variant (same as mineral) */
+.material-effect {
+  position: relative;
+  isolation: isolate;
+}
+
+.material-effect::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 50%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.33;
+  border-radius: inherit;
+}
+
+.material-effect::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.33;
+  border-radius: inherit;
+}
+
+/* Variant: Stronger effect (50% opacity instead of 33%) */
+.mineral-effect-strong::before,
+.mineral-effect-strong::after {
+  opacity: 0.5;
+}
+
+/* Variant: Subtle effect (20% opacity instead of 33%) */
+.mineral-effect-subtle::before,
+.mineral-effect-subtle::after {
+  opacity: 0.2;
+}
+
+/* Variant: Disable bottom gradient, keep only radial */
+.mineral-effect-radial-only::before {
+  display: none;
+}
+
+/* Variant: Disable radial gradient, keep only bottom */
+.mineral-effect-linear-only::after {
+  display: none;
+}

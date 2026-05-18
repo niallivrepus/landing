@@ -1,0 +1,823 @@
+/**
+ * Jokuh Design System Tokens
+ * Generated from Figma on 2026-01-29
+ *
+ * Scale Direction: 1 = darker, 7 = lighter
+ * Dark Theme: Scales read naturally (1 = darkest)
+ * Light Theme: Scales INVERT (1 = lightest)
+ */
+
+/* ===== FONT FACES ===== */
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-LightItalic.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-MediumItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-BoldItalic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-BlackItalic.otf") format("opentype");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Rock Salt";
+  src: url("/fonts/RockSalt-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===== DESIGN TOKENS ===== */
+/* Every color and gradient has explicit dark and light theme values.
+   Dark theme = :root. Light theme = :root.light.
+   Origins are omni-referenced (same hex in both themes) but still specified for both. */
+
+:root {
+  /* ===== ECLIPSE (ABSOLUTE) ===== */
+  --color-dark-space: #000000;
+  --color-light-space: #FFFFFF;
+
+  /* Solid colors - maintain their color regardless of theme */
+  /* Use for text on images, icons on colored backgrounds, etc. */
+  --color-dark-solid: #000000;
+  --color-light-solid: #FFFFFF;
+
+  /* Low opacity colors - inverts with theme */
+  /* Low Dark in dark theme → Low Light in light theme */
+  /* Low Light in dark theme → Low Dark in light theme */
+  --color-low-dark: rgba(0, 0, 0, 0);
+  --color-low-light: rgba(255, 255, 255, 0);
+
+  /* ===== BALANCE (YIN & YANG GRADIENTS) ===== */
+  /* Yin - dark gradient (bottom to top) */
+  --color-yin-1: #0A0A0A;
+  --color-yin-2: #121212;
+  --gradient-yin: linear-gradient(0deg, #0A0A0A 0%, #121212 100%);
+
+  /* Yang - light gradient (top to bottom) */
+  --color-yang-1: #FFFFFF;
+  --color-yang-2: #F2F2F2;
+  --gradient-yang: linear-gradient(180deg, #FFFFFF 0%, #F2F2F2 100%);
+
+  /* ===== ENERGIES ===== */
+
+  /* Pink Scale */
+  --color-pink-1: #2A0027;
+  --color-pink-2: #52004D;
+  --color-pink-3: #A20097;
+  --color-pink-4: #FF00EE;
+  --color-pink-5: #FF5CF4;
+  --color-pink-6: #FFAAF9;
+  --color-pink-7: #FFD9FC;
+
+  /* Purple Scale */
+  --color-purple-1: #30005F;
+  --color-purple-2: #5D0EAC;
+  --color-purple-3: #7516D3;
+  --color-purple-4: #9327FF;
+  --color-purple-5: #B56FFF;
+  --color-purple-6: #E2C5FF;
+  --color-purple-7: #F0E2FF;
+
+  /* Blue Scale */
+  --color-blue-1: #001534;
+  --color-blue-2: #002F76;
+  --color-blue-3: #003E9C;
+  --color-blue-4: #0066FF;
+  --color-blue-5: #2C81FF;
+  --color-blue-6: #DDEDFF;
+  --color-blue-7: #F3F9FF;
+
+  /* Cyan Scale */
+  --color-cyan-1: #002323;
+  --color-cyan-2: #004142;
+  --color-cyan-3: #008789;
+  --color-cyan-4: #43FDFF;
+  --color-cyan-5: #BFFEFF;
+  --color-cyan-6: #C8FEFF;
+  --color-cyan-7: #E5FFFF;
+
+  /* Green Scale */
+  --color-green-1: #032200;
+  --color-green-2: #054000;
+  --color-green-3: #0A8200;
+  --color-green-4: #21DC11;
+  --color-green-5: #30FA16;
+  --color-green-6: #B2FFAB;
+  --color-green-7: #DCFFD9;
+
+  /* Yellow Scale */
+  --color-yellow-1: #281901;
+  --color-yellow-2: #673F00;
+  --color-yellow-3: #FF9D00;
+  --color-yellow-4: #FFB800;
+  --color-yellow-5: #FFC633;
+  --color-yellow-6: #FFE7AB;
+  --color-yellow-7: #FFF8E7;
+
+  /* Orange Scale */
+  --color-orange-1: #240B00;
+  --color-orange-2: #6B2000;
+  --color-orange-3: #BC3800;
+  --color-orange-4: #FF4D00;
+  --color-orange-5: #FF6B00;
+  --color-orange-6: #FFEBDF;
+  --color-orange-7: #FFF8F4;
+
+  /* Red Scale */
+  --color-red-1: #200400;
+  --color-red-2: #480900;
+  --color-red-3: #940900;
+  --color-red-4: #FF0700;
+  --color-red-5: #FF312B;
+  --color-red-6: #FFB4B1;
+  --color-red-7: #FFF6F5;
+
+  /* ===== SHADES ===== */
+
+  /* Smoke Scale */
+  --color-smoke-1: #090909;
+  --color-smoke-2: #141414;
+  --color-smoke-3: #4F4F4F;
+  --color-smoke-4: #757575;
+  --color-smoke-5: #B3B3B3;
+  --color-smoke-6: #F2F2F2;
+  --color-smoke-7: #FDFDFD;
+
+  /* ===== GLASS & TRANSPARENCY ===== */
+
+  /* Dark Glass */
+  --color-dark-glass-5: rgba(0, 0, 0, 0.05);
+  --color-dark-glass-10: rgba(0, 0, 0, 0.10);
+  --color-dark-glass-20: rgba(0, 0, 0, 0.20);
+  --color-dark-glass-30: rgba(0, 0, 0, 0.30);
+  --color-dark-glass-40: rgba(0, 0, 0, 0.40);
+  --color-dark-glass-50: rgba(0, 0, 0, 0.50);
+  --color-dark-glass-60: rgba(0, 0, 0, 0.60);
+  --color-dark-glass-70: rgba(0, 0, 0, 0.70);
+  --color-dark-glass-80: rgba(0, 0, 0, 0.80);
+  --color-dark-glass-90: rgba(0, 0, 0, 0.90);
+
+  /* Light Glass */
+  --color-light-glass-5: rgba(255, 255, 255, 0.05);
+  --color-light-glass-10: rgba(255, 255, 255, 0.10);
+  --color-light-glass-20: rgba(255, 255, 255, 0.20);
+  --color-light-glass-30: rgba(255, 255, 255, 0.30);
+  --color-light-glass-40: rgba(255, 255, 255, 0.40);
+  --color-light-glass-50: rgba(255, 255, 255, 0.50);
+  --color-light-glass-60: rgba(255, 255, 255, 0.60);
+  --color-light-glass-70: rgba(255, 255, 255, 0.70);
+  --color-light-glass-80: rgba(255, 255, 255, 0.80);
+  --color-light-glass-90: rgba(255, 255, 255, 0.90);
+
+  /* ===== MATERIALS - PRECIOUS METALS ===== */
+
+  /* Vanadium */
+  --color-vanadium-1: #0A0A0B;
+  --color-vanadium-2: #202027;
+
+  /* Crude Copper */
+  --color-crude-copper-1: #2E221C;
+  --color-crude-copper-2: #724E43;
+
+  /* Copper */
+  --color-copper-1: #7E5353;
+  --color-copper-2: #D09486;
+
+  /* Bronze */
+  --color-bronze-1: #997468;
+  --color-bronze-2: #E5AF9E;
+
+  /* Steel */
+  --color-steel-1: #88837B;
+  --color-steel-2: #CDCBC8;
+
+  /* Rose Gold */
+  --color-rose-gold-1: #BA8279;
+  --color-rose-gold-2: #F9CEC5;
+
+  /* Gold */
+  --color-gold-1: #CCAB88;
+  --color-gold-2: #FFF1DA;
+
+  /* Silver */
+  --color-silver-1: #CDD7D0;
+  --color-silver-2: #F3F0E4;
+
+  /* Platinum */
+  --color-platinum-1: #CCD4E9;
+  --color-platinum-2: #E7FCF6;
+
+  /* Jaskmarr */
+  --color-jaskmarr-1: #CCC3FF;
+  --color-jaskmarr-2: #F8E3FF;
+
+  /* ===== MATERIALS - FANTASY SCALES ===== */
+
+  /* Gronk'sh (dark theme) */
+  --color-gronksh-1: #0D0905;
+  --color-gronksh-2: #3E3D3C;
+  --color-gronksh-3: #191817;
+  --color-gronksh-4: #2D2924;
+  --color-gronksh-5: #302D2A;
+  --color-gronksh-6: #867266;
+  --color-gronksh-7: #494242;
+
+  /* Plata */
+  --color-plata-1: #0D0905;
+  --color-plata-2: #4B4A49;
+  --color-plata-3: #232120;
+  --color-plata-4: #534F4A;
+  --color-plata-5: #4B443C;
+  --color-plata-6: #C5B7B7;
+
+  /* Orro */
+  --color-orro-1: #0D0905;
+  --color-orro-2: #492203;
+  --color-orro-3: #1B0D03;
+  --color-orro-4: #4A3011;
+  --color-orro-5: #A05F12;
+  --color-orro-6: #C29245;
+
+  /* Drakzul */
+  --color-drakzul-1: #45000F;
+  --color-drakzul-2: #1B0311;
+  --color-drakzul-3: #270000;
+  --color-drakzul-4: #38000B;
+
+  /* Adamant */
+  --color-adamant-1: #004A1D;
+  --color-adamant-2: #0F1412;
+  --color-adamant-3: #206A3D;
+  --color-adamant-4: #02A041;
+
+  /* Slyvir */
+  --color-slyvir-1: #085F3B;
+  --color-slyvir-2: #022E19;
+  --color-slyvir-3: #031B0E;
+  --color-slyvir-4: #00492F;
+  --color-slyvir-5: #002D14;
+  --color-slyvir-6: #005823;
+
+  /* Mithrill */
+  --color-mithrill-1: #3E3BC7;
+  --color-mithrill-2: #2D2C61;
+  --color-mithrill-3: #6456C1;
+  --color-mithrill-4: #9282FD;
+
+  /* Rune (dark theme) */
+  --color-rune-1: #00568C;
+  --color-rune-2: #002B39;
+  --color-rune-3: #004D79;
+  --color-rune-4: #0069A4;
+
+  /* Liktir */
+  --color-liktir-1: #1A3B3B;
+  --color-liktir-2: #033849;
+  --color-liktir-3: #030F1B;
+  --color-liktir-4: #11484F;
+  --color-liktir-5: #1297A0;
+  --color-liktir-6: #45C2A4;
+
+  /* Amfrill */
+  --color-amfrill-1: #0D0506;
+  --color-amfrill-2: #220349;
+  --color-amfrill-3: #0F031B;
+  --color-amfrill-4: #2C114F;
+  --color-amfrill-5: #5912A0;
+  --color-amfrill-6: #8345C2;
+
+  /* ===== MINERALS ===== */
+
+  /* Kaleidyx */
+  --color-kaleidyx-1: #B6B1D3;
+  --color-kaleidyx-2: #BFD8E3;
+  --color-kaleidyx-3: #EDEDED;
+  --color-kaleidyx-4: #DFCCD0;
+  --color-kaleidyx-5: #D3D9CE;
+
+  /* Rulgor */
+  --color-rulgor-1: #5F081D;
+  --color-rulgor-2: #2E0208;
+  --color-rulgor-3: #1A0003;
+  --color-rulgor-4: #490009;
+  --color-rulgor-5: #2D0005;
+  --color-rulgor-6: #580000;
+
+  /* Veltryne (dark theme) */
+  --color-veltryne-1: #085F0C;
+  --color-veltryne-2: #022E09;
+  --color-veltryne-3: #001A0F;
+  --color-veltryne-4: #00490C;
+  --color-veltryne-5: #002D02;
+  --color-veltryne-6: #005809;
+
+  /* Zharuk */
+  --color-zharuk-1: #080C5F;
+  --color-zharuk-2: #02072E;
+  --color-zharuk-3: #04001A;
+  --color-zharuk-4: #000349;
+  --color-zharuk-5: #01002D;
+  --color-zharuk-6: #000458;
+
+  /* ===== FACTIONS (dark theme) ===== */
+  --color-faction-pica-1: #6B272C;
+  --color-faction-pica-2: #D66976;
+  --color-faction-nautilus-1: #5A1705;
+  --color-faction-nautilus-2: #A90700;
+  --color-faction-odin-1: #733000;
+  --color-faction-odin-2: #FFA337;
+  --color-faction-aladar-1: #566311;
+  --color-faction-aladar-2: #B6D02B;
+  --color-faction-eclipse-1: #06130F;
+  --color-faction-eclipse-2: #084B37;
+  --color-faction-onyx-1: #090F15;
+  --color-faction-onyx-2: #3D2B86;
+  --color-faction-omega-1: #8A70F2;
+  --color-faction-omega-2: #B8A7FF;
+  --color-faction-epsilon-1: #F4E3FF;
+  --color-faction-epsilon-2: #FDFAFF;
+
+  /* ===== ORIGINS (GRADIENTS) ===== */
+  --color-origin-fruta-1: #CB0B03;
+  --color-origin-fruta-2: #FF0970;
+  --color-origin-flame-1: #FF4D00;
+  --color-origin-flame-2: #FFB800;
+  --color-origin-solar-1: #FF9D00;
+  --color-origin-solar-2: #F2FF3D;
+  --color-origin-life-1: #77FF00;
+  --color-origin-life-2: #D8FF3D;
+  --color-origin-aether-1: #002FFF;
+  --color-origin-aether-2: #3D7EFF;
+  --color-origin-insight-1: #7700FF;
+  --color-origin-insight-2: #B200FF;
+  --color-origin-spirit-1: #FF00D9;
+  --color-origin-spirit-2: #FF58B4;
+
+  /* Origin Gradients */
+  --gradient-fruta: linear-gradient(359deg, #CB0B03 0.5%, #FF0970 99%);
+  --gradient-flame: linear-gradient(0deg, #FFB800 0%, #FF4D00 100%);
+  --gradient-solar: linear-gradient(0deg, #F2FF3D 0%, #FF9D00 100%);
+  --gradient-life: linear-gradient(0deg, #D8FF3D 0%, #77FF00 100%);
+  --gradient-aether: linear-gradient(223deg, #3D7EFF 24%, #002FFF 75%);
+  --gradient-insight: linear-gradient(0deg, #B200FF 0%, #7700FF 100%);
+  --gradient-spirit: linear-gradient(0deg, #FF58B4 0%, #FF00D9 100%);
+
+  /* Spectral (rainbow) */
+  --gradient-spectral: linear-gradient(360deg, #ff0f00 0%, #ebff00 15%, #2fff00 36%, #00ffc9 58%, #002eff 79%, #020266 100%);
+
+  /* Legacy gradients (for compatibility) */
+  --color-gradient-fruta: var(--gradient-fruta);
+  --color-gradient-flame: var(--gradient-flame);
+  --color-flame: #FF4D00;
+
+  /* ===== TYPOGRAPHY ===== */
+
+  /* Font Families */
+  --font-sans: "Satoshi", -apple-system, sans-serif;
+  --font-display: "Rock Salt", cursive;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* Headlines - Satoshi */
+  --font-size-h1: 80px;
+  --font-weight-h1: 500;
+  --line-height-h1: 1;
+  --letter-spacing-h1: -5px;
+
+  --font-size-h2: 58px;
+  --font-weight-h2: 500;
+  --line-height-h2: 1.1;
+  --letter-spacing-h2: -5px;
+
+  --font-size-h3: 48px;
+  --font-weight-h3: 500;
+  --line-height-h3: 1.2;
+
+  --font-size-h4: 40px;
+  --font-weight-h4: 400;
+  --line-height-h4: 1.2;
+
+  --font-size-h5: 32px;
+  --font-weight-h5: 400;
+  --line-height-h5: 1.2;
+
+  --font-size-h6: 24px;
+  --font-weight-h6: 400;
+  --line-height-h6: 1.4;
+
+  --font-size-h7: 18px;
+  --font-weight-h7: 400;
+  --line-height-h7: 1.6;
+
+  --font-size-h8: 16px;
+  --font-weight-h8: 500;
+  --line-height-h8: 1;
+
+  /* Paragraphs */
+  --font-size-p-lg: 18px;
+  --line-height-p-lg: 1.52;
+
+  --font-size-p-md: 16px;
+  --line-height-p-md: 1.45;
+
+  --font-size-p-sm: 14px;
+  --line-height-p-sm: 1.6;
+
+  /* Labels */
+  --font-size-label: 14px;
+  --line-height-label: 0.9;
+
+  /* Mono */
+  --font-size-mono-md: 16px;
+  --font-size-mono-sm: 14px;
+  --line-height-mono: 24px;
+
+  /* ===== GRID SYSTEM ===== */
+
+  /* Desktop Wide (≥1440px) */
+  --grid-desktop-wide-columns: 12;
+  --grid-desktop-wide-gap: 12px;
+  --grid-desktop-wide-content: 1440px;
+  --grid-desktop-wide-margin: 240px;
+
+  /* Desktop Narrow (1024-1439px) */
+  --grid-desktop-columns: 12;
+  --grid-desktop-gap: 12px;
+  --grid-desktop-content: 1024px;
+  --grid-desktop-margin: 16px;
+
+  /* Tablet (600-1023px) */
+  --grid-tablet-columns: 6;
+  --grid-tablet-gap: 12px;
+  --grid-tablet-content: 768px;
+  --grid-tablet-margin: 16px;
+
+  /* Phone (<600px) */
+  --grid-phone-columns: 6;
+  --grid-phone-gap: 4px;
+  --grid-phone-content: 320px;
+  --grid-phone-margin: 16px;
+
+  /* Grid shortcuts */
+  --grid-gap: 12px;
+  --grid-gap-phone: 4px;
+  --grid-margin: 16px;
+  --grid-margin-wide: 240px;
+  --grid-content-wide: 1440px;
+
+  /* Icon-only circular buttons (prompt bar mic/add, etc.) */
+  --icon-only-button-border-width: 2px;
+  --icon-only-button-border: var(--color-light-glass-20);
+  --icon-only-button-border-soft: var(--color-light-glass-5);
+
+  /* Effect tokens — shadows flip between themes */
+  --shadow-pill: 0px 1px 2px rgba(0,0,0,0.15), 0px 4px 12px rgba(0,0,0,0.2);
+  --shadow-pill-inset: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.2), inset 2px 2px 6px rgba(0,0,0,0.15), inset -2px -2px 6px rgba(255,255,255,0.05);
+}
+
+/* ===== LIGHT THEME (explicit value for every color & gradient) ===== */
+/* Every token is specified for light theme; same-as-dark values are still listed. */
+/* Origins are omni-referenced (same in light and dark) but specified here for clarity. */
+:root.light {
+  /* Material gradients (precious metals) — all specified; same-as-dark where applicable */
+  --color-vanadium-1: #0C0C0D;
+  --color-vanadium-2: #33333D;
+  --color-crude-copper-1: #4A372D;
+  --color-crude-copper-2: #8E6052;
+  --color-copper-1: #B67878;
+  --color-copper-2: #F5AE9F;
+  --color-bronze-1: #997468;
+  --color-bronze-2: #E5AF9E;
+  --color-steel-1: #A09A90;
+  --color-steel-2: #E9E7E4;
+  --color-rose-gold-1: #E6A398;
+  --color-rose-gold-2: #FFE9E5;
+  --color-gold-1: #E7C29B;
+  --color-gold-2: #FFF5E4;
+  --color-silver-1: #CDD7D0;
+  --color-silver-2: #F3F0E4;
+  --color-platinum-1: #CCD4E9;
+  --color-platinum-2: #E7FCF6;
+  --color-jaskmarr-1: #CCC3FF;
+  --color-jaskmarr-2: #F8E3FF;
+
+  /* Materials (fantasy scales) — all specified; same-as-dark where applicable */
+  --color-gronksh-1: #3E352C;
+  --color-gronksh-2: #7B7977;
+  --color-gronksh-3: #585451;
+  --color-gronksh-4: #665E53;
+  --color-gronksh-5: #68615B;
+  --color-gronksh-6: #C4A796;
+  --color-gronksh-7: #8A7C7C;
+  --color-plata-1: #716B64;
+  --color-plata-2: #848382;
+  --color-plata-3: #6A6461;
+  --color-plata-4: #8F8981;
+  --color-plata-5: #8E8274;
+  --color-plata-6: #EBDBDB;
+  --color-orro-1: #573C21;
+  --color-orro-2: #794115;
+  --color-orro-3: #51280A;
+  --color-orro-4: #8A5312;
+  --color-orro-5: #DB7E10;
+  --color-orro-6: #E9A02A;
+  --color-drakzul-1: #45000F;
+  --color-drakzul-2: #1B0311;
+  --color-drakzul-3: #270000;
+  --color-drakzul-4: #38000B;
+  --color-slyvir-1: #0D794C;
+  --color-slyvir-2: #054828;
+  --color-slyvir-3: #052C17;
+  --color-slyvir-4: #005738;
+  --color-slyvir-5: #004720;
+  --color-slyvir-6: #05632A;
+  --color-adamant-1: #004A1D;
+  --color-adamant-2: #0A2C1E;
+  --color-adamant-3: #206A3D;
+  --color-adamant-4: #02A041;
+  --color-mithrill-1: #524FEB;
+  --color-mithrill-2: #434289;
+  --color-mithrill-3: #7363D8;
+  --color-mithrill-4: #A597FF;
+  --color-liktir-1: #2D6666;
+  --color-liktir-2: #055873;
+  --color-liktir-3: #082440;
+  --color-liktir-4: #17616B;
+  --color-liktir-5: #16AEB8;
+  --color-liktir-6: #4BD4B3;
+  --color-rune-1: #00568C;
+  --color-rune-2: #002B39;
+  --color-rune-3: #006198;
+  --color-rune-4: #0069A4;
+  --color-amfrill-1: #0D0506;
+  --color-amfrill-2: #220349;
+  --color-amfrill-3: #0F031B;
+  --color-amfrill-4: #2C114F;
+  --color-amfrill-5: #5912A0;
+  --color-amfrill-6: #8345C2;
+
+  /* Minerals — all specified */
+  --color-rulgor-1: #8F0D2C;
+  --color-rulgor-2: #5C0410;
+  --color-rulgor-3: #400108;
+  --color-rulgor-4: #76000E;
+  --color-rulgor-5: #60010B;
+  --color-rulgor-6: #7F0101;
+  --color-veltryne-1: #0C7A11;
+  --color-veltryne-2: #035010;
+  --color-veltryne-3: #013E24;
+  --color-veltryne-4: #016611;
+  --color-veltryne-5: #004303;
+  --color-veltryne-6: #00740C;
+  --color-zharuk-1: #0C117D;
+  --color-zharuk-2: #040D52;
+  --color-zharuk-3: #0B0143;
+  --color-zharuk-4: #03076B;
+  --color-zharuk-5: #020055;
+  --color-zharuk-6: #020881;
+  --color-kaleidyx-1: #EAE7FF;
+  --color-kaleidyx-2: #E4F7FF;
+  --color-kaleidyx-3: #FFFFFF;
+  --color-kaleidyx-4: #FFF4F6;
+  --color-kaleidyx-5: #F6FFF0;
+
+  /* Factions — all specified */
+  --color-faction-pica-1: #8B3138;
+  --color-faction-pica-2: #EE7281;
+  --color-faction-nautilus-1: #822107;
+  --color-faction-nautilus-2: #C40800;
+  --color-faction-odin-1: #8A3A00;
+  --color-faction-odin-2: #FFA337;
+  --color-faction-aladar-1: #768718;
+  --color-faction-aladar-2: #D4F235;
+  --color-faction-eclipse-1: #123F32;
+  --color-faction-eclipse-2: #0B8460;
+  --color-faction-onyx-1: #152535;
+  --color-faction-onyx-2: #4933A4;
+  --color-faction-omega-1: #A48EFF;
+  --color-faction-omega-2: #DAD1FF;
+  --color-faction-epsilon-1: #FAF3FF;
+  --color-faction-epsilon-2: #FFFFFF;
+
+  /* ===== ECLIPSE (INVERTED) ===== */
+  --color-dark-space: #FFFFFF;
+  --color-light-space: #000000;
+  /* Solid colors stay absolute */
+  --color-dark-solid: #000000;
+  --color-light-solid: #FFFFFF;
+  /* Low opacity colors invert */
+  --color-low-dark: rgba(255, 255, 255, 0);
+  --color-low-light: rgba(0, 0, 0, 0);
+
+  /* ===== BALANCE (YIN & YANG — INVERTED) ===== */
+  --color-yin-1: #FFFFFF;
+  --color-yin-2: #F2F2F2;
+  --gradient-yin: linear-gradient(0deg, #FFFFFF 0%, #F2F2F2 100%);
+  --color-yang-1: #0A0A0A;
+  --color-yang-2: #121212;
+  --gradient-yang: linear-gradient(180deg, #0A0A0A 0%, #121212 100%);
+
+  /* ===== ENERGIES (SCALES INVERTED: 1↔7, 2↔6, 3↔5) ===== */
+
+  /* Pink Scale — inverted */
+  --color-pink-1: #FFD9FC;
+  --color-pink-2: #FFAAF9;
+  --color-pink-3: #FF5CF4;
+  --color-pink-4: #FF00EE;
+  --color-pink-5: #A20097;
+  --color-pink-6: #52004D;
+  --color-pink-7: #2A0027;
+
+  /* Purple Scale — inverted */
+  --color-purple-1: #F0E2FF;
+  --color-purple-2: #E2C5FF;
+  --color-purple-3: #B56FFF;
+  --color-purple-4: #9327FF;
+  --color-purple-5: #7516D3;
+  --color-purple-6: #5D0EAC;
+  --color-purple-7: #30005F;
+
+  /* Blue Scale — inverted */
+  --color-blue-1: #F3F9FF;
+  --color-blue-2: #DDEDFF;
+  --color-blue-3: #2C81FF;
+  --color-blue-4: #0066FF;
+  --color-blue-5: #003E9C;
+  --color-blue-6: #002F76;
+  --color-blue-7: #001534;
+
+  /* Cyan Scale — inverted */
+  --color-cyan-1: #E5FFFF;
+  --color-cyan-2: #C8FEFF;
+  --color-cyan-3: #BFFEFF;
+  --color-cyan-4: #43FDFF;
+  --color-cyan-5: #008789;
+  --color-cyan-6: #004142;
+  --color-cyan-7: #002323;
+
+  /* Green Scale — inverted */
+  --color-green-1: #DCFFD9;
+  --color-green-2: #B2FFAB;
+  --color-green-3: #30FA16;
+  --color-green-4: #21DC11;
+  --color-green-5: #0A8200;
+  --color-green-6: #054000;
+  --color-green-7: #032200;
+
+  /* Yellow Scale — inverted */
+  --color-yellow-1: #FFF8E7;
+  --color-yellow-2: #FFE7AB;
+  --color-yellow-3: #FFC633;
+  --color-yellow-4: #FFB800;
+  --color-yellow-5: #FF9D00;
+  --color-yellow-6: #673F00;
+  --color-yellow-7: #281901;
+
+  /* Orange Scale — inverted */
+  --color-orange-1: #FFF8F4;
+  --color-orange-2: #FFEBDF;
+  --color-orange-3: #FF6B00;
+  --color-orange-4: #FF4D00;
+  --color-orange-5: #BC3800;
+  --color-orange-6: #6B2000;
+  --color-orange-7: #240B00;
+
+  /* Red Scale — inverted */
+  --color-red-1: #FFF6F5;
+  --color-red-2: #FFB4B1;
+  --color-red-3: #FF312B;
+  --color-red-4: #FF0700;
+  --color-red-5: #940900;
+  --color-red-6: #480900;
+  --color-red-7: #200400;
+
+  /* ===== SMOKE (SCALE INVERTED) ===== */
+  --color-smoke-1: #FDFDFD;
+  --color-smoke-2: #F2F2F2;
+  --color-smoke-3: #B3B3B3;
+  --color-smoke-4: #757575;
+  --color-smoke-5: #4F4F4F;
+  --color-smoke-6: #141414;
+  --color-smoke-7: #090909;
+
+  /* ===== GLASS (BASE COLORS SWAPPED) ===== */
+
+  /* Dark Glass → white-based in light theme */
+  --color-dark-glass-5: rgba(255, 255, 255, 0.05);
+  --color-dark-glass-10: rgba(255, 255, 255, 0.10);
+  --color-dark-glass-20: rgba(255, 255, 255, 0.20);
+  --color-dark-glass-30: rgba(255, 255, 255, 0.30);
+  --color-dark-glass-40: rgba(255, 255, 255, 0.40);
+  --color-dark-glass-50: rgba(255, 255, 255, 0.50);
+  --color-dark-glass-60: rgba(255, 255, 255, 0.60);
+  --color-dark-glass-70: rgba(255, 255, 255, 0.70);
+  --color-dark-glass-80: rgba(255, 255, 255, 0.80);
+  --color-dark-glass-90: rgba(255, 255, 255, 0.90);
+
+  /* Light Glass → black-based in light theme */
+  --color-light-glass-5: rgba(0, 0, 0, 0.05);
+  --color-light-glass-10: rgba(0, 0, 0, 0.10);
+  --color-light-glass-20: rgba(0, 0, 0, 0.20);
+  --color-light-glass-30: rgba(0, 0, 0, 0.30);
+  --color-light-glass-40: rgba(0, 0, 0, 0.40);
+  --color-light-glass-50: rgba(0, 0, 0, 0.50);
+  --color-light-glass-60: rgba(0, 0, 0, 0.60);
+  --color-light-glass-70: rgba(0, 0, 0, 0.70);
+  --color-light-glass-80: rgba(0, 0, 0, 0.80);
+  --color-light-glass-90: rgba(0, 0, 0, 0.90);
+
+  /* Icon-only — thin, low-contrast ring on white */
+  --icon-only-button-border-width: 1px;
+  --icon-only-button-border: rgba(0, 0, 0, 0.08);
+  --icon-only-button-border-soft: rgba(0, 0, 0, 0.055);
+
+  /* Origins — omni-referenced (same in light and dark); specified here for clarity */
+  --color-origin-fruta-1: #CB0B03;
+  --color-origin-fruta-2: #FF0970;
+  --color-origin-flame-1: #FF4D00;
+  --color-origin-flame-2: #FFB800;
+  --color-origin-solar-1: #FF9D00;
+  --color-origin-solar-2: #F2FF3D;
+  --color-origin-life-1: #77FF00;
+  --color-origin-life-2: #D8FF3D;
+  --color-origin-aether-1: #002FFF;
+  --color-origin-aether-2: #3D7EFF;
+  --color-origin-insight-1: #7700FF;
+  --color-origin-insight-2: #B200FF;
+  --color-origin-spirit-1: #FF00D9;
+  --color-origin-spirit-2: #FF58B4;
+
+  /* Effect tokens — light mode: drop shadows removed, inset softened */
+  --shadow-pill: none;
+  --shadow-pill-inset: inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -1px 0 rgba(0,0,0,0.05);
+}

@@ -48,7 +48,7 @@ test('submits the contact sales form with a mocked backend', async ({ page }) =>
   await page.goto('/contact');
   await fillContactSalesForm(page);
 
-  await page.getByRole('button', { name: 'Submit inquiry' }).click();
+  await page.getByRole('button', { name: 'Submit' }).click();
   await expect.poll(() => payload, { timeout: 10_000 }).not.toBeNull();
 
   await expect(
@@ -81,10 +81,10 @@ test('keeps form data and shows a clean error when contact delivery fails', asyn
   await page.goto('/contact');
   await fillContactSalesForm(page);
 
-  await page.getByRole('button', { name: 'Submit inquiry' }).click();
+  await page.getByRole('button', { name: 'Submit' }).click();
 
   await expect(page.getByRole('alert')).toContainText('Email delivery is not configured yet.');
-  await expect(page.getByRole('button', { name: 'Submit inquiry' })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Submit' })).toBeEnabled();
   await expect(page.getByLabel('Work email *')).toHaveValue('designer@jokuh.com');
   await expect(page.getByLabel('Company name *')).toHaveValue('Jokuh Studio');
 });

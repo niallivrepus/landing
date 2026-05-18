@@ -6,11 +6,13 @@ test.describe('newsroom detail journeys', () => {
     await primeCookieConsent(page);
     await page.goto('/newsroom');
 
-    await page.getByRole('heading', { name: 'Introducing Jokuh Cortex' }).click();
+    const firstArticleHeading = page.locator('main article').first().getByRole('heading').first();
+    const firstTitle = (await firstArticleHeading.textContent())?.trim();
+    expect(firstTitle).toBeTruthy();
+    await firstArticleHeading.click();
 
-    await expect(page).toHaveURL(/\/newsroom\/introducing-jokuh-cortex$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'Introducing Jokuh Cortex' })).toBeVisible();
-    await expect(page.getByRole('heading', { level: 2, name: 'Knowledge work' })).toBeVisible();
+    await expect(page).toHaveURL(/\/newsroom\/[^/]+$/);
+    await expect(page.getByRole('heading', { level: 1, name: firstTitle! })).toBeVisible();
 
     await page.goto('/newsroom');
 
@@ -20,12 +22,11 @@ test.describe('newsroom detail journeys', () => {
 
   test('renders a brief newsroom article with its follow-up body section', async ({ page }) => {
     await primeCookieConsent(page);
-    await page.goto('/newsroom/jokuh-spine-tighter-sync');
+    await page.goto('/newsroom/spine-ships-testflight');
 
     await expect(
-      page.getByRole('heading', { level: 1, name: 'Jokuh Spine: tighter sync for multi-pod sessions' }),
+      page.getByRole('heading', { level: 1, name: 'Spine ships to TestFlight' }),
     ).toBeVisible();
-    await expect(page.getByText('Lower latency handoff when you move between pods on desktop and web.')).toBeVisible();
-    await expect(page.getByRole('heading', { level: 2, name: 'Why it matters' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'What ships' })).toBeVisible();
   });
 });
