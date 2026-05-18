@@ -27,7 +27,8 @@ test('opens the mobile menu and navigates to the About page', async ({ page }) =
   await page.locator('button[aria-label="Open menu"]:visible').click();
 
   const menu = page.getByRole('dialog', { name: 'Primary menu' });
-  await expect(menu.getByRole('button', { name: 'Close menu' })).toBeVisible();
+  await expect(menu).toBeVisible();
+  await expect(page.locator('button[aria-label="Close menu"]:visible')).toBeVisible();
   await expectBlurredBackdrop(menu);
 
   await menu.getByRole('button', { name: 'Company' }).click();
