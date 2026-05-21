@@ -17,7 +17,7 @@ test('renders the landing hero and waitlist prompt', async ({ page }) => {
 });
 
 test('takes visitors from the header CTA to the download page', async ({ page }) => {
-  await page.getByRole('link', { name: 'Start' }).click();
+  await page.locator('[data-nav-cta="primary"], a:has-text("Start")').first().click();
 
   await expect(page).toHaveURL(/\/download$/);
   await expect(page.getByRole('heading', { level: 1, name: /Download Jokuh/i })).toBeVisible();
