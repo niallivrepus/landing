@@ -11,6 +11,7 @@ function resolveGooeyRoots(landingRoot: string): {
   gooeyPackageRoot: string;
 } {
   const candidates = [
+    resolve(landingRoot, "packages/gooey"),
     resolve(landingRoot, "../gooey/packages/gooey"),
     resolve(landingRoot, "../frontend/packages/gooey"),
   ];

@@ -1,0 +1,807 @@
+@import "tailwindcss";
+@import "./design-tokens.css";
+@import "./mineral-effect.css";
+
+/* Geist fonts (fallback for code blocks, compatibility) */
+@font-face {
+  font-family: "Geist Mono";
+  src:
+    local("Geist Mono"),
+    url("https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/GeistMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
+
+@theme inline {
+  /* Eclipse */
+  --color-dark-space: var(--color-dark-space);
+  --color-light-space: var(--color-light-space);
+
+  /* Energies - Pink (1-7, dark to light) */
+  --color-pink-1: var(--color-pink-1);
+  --color-pink-2: var(--color-pink-2);
+  --color-pink-3: var(--color-pink-3);
+  --color-pink-4: var(--color-pink-4);
+  --color-pink-5: var(--color-pink-5);
+  --color-pink-6: var(--color-pink-6);
+  --color-pink-7: var(--color-pink-7);
+
+  /* Energies - Purple (1-7) */
+  --color-purple-1: var(--color-purple-1);
+  --color-purple-2: var(--color-purple-2);
+  --color-purple-3: var(--color-purple-3);
+  --color-purple-4: var(--color-purple-4);
+  --color-purple-5: var(--color-purple-5);
+  --color-purple-6: var(--color-purple-6);
+  --color-purple-7: var(--color-purple-7);
+
+  /* Energies - Blue (1-7) */
+  --color-blue-1: var(--color-blue-1);
+  --color-blue-2: var(--color-blue-2);
+  --color-blue-3: var(--color-blue-3);
+  --color-blue-4: var(--color-blue-4);
+  --color-blue-5: var(--color-blue-5);
+  --color-blue-6: var(--color-blue-6);
+  --color-blue-7: var(--color-blue-7);
+
+  /* Energies - Cyan (1-7) */
+  --color-cyan-1: var(--color-cyan-1);
+  --color-cyan-2: var(--color-cyan-2);
+  --color-cyan-3: var(--color-cyan-3);
+  --color-cyan-4: var(--color-cyan-4);
+  --color-cyan-5: var(--color-cyan-5);
+  --color-cyan-6: var(--color-cyan-6);
+  --color-cyan-7: var(--color-cyan-7);
+
+  /* Energies - Green (1-7) */
+  --color-green-1: var(--color-green-1);
+  --color-green-2: var(--color-green-2);
+  --color-green-3: var(--color-green-3);
+  --color-green-4: var(--color-green-4);
+  --color-green-5: var(--color-green-5);
+  --color-green-6: var(--color-green-6);
+  --color-green-7: var(--color-green-7);
+
+  /* Energies - Yellow (1-7) */
+  --color-yellow-1: var(--color-yellow-1);
+  --color-yellow-2: var(--color-yellow-2);
+  --color-yellow-3: var(--color-yellow-3);
+  --color-yellow-4: var(--color-yellow-4);
+  --color-yellow-5: var(--color-yellow-5);
+  --color-yellow-6: var(--color-yellow-6);
+  --color-yellow-7: var(--color-yellow-7);
+
+  /* Energies - Orange (1-7) */
+  --color-orange-1: var(--color-orange-1);
+  --color-orange-2: var(--color-orange-2);
+  --color-orange-3: var(--color-orange-3);
+  --color-orange-4: var(--color-orange-4);
+  --color-orange-5: var(--color-orange-5);
+  --color-orange-6: var(--color-orange-6);
+  --color-orange-7: var(--color-orange-7);
+
+  /* Energies - Red (1-7) */
+  --color-red-1: var(--color-red-1);
+  --color-red-2: var(--color-red-2);
+  --color-red-3: var(--color-red-3);
+  --color-red-4: var(--color-red-4);
+  --color-red-5: var(--color-red-5);
+  --color-red-6: var(--color-red-6);
+  --color-red-7: var(--color-red-7);
+
+  /* Shades - Smoke (1-7) */
+  --color-smoke-1: var(--color-smoke-1);
+  --color-smoke-2: var(--color-smoke-2);
+  --color-smoke-3: var(--color-smoke-3);
+  --color-smoke-4: var(--color-smoke-4);
+  --color-smoke-5: var(--color-smoke-5);
+  --color-smoke-6: var(--color-smoke-6);
+  --color-smoke-7: var(--color-smoke-7);
+
+  /* Glass - Light (5-90%) */
+  --color-light-glass-5: var(--color-light-glass-5);
+  --color-light-glass-10: var(--color-light-glass-10);
+  --color-light-glass-20: var(--color-light-glass-20);
+  --color-light-glass-30: var(--color-light-glass-30);
+  --color-light-glass-40: var(--color-light-glass-40);
+  --color-light-glass-50: var(--color-light-glass-50);
+  --color-light-glass-60: var(--color-light-glass-60);
+  --color-light-glass-70: var(--color-light-glass-70);
+  --color-light-glass-80: var(--color-light-glass-80);
+  --color-light-glass-90: var(--color-light-glass-90);
+
+  /* Glass - Dark (5-90%) */
+  --color-dark-glass-5: var(--color-dark-glass-5);
+  --color-dark-glass-10: var(--color-dark-glass-10);
+  --color-dark-glass-20: var(--color-dark-glass-20);
+  --color-dark-glass-30: var(--color-dark-glass-30);
+  --color-dark-glass-40: var(--color-dark-glass-40);
+  --color-dark-glass-50: var(--color-dark-glass-50);
+  --color-dark-glass-60: var(--color-dark-glass-60);
+  --color-dark-glass-70: var(--color-dark-glass-70);
+  --color-dark-glass-80: var(--color-dark-glass-80);
+  --color-dark-glass-90: var(--color-dark-glass-90);
+
+  /* Gradients — Origins (canonical names from Color Library) */
+  --color-gradient-fruta: var(--gradient-fruta);
+  --color-gradient-flame: var(--gradient-flame);
+  --color-flame: var(--color-orange-4);
+  --color-flame-glass: rgba(255, 77, 0, 0.2);
+  --color-gradient-solar: var(--gradient-solar);
+  --color-gradient-life: var(--gradient-life);
+  --color-gradient-aether: var(--gradient-aether);
+  --color-aether: #002FFF;
+  --color-aether-glass: rgba(0, 47, 255, 0.2);
+  --color-gradient-insight: var(--gradient-insight);
+  --color-insight: #7700FF;
+  --color-insight-glass: rgba(119, 0, 255, 0.2);
+  --color-gradient-spirit: var(--gradient-spirit);
+  /* Gradients — Non-origin (references design-tokens.css) */
+  --color-gradient-yin: var(--gradient-yin);
+  --color-gradient-yang: var(--gradient-yang);
+  --color-gradient-spectral: linear-gradient(360deg,
+      #ff0f00 0%,
+      #ebff00 15%,
+      #2fff00 36%,
+      #00ffc9 58%,
+      #002eff 79%,
+      #020266 100%);
+}
+
+/* =====================================================================
+   tweakcn / shadcn Token Layer
+   Structure matches tweakcn output exactly so themes can sync 1:1.
+   Values reference Gooey design tokens — Gooey is the source of truth.
+   :root = light mode  ·  .dark = dark mode (Gooey default)
+   ===================================================================== */
+
+:root {
+  /* --- Colors (tweakcn core) --- */
+  --background: var(--color-dark-space);
+  --foreground: var(--color-light-space);
+  --card: var(--color-smoke-1);
+  --card-foreground: var(--color-light-space);
+  --popover: var(--color-smoke-1);
+  --popover-foreground: var(--color-light-space);
+  --primary: var(--color-purple-4);
+  --primary-foreground: var(--color-dark-space);
+  --secondary: var(--color-smoke-2);
+  --secondary-foreground: var(--color-light-space);
+  --muted: var(--color-smoke-2);
+  --muted-foreground: var(--color-smoke-5);
+  --accent: var(--color-smoke-2);
+  --accent-foreground: var(--color-light-space);
+  --destructive: var(--color-red-4);
+  --destructive-foreground: var(--color-dark-space);
+  --border: var(--color-smoke-3);
+  --input: var(--color-smoke-3);
+  --ring: var(--color-purple-5);
+
+  /* --- Charts (energy palette) --- */
+  --chart-1: var(--color-orange-4);
+  --chart-2: var(--color-blue-4);
+  --chart-3: var(--color-green-4);
+  --chart-4: var(--color-purple-4);
+  --chart-5: var(--color-cyan-4);
+
+  /* --- Sidebar --- */
+  --sidebar: var(--color-smoke-1);
+  --sidebar-foreground: var(--color-light-space);
+  --sidebar-primary: var(--color-purple-4);
+  --sidebar-primary-foreground: var(--color-dark-space);
+  --sidebar-accent: var(--color-smoke-2);
+  --sidebar-accent-foreground: var(--color-light-space);
+  --sidebar-border: var(--color-smoke-3);
+  --sidebar-ring: var(--color-purple-5);
+
+  /* --- Typography (tweakcn font slots) --- */
+  --font-sans: "Satoshi", -apple-system, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* --- Layout --- */
+  --radius: 0.625rem;
+  --spacing: 0.25rem;
+  --tracking-normal: 0em;
+
+  /* --- Shadows (tweakcn shadow system) --- */
+  --shadow-x: 0;
+  --shadow-y: 1px;
+  --shadow-blur: 3px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: oklch(0 0 0);
+  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+
+  /* --- Gooey-specific semantic tokens --- */
+  --surface: var(--color-smoke-1);
+  --text: var(--color-light-space);
+  --text-secondary: var(--color-smoke-5);
+  --textSecondary: var(--color-smoke-5);
+  --squircleBorder: var(--color-smoke-3);
+  --squircleFill: var(--color-smoke-1);
+  --squircleFocus: var(--color-purple-3);
+  --overlay-scrim: color-mix(in srgb, var(--color-light-space) 65%, transparent);
+
+  /* --- Text size scaling --- */
+  --text-size-scale: 1;
+  --text-base-size: 16px;
+  --text-xs: calc(0.75rem * var(--text-size-scale));
+  --text-sm: calc(0.875rem * var(--text-size-scale));
+  --text-base: calc(1rem * var(--text-size-scale));
+  --text-lg: calc(1.125rem * var(--text-size-scale));
+  --text-xl: calc(1.25rem * var(--text-size-scale));
+  --text-2xl: calc(1.5rem * var(--text-size-scale));
+  --text-3xl: calc(1.875rem * var(--text-size-scale));
+  --text-4xl: calc(2.25rem * var(--text-size-scale));
+  --text-5xl: calc(3rem * var(--text-size-scale));
+  --text-6xl: calc(3.75rem * var(--text-size-scale));
+}
+
+.dark {
+  /* --- Colors (tweakcn core) --- */
+  --background: var(--color-dark-space);
+  --foreground: var(--color-light-space);
+  --card: var(--color-smoke-2);
+  --card-foreground: var(--color-light-space);
+  --popover: var(--color-smoke-2);
+  --popover-foreground: var(--color-light-space);
+  --primary: var(--color-purple-4);
+  --primary-foreground: var(--color-light-space);
+  --secondary: var(--color-smoke-2);
+  --secondary-foreground: var(--color-light-space);
+  --muted: var(--color-smoke-2);
+  --muted-foreground: var(--color-smoke-5);
+  --accent: var(--color-smoke-3);
+  --accent-foreground: var(--color-light-space);
+  --destructive: var(--color-red-5);
+  --destructive-foreground: var(--color-light-space);
+  --border: var(--color-smoke-3);
+  --input: var(--color-smoke-3);
+  --ring: var(--color-purple-4);
+
+  /* --- Charts (energy palette) --- */
+  --chart-1: var(--color-orange-4);
+  --chart-2: var(--color-blue-4);
+  --chart-3: var(--color-green-4);
+  --chart-4: var(--color-purple-4);
+  --chart-5: var(--color-cyan-4);
+
+  /* --- Sidebar --- */
+  --sidebar: var(--color-smoke-1);
+  --sidebar-foreground: var(--color-light-space);
+  --sidebar-primary: var(--color-purple-4);
+  --sidebar-primary-foreground: var(--color-light-space);
+  --sidebar-accent: var(--color-smoke-2);
+  --sidebar-accent-foreground: var(--color-light-space);
+  --sidebar-border: var(--color-smoke-3);
+  --sidebar-ring: var(--color-purple-5);
+
+  /* --- Shadows (darker for dark mode) --- */
+  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.10);
+  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.10);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.15), 0 1px 2px -1px hsl(0 0% 0% / 0.15);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.15), 0 1px 2px -1px hsl(0 0% 0% / 0.15);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.15), 0 2px 4px -1px hsl(0 0% 0% / 0.15);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.15), 0 4px 6px -1px hsl(0 0% 0% / 0.15);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.15), 0 8px 10px -1px hsl(0 0% 0% / 0.15);
+  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.35);
+
+  /* --- Gooey-specific semantic tokens --- */
+  --surface: var(--color-smoke-2);
+  --text: var(--color-light-space);
+  --text-secondary: var(--color-smoke-5);
+  --textSecondary: var(--color-smoke-5);
+  --squircleBorder: var(--color-smoke-3);
+  --squircleFill: var(--color-smoke-2);
+  --squircleFocus: var(--color-purple-3);
+  --overlay-scrim: color-mix(in srgb, var(--color-dark-space) 72%, transparent);
+}
+
+@theme inline {
+  /* --- tweakcn / shadcn color tokens --- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* --- Fonts --- */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  /* --- Radius --- */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* --- Shadows --- */
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+
+  /* --- Gooey semantic tokens (Tailwind utility access) --- */
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-textSecondary: var(--textSecondary);
+  --color-squircleBorder: var(--squircleBorder);
+  --color-squircleFill: var(--squircleFill);
+  --color-squircleFocus: var(--squircleFocus);
+  --color-overlay-scrim: var(--overlay-scrim);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  html {
+    font-size: calc(var(--text-base-size) * var(--text-size-scale));
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Hide all scrollbars by default */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Custom scrollbar styles */
+  .scrollbar-hidden {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(107, 114, 128, 0.5);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.7);
+  }
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-1deg);
+    }
+    75% {
+      transform: rotate(1deg);
+    }
+  }
+
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.7;
+    }
+    30% {
+      transform: translateY(-6px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes storyGlow {
+    0%,
+    100% {
+      box-shadow:
+        0 0 12px 2px rgba(193, 112, 242, 0.6),
+        0 0 20px 4px rgba(255, 0, 168, 0.4);
+    }
+    50% {
+      box-shadow:
+        0 0 16px 4px rgba(255, 0, 168, 0.7),
+        0 0 28px 6px rgba(193, 112, 242, 0.5);
+    }
+  }
+
+  @keyframes skeletonPulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .animate-skeleton-pulse {
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeletonShine {
+    0% {
+      transform: translate(150%, 150%);
+    }
+    100% {
+      transform: translate(-150%, -150%);
+    }
+  }
+
+  .animate-skeleton-shine {
+    background: linear-gradient(
+      -45deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 60%,
+      transparent 100%
+    );
+    animation: skeletonShine 2.5s ease-in-out infinite;
+  }
+
+  .dark .animate-skeleton-shine {
+    background: linear-gradient(
+      -45deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 60%,
+      transparent 100%
+    );
+  }
+
+  @keyframes shootingStar {
+    0% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+    30% {
+      transform: scaleY(1);
+      transform-origin: bottom;
+    }
+    35% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    55% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+  }
+
+  .animate-shooting-star {
+    animation: shootingStar 1.2s ease-out infinite;
+  }
+
+  [data-slot="skeleton"] {
+    background: color-mix(in oklch, var(--color-accent) 88%, transparent);
+  }
+}
+
+::selection,
+::-moz-selection {
+  background: #cd3e05 !important;
+  background-color: #cd3e05 !important;
+  color: #ffffff !important;
+}
+
+*::selection,
+*::-moz-selection {
+  background: #cd3e05 !important;
+  background-color: #cd3e05 !important;
+  color: #ffffff !important;
+}
+
+.dark ::selection,
+.dark ::-moz-selection {
+  background: #cd3e05 !important;
+  background-color: #cd3e05 !important;
+  color: #000000 !important;
+}
+
+.dark *::selection,
+.dark *::-moz-selection {
+  background: #cd3e05 !important;
+  background-color: #cd3e05 !important;
+  color: #000000 !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.liquid-toggle {
+  position: relative;
+  overflow: visible;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.liquid-toggle::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 100px;
+  background: inherit;
+  filter: url(#liquid-goo);
+  opacity: 0.4;
+  z-index: -1;
+  transition: none;
+  pointer-events: none;
+}
+
+.liquid-toggle:hover::after {
+  opacity: 0.6;
+  transform: scale(1.02);
+}
+
+.liquid-toggle:active::after {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.liquid-toggle span {
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.liquid-toggle[aria-checked="true"] span {
+  box-shadow:
+    0 2px 12px rgba(34, 197, 94, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.liquid-toggle[aria-checked="true"]::after {
+  opacity: 0.5;
+}
+
+/* Right Hand Button — interactive glass states */
+.right-hand-button:hover,
+.right-hand-button[data-force-state="hover"] {
+  background: var(--color-light-glass-20) !important;
+  box-shadow:
+    0px 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0px 2px 4px var(--color-light-glass-20),
+    inset 0px 0.75px 0.75px var(--color-light-glass-20) !important;
+}
+
+.right-hand-button:active,
+.right-hand-button[data-force-state="active"] {
+  background: var(--color-light-glass-90) !important;
+  border-color: var(--color-light-glass-5) !important;
+  color: var(--color-dark-space) !important;
+}
+
+/* Spectral (rainbow) gradient border — uses mask technique for rounded corners */
+.spectral-border {
+  position: relative;
+}
+.spectral-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  padding: 2.5px;
+  background: var(--gradient-spectral);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Spectral shine — vertical gradient flow */
+@keyframes spectral-shine {
+  0% { background-position: 50% 200%; }
+  100% { background-position: 50% 0%; }
+}
+
+/* Animated spectral border */
+.spectral-border-animated {
+  position: relative;
+}
+.spectral-border-animated::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  padding: 2.5px;
+  background: linear-gradient(
+    360deg,
+    #ff0f00 0%, #ebff00 15%, #2fff00 36%, #00ffc9 58%, #002eff 79%, #020266 100%,
+    #ff0f00 100%, #ebff00 115%, #2fff00 136%, #00ffc9 158%, #002eff 179%, #020266 200%
+  );
+  background-size: 100% 200%;
+  animation: spectral-shine 6s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.spectral-border-animated.active::before {
+  opacity: 1;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast preferences — increase glass opacity for visibility */
+@media (prefers-contrast: more) {
+  :root {
+    --color-light-glass-5: rgba(255, 255, 255, 0.20);
+    --color-light-glass-10: rgba(255, 255, 255, 0.30);
+    --color-light-glass-20: rgba(255, 255, 255, 0.40);
+    --color-dark-glass-5: rgba(0, 0, 0, 0.20);
+    --color-dark-glass-10: rgba(0, 0, 0, 0.30);
+    --color-dark-glass-20: rgba(0, 0, 0, 0.40);
+  }
+}
+
+/* Liquid Glass Noise Texture */
+@keyframes liquidGlassNoise {
+  0%, 100% { opacity: 0.02; }
+  50% { opacity: 0.03; }
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.1) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.1) 3px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.1) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.1) 3px);
+  background-size: 2px 2px;
+  opacity: 0.15;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* In light mode, card chrome should stay white with a clean gray outline. */
+.light .bg-dark-glass-5 {
+  background-color: var(--color-dark-space) !important;
+}
+
+.light .bg-dark-glass-10 {
+  background-color: var(--color-dark-space) !important;
+}
+
+.light .bg-dark-glass-20 {
+  background-color: var(--color-dark-space) !important;
+}
+
+.light .bg-dark-glass-40 {
+  background-color: var(--color-dark-space) !important;
+}
+
+.light .bg-dark-glass-80 {
+  background-color: var(--color-dark-space) !important;
+}
+
+.light .border-light-glass-5 {
+  border-color: var(--color-smoke-2) !important;
+}
+
+.light .border-light-glass-10 {
+  border-color: var(--color-smoke-2) !important;
+}
+
+.light .border-light-glass-20 {
+  border-color: var(--color-smoke-3) !important;
+}
+
+.light .border-light-glass-40 {
+  border-color: var(--color-smoke-4) !important;
+}
+
+.light .hover\:bg-dark-glass-10:hover {
+  background-color: var(--color-smoke-1) !important;
+}

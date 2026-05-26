@@ -35,6 +35,7 @@ const NewsPage = lazyNamed(() => import("./pages/NewsPage"), "NewsPage");
 const ProductPage = lazyNamed(() => import("./pages/ProductPage"), "ProductPage");
 const StoryDetailPage = lazyNamed(() => import("./pages/StoryDetailPage"), "StoryDetailPage");
 const ShareYourStoryPage = lazyNamed(() => import("./pages/ShareYourStoryPage"), "ShareYourStoryPage");
+const SignupPage = lazyNamed(() => import("./pages/SignupPage"), "SignupPage");
 const StoriesPage = lazyNamed(() => import("./pages/StoriesPage"), "StoriesPage");
 
 const PRODUCT_ROUTES = [
@@ -113,6 +114,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/download" element={<DownloadPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/waitlist" element={<SignupPage />} />
 
           <Route path="/newsroom" element={<NewsPage />} />
           <Route path="/newsroom/:slug" element={<NewsDetailPage />} />

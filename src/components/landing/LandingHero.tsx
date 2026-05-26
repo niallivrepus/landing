@@ -1,4 +1,4 @@
-import { InteractivePromptBar, cn, type GooeyLordiconAssetName } from "@jokuh/gooey";
+import type { GooeyLordiconAssetName } from "@jokuh/gooey";
 import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
@@ -13,11 +13,10 @@ import {
   Users,
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { buildAppHandoffUrl } from "../../config/site-subdomains";
-import { HOME_PROMPT_SUGGESTIONS, HOME_PROMPT_SUGGESTIONS_MOBILE } from "../../data/site-search-suggestions";
+import { PhoneSignupPrompt } from "../signup/PhoneSignupPrompt";
 import { HeroQuickPills } from "./HeroQuickPills";
-import { LANDING_PROMPT_BORDER_CLASS } from "./promptChrome";
 
 export type HeroQuickLink = {
   label: string;
@@ -45,24 +44,8 @@ export const HERO_OVERFLOW_QUICK_LINKS: HeroQuickLink[] = [
   { label: "Contact sales", href: "/contact", icon: { lucide: HeartHandshake, lordicon: "arrowLongRight" } },
 ];
 
-function useIsCompactPromptViewport() {
-  const [compact, setCompact] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 479px)");
-    const update = () => setCompact(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  return compact;
-}
-
 export function LandingHero() {
   const ref = useRef<HTMLElement>(null);
-  const isCompactPromptViewport = useIsCompactPromptViewport();
-  const promptSuggestions = isCompactPromptViewport ? HOME_PROMPT_SUGGESTIONS_MOBILE : HOME_PROMPT_SUGGESTIONS;
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -90,20 +73,7 @@ export function LandingHero() {
             id="prompt"
             className="flex w-full max-w-[min(calc(100vw-1.5rem),400px)] shrink-0 flex-col items-center scroll-mt-32 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),770px)]"
           >
-            <div className="w-full">
-              <InteractivePromptBar
-                variant="desktop"
-                className={cn(
-                  "!w-full !max-w-none",
-                  LANDING_PROMPT_BORDER_CLASS,
-                )}
-                previewSuggestions={promptSuggestions}
-                heroSendOnly
-                onSend={(text: string) => {
-                  window.location.assign(buildAppHandoffUrl(text));
-                }}
-              />
-            </div>
+            <PhoneSignupPrompt className="w-full" />
           </div>
 
           <div className="flex w-full max-w-[min(calc(100vw-1.5rem),400px)] flex-1 flex-col items-center justify-start pt-6 sm:max-w-[min(calc(100vw-3rem),520px)] md:max-w-[min(calc(100vw-4rem),900px)]">

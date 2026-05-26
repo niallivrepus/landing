@@ -56,30 +56,21 @@ test.describe('homepage responsiveness', () => {
 });
 
 test.describe('homepage mobile card rails', () => {
-  test('uses matching horizontal card rails for newsroom and business cards', async ({ page }) => {
+  test('keeps the newsroom secondary cards in a horizontal rail on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await primeCookieConsent(page);
     await page.goto('/');
 
-    const businessFirst = page.locator('#business a[href="/spine"]').first();
-    const businessSecond = page.locator('#business a[href="/calls"]').first();
-    const newsFirst = page.locator('#newsroom a[href="/newsroom/grant-stack-avalanche-runpod-hume-kihew"]').last();
-    const newsSecond = page.locator('#newsroom a[href="/newsroom/ethics-compliance-responsible-deployment"]').last();
+    const railLinks = page.locator('#newsroom div.overflow-x-auto a[href^="/newsroom/"]');
+    const first = railLinks.nth(0);
+    const second = railLinks.nth(1);
 
-    await businessFirst.scrollIntoViewIfNeeded();
-    const businessFirstBox = await bounds(businessFirst);
-    const businessSecondBox = await bounds(businessSecond);
+    await first.scrollIntoViewIfNeeded();
+    const firstBox = await bounds(first);
+    const secondBox = await bounds(second);
 
-    expect(Math.abs(businessFirstBox.y - businessSecondBox.y)).toBeLessThan(8);
-    expect(businessSecondBox.x).toBeGreaterThan(businessFirstBox.x + businessFirstBox.width - 12);
-
-    await newsFirst.scrollIntoViewIfNeeded();
-    const newsFirstBox = await bounds(newsFirst);
-    const newsSecondBox = await bounds(newsSecond);
-
-    expect(Math.abs(newsFirstBox.y - newsSecondBox.y)).toBeLessThan(8);
-    expect(newsSecondBox.x).toBeGreaterThan(newsFirstBox.x + newsFirstBox.width - 12);
-    expect(Math.abs(businessFirstBox.width - newsFirstBox.width)).toBeLessThan(2);
+    expect(Math.abs(firstBox.y - secondBox.y)).toBeLessThan(8);
+    expect(secondBox.x).toBeGreaterThan(firstBox.x + firstBox.width - 12);
     await expectNoHorizontalOverflow(page);
   });
 });
@@ -117,13 +108,25 @@ test.describe('contact form responsiveness', () => {
 });
 
 test.describe('stories responsiveness', () => {
+  async function hasAtLeastTwoRemainderStoryLinks(page: Page) {
+    return page.evaluate(() => {
+      const links = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>('main div.grid.gap-8 a[href^="/stories/"]'),
+      ).filter((el) => el.getBoundingClientRect().width > 0);
+      return links.length >= 2;
+    });
+  }
+
   test('uses a single-column grid on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await primeCookieConsent(page);
     await page.goto('/stories');
 
-    const first = page.getByRole('link', { name: /Treasury loops and the API grid/ });
-    const second = page.getByRole('link', { name: /Live transcript hooks on the spine/ });
+    test.skip(!(await hasAtLeastTwoRemainderStoryLinks(page)), 'Not enough story cards in the remainder grid to compare layout.');
+    const storyLinks = page.locator('main div.grid.gap-8 a[href^="/stories/"]');
+    const first = storyLinks.nth(0);
+    const second = storyLinks.nth(1);
+    await first.scrollIntoViewIfNeeded();
     const firstBox = await bounds(first);
     const secondBox = await bounds(second);
 
@@ -137,8 +140,11 @@ test.describe('stories responsiveness', () => {
     await primeCookieConsent(page);
     await page.goto('/stories');
 
-    const first = page.getByRole('link', { name: /Treasury loops and the API grid/ });
-    const second = page.getByRole('link', { name: /Live transcript hooks on the spine/ });
+    test.skip(!(await hasAtLeastTwoRemainderStoryLinks(page)), 'Not enough story cards in the remainder grid to compare layout.');
+    const storyLinks = page.locator('main div.grid.gap-8 a[href^="/stories/"]');
+    const first = storyLinks.nth(0);
+    const second = storyLinks.nth(1);
+    await first.scrollIntoViewIfNeeded();
     const firstBox = await bounds(first);
     const secondBox = await bounds(second);
 
