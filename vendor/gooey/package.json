@@ -1,0 +1,50 @@
+{
+  "name": "gooey-workspace",
+  "displayName": "Gooey",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter gooey dev",
+    "dev:prototype": "pnpm --filter prototype dev",
+    "build": "pnpm --filter gooey build",
+    "fmt": "prettier --cache --write --log-level=warn \"**/*.{ts,tsx,md,json}\"",
+    "fmt:check": "prettier --cache --check --log-level=warn \"**/*.{ts,tsx,md,json}\"",
+    "check-types": "pnpm --filter @jokuh/gooey check-types",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "import:decor:v1llains": "node ./scripts/import-v1llains-decor.mjs",
+    "swift:sync": "node ./scripts/convert-gooey-swift.mjs --all-supported",
+    "swift:list": "node ./scripts/convert-gooey-swift.mjs --list",
+    "swift:build": "swift build --package-path swift/GooeySwift",
+    "swift:check": "node ./scripts/check-gooey-swift.mjs"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^5.0.2",
+    "@storybook/addon-a11y": "^10.3.1",
+    "@storybook/addon-docs": "^10.3.1",
+    "@storybook/addon-onboarding": "^10.3.1",
+    "@storybook/addon-vitest": "^10.3.1",
+    "@storybook/react-vite": "^10.3.1",
+    "@vitest/browser-playwright": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "hugeicons-react": "0.3.0",
+    "lucide-react": "^0.562.0",
+    "motion": "^12.38.0",
+    "playwright": "^1.58.2",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "storybook": "^10.3.1",
+    "typescript": "5.9.2",
+    "vitest": "^4.1.0"
+  },
+  "packageManager": "pnpm@10.18.1",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

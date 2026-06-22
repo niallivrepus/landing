@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.vercel
+.railway
+.playwright-mcp
+playwright-report
+test-results
+*.log

@@ -1,0 +1,989 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-29T23:58:00.167Z",
+  "sourceRoot": "/Users/sonadin/code/jokuh/gooey",
+  "selectedComponents": [
+    "badge",
+    "button",
+    "card",
+    "checkbox",
+    "icon-only-button",
+    "input",
+    "radio",
+    "skeleton",
+    "switch"
+  ],
+  "tokenCounts": {
+    "dark": 220,
+    "light": 219
+  },
+  "totals": {
+    "components": 120,
+    "templateReady": 0,
+    "converted": 9,
+    "needsTemplate": 111,
+    "swiftTemplates": 9
+  },
+  "components": [
+    {
+      "id": "action-button",
+      "source": "packages/gooey/src/components/ui/action-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "action-card-contacts",
+      "source": "packages/gooey/src/components/ui/action-card-contacts.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "action-card-users",
+      "source": "packages/gooey/src/components/ui/action-card-users.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "action-circle-button",
+      "source": "packages/gooey/src/components/ui/action-circle-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "active-calls",
+      "source": "packages/gooey/src/components/ui/active-calls.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "add-bank-info-card",
+      "source": "packages/gooey/src/components/ui/add-bank-info-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "album-art",
+      "source": "packages/gooey/src/components/ui/album-art.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "album-art-cover",
+      "source": "packages/gooey/src/components/ui/album-art-cover.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "avatar",
+      "source": "packages/gooey/src/components/ui/avatar.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "avatar-decor-scene",
+      "source": "packages/gooey/src/components/ui/avatar-decor-scene.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "avatar-hype-train",
+      "source": "packages/gooey/src/components/ui/avatar-hype-train.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "avatar-wheel",
+      "source": "packages/gooey/src/components/ui/avatar-wheel.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "bad",
+      "source": "packages/gooey/src/components/ui/bad.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "badge",
+      "source": "packages/gooey/src/components/ui/badge.tsx",
+      "status": "converted",
+      "target": "GooeyControls",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyControls/GooeyBadge.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "badge-drop-zone",
+      "source": "packages/gooey/src/components/ui/badge-drop-zone.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Runtime/effect component. Requires a native adapter before SwiftUI output."
+    },
+    {
+      "id": "bottom-bar",
+      "source": "packages/gooey/src/components/ui/bottom-bar.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "State-machine component. Convert after manifest models and enum states exist."
+    },
+    {
+      "id": "button",
+      "source": "packages/gooey/src/components/ui/button.tsx",
+      "status": "converted",
+      "target": "GooeyControls",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyControls/GooeyButton.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "card",
+      "source": "packages/gooey/src/components/ui/card.tsx",
+      "status": "converted",
+      "target": "GooeyPatterns",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyPatterns/GooeyCard.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "chat-bubble-button",
+      "source": "packages/gooey/src/components/ui/chat-bubble-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "chat-feed",
+      "source": "packages/gooey/src/components/ui/chat-feed.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "checkbox",
+      "source": "packages/gooey/src/components/ui/checkbox.tsx",
+      "status": "converted",
+      "target": "GooeyControls",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyControls/GooeyCheckbox.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "chevron-right",
+      "source": "packages/gooey/src/components/ui/chevron-right.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "claim-identity",
+      "source": "packages/gooey/src/components/ui/claim-identity.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "color-only-button",
+      "source": "packages/gooey/src/components/ui/color-only-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "color-swatch",
+      "source": "packages/gooey/src/components/ui/color-swatch.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "component-library-context-menu",
+      "source": "packages/gooey/src/components/ui/component-library-context-menu.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "component-library-meta-layer",
+      "source": "packages/gooey/src/components/ui/component-library-meta-layer.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "confetti",
+      "source": "packages/gooey/src/components/ui/confetti.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "connect-socials-card",
+      "source": "packages/gooey/src/components/ui/connect-socials-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "connection-request-card",
+      "source": "packages/gooey/src/components/ui/connection-request-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "contact-item",
+      "source": "packages/gooey/src/components/ui/contact-item.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "context-menu",
+      "source": "packages/gooey/src/components/ui/context-menu.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "corner-dragger",
+      "source": "packages/gooey/src/components/ui/corner-dragger.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "crumb",
+      "source": "packages/gooey/src/components/ui/crumb.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "custom-cursor",
+      "source": "packages/gooey/src/components/ui/custom-cursor.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Runtime/effect component. Requires a native adapter before SwiftUI output."
+    },
+    {
+      "id": "direct-message-head",
+      "source": "packages/gooey/src/components/ui/direct-message-head.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "document-card",
+      "source": "packages/gooey/src/components/ui/document-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "dynamic-island",
+      "source": "packages/gooey/src/components/ui/dynamic-island.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "State-machine component. Convert after manifest models and enum states exist."
+    },
+    {
+      "id": "edit-bar",
+      "source": "packages/gooey/src/components/ui/edit-bar.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "edit-bar-icons",
+      "source": "packages/gooey/src/components/ui/edit-bar-icons.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "email-avatar",
+      "source": "packages/gooey/src/components/ui/email-avatar.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "fireworks",
+      "source": "packages/gooey/src/components/ui/fireworks.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Runtime/effect component. Requires a native adapter before SwiftUI output."
+    },
+    {
+      "id": "glass-button",
+      "source": "packages/gooey/src/components/ui/glass-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "glass-icon-button",
+      "source": "packages/gooey/src/components/ui/glass-icon-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "human-speech",
+      "source": "packages/gooey/src/components/ui/human-speech.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "icon-only-button",
+      "source": "packages/gooey/src/components/ui/icon-only-button.tsx",
+      "status": "converted",
+      "target": "GooeyControls",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyControls/GooeyIconButton.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "image-preview",
+      "source": "packages/gooey/src/components/ui/image-preview.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "image-stack",
+      "source": "packages/gooey/src/components/ui/image-stack.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "input",
+      "source": "packages/gooey/src/components/ui/input.tsx",
+      "status": "converted",
+      "target": "GooeyControls",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyControls/GooeyInput.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "input-secondary",
+      "source": "packages/gooey/src/components/ui/input-secondary.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "library-menu",
+      "source": "packages/gooey/src/components/ui/library-menu.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "State-machine component. Convert after manifest models and enum states exist."
+    },
+    {
+      "id": "location-point",
+      "source": "packages/gooey/src/components/ui/location-point.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "logo",
+      "source": "packages/gooey/src/components/ui/logo.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "lordicon",
+      "source": "packages/gooey/src/components/ui/lordicon.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Runtime/effect component. Requires a native adapter before SwiftUI output."
+    },
+    {
+      "id": "make-it-strong",
+      "source": "packages/gooey/src/components/ui/make-it-strong.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "medium-tag",
+      "source": "packages/gooey/src/components/ui/medium-tag.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "menu-context",
+      "source": "packages/gooey/src/components/ui/menu-context.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "menu-context-icons",
+      "source": "packages/gooey/src/components/ui/menu-context-icons.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "message-bubble",
+      "source": "packages/gooey/src/components/ui/message-bubble.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "message-preview",
+      "source": "packages/gooey/src/components/ui/message-preview.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "message-preview-item",
+      "source": "packages/gooey/src/components/ui/message-preview-item.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "mineral-effect",
+      "source": "packages/gooey/src/components/ui/mineral-effect.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "motivator",
+      "source": "packages/gooey/src/components/ui/motivator.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "music-controls",
+      "source": "packages/gooey/src/components/ui/music-controls.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "music-cover-title",
+      "source": "packages/gooey/src/components/ui/music-cover-title.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "music-timer",
+      "source": "packages/gooey/src/components/ui/music-timer.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "navigation-button",
+      "source": "packages/gooey/src/components/ui/navigation-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "nexus-logo",
+      "source": "packages/gooey/src/components/ui/nexus-logo.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "notification",
+      "source": "packages/gooey/src/components/ui/notification.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "notification-preview-card",
+      "source": "packages/gooey/src/components/ui/notification-preview-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "numbers",
+      "source": "packages/gooey/src/components/ui/numbers.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "onboarding-card",
+      "source": "packages/gooey/src/components/ui/onboarding-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "oo",
+      "source": "packages/gooey/src/components/ui/oo.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "pass-photo",
+      "source": "packages/gooey/src/components/ui/pass-photo.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "passport-card",
+      "source": "packages/gooey/src/components/ui/passport-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "password-safety",
+      "source": "packages/gooey/src/components/ui/password-safety.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "payment-method-icon",
+      "source": "packages/gooey/src/components/ui/payment-method-icon.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "pet",
+      "source": "packages/gooey/src/components/ui/pet.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Runtime/effect component. Requires a native adapter before SwiftUI output."
+    },
+    {
+      "id": "play-button",
+      "source": "packages/gooey/src/components/ui/play-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "play-pause",
+      "source": "packages/gooey/src/components/ui/play-pause.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "plus",
+      "source": "packages/gooey/src/components/ui/plus.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "pod",
+      "source": "packages/gooey/src/components/ui/pod.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "popover",
+      "source": "packages/gooey/src/components/ui/popover.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "portal-animation",
+      "source": "packages/gooey/src/components/ui/portal-animation.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "portal-context-menu",
+      "source": "packages/gooey/src/components/ui/portal-context-menu.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "power-button",
+      "source": "packages/gooey/src/components/ui/power-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "preview-card",
+      "source": "packages/gooey/src/components/ui/preview-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "prompt-bar",
+      "source": "packages/gooey/src/components/ui/prompt-bar.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "State-machine component. Convert after manifest models and enum states exist."
+    },
+    {
+      "id": "prompt-categories",
+      "source": "packages/gooey/src/components/ui/prompt-categories.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "prompt-suggestion-card",
+      "source": "packages/gooey/src/components/ui/prompt-suggestion-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "radio",
+      "source": "packages/gooey/src/components/ui/radio.tsx",
+      "status": "converted",
+      "target": "GooeyControls",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyControls/GooeyRadio.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "react",
+      "source": "packages/gooey/src/components/ui/react.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Runtime/effect component. Requires a native adapter before SwiftUI output."
+    },
+    {
+      "id": "reactions",
+      "source": "packages/gooey/src/components/ui/reactions.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "record-button",
+      "source": "packages/gooey/src/components/ui/record-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "right-hand-button",
+      "source": "packages/gooey/src/components/ui/right-hand-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "ripple-effect",
+      "source": "packages/gooey/src/components/ui/ripple-effect.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "search-indication",
+      "source": "packages/gooey/src/components/ui/search-indication.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "sequin-effect",
+      "source": "packages/gooey/src/components/ui/sequin-effect.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "server-avatar",
+      "source": "packages/gooey/src/components/ui/server-avatar.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Asset component. Requires typed GooeyAsset ids and Swift asset catalog mapping."
+    },
+    {
+      "id": "shooting-star",
+      "source": "packages/gooey/src/components/ui/shooting-star.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "skeleton",
+      "source": "packages/gooey/src/components/ui/skeleton.tsx",
+      "status": "converted",
+      "target": "GooeyPatterns",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyPatterns/GooeySkeleton.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "slider-point",
+      "source": "packages/gooey/src/components/ui/slider-point.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "small-tag",
+      "source": "packages/gooey/src/components/ui/small-tag.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "social-icons",
+      "source": "packages/gooey/src/components/ui/social-icons.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "soundwave",
+      "source": "packages/gooey/src/components/ui/soundwave.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "special-button",
+      "source": "packages/gooey/src/components/ui/special-button.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "spine-tag",
+      "source": "packages/gooey/src/components/ui/spine-tag.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "squircle",
+      "source": "packages/gooey/src/components/ui/squircle.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "star",
+      "source": "packages/gooey/src/components/ui/star.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "step-counter",
+      "source": "packages/gooey/src/components/ui/step-counter.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "storage-pricing-card",
+      "source": "packages/gooey/src/components/ui/storage-pricing-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "switch",
+      "source": "packages/gooey/src/components/ui/switch.tsx",
+      "status": "converted",
+      "target": "GooeyControls",
+      "swiftFile": "swift/GooeySwift/Sources/GooeyControls/GooeySwitch.swift",
+      "reason": "Native SwiftUI template exists."
+    },
+    {
+      "id": "theme-selector-card",
+      "source": "packages/gooey/src/components/ui/theme-selector-card.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "timer",
+      "source": "packages/gooey/src/components/ui/timer.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "tooltip-bubble",
+      "source": "packages/gooey/src/components/ui/tooltip-bubble.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "track-info",
+      "source": "packages/gooey/src/components/ui/track-info.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "tray",
+      "source": "packages/gooey/src/components/ui/tray.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "State-machine component. Convert after manifest models and enum states exist."
+    },
+    {
+      "id": "value-slider",
+      "source": "packages/gooey/src/components/ui/value-slider.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "verified",
+      "source": "packages/gooey/src/components/ui/verified.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    },
+    {
+      "id": "voice-memo",
+      "source": "packages/gooey/src/components/ui/voice-memo.tsx",
+      "status": "needs-template",
+      "target": null,
+      "swiftFile": null,
+      "reason": "Needs an explicit SwiftUI template before conversion is safe."
+    }
+  ]
+}

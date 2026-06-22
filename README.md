@@ -122,6 +122,25 @@ This repo currently assumes:
 
 See [docs/domain-topology.md](/Users/sonadin/Documents/code/jokuh/landing/docs/domain-topology.md) for the canonical host map and rollout notes.
 
+The signed-in product app lives at **`https://app.jokuh.com`** (Railway service **`live`** in the `jokuh-live` monorepo). This landing repo serves **`jokuh.com`** / **`www.jokuh.com`** on Railway service **`www`**.
+
+---
+
+## Railway (`jokuh.com`)
+
+**Production:** Railway project **`live`**, service **`www`**, GitHub source = **this repo** (Root Directory `.`).
+
+| Host | Service | Repo |
+|------|---------|------|
+| `jokuh.com`, `www.jokuh.com` | Railway **`www`** | `niallivrepus/landing` |
+| `app.jokuh.com` | Railway **`live`** | `niallivrepus/jokuh-live` (`frontend/`) |
+
+Push `Dockerfile`, `Caddyfile`, `railway.toml`, and **`vendor/gooey/`** from this repo (mirrored from jokuh-live via `scripts/sync-gooey-vendor.mjs`), then add custom domains in Railway. **Do not** use `railway up` from a laptop — `public/` is too large for CLI uploads; GitHub-triggered builds clone on Railway.
+
+Optional build env on service **`www`**: `VITE_ORIGIN_APP=https://app.jokuh.com`, `VITE_COOKIE_DOMAIN=.jokuh.com`.
+
+Cutover checklist: point DNS at Railway **`www`**, verify site, remove apex domains from Vercel project **`jokuh`**.
+
 Then, for local verification:
 
 ```bash

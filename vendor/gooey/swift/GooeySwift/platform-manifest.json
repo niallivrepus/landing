@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-29T23:58:00.167Z",
+  "sourceOfTruth": {
+    "tokens": "packages/gooey/src/styles/design-tokens.css",
+    "reactComponents": "packages/gooey/src/components/ui"
+  },
+  "platforms": {
+    "react": {
+      "package": "@jokuh/gooey",
+      "path": "packages/gooey",
+      "targets": [
+        "web",
+        "react-native"
+      ]
+    },
+    "swift": {
+      "package": "GooeySwift",
+      "path": "swift/GooeySwift",
+      "targets": [
+        "ios",
+        "macos"
+      ],
+      "spmProduct": "GooeySwift"
+    },
+    "android": {
+      "primary": "@jokuh/gooey",
+      "note": "Use React Native with @jokuh/gooey for Android UI parity until a native Compose track exists."
+    }
+  },
+  "swiftSupportedComponents": [
+    "badge",
+    "button",
+    "card",
+    "checkbox",
+    "icon-only-button",
+    "input",
+    "radio",
+    "skeleton",
+    "switch"
+  ],
+  "parity": [
+    {
+      "id": "badge",
+      "react": "packages/gooey/src/components/ui/badge.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyControls/GooeyBadge.swift",
+      "status": "converted"
+    },
+    {
+      "id": "button",
+      "react": "packages/gooey/src/components/ui/button.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyControls/GooeyButton.swift",
+      "status": "converted"
+    },
+    {
+      "id": "card",
+      "react": "packages/gooey/src/components/ui/card.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyPatterns/GooeyCard.swift",
+      "status": "converted"
+    },
+    {
+      "id": "checkbox",
+      "react": "packages/gooey/src/components/ui/checkbox.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyControls/GooeyCheckbox.swift",
+      "status": "converted"
+    },
+    {
+      "id": "icon-only-button",
+      "react": "packages/gooey/src/components/ui/icon-only-button.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyControls/GooeyIconButton.swift",
+      "status": "converted"
+    },
+    {
+      "id": "input",
+      "react": "packages/gooey/src/components/ui/input.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyControls/GooeyInput.swift",
+      "status": "converted"
+    },
+    {
+      "id": "radio",
+      "react": "packages/gooey/src/components/ui/radio.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyControls/GooeyRadio.swift",
+      "status": "converted"
+    },
+    {
+      "id": "skeleton",
+      "react": "packages/gooey/src/components/ui/skeleton.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyPatterns/GooeySkeleton.swift",
+      "status": "converted"
+    },
+    {
+      "id": "switch",
+      "react": "packages/gooey/src/components/ui/switch.tsx",
+      "swift": "swift/GooeySwift/Sources/GooeyControls/GooeySwitch.swift",
+      "status": "converted"
+    }
+  ]
+}

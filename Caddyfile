@@ -1,0 +1,51 @@
+# Marketing apex (`jokuh.com`) — static landing + handoffs to `app.jokuh.com`.
+# **Purpose:** SPA fallback, AASA JSON, www→apex redirect, legacy app path redirects.
+# **Parity:** `frontend/vercel-www.json` in jokuh-live.
+
+:{$PORT:3000} {
+	root * /srv
+
+	route {
+		@wwwHost header Host www.jokuh.com
+		handle @wwwHost {
+			redir https://jokuh.com{uri} 308
+		}
+
+		@appleAppSiteAssociation path /.well-known/apple-app-site-association /apple-app-site-association
+		handle @appleAppSiteAssociation {
+			header Content-Type application/json
+			rewrite * /.well-known/apple-app-site-association
+			file_server
+		}
+
+		@sandbox path /sandbox /sandbox/*
+		handle @sandbox {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@dd path /dd /dd/*
+		handle @dd {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@dataroom path /dataroom /dataroom/*
+		handle @dataroom {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@oo path /oo /oo/*
+		handle @oo {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@investpipeline path /xx/investpipeline /xx/investpipeline/*
+		handle @investpipeline {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		handle {
+			try_files {path} /index.html
+			file_server
+		}
+	}
+}

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+out
+build
+
+# Local env files
+.env
+.env.local
+.env*.local
+
+# Coverage
+coverage
+
+# Debug
+npm-debug.log*
+
+# Misc
+.DS_Store
+*.pem
+pnpm-lock.yaml

@@ -1,0 +1,70 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["A4XZK9JRPW.ai.antimatter.jokuh.mobile", "A4XZK9JRPW.app.jokuh"],
+        "paths": ["/pay/*", "/id/*", "/id/*/b/*", "/id/*/spine", "/id/*/spine/*", "/peer/*", "/invite/*", "/pulse/join/*", "/join/*", "/b/*", "/bubble/*", "/u/*", "/u/*/b/*", "/u/*/spine/rsvp"],
+        "components": [
+          {
+            "/": "/pay/*",
+            "comment": "Payment links"
+          },
+          {
+            "/": "/id/*",
+            "comment": "Profile links (canonical /id/{username})"
+          },
+          {
+            "/": "/peer/*",
+            "comment": "Profile links by account id (QR when no vanity username)"
+          },
+          {
+            "/": "/id/*/b/*",
+            "comment": "Public blurb canonical permalinks"
+          },
+          {
+            "/": "/id/*/spine/*",
+            "comment": "Spine public booking (/id/{username}/spine, /spine/rsvp)"
+          },
+          {
+            "/": "/invite/*",
+            "comment": "Invite links"
+          },
+          {
+            "/": "/pulse/join/*",
+            "comment": "Pulse call join links (canonical)"
+          },
+          {
+            "/": "/join/*",
+            "comment": "Legacy call join links (redirect to /pulse/join on web)"
+          },
+          {
+            "/": "/b/*",
+            "comment": "Public blurb short permalinks"
+          },
+          {
+            "/": "/bubble/*",
+            "comment": "Public Bubble permalinks"
+          },
+          {
+            "/": "/u/*",
+            "comment": "Public profile vanity pages (/u/{username})"
+          },
+          {
+            "/": "/u/*/b/*",
+            "comment": "Public blurb canonical permalinks"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "A4XZK9JRPW.ai.antimatter.jokuh.mobile",
+      "A4XZK9JRPW.app.jokuh"
+    ]
+  },
+  "appclips": {
+    "apps": []
+  }
+}
