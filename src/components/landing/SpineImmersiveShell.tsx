@@ -161,9 +161,17 @@ export function SpineImmersiveShell() {
             </AnimatePresence>
           </SquircleShell>
 
-          <p className="text-center font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
-            Spine
-          </p>
+          <div className="text-center">
+            <p className="font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
+              Spine
+            </p>
+            <p className="mt-1 font-sans text-[clamp(0.85rem,2.5vw,1rem)] font-medium text-light-space/72 light:text-zinc-600">
+              Your operating timeline — every day, every memory, one surface.
+            </p>
+            <p className="mx-auto mt-2 max-w-[22rem] font-sans text-[clamp(0.75rem,2vw,0.875rem)] leading-relaxed text-light-space/48 light:text-zinc-500">
+              Today Brief, planner tabs, mood rail, and thirty-plus memory kinds. Calls, captures, and calendar events land here automatically.
+            </p>
+          </div>
         </motion.div>
       </ImmersiveCenterColumn>
     </section>

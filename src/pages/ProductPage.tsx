@@ -92,7 +92,7 @@ const PRODUCT_FAQ_SUMMARIES: Partial<Record<ProductId, string>> = {
   blurbs:
     "Blurbs are Jokuh's native short-form unit: thoughts, links, snippets, and prompts captured in seconds and instantly searchable across your timeline.",
   spine:
-    "Spine is your operating timeline. It threads notes, calls, messages, prompts, and reminders into one chronological surface so your work has a single source of truth.",
+    "Spine is Jokuh's long-term home for structured personal context: a year timeline with Today Brief, day planner (notes, tasks, reminders, files, memories), mood logging, Sky Lens, calendar and photo import, memory search, streaks, and automatic lifelogging from calls, captures, wallet, and more — synced local-first across your devices.",
   calls:
     "Calls are end-to-end-encrypted voice and video native to Jokuh, with agent-assisted summaries, action items, and memory written back to your Spine automatically.",
   messages:

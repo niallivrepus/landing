@@ -82,6 +82,18 @@ export type ProductDetailMedia =
         | "personality"
         | "customize"
         | "claim";
+    }
+  | {
+      kind: "spineHighlight";
+      variant:
+        | "todayBrief"
+        | "timeline"
+        | "memories"
+        | "planner"
+        | "moodSky"
+        | "lifelog"
+        | "search"
+        | "recap";
     };
 
 export type ProductHighlightSlide = {
@@ -504,40 +516,46 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Highlights.",
       slides: [
         {
-          id: "spine-jump",
-          eyebrow: "Time",
-          title: "Jump to what mattered.",
-          body: "Move through days, weeks, and months without losing the shape of the story.",
-          media: {
-            kind: "gradient",
-            variant: "pillars",
-            gradient: "linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)",
-            accent: "#f59e0b",
-          },
+          id: "spine-today-brief",
+          eyebrow: "Today Brief",
+          title: "OO reads your day before you do.",
+          body: "A conversational morning layer — greeting, counts, action queue, and what needs you today. Optional push lands you here each morning.",
+          media: { kind: "spineHighlight", variant: "todayBrief" },
         },
         {
-          id: "spine-context",
-          eyebrow: "Context",
-          title: "Keep the arc in view.",
-          body: "Important moments stay attached to their timeline, instead of dissolving into another infinite feed.",
-          media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #fff7ed 0%, #eff6ff 100%)",
-            accent: "#3b82f6",
-          },
+          id: "spine-timeline",
+          eyebrow: "Timeline",
+          title: "Every day of your life, on one timeline.",
+          body: "Year accordion, expandable days, hour capsules, and drag planner items across the week. Jump to today in one tap.",
+          media: { kind: "spineHighlight", variant: "timeline" },
         },
         {
-          id: "spine-return",
-          eyebrow: "Return",
-          title: "Pick up where you left off.",
-          body: "The spine is a continuity layer, not just a visual timeline.",
-          media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #fffbeb 0%, #eef2ff 100%)",
-            accent: "#f59e0b",
-          },
+          id: "spine-memories",
+          eyebrow: "Lifelog",
+          title: "Calls, captures, and moments land automatically.",
+          body: "Thirty-plus memory kinds — transcripts, screenshots, wallet moves, Arcade sessions, browser visits, and Profile Live streams write back to Spine.",
+          media: { kind: "spineHighlight", variant: "memories" },
+        },
+        {
+          id: "spine-planner",
+          eyebrow: "Planner",
+          title: "Notes, tasks, reminders, and files — per day.",
+          body: "Five planner tabs on every expanded day: sticky notes with OO autocomplete, checklists, timed reminders, and a file library synced to the cloud.",
+          media: { kind: "spineHighlight", variant: "planner" },
+        },
+        {
+          id: "spine-mood-sky",
+          eyebrow: "Wellbeing",
+          title: "Mood, Sky Lens, and ambient signals.",
+          body: "Log how you feel on an eight-mood rail. Daily Sky Lens readings, weather, hydration nudges, and rhythm hints stay on your timeline — patterns, not forecasts.",
+          media: { kind: "spineHighlight", variant: "moodSky" },
+        },
+        {
+          id: "spine-lifelog",
+          eyebrow: "Import",
+          title: "Calendar and photos sync — local first.",
+          body: "Mirror Apple or Google calendar, backfill PhotoKit moments onto the right days, and capture screenshots with a press-and-hold. Your manifest syncs when you sign in.",
+          media: { kind: "spineHighlight", variant: "lifelog" },
         },
       ],
     },
@@ -546,58 +564,38 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       items: [
         {
           id: "spine-day",
-          label: "Day view",
-          title: "See the day clearly.",
-          body: "A day can be readable at a glance, with just enough detail to help you jump back in.",
-          media: {
-            kind: "gradient",
-            variant: "pillars",
-            gradient: "linear-gradient(180deg, #fff7ed 0%, #f8fafc 100%)",
-            accent: "#f59e0b",
-          },
+          label: "Today Brief",
+          title: "Open on what matters today.",
+          body: "Spine lands with today expanded and the brief first — meetings, tasks, unread messages, and overdue reminders surface before you dig into the timeline.",
+          media: { kind: "spineHighlight", variant: "todayBrief" },
         },
         {
           id: "spine-week",
-          label: "Week view",
-          title: "Shape the week.",
-          body: "Bigger spans can compress without feeling like you lost the important beats.",
-          media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)",
-            accent: "#3b82f6",
-          },
+          label: "Year timeline",
+          title: "Shape months without losing days.",
+          body: "One month accordion open at a time. Day rows show activity counts; expand for hour capsules, planner tabs, and the full memory stack.",
+          media: { kind: "spineHighlight", variant: "timeline" },
         },
         {
           id: "spine-pins",
-          label: "Pins",
-          title: "Hold onto what matters.",
-          body: "Decisions, commitments, and highlights can stay surfaced even as more time passes underneath them.",
-          media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #fff7ed 0%, #eef2ff 100%)",
-            accent: "#f97316",
-          },
+          label: "Search",
+          title: "Find any moment in seconds.",
+          body: "AND-token search across summaries, transcripts, URLs, and chip labels. Optional viewport-scoped mode keeps results tied to what you are viewing.",
+          media: { kind: "spineHighlight", variant: "search" },
         },
         {
           id: "spine-archive",
-          label: "Archive",
-          title: "Archive, not erase.",
-          body: "Older context should become quieter, not disappear.",
-          media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #fffbeb 0%, #eff6ff 100%)",
-            accent: "#f59e0b",
-          },
+          label: "Retention",
+          title: "On this day — archive, not erase.",
+          body: "Streaks celebrate consecutive days with content. Month and year recaps resurface top moods, busiest days, and memories from years ago today.",
+          media: { kind: "spineHighlight", variant: "recap" },
         },
       ],
     },
     centerpiece: {
       eyebrow: "Spine",
-      title: "Memory with shape.",
-      body: "Spine keeps time readable. It is the difference between a feed that erases context and a history you can actually work with.",
+      title: "Your operating timeline.",
+      body: "Spine is the long-term home for structured personal context — data, files, memories, and activity. Not a feed that erases context. A history OO can actually work with.",
       ctaLabel: "Join Beta",
       ctaTo: "/download",
       items: [
@@ -605,45 +603,25 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           id: "spine-corner-1",
           position: "top-left",
           rotation: -8,
-          media: {
-            kind: "gradient",
-            variant: "pillars",
-            gradient: "linear-gradient(180deg, #fffbeb 0%, #f8fafc 100%)",
-            accent: "#f59e0b",
-          },
+          media: { kind: "spineHighlight", variant: "todayBrief" },
         },
         {
           id: "spine-corner-2",
           position: "top-right",
           rotation: 8,
-          media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #eff6ff 0%, #eef2ff 100%)",
-            accent: "#3b82f6",
-          },
+          media: { kind: "spineHighlight", variant: "memories" },
         },
         {
           id: "spine-corner-3",
           position: "bottom-left",
           rotation: -10,
-          media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #fff7ed 0%, #eef2ff 100%)",
-            accent: "#fb923c",
-          },
+          media: { kind: "spineHighlight", variant: "planner" },
         },
         {
           id: "spine-corner-4",
           position: "bottom-right",
           rotation: 10,
-          media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #fffbeb 0%, #eff6ff 100%)",
-            accent: "#f59e0b",
-          },
+          media: { kind: "spineHighlight", variant: "moodSky" },
         },
       ],
     },

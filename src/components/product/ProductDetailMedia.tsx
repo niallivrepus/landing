@@ -13,6 +13,7 @@ import { Captions, Mic, PhoneOff, Sparkles } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import type { ProductDetailMedia as ProductDetailMediaConfig } from "../../data/product-detail-blueprints";
 import { ProfileHighlightVisual } from "../landing/ProfileHighlightVisual";
+import { SpineHighlightVisual } from "../landing/SpineHighlightVisual";
 
 const BLURB_SEQUENCE_EASE = [0.22, 1, 0.36, 1] as const;
 const BLURB_IMAGE_INTERVAL_MS = 2300;
@@ -156,6 +157,12 @@ export function ProductDetailMedia({
   if (media.kind === "profileHighlight") {
     return (
       <ProfileHighlightVisual variant={media.variant} active={active} className={className} />
+    );
+  }
+
+  if (media.kind === "spineHighlight") {
+    return (
+      <SpineHighlightVisual variant={media.variant} active={active} className={className} />
     );
   }
 
