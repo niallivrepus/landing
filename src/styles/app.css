@@ -8,6 +8,11 @@
 @import "./landing-onboarding.css";
 @import "./landing-spine-capsules.css";
 @import "./landing-spine-memory.css";
+@import "./spine-day-mood.css";
+@import "./spine-today-brief-tiers.css";
+@import "./spine-streak-chip.css";
+@import "./landing-spine-brief.css";
+@import "./landing-spine-highlight.css";
 @import "./freedom-day-fireworks.css";
 @import "./landing-home-prompt.css";
 @import "./landing-arcade.css";
@@ -16,7 +21,6 @@
 @import "./landing-profile-search.css";
 @import "./landing-profile-pod.css";
 @import "./landing-profile-highlight.css";
-@import "./landing-spine-highlight.css";
 
 /* Library rail rainbow burst — parity `jokuh-app-main/src/styles/app.css` */
 .spectral-border-burst {

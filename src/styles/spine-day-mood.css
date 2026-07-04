@@ -1,0 +1,384 @@
+/* ── Today mood carousel — pills flanking Today Brief (Figma Pattern Library 4410:6645) ── */
+
+.spine-today-mood-carousel {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.spine-today-mood-carousel__back-chip {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.spine-today-mood-carousel__viewport {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  outline: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.spine-today-mood-carousel__viewport--dragging {
+  cursor: grabbing;
+}
+
+.spine-today-mood-carousel__track {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  will-change: transform;
+  transition: transform 0.42s cubic-bezier(0.16, 1, 0.18, 1);
+}
+
+.spine-today-mood-carousel__viewport--dragging .spine-today-mood-carousel__track {
+  transition: none;
+}
+
+.spine-today-mood-carousel__page {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.spine-today-mood-carousel__page--mood {
+  min-height: 240px;
+}
+
+.spine-today-mood-carousel__brief-page {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+}
+
+.spine-today-mood-carousel__brief-rails {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.spine-today-mood-carousel__brief-rails .spine-mood-adjacent-rail {
+  pointer-events: auto;
+}
+
+.spine-today-mood-carousel__brief-slot {
+  position: relative;
+  z-index: 2;
+  flex: 0 1 auto;
+  width: min(100%, var(--spine-today-brief-card-max, 400px));
+  max-width: min(100%, var(--spine-today-brief-card-max, 400px));
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.spine-today-mood-carousel__mood-focus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0 16px;
+  width: 100%;
+}
+
+.spine-today-mood-carousel__hint {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.42);
+  text-align: center;
+}
+
+/* ── Adjacent mood rails — sit in side margins; do not shrink the brief card ── */
+
+.spine-mood-adjacent-rail {
+  flex: 0 0 104px;
+  width: 104px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.spine-mood-adjacent-rail .spine-emotion-pill {
+  z-index: auto;
+}
+
+.spine-mood-adjacent-rail--right {
+  /* Right rail peeks the next mood toward the screen edge. */
+}
+
+.spine-mood-adjacent-rail--left .spine-mood-adjacent-rail__track {
+  /* Mirror the right rail: inner pill flush to Today Brief, peek on the outer left edge. */
+  justify-content: flex-end;
+}
+
+.spine-mood-adjacent-rail__track {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.spine-mood-adjacent-rail .spine-emotion-pill--compact {
+  flex: 0 0 72px;
+}
+
+/* ── Emotion pill (Figma AssetsEmotions) ── */
+
+.spine-emotion-pill {
+  --spine-emotion-border: var(--color-origin-fruta-1);
+  --spine-emotion-fill: #200400;
+  position: relative;
+  z-index: 1;
+  touch-action: manipulation;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 110px;
+  padding: 24px 12px;
+  border-radius: 999px;
+  border: 2px solid var(--spine-emotion-border);
+  background: radial-gradient(
+    ellipse 120% 90% at 50% 0%,
+    color-mix(in srgb, var(--spine-emotion-border) 38%, transparent),
+    var(--spine-emotion-fill) 58%
+  );
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.18),
+    0 10px 24px color-mix(in srgb, var(--spine-emotion-border) 28%, transparent);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.96);
+  transition:
+    transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.22s ease;
+}
+
+.spine-emotion-pill--compact {
+  width: 72px;
+  padding: 14px 8px;
+  gap: 6px;
+}
+
+.spine-emotion-pill--peek {
+  width: 58px;
+  padding: 10px 6px;
+  gap: 0;
+}
+
+.spine-emotion-pill--compact .spine-emotion-pill__emoji,
+.spine-emotion-pill--peek .spine-emotion-pill__emoji {
+  font-size: 20px;
+}
+
+.spine-emotion-pill--peek .spine-emotion-pill__emoji {
+  font-size: 18px;
+}
+
+.spine-emotion-pill--compact .spine-emotion-pill__glyph,
+.spine-emotion-pill--peek .spine-emotion-pill__glyph {
+  display: none;
+}
+
+.spine-emotion-pill--compact .spine-emotion-pill__label {
+  font-size: 10px;
+  min-height: 28px;
+  padding: 4px 8px;
+}
+
+.spine-emotion-pill--selected {
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.22),
+    0 0 0 2px rgba(255, 255, 255, 0.14),
+    0 14px 32px color-mix(in srgb, var(--spine-emotion-border) 42%, transparent);
+  transform: scale(1.04);
+}
+
+.spine-emotion-pill:active {
+  transform: scale(0.97);
+}
+
+.spine-emotion-pill__emoji {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--spine-emotion-border) 45%, transparent));
+}
+
+.spine-emotion-pill__glyph {
+  width: 24px;
+  height: 24px;
+  color: var(--spine-emotion-border);
+  opacity: 0.9;
+}
+
+.spine-emotion-pill__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 50px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 0.95;
+  text-align: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 380px) {
+  .spine-mood-adjacent-rail {
+    flex-basis: 88px;
+    width: 88px;
+  }
+
+  .spine-mood-adjacent-rail .spine-emotion-pill--compact {
+    flex-basis: 58px;
+    width: 58px;
+    padding: 10px 6px;
+  }
+
+  .spine-mood-adjacent-rail .spine-emotion-pill__label {
+    font-size: 9px;
+    min-height: 24px;
+    padding: 3px 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spine-emotion-pill {
+    transition: none;
+  }
+
+  .spine-today-mood-carousel__track {
+    transition: none;
+  }
+}
+
+/* ── Mood follow-up sheet ── */
+
+.spine-mood-follow-up-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.spine-mood-follow-up-sheet {
+  width: min(420px, 100%);
+  border-radius: 28px;
+  padding: 22px 20px 18px;
+  background: rgba(18, 18, 20, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.spine-mood-follow-up-sheet__hero {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.spine-mood-follow-up-sheet__emoji {
+  font-size: 40px;
+  line-height: 1;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.spine-mood-follow-up-sheet__title {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.spine-mood-follow-up-sheet__subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.spine-mood-follow-up-sheet__input {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+  padding: 12px 14px;
+  resize: vertical;
+  min-height: 96px;
+}
+
+.spine-mood-follow-up-sheet__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.spine-mood-follow-up-sheet__btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.spine-mood-follow-up-sheet__btn--primary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
+}
+
+.spine-mood-follow-up-sheet__btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: rgba(255, 255, 255, 0.48);
+  font-weight: 600;
+}

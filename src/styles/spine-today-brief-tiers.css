@@ -1,0 +1,318 @@
+/**
+ * Today Brief tier chrome — lead row, "One moment" editorial surface, ambient signal row, and the
+ * staggered tier entrance (design-clarity pass, tiers 1–5 in `SpineBriefing.tsx`).
+ *
+ * **Concentric radius:** the brief card (`.id-pod-squircle`) is radius 36 / padding 22, so nested
+ * surfaces here use 14px (outer = inner + padding). Capsule pills (999) are exempt.
+ * **Motion:** house Playful Motion tokens (`tokens.css`) — settle for enters, pop for presses;
+ * transitions list explicit properties only (never `transition: all`).
+ *
+ * **Parity:** Today Brief tiers in `spine-root-view.swift` (iOS twin, same wave).
+ */
+
+/* ── Tier 1: lead row — greeting sentence + inline streak chip ── */
+
+.spine-brief-lead {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.spine-brief-lead[data-centered='true'] {
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.spine-brief-lead__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ── Staggered tier entrance (~90ms steps) — subtle rise, settle spring ── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .spine-brief-tier {
+    animation: spine-brief-tier-in var(--motion-settle-duration, 440ms)
+      var(--motion-ease-settle, cubic-bezier(0.34, 1.45, 0.5, 1)) both;
+  }
+
+  .spine-brief-tier:nth-of-type(1) { animation-delay: 0ms; }
+  .spine-brief-tier:nth-of-type(2) { animation-delay: 90ms; }
+  .spine-brief-tier:nth-of-type(3) { animation-delay: 180ms; }
+  .spine-brief-tier:nth-of-type(4) { animation-delay: 270ms; }
+  .spine-brief-tier:nth-of-type(n + 5) { animation-delay: 360ms; }
+}
+
+@keyframes spine-brief-tier-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Tier 3: "One moment" — visually distinct editorial surface ── */
+
+.spine-brief-moment {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 4px 14px 8px;
+  /* Concentric: 36 (card) − 22 (card padding) = 14. */
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* The inset row inside the moment surface already carries its own top hairline — hide it here. */
+.spine-brief-moment .spine-brief-inset__divider {
+  display: none;
+}
+
+/* ── Tier 4: ambient row — equal small frosted chips, detail expands inline below ── */
+
+.spine-ambient {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.spine-ambient__row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.spine-ambient-chip {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ≥40px hit target without visual growth — the row has ≥10px clearance above and below. */
+.spine-ambient-chip::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -5px;
+  bottom: -5px;
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spine-ambient-chip {
+    transition-property: transform;
+    transition-duration: var(--motion-pop-duration, 340ms);
+    transition-timing-function: var(--motion-ease-pop, cubic-bezier(0.34, 2, 0.5, 1));
+  }
+
+  .spine-ambient-chip:active {
+    transform: scale(0.96);
+    transition-duration: var(--motion-press-duration, 120ms);
+    transition-timing-function: var(--motion-ease-standard, ease);
+  }
+}
+
+.spine-ambient-chip[aria-expanded='true'] {
+  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.spine-ambient-chip:focus-visible {
+  outline: 2px solid var(--smc-focus-outline, rgba(255, 255, 255, 0.6));
+  outline-offset: 2px;
+}
+
+.spine-ambient-chip__icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.spine-ambient-chip__value {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Inline detail below the row — one signal at a time; enters with a small settle. */
+.spine-ambient__detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  /* Concentric with the brief card: 36 − 22 = 14. */
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spine-ambient__detail {
+    animation: spine-brief-tier-in var(--motion-settle-duration, 440ms)
+      var(--motion-ease-settle, cubic-bezier(0.34, 1.45, 0.5, 1)) both;
+  }
+}
+
+.spine-ambient__detail-copy {
+  margin: 0;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  /* Cycle detail joins status + support line with "\n". */
+  white-space: pre-line;
+  text-wrap: pretty;
+}
+
+.spine-ambient__detail-action {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 3px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.82);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.spine-ambient__detail-action::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: -7px;
+  bottom: -7px;
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spine-ambient__detail-action {
+    transition-property: transform;
+    transition-duration: var(--motion-press-duration, 120ms);
+    transition-timing-function: var(--motion-ease-standard, ease);
+  }
+
+  .spine-ambient__detail-action:active {
+    transform: scale(0.96);
+  }
+}
+
+/* ── Calm density: one quiet "More" disclosure for tiers 4–5 ── */
+
+.spine-today-brief-more-btn--quiet {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 auto;
+}
+
+/* ── Timeline affordances (month accordion chevron + one-time today hint, `SpinePage.tsx`) ── */
+
+.spine-month-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+.spine-month-chevron > svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spine-month-chevron {
+    transition-property: transform;
+    transition-duration: var(--motion-pop-duration, 340ms);
+    transition-timing-function: var(--motion-ease-pop, cubic-bezier(0.34, 2, 0.5, 1));
+  }
+}
+
+.spine-month-chevron[data-expanded='true'] {
+  transform: rotate(180deg);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* One-time bouncing chevron under today's row — removed forever after first expansion. */
+.spine-today-chevron-hint {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  width: 12px;
+  height: 12px;
+  color: rgba(255, 255, 255, 0.42);
+  pointer-events: none;
+}
+
+.spine-today-chevron-hint > svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spine-today-chevron-hint {
+    animation: spine-today-chevron-hint-bob 1.6s var(--motion-ease-settle, cubic-bezier(0.34, 1.45, 0.5, 1)) infinite;
+  }
+}
+
+@keyframes spine-today-chevron-hint-bob {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateX(-50%) translateY(3px);
+    opacity: 0.95;
+  }
+}

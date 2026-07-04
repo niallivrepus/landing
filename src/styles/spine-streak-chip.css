@@ -1,0 +1,187 @@
+/**
+ * Spine streak chip — Today Brief "Day N" flame chip + expandable milestone detail.
+ * Reuses the Pattern Library tag chrome tokens (`--smc-*` in `tokens.css`, see
+ * `spine-memory-chip.css`) with a flame-orange icon well; milestone days scale in with the
+ * house `pop` spring (`--motion-ease-pop`, `tokens.css` Playful Motion vocabulary).
+ *
+ * **Parity:** streak chip beside the Today Brief chips on native (`Sources/spine/spine-streak-engine.swift`
+ * + `spine-today-brief-streak-chip.swift`, iOS twin in the same wave).
+ */
+
+.spine-streak-chip {
+  --smc-tint-rgb: 255, 122, 33;
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  max-width: 100%;
+  padding: 4px;
+  border: 2px solid var(--smc-shell-border);
+  border-radius: 999px;
+  background: var(--smc-shell-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+  color: inherit;
+  box-shadow:
+    var(--smc-badge-inset),
+    var(--smc-elevation-shadow);
+}
+
+.spine-streak-chip:focus-visible {
+  outline: 2px solid var(--smc-focus-outline);
+  outline-offset: 2px;
+}
+
+/* Tactile press — exactly 0.96, transform only (never `transition: all`). */
+@media (prefers-reduced-motion: no-preference) {
+  .spine-streak-chip {
+    transition-property: transform;
+    transition-duration: var(--motion-pop-duration, 340ms);
+    transition-timing-function: var(--motion-ease-pop, cubic-bezier(0.34, 2, 0.5, 1));
+  }
+
+  .spine-streak-chip:active {
+    transform: scale(0.96);
+    transition-duration: var(--motion-press-duration, 120ms);
+    transition-timing-function: var(--motion-ease-standard, ease);
+  }
+}
+
+/* ── Inline lead-row variant — 28px chrome beside the greeting (tier 1) ── */
+
+.spine-streak-chip--inline {
+  height: 28px;
+  padding: 3px;
+  gap: 6px;
+  border-width: 1.5px;
+}
+
+/* ≥40px hit target without visual growth — nothing sits within 6px above/below the lead row. */
+.spine-streak-chip--inline::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: -6px;
+  bottom: -6px;
+  border-radius: inherit;
+}
+
+.spine-streak-chip--inline .spine-streak-chip__well {
+  width: 20px;
+  height: 20px;
+  border-width: 1.5px;
+}
+
+.spine-streak-chip--inline .spine-streak-chip__well > svg {
+  width: 12px;
+  height: 12px;
+}
+
+.spine-streak-chip--inline .spine-streak-chip__label {
+  font-size: 12px;
+  padding-right: 6px;
+}
+
+.spine-streak-chip--inline .spine-streak-chip__detail {
+  min-height: 20px;
+  padding: 2px 8px;
+  font-size: 10px;
+  border-width: 1.5px;
+}
+
+/* Milestone day — springy toy-like scale-in (pop ≈ back.out(2.6)). */
+.spine-streak-chip[data-milestone='true'] {
+  animation: spine-streak-pop var(--motion-pop-duration, 340ms) var(--motion-ease-pop, cubic-bezier(0.34, 2, 0.5, 1)) both;
+}
+
+@keyframes spine-streak-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spine-streak-chip[data-milestone='true'] {
+    animation: none;
+  }
+}
+
+/* Flame icon well — solid ember gradient, matches the 32px Figma tag well. */
+.spine-streak-chip__well {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ff9d42;
+  background: linear-gradient(83deg, #ff4d00 0%, #ffb200 100%);
+  color: #fff;
+  box-shadow:
+    var(--smc-badge-inset),
+    var(--smc-well-elevation-shadow);
+}
+
+.spine-streak-chip__well > svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.spine-streak-chip__label {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 0.9;
+  color: var(--smc-label-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Trailing detail pill — best streak + next milestone, shown after tap. */
+.spine-streak-chip__detail {
+  flex-shrink: 1;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--smc-badge-color);
+  background: var(--smc-badge-bg);
+  border: 2px solid var(--smc-inner-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+  animation: spine-streak-pop var(--motion-pop-duration, 340ms) var(--motion-ease-pop, cubic-bezier(0.34, 2, 0.5, 1)) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spine-streak-chip__detail {
+    animation: none;
+  }
+}
