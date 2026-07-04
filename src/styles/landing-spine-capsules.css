@@ -1,0 +1,478 @@
+/**
+ * **Purpose:** Frosted day/year/hour capsule chrome for landing Spine and Calls immersive demos.
+ * **Connects to:** `LandingDayYearCapsules.tsx`, `MessagesImmersiveShell` inbox rows.
+ */
+
+.landing-inbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 16px;
+  padding: 10px 12px;
+  transition: background-color 0.18s ease;
+}
+
+.landing-inbox-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.light .landing-inbox-row:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.landing-inbox-row--active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.light .landing-inbox-row--active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.landing-inbox-row__leading {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.landing-inbox-row__oo {
+  display: flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.landing-inbox-row__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.landing-inbox-row__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.landing-inbox-row__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.landing-inbox-row__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.landing-inbox-row__name {
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-light-space, #fff);
+}
+
+.light .landing-inbox-row__name {
+  color: #18181b;
+}
+
+.landing-inbox-row__meta {
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.light .landing-inbox-row__meta {
+  color: rgba(0, 0, 0, 0.42);
+}
+
+.landing-inbox-row__unread {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #2fff00;
+  flex-shrink: 0;
+}
+
+.landing-inbox-row__preview {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.light .landing-inbox-row__preview {
+  color: rgba(0, 0, 0, 0.48);
+}
+
+.landing-story-reader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.landing-story-reader__back {
+  align-self: flex-start;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.light .landing-story-reader__back {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.landing-story-reader__hero {
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.light .landing-story-reader__hero {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.landing-story-reader__hero-image {
+  display: block;
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.landing-story-reader__meta {
+  margin: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.light .landing-story-reader__meta {
+  color: rgba(0, 0, 0, 0.42);
+}
+
+.landing-story-reader__title {
+  margin: 0;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-light-space, #fff);
+}
+
+.light .landing-story-reader__title {
+  color: #18181b;
+}
+
+.landing-story-reader__dek,
+.landing-story-reader__excerpt {
+  margin: 0;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.light .landing-story-reader__dek,
+.light .landing-story-reader__excerpt {
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.landing-spine-capsules {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  width: 100%;
+}
+
+/* Vertical spine rail — day pills sit on the center line like the app timeline */
+.landing-spine-capsules--timeline {
+  align-items: center;
+  max-width: 340px;
+  margin-inline: auto;
+  padding-bottom: 8px;
+}
+
+.landing-spine-capsules__rail {
+  pointer-events: none;
+  position: absolute;
+  top: 52px;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.22) 12%,
+    rgba(255, 255, 255, 0.22) 88%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.light .landing-spine-capsules__rail {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.14) 12%,
+    rgba(0, 0, 0, 0.14) 88%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.landing-spine-capsules__timeline-days {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  z-index: 1;
+}
+
+.landing-spine-timeline-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.landing-spine-capsules__hours--under-day {
+  max-height: none;
+  padding-bottom: 4px;
+}
+
+.landing-spine-capsules__year {
+  align-self: center;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.light .landing-spine-capsules__year {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.landing-spine-capsules__month {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.light .landing-spine-capsules__month {
+  color: rgba(0, 0, 0, 0.72);
+}
+
+.landing-spine-capsules__days {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.landing-spine-capsules--timeline .landing-spine-capsules__days {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.landing-day-capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 28px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.12s ease;
+}
+
+.light .landing-day-capsule {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.landing-day-capsule--selected {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.light .landing-day-capsule--selected {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.16);
+}
+
+.landing-day-capsule--today .landing-day-capsule__day {
+  color: #d8ff3d;
+}
+
+.landing-day-capsule__weekday,
+.landing-day-capsule__day {
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.light .landing-day-capsule__weekday,
+.light .landing-day-capsule__day {
+  color: rgba(0, 0, 0, 0.82);
+}
+
+.landing-day-capsule__cord {
+  width: 1px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.light .landing-day-capsule__cord {
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.landing-spine-capsules__hours {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.landing-spine-capsules__hour-wrap {
+  width: 100%;
+  max-width: 320px;
+}
+
+.landing-hour-capsule {
+  display: flex;
+  width: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.92);
+  transition: filter 0.18s ease, transform 0.12s ease;
+}
+
+.landing-hour-capsule:active {
+  transform: scale(0.98);
+}
+
+.landing-hour-capsule--empty {
+  background: linear-gradient(180deg, #232323 0%, #232323 100%);
+}
+
+.landing-hour-capsule--memory,
+.landing-hour-capsule--call {
+  background: linear-gradient(180deg, #b200ff 0%, #7700ff 100%);
+}
+
+.landing-hour-capsule--task {
+  background: linear-gradient(180deg, #ebff00 0%, #2fff00 100%);
+  color: rgba(12, 28, 0, 0.92);
+}
+
+.landing-hour-capsule--note {
+  background: linear-gradient(180deg, #ffc700 0%, #fff500 100%);
+  color: rgba(35, 20, 0, 0.92);
+}
+
+.landing-hour-capsule--reminder {
+  background: linear-gradient(180deg, #ff0970 0%, #ff4d00 100%);
+}
+
+.landing-hour-capsule--expanded {
+  filter: brightness(1.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+
+.landing-hour-capsule__label {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.landing-hour-capsule__summary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.landing-hour-capsule__detail {
+  margin: 6px 0 0;
+  padding: 0 12px;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.light .landing-hour-capsule__detail {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.landing-spine-capsules__empty,
+.landing-spine-capsules__focus {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.light .landing-spine-capsules__empty,
+.light .landing-spine-capsules__focus {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-day-capsule,
+  .landing-hour-capsule,
+  .landing-inbox-row {
+    transition: none;
+  }
+
+  .landing-hour-capsule:active {
+    transform: none;
+  }
+}

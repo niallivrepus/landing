@@ -1,0 +1,444 @@
+/**
+ * **Purpose:** Miniature profile UI mockups for `/profile` highlight carousel slides.
+ * **Connects to:** `ProfileHighlightVisual.tsx`, `ProductHighlightsCarousel`.
+ * **Parity:** Scaled-down replicas of `landing-profile-pod.css` / ID pod surfaces.
+ */
+
+.profile-highlight-visual {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fbfbfd;
+  padding: 5rem 1.5rem 2.5rem;
+  box-sizing: border-box;
+}
+
+.dark .profile-highlight-visual,
+.profile-highlight-visual--dark {
+  background: #1c1c1e;
+}
+
+.profile-highlight-visual__stage {
+  position: relative;
+  width: min(22rem, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.profile-highlight-visual__squircle {
+  width: 100%;
+  padding: 1.1rem;
+  border-radius: 1.75rem;
+  box-sizing: border-box;
+  background: rgba(10, 10, 12, 0.88);
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.light .profile-highlight-visual__squircle {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.profile-highlight-visual__oo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: 100%;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: rgba(139, 92, 246, 0.12);
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.16);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(237, 233, 254, 0.95);
+}
+
+.light .profile-highlight-visual__oo-chip {
+  color: rgb(91, 33, 182);
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.28);
+}
+
+.profile-highlight-visual__oo-chip-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7700ff, #b200ff);
+  box-shadow: 0 0 12px rgba(178, 0, 255, 0.55);
+  flex-shrink: 0;
+}
+
+/* Identity row mockup */
+.profile-highlight-visual__identity-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.profile-highlight-visual__identity-photo {
+  width: 3.25rem;
+  height: 4.35rem;
+  border-radius: 0.85rem;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+.profile-highlight-visual__identity-text {
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.profile-highlight-visual__identity-name {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.light .profile-highlight-visual__identity-name {
+  color: rgba(9, 9, 11, 0.94);
+}
+
+.profile-highlight-visual__identity-handle {
+  margin: 0.2rem 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.light .profile-highlight-visual__identity-handle {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* Biography pod mockup */
+.profile-highlight-visual__bio-card {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  border-radius: 1.25rem;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+}
+
+.light .profile-highlight-visual__bio-card {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.profile-highlight-visual__bio-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.light .profile-highlight-visual__bio-label {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.profile-highlight-visual__bio-title {
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.light .profile-highlight-visual__bio-title {
+  color: rgba(9, 9, 11, 0.94);
+}
+
+.profile-highlight-visual__bio-line {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.light .profile-highlight-visual__bio-line {
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.profile-highlight-visual__bio-line + .profile-highlight-visual__bio-line {
+  margin-top: 0.35rem;
+}
+
+.profile-highlight-visual__bio-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: rgba(139, 92, 246, 0.85);
+  animation: profile-highlight-cursor-blink 1s step-end infinite;
+}
+
+@keyframes profile-highlight-cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Network strip — scale embedded strip inside highlight card */
+.profile-highlight-visual__network-wrap {
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.profile-highlight-visual__network-wrap .profile-network-strip__stack {
+  min-height: 48px;
+  padding: 6px 0 8px;
+}
+
+.profile-highlight-visual__network-wrap .profile-network-strip__hero-title {
+  font-size: 0.95rem;
+}
+
+.profile-highlight-visual__network-wrap .profile-network-strip__connections-badge-text {
+  font-size: 0.65rem;
+  padding: 3px 0;
+}
+
+/* Personality / Spine context flow */
+.profile-highlight-visual__context-flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.profile-highlight-visual__context-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.profile-highlight-visual__context-photo {
+  width: 2.75rem;
+  height: 3.65rem;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+}
+
+.profile-highlight-visual__context-label {
+  margin: 0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.light .profile-highlight-visual__context-label {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.profile-highlight-visual__context-bridge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  color: rgba(139, 92, 246, 0.75);
+}
+
+.profile-highlight-visual__context-bridge-line {
+  width: 2rem;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.65), transparent);
+}
+
+.profile-highlight-visual__memory-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.profile-highlight-visual__memory-chip {
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.light .profile-highlight-visual__memory-chip {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.04);
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.profile-highlight-visual__memory-chip--accent {
+  border-color: rgba(139, 92, 246, 0.35);
+  background: rgba(139, 92, 246, 0.14);
+  color: rgba(237, 233, 254, 0.95);
+}
+
+.light .profile-highlight-visual__memory-chip--accent {
+  color: rgb(91, 33, 182);
+}
+
+/* Customize preview */
+.profile-highlight-visual__customize-frame {
+  position: relative;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 1.35rem;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.profile-highlight-visual__wallpaper {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, #312e81 0%, #5b21b6 42%, #0f172a 100%);
+  opacity: 0.92;
+}
+
+.profile-highlight-visual__customize-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.profile-highlight-visual__status-pill {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+.profile-highlight-visual__status-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #86efac;
+  box-shadow: 0 0 8px rgba(134, 239, 172, 0.65);
+}
+
+.profile-highlight-visual__interest-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.profile-highlight-visual__interest-tag {
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Claim morph — empty vs filled */
+.profile-highlight-visual__claim-stack {
+  position: relative;
+  width: 100%;
+  min-height: 11rem;
+}
+
+.profile-highlight-visual__claim-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 1.25rem;
+  border-radius: 1.75rem;
+  box-sizing: border-box;
+  border: 1.5px dashed rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.light .profile-highlight-visual__claim-card {
+  border-color: rgba(0, 0, 0, 0.14);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.profile-highlight-visual__claim-card--filled {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(10, 10, 12, 0.88);
+}
+
+.light .profile-highlight-visual__claim-card--filled {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.profile-highlight-visual__claim-placeholder {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.light .profile-highlight-visual__claim-placeholder {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.profile-highlight-visual__claim-photo {
+  width: 3.5rem;
+  height: 4.65rem;
+  border-radius: 0.9rem;
+  object-fit: cover;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.profile-highlight-visual__claim-cta {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(134, 239, 172, 0.88);
+}
+
+.light .profile-highlight-visual__claim-cta {
+  color: rgb(21, 128, 61);
+}

@@ -1,0 +1,104 @@
+{
+  "_deprecated": "Do not deploy with Vercel. Production target is Railway — see railway.toml, Dockerfile, server/railway.ts, and docs/railway-deployment.md.",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "corepack enable pnpm && pnpm install --ignore-workspace",
+  "buildCommand": "pnpm run build:landing",
+  "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/.well-known/apple-app-site-association",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "source": "/apple-app-site-association",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/sandbox",
+      "destination": "https://app.jokuh.com/",
+      "permanent": false
+    },
+    {
+      "source": "/sandbox/:path*",
+      "destination": "https://app.jokuh.com/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/dd",
+      "destination": "https://app.jokuh.com/dd",
+      "permanent": false
+    },
+    {
+      "source": "/dataroom",
+      "destination": "https://app.jokuh.com/dataroom",
+      "permanent": false
+    },
+    {
+      "source": "/dataroom/:path*",
+      "destination": "https://app.jokuh.com/dataroom/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/oo/:path*",
+      "destination": "https://app.jokuh.com/oo/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/pitchdeck",
+      "destination": "https://app.jokuh.com/pitch-deck",
+      "permanent": false
+    },
+    {
+      "source": "/pitchdeck/:path*",
+      "destination": "https://app.jokuh.com/pitch-deck/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/pitch-deck",
+      "destination": "https://app.jokuh.com/pitch-deck",
+      "permanent": false
+    },
+    {
+      "source": "/pitch-deck/:path*",
+      "destination": "https://app.jokuh.com/pitch-deck/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/xx/investpipeline",
+      "destination": "https://app.jokuh.com/xx/investpipeline",
+      "permanent": false
+    },
+    {
+      "source": "/xx/investpipeline/:path*",
+      "destination": "https://app.jokuh.com/xx/investpipeline/:path*",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/apple-app-site-association",
+      "destination": "/.well-known/apple-app-site-association"
+    },
+    {
+      "source": "/.well-known/(.*)",
+      "destination": "/.well-known/$1"
+    },
+    {
+      "source": "/((?!\\.well-known|assets|favicon|robots\\.txt|apple-touch-icon|product-hero|fonts|images|legal|news-art|api).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

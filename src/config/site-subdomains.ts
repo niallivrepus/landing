@@ -1,0 +1,108 @@
+import {
+  filterRigidNavColumns,
+  type RigidNavColumn,
+  type RigidLink,
+  type RigidSurface,
+} from "../data/rigid-sitemap";
+
+/** Set in deploy (e.g. https://developers.jokuh.com) so /developers/* nav targets the dev subdomain. */
+export const DEV_PORTAL_ORIGIN =
+  (import.meta.env.VITE_ORIGIN_DEVELOPERS as string | undefined)?.replace(/\/$/, "") ?? "";
+
+/** Status / incidents (e.g. incident.io-backed page on status.jokuh.com). */
+export const STATUS_PORTAL_ORIGIN =
+  (import.meta.env.VITE_ORIGIN_STATUS as string | undefined)?.replace(/\/$/, "") ?? "";
+
+/** Help center / support knowledge base (e.g. https://help.jokuh.com). */
+export const HELP_PORTAL_ORIGIN =
+  (import.meta.env.VITE_ORIGIN_HELP as string | undefined)?.replace(/\/$/, "") ?? "";
+
+/** Logged-in product / workspace (e.g. https://app.jokuh.com). */
+export const APP_ORIGIN =
+  (import.meta.env.VITE_ORIGIN_APP as string | undefined)?.replace(/\/$/, "") ||
+  "https://app.jokuh.com";
+
+/** Marketing same-origin paths that Railway/Caddy redirect to `app.jokuh.com` — must use full navigation, not SPA `Link`. */
+const APP_HANDOFF_PREFIXES = [
+  "/dataroom",
+  "/pitchdeck",
+  "/pitch-deck",
+  "/xx/investpipeline",
+] as const;
+
+/** **Returns** true when `href` should bypass React Router and hit server redirects. */
+export function isAppHandoffHref(href: string): boolean {
+  if (!href.startsWith("/")) return false;
+  const path = href.split("#")[0]?.split("?")[0] ?? href;
+  return APP_HANDOFF_PREFIXES.some(
+    (prefix) => path === prefix || path.startsWith(`${prefix}/`),
+  );
+}
+
+export function buildAppHandoffUrl(prompt: string): string {
+  const url = new URL(`${APP_ORIGIN}/`);
+  const q = prompt.trim();
+  if (q) {
+    url.searchParams.set("q", q);
+  }
+  return url.toString();
+}
+
+export function resolveStatusHref(href: string = "/"): string {
+  if (!STATUS_PORTAL_ORIGIN) return "/";
+  const raw = href && href !== "/" ? href : "";
+  const path = raw === "" ? "" : raw.startsWith("/") ? raw : `/${raw}`;
+  return path === "" ? `${STATUS_PORTAL_ORIGIN}/` : `${STATUS_PORTAL_ORIGIN}${path}`;
+}
+
+export function resolveHelpHref(href: string = "/"): string {
+  if (!HELP_PORTAL_ORIGIN) return "mailto:support@jokuh.com?subject=Support%20request";
+  const raw = href && href !== "/" ? href : "";
+  const path = raw === "" ? "" : raw.startsWith("/") ? raw : `/${raw}`;
+  return path === "" ? `${HELP_PORTAL_ORIGIN}/` : `${HELP_PORTAL_ORIGIN}${path}`;
+}
+
+export function isDevPortalAbsoluteHref(href: string): boolean {
+  return Boolean(
+    DEV_PORTAL_ORIGIN && (href === DEV_PORTAL_ORIGIN || href.startsWith(`${DEV_PORTAL_ORIGIN}/`)),
+  );
+}
+
+export function isStatusPortalAbsoluteHref(href: string): boolean {
+  return Boolean(
+    STATUS_PORTAL_ORIGIN && (href === STATUS_PORTAL_ORIGIN || href.startsWith(`${STATUS_PORTAL_ORIGIN}/`)),
+  );
+}
+
+export function isHelpPortalAbsoluteHref(href: string): boolean {
+  return Boolean(HELP_PORTAL_ORIGIN && (href === HELP_PORTAL_ORIGIN || href.startsWith(`${HELP_PORTAL_ORIGIN}/`)));
+}
+
+/** Marketing site opens these first-party subdomains in the same tab (like OpenAI → developers / status). */
+export function isTrustedSiblingOriginHref(href: string): boolean {
+  return isDevPortalAbsoluteHref(href) || isStatusPortalAbsoluteHref(href) || isHelpPortalAbsoluteHref(href);
+}
+
+export function resolveSiteHref(link: RigidLink): string {
+  if (link.host === "status") {
+    return resolveStatusHref(link.href);
+  }
+  if (link.host === "developers" && DEV_PORTAL_ORIGIN && link.href.startsWith("/developers")) {
+    const rest = link.href.slice("/developers".length);
+    return `${DEV_PORTAL_ORIGIN}${rest || "/"}`;
+  }
+  return link.href;
+}
+
+export function resolveRigidNavColumns(
+  cols: readonly RigidNavColumn[],
+  surface: RigidSurface,
+): RigidNavColumn[] {
+  return filterRigidNavColumns(cols, surface).map((col) => ({
+    ...col,
+    sections: col.sections.map((sec) => ({
+      ...sec,
+      links: sec.links.map((l) => ({ ...l, href: resolveSiteHref(l) })),
+    })),
+  }));
+}

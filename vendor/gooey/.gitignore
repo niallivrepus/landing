@@ -1,0 +1,40 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+out
+build
+.build
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.*
+.env.local
+.env*.local
+
+# IDE
+.idea
+.vscode/settings.json
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.tmp
+
+# Test artifacts in dist
+**/dist/__tests__/
+
+# Keep empty directories
+!**/.gitkeep
+.gstack/

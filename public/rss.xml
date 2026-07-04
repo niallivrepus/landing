@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/rss.xsl"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>Jokuh newsroom and stories</title>
+    <link>https://www.jokuh.com</link>
+    <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
+    <description>Latest Jokuh newsroom articles and stories.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 04 Jul 2026 22:16:04 GMT</lastBuildDate>
+    <item>
+      <title>The Next Version of Freedom</title>
+      <link>https://www.jokuh.com/stories/the-next-version-of-freedom</link>
+      <guid isPermaLink="true">https://www.jokuh.com/stories/the-next-version-of-freedom</guid>
+      <description>On Independence Day, Sean Rock reflects on digital sovereignty—and why Spine is an operating environment, not another app.</description>
+      <category>Stories</category>
+      <pubDate>Sat, 04 Jul 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/images/spine-freedom-flag.png" />
+    </item>
+    <item>
+      <title>Spine ships to TestFlight</title>
+      <link>https://www.jokuh.com/newsroom/spine-ships-testflight</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/spine-ships-testflight</guid>
+      <description>The encrypted personal memory layer at the core of Jokuh is now live for active TestFlight users, keys held by the user, computation verified through TEE, ZKP, and FHE.</description>
+      <category>Release</category>
+      <pubDate>Wed, 15 Apr 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-d8b26214c8.jpg" />
+    </item>
+    <item>
+      <title>Grants from Avalanche, RunPod, Hume AI, and Kihew</title>
+      <link>https://www.jokuh.com/newsroom/grant-stack-avalanche-runpod-hume-kihew</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/grant-stack-avalanche-runpod-hume-kihew</guid>
+      <description>Four ecosystem grants, across settlement, compute, voice, and regional infrastructure, confirm independent technical validation of the Jokuh stack.</description>
+      <category>Milestone</category>
+      <pubDate>Wed, 08 Apr 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-fba6b6f6b1.jpg" />
+    </item>
+    <item>
+      <title>A regenerative grain cooperative in the High Plains</title>
+      <link>https://www.jokuh.com/stories/tomas-aldaz</link>
+      <guid isPermaLink="true">https://www.jokuh.com/stories/tomas-aldaz</guid>
+      <description>Registries, green-claims rules, and greenwashing suits can turn soil panels and grower calls into evidence, so this scenario explores defensible cooperative memory.</description>
+      <category>Stories</category>
+      <pubDate>Wed, 08 Apr 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/story-art/tomas-aldaz-card.png" />
+    </item>
+    <item>
+      <title>A psychotherapy practice in New York</title>
+      <link>https://www.jokuh.com/stories/aaron-liebowitz-psychotherapy-nyc</link>
+      <guid isPermaLink="true">https://www.jokuh.com/stories/aaron-liebowitz-psychotherapy-nyc</guid>
+      <description>Recent AI privilege and preservation rulings raised new confidentiality questions for clinical notes, so this scenario explores what safer memory infrastructure could look like.</description>
+      <category>Stories</category>
+      <pubDate>Wed, 01 Apr 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/story-art/aaron-nyc-card.png" />
+    </item>
+    <item>
+      <title>Made from Memory</title>
+      <link>https://www.jokuh.com/stories/made-from-memory</link>
+      <guid isPermaLink="true">https://www.jokuh.com/stories/made-from-memory</guid>
+      <description>How a Tulum designer keeps every word her clients ever told her.</description>
+      <category>Stories</category>
+      <pubDate>Sun, 29 Mar 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/story-art/maren-workspace.png" />
+    </item>
+    <item>
+      <title>Made from Memory</title>
+      <link>https://www.jokuh.com/stories/made-from-memory-ii</link>
+      <guid isPermaLink="true">https://www.jokuh.com/stories/made-from-memory-ii</guid>
+      <description>How a Tulum designer keeps every word her clients ever told her.</description>
+      <category>Stories</category>
+      <pubDate>Sun, 29 Mar 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/story-art/maren-workspace.png" />
+    </item>
+    <item>
+      <title>Ethics, Compliance &amp; Responsible Deployment</title>
+      <link>https://www.jokuh.com/newsroom/ethics-compliance-responsible-deployment</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/ethics-compliance-responsible-deployment</guid>
+      <description>Ethics and compliance are product behaviors, not a policy appendix.</description>
+      <category>Safety</category>
+      <pubDate>Sat, 28 Mar 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-07354d4ef5.jpg" />
+    </item>
+    <item>
+      <title>Gooey 0.9: accessible focus rings and motion prefs</title>
+      <link>https://www.jokuh.com/newsroom/gooey-accessible-focus-rings-motion-prefs</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/gooey-accessible-focus-rings-motion-prefs</guid>
+      <description>Respects reduced motion and improves keyboard navigation across primitives.</description>
+      <category>Engineering</category>
+      <pubDate>Fri, 20 Feb 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-8fd17453c8.jpg" />
+    </item>
+    <item>
+      <title>Responsible use guidelines for V1llains lab</title>
+      <link>https://www.jokuh.com/newsroom/responsible-use-guidelines-v1llains-lab</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/responsible-use-guidelines-v1llains-lab</guid>
+      <description>We tightened sandbox language, escalation rules, and disclosure expectations for experimental agents.</description>
+      <category>Safety</category>
+      <pubDate>Thu, 05 Feb 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-904958eb92.jpg" />
+    </item>
+    <item>
+      <title>Blurbs composer: markdown tables and paste cleanup</title>
+      <link>https://www.jokuh.com/newsroom/blurbs-composer-markdown-tables-paste-cleanup</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/blurbs-composer-markdown-tables-paste-cleanup</guid>
+      <description>Composer paste now normalizes tables, strips inline cruft, and keeps formatting safer across exports.</description>
+      <category>Product</category>
+      <pubDate>Wed, 28 Jan 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-96868c3c28.jpg" />
+    </item>
+    <item>
+      <title>Open office hours: identity &amp; claim flow</title>
+      <link>https://www.jokuh.com/newsroom/open-office-hours-identity-claim-flow</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/open-office-hours-identity-claim-flow</guid>
+      <description>We are opening product office hours around identity verification, claims, and account portability.</description>
+      <category>Community</category>
+      <pubDate>Mon, 12 Jan 2026 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-ab88697a68.jpg" />
+    </item>
+    <item>
+      <title>Hiring: design systems and realtime infra</title>
+      <link>https://www.jokuh.com/newsroom/hiring-design-systems-realtime-infra</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/hiring-design-systems-realtime-infra</guid>
+      <description>We are growing the teams behind Gooey, realtime transcription, and the infra that keeps them reliable.</description>
+      <category>Company</category>
+      <pubDate>Sun, 30 Nov 2025 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-b40d239353.jpg" />
+    </item>
+    <item>
+      <title>Pod encryption at rest: what changed</title>
+      <link>https://www.jokuh.com/newsroom/pod-encryption-at-rest-what-changed</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/pod-encryption-at-rest-what-changed</guid>
+      <description>We rotated key handling, narrowed access paths, and tightened how encrypted pod state moves through storage.</description>
+      <category>Engineering</category>
+      <pubDate>Wed, 08 Oct 2025 12:00:00 GMT</pubDate>
+      <media:thumbnail url="https://www.jokuh.com/news-art/news-art-b6d9b6fe70.jpg" />
+    </item>
+  </channel>
+</rss>

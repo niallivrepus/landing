@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <!--
+      Drop legacy root-scoped service workers: the desktop web client used to register
+      `/sw.js` with scope `/` on jokuh.com. After the combined deploy, marketing HTML
+      lives at `/` while the client (and its PWA) lives under `/sandbox/`. A stale `/`
+      worker can keep serving cached client shell (wrong logo / not the landing site).
+      Only clear workers that control the site root; `/sandbox/*` registrations stay.
+    -->
+    <script>
+      (function () {
+        if (!("serviceWorker" in navigator)) return;
+        var path = window.location.pathname || "/";
+        if (path.startsWith("/sandbox")) return;
+        var origin = window.location.origin;
+        var rootScope = origin + "/";
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (regs) {
+            regs.forEach(function (reg) {
+              var scope = reg.scope || "";
+              if (scope === rootScope || scope === origin) {
+                reg.unregister();
+              }
+            });
+          })
+          .catch(function () {});
+      })();
+    </script>
+    <script>
+      (function () {
+        var mediaByPath = {
+          "/blurbs": {
+            poster: "/product-hero/blurbs-poster.jpg",
+          },
+          "/messages": {
+            poster: "/product-hero/texts.jpg",
+          },
+        };
+        var path = window.location.pathname.replace(/\/+$/, "") || "/";
+        var media = mediaByPath[path];
+        if (!media) return;
+
+        function preloadHeroAsset(href, as, type, fetchPriority) {
+          var link = document.createElement("link");
+          link.rel = "preload";
+          link.as = as;
+          link.href = href;
+          if (type) link.type = type;
+          if (fetchPriority) link.setAttribute("fetchpriority", fetchPriority);
+          document.head.appendChild(link);
+        }
+
+        preloadHeroAsset(media.poster, "image", "", "high");
+      })();
+    </script>
+    <link rel="preload" as="image" href="/story-art/maren-workspace.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/story-art/story-office-focus.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/story-art/story-office-smile.png" fetchpriority="high" />
+    <link rel="prefetch" as="image" href="/story-art/maren-tulum-coast.png" />
+    <link rel="prefetch" as="image" href="/story-art/maren-tulum-kitchen.png" />
+    <link rel="prefetch" as="image" href="/story-art/maren-tulum-call.png" />
+    <link rel="prefetch" as="image" href="/story-art/maren-tulum-bungalow.png" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Jokuh newsroom and stories RSS"
+      href="/rss.xml"
+    />
+    <meta
+      name="description"
+      content="Jokuh is a private AI workspace for memory, identity, and agent workflows, built for teams that need clearer control over sensitive context."
+    />
+    <meta property="og:title" content="Jokuh" />
+    <meta property="og:description" content="A private AI workspace for memory, identity, and agent workflows." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <title>Jokuh</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        var k = "jokuh-landing-theme-v2";
+        var stored = null;
+        try {
+          stored = localStorage.getItem(k);
+        } catch (e) {}
+        var resolved =
+          stored === "dark" || stored === "light"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        var root = document.documentElement;
+        root.classList.remove("light", "dark");
+        root.classList.add(resolved);
+        root.setAttribute("data-theme", resolved);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta)
+          meta.setAttribute("content", resolved === "dark" ? "#000000" : "#ffffff");
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

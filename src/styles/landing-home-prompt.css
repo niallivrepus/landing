@@ -1,0 +1,243 @@
+/**
+ * **Purpose:** Homepage prompt stack — bar + OO suggestion pills below (parity `SearchBar.tsx` strip).
+ * **Connects to:** `LandingImmersiveShell`, `landing-home-suggestions.ts`.
+ */
+
+.landing-home-prompt-stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  text-align: left;
+}
+
+/**
+ * Home prompt border-beam shell — `LandingPromptBorderBeam` (border-beam `md`)
+ * wraps the Gooey prompt content, so this element shares the exact box of
+ * `[data-slot="prompt-frame"]` (measured identical: same x/y/w/h + 25px pill).
+ * Fill depth stays on `[data-slot="prompt-frame"]` via `landing-controls.css`.
+ *
+ * `overflow: visible` lets the frame's own drop shadow lift off the hero; the
+ * beam is instead contained by each pseudo-layer's own `clip-path` (below).
+ */
+.landing-home-prompt-bar {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+  border-radius: 25px;
+}
+
+/* Out-specify border-beam's packaged `[data-beam]{overflow:hidden}` so the
+   frame's own drop shadow can lift off the hero; the beam stays contained via
+   each layer's `clip-path` (below), not by clipping this wrapper. */
+.landing-home-prompt-bar[data-beam] {
+  overflow: visible;
+}
+
+/* Keep InteractivePromptBar above decorative beam pseudo-layers. */
+.landing-home-prompt-bar > *:not([data-beam-bloom]) {
+  position: relative;
+  z-index: 1;
+}
+
+/**
+ * Ride the beam *inside* the frame's 1px border — within the frosted indent —
+ * instead of on the extreme outer edge (where it read as a glow floating around
+ * the pill). We inset every beam layer by 1px and shrink the corner to 24px
+ * (25px frame radius − 1px inset) so the stroke, inner glow, and bloom all trace
+ * the same rounded rect just inside the visible border, clipped to that rect so
+ * nothing spills past the frosted edge.
+ *
+ * The `[data-beam]` attribute in the selector is required so this out-specifies
+ * border-beam's packaged `[data-beam="<id>"][data-active]::after` rules
+ * (attr+attr); a plain `.class[data-active]` selector loses and never applies
+ * (the previous `padding: 2px` tweak here was silently dead).
+ */
+.landing-home-prompt-bar[data-beam][data-active]::after,
+.landing-home-prompt-bar[data-beam][data-fading]::after {
+  inset: 1px;
+  padding: 1.5px;
+  border-radius: 24px;
+  clip-path: inset(0 round 24px);
+}
+
+.landing-home-prompt-bar[data-beam][data-active]::before,
+.landing-home-prompt-bar[data-beam][data-fading]::before {
+  inset: 1px;
+  border-radius: 24px;
+  clip-path: inset(0 round 24px);
+}
+
+.landing-home-prompt-bar[data-beam] [data-beam-bloom] {
+  inset: 1px;
+  border-radius: 24px;
+  clip-path: inset(0 round 24px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-home-prompt-bar[data-active],
+  .landing-home-prompt-bar[data-fading],
+  .landing-home-prompt-bar[data-active]::after,
+  .landing-home-prompt-bar[data-fading]::after,
+  .landing-home-prompt-bar[data-active]::before,
+  .landing-home-prompt-bar[data-fading]::before,
+  .landing-home-prompt-bar[data-active] [data-beam-bloom],
+  .landing-home-prompt-bar[data-fading] [data-beam-bloom] {
+    animation: none !important;
+  }
+}
+
+.landing-home-suggestion-strip {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  padding: 4px 4px 2px;
+}
+
+.landing-home-suggestion-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.landing-home-suggestion-strip__inner {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin: 0 auto;
+}
+
+.landing-home-suggestion-pill-wrap {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing-home-suggestion-pill-wrap {
+    opacity: 0;
+    animation: landing-home-suggestion-pill-in 0.42s cubic-bezier(0.22, 1.35, 0.36, 1) both;
+  }
+}
+
+@keyframes landing-home-suggestion-pill-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.landing-home-suggestion-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.88);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.12s ease,
+    box-shadow 0.18s ease;
+}
+
+.light .landing-home-suggestion-pill {
+  color: rgba(0, 0, 0, 0.78);
+}
+
+.light .landing-home-suggestion-pill:hover {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.landing-home-suggestion-pill:active {
+  transform: scale(0.98);
+}
+
+.landing-hero-headline {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  text-align: center;
+  white-space: nowrap;
+  font-size: clamp(1.15rem, 4.6vw, 4.5rem);
+}
+
+/* Branded Jokuh blue block caret for homepage hero typewriter. */
+.landing-hero-typewriter-caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.88em;
+  margin-left: 3px;
+  vertical-align: -0.06em;
+  background: #0066ff;
+  border-radius: 1px;
+  box-shadow: 0 0 10px rgba(0, 102, 255, 0.35);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing-hero-typewriter-caret--typing {
+    animation: landing-hero-caret-blink 0.85s step-end infinite;
+  }
+
+  .landing-hero-typewriter-caret--complete {
+    animation: landing-hero-caret-fade 0.42s ease forwards;
+  }
+}
+
+@keyframes landing-hero-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes landing-hero-caret-fade {
+  to {
+    opacity: 0;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .landing-hero-headline {
+    white-space: normal;
+    font-size: clamp(1.35rem, 6.8vw, 2rem);
+    line-height: 1.08;
+    max-width: min(100%, 20ch);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-home-suggestion-pill-wrap {
+    animation: none;
+    opacity: 1;
+  }
+
+  .landing-home-suggestion-pill:active {
+    transform: none;
+  }
+
+  .landing-hero-typewriter-caret {
+    display: none;
+  }
+}

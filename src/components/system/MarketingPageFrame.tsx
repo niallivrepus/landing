@@ -1,0 +1,62 @@
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { cn } from "@jokuh/gooey";
+import { MegaFooter } from "../MegaFooter";
+import { MARKETING_ROOT_CLASS } from "./shells";
+
+export function MarketingPageFrame({
+  beforeChrome,
+  children,
+  afterMain,
+  afterFooter,
+  className,
+  mainClassName,
+  mainProps,
+  theme = "dark",
+  footer = <MegaFooter />,
+  topBar = null,
+  withAntialiased = false,
+  withFontSans = false,
+  wrapMain = true,
+}: {
+  beforeChrome?: ReactNode;
+  children: ReactNode;
+  afterMain?: ReactNode;
+  afterFooter?: ReactNode;
+  className?: string;
+  mainClassName?: string;
+  mainProps?: ComponentPropsWithoutRef<"main">;
+  theme?: "dark" | "light";
+  footer?: ReactNode;
+  topBar?: ReactNode;
+  withAntialiased?: boolean;
+  withFontSans?: boolean;
+  /** When false, children render after the top bar with no wrapping `<main>` (docs, legal). */
+  wrapMain?: boolean;
+}) {
+  const body = wrapMain ? (
+    <main className={mainClassName} {...mainProps}>
+      {children}
+    </main>
+  ) : (
+    children
+  );
+
+  return (
+    <div
+      data-theme={theme}
+      className={cn(
+        theme === "light" ? "light min-h-screen bg-white text-zinc-950" : MARKETING_ROOT_CLASS,
+        withFontSans && "font-sans",
+        withAntialiased && "antialiased",
+        className,
+      )}
+    >
+      {beforeChrome}
+      {topBar}
+      {body}
+      {afterMain}
+      {footer}
+      {afterFooter}
+    </div>
+  );
+}

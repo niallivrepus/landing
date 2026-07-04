@@ -1,0 +1,11 @@
+# Railway config-as-code for marketing apex (`jokuh.com`).
+# **Purpose:** Pin Docker builder; connect this repo directly to Railway service `www`.
+# **Connects to:** `Dockerfile`, `server/railway.ts`; app subdomain on jokuh-live service `live`.
+# **Deploy docs:** `docs/railway-deployment.md`
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+restartPolicyType = "ON_FAILURE"

@@ -1,0 +1,138 @@
+/**
+ * **Purpose:** Central fill-depth tokens for landing frosted controls (buttons, inputs, pills).
+ * **Connects to:** Gooey `--color-light-glass-*`, `--app-surface`, `InteractivePromptBar`, `ActionButton`.
+ * Overrides transparent glass defaults with layered 4D depth while keeping blur.
+ */
+
+.landing-cinema {
+  --landing-control-fill: rgba(255, 255, 255, 0.15);
+  --landing-control-fill-hover: rgba(255, 255, 255, 0.2);
+  --landing-control-fill-active: rgba(255, 255, 255, 0.24);
+  --landing-control-border: rgba(255, 255, 255, 0.22);
+  --landing-control-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --landing-control-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.14);
+}
+
+.light,
+[data-theme="light"] {
+  --landing-control-fill: rgba(255, 255, 255, 0.88);
+  --landing-control-fill-hover: rgba(255, 255, 255, 0.94);
+  --landing-control-fill-active: rgba(255, 255, 255, 0.98);
+  --landing-control-border: rgba(0, 0, 0, 0.1);
+  --landing-control-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --landing-control-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Map landing tokens onto Gooey glass scale for shared components (prompt bar, ActionButton, ChatBubbleButton). */
+.landing-cinema,
+.light,
+[data-theme="light"] {
+  --color-light-glass-5: var(--landing-control-fill);
+  --color-light-glass-10: var(--landing-control-fill-hover);
+  --color-light-glass-15: var(--landing-control-fill-active);
+  --color-light-glass-20: var(--landing-control-border);
+  --app-surface: var(--landing-control-fill);
+  --app-surface-hover: var(--landing-control-fill-hover);
+  --app-surface-pressed: var(--landing-control-fill-active);
+  --app-surface-border: var(--landing-control-border);
+  --app-surface-shadow: var(--landing-control-shadow);
+  --prompt-glass-surface: var(--landing-control-fill);
+  --prompt-glass-border: 1px solid var(--landing-control-border);
+  --prompt-glass-shadow: var(--landing-control-inner-highlight), var(--landing-control-shadow);
+  --button-glass-fill: var(--landing-control-fill);
+}
+
+/**
+ * GooeyGlass shells for Nexus, Blurbs, composer — match ActionButton fill depth.
+ * `!important` wins over inline `background: transparent` from lens hosts.
+ */
+.landing-gooey-shell {
+  background: var(--landing-control-fill) !important;
+  border: 1px solid var(--landing-control-border) !important;
+  box-shadow: var(--landing-control-inner-highlight), var(--landing-control-shadow) !important;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+.landing-nexus-pill-link:hover .landing-gooey-shell,
+.landing-blurbs-pill-link:hover .landing-gooey-shell,
+.landing-blurbs-composer:hover .landing-gooey-shell,
+.landing-blurbs-composer:focus-within .landing-gooey-shell {
+  background: var(--landing-control-fill-hover) !important;
+}
+
+.landing-nexus-pill-link:active .landing-gooey-shell,
+.landing-blurbs-pill-link:active .landing-gooey-shell,
+.landing-blurbs-composer:active .landing-gooey-shell {
+  background: var(--landing-control-fill-active) !important;
+}
+
+/* Homepage + product immersive prompt bars — full 4D depth on Gooey frame. */
+.landing-cinema [data-slot="prompt-frame"],
+.light [data-slot="prompt-frame"],
+[data-theme="light"] [data-slot="prompt-frame"] {
+  background-color: var(--landing-control-fill) !important;
+  border: 1px solid var(--landing-control-border) !important;
+  box-shadow: var(--landing-control-inner-highlight), var(--landing-control-shadow) !important;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+/** Reusable frosted control surface — suggestion pills, inputs, custom capsules. */
+.landing-control-surface {
+  background: var(--landing-control-fill);
+  border: 1px solid var(--landing-control-border);
+  box-shadow: var(--landing-control-inner-highlight), var(--landing-control-shadow);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+.landing-control-surface:hover {
+  background: var(--landing-control-fill-hover);
+}
+
+.landing-control-surface:active {
+  background: var(--landing-control-fill-active);
+}
+
+/* Corner ActionButton — stronger drop shadow for lift off the hero. */
+.landing-cinema [data-slot="action-button"],
+.light [data-slot="action-button"],
+[data-theme="light"] [data-slot="action-button"] {
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.22)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.14));
+}
+
+/* Marketing pill links (Invest, Careers, About). */
+.landing-pill-link {
+  background: var(--landing-control-fill);
+  border: 1px solid var(--landing-control-border);
+  box-shadow: var(--landing-control-inner-highlight), var(--landing-control-shadow);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+}
+
+.landing-pill-link:hover {
+  background: var(--landing-control-fill-hover);
+}
+
+.landing-pill-link--primary {
+  background: var(--color-light-space);
+  border-color: transparent;
+  box-shadow: var(--landing-control-shadow);
+  color: var(--color-dark-space);
+}
+
+.landing-pill-link--primary:hover {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.light .landing-pill-link--primary,
+[data-theme="light"] .landing-pill-link--primary {
+  background: rgb(9, 9, 11);
+  color: rgb(255, 255, 255);
+}
+
+.light .landing-pill-link--primary:hover,
+[data-theme="light"] .landing-pill-link--primary:hover {
+  background: rgb(39, 39, 42);
+}

@@ -1,0 +1,473 @@
+/**
+ * **Purpose:** App profile pod + network strip styles for the marketing `/profile` page.
+ * **Parity:** `frontend/src/styles/glass.css` — `.id-page-profile-stack`, `.id-pod-squircle`, `.profile-network-strip`.
+ */
+
+.landing-profile-pod {
+  width: 100%;
+}
+
+.landing-profile-pod__loading {
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.id-page-profile-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+  max-width: 470px;
+  min-width: 0;
+  box-sizing: border-box;
+  --id-scale: clamp(0.86, calc(min(100dvw, 100dvh) / 390), 1.06);
+  --id-fs-12: calc(12px * var(--id-scale));
+  --id-fs-13: calc(13px * var(--id-scale));
+  --id-fs-15: calc(15px * var(--id-scale));
+  --id-fs-17: calc(17px * var(--id-scale));
+  --id-fs-22: calc(22px * var(--id-scale));
+}
+
+.id-page-profile-stack--no-biography .id-pod-profile-photo-frame {
+  max-height: min(60dvh, calc(min(100%, 470px) * 4 / 3));
+}
+
+.id-pod-squircle {
+  width: 100%;
+  max-width: 470px;
+  min-width: 0;
+  padding: 22px;
+  border-radius: 36px;
+  box-sizing: border-box;
+  background: rgba(10, 10, 12, 0.88);
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.light .id-pod-squircle {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.id-biography-card {
+  min-width: 0;
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 28px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.light .id-biography-card {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.id-pod-profile-photo-frame {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  aspect-ratio: 3 / 4;
+  max-height: min(48dvh, calc(min(100%, 470px) * 4 / 3));
+  border-radius: 28px;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.id-pod-profile-photo-frame__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-width: 0;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+.id-pod-profile-photo-frame__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.landing-profile-pod__identity {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.landing-profile-pod__display-name {
+  margin: 0;
+  font-size: var(--id-fs-22, 22px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.light .landing-profile-pod__display-name {
+  color: rgba(9, 9, 11, 0.94);
+}
+
+.landing-profile-pod__handle {
+  margin: 6px 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: var(--id-fs-12, 12px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.light .landing-profile-pod__handle {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.landing-profile-pod__tagline {
+  margin: 8px 0 0;
+  font-size: var(--id-fs-13, 13px);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(134, 239, 172, 0.88);
+}
+
+.light .landing-profile-pod__tagline {
+  color: rgb(21, 128, 61);
+}
+
+.landing-profile-pod__initials {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.light .landing-profile-pod__initials {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.landing-profile-pod__live-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #fff;
+  background: rgba(220, 38, 38, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.landing-profile-pod__network-wrap {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.landing-profile-pod__bio-title {
+  margin: 0 0 8px;
+  font-size: var(--id-fs-15, 15px);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.light .landing-profile-pod__bio-title {
+  color: rgba(9, 9, 11, 0.94);
+}
+
+.landing-profile-pod__bio-source {
+  margin: 0 0 8px;
+  font-size: var(--id-fs-12, 12px);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.light .landing-profile-pod__bio-source {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.landing-profile-pod__bio-body {
+  margin: 0;
+  font-size: var(--id-fs-15, 15px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: pre-wrap;
+}
+
+.light .landing-profile-pod__bio-body {
+  color: rgba(0, 0, 0, 0.68);
+}
+
+.landing-profile-pod__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.landing-profile-pod__btn {
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.landing-profile-pod__btn--primary {
+  border: 1px solid rgba(96, 165, 250, 0.45);
+  background: rgba(59, 130, 246, 0.2);
+  color: rgba(219, 234, 254, 0.95);
+}
+
+.landing-profile-pod__btn--primary:hover {
+  background: rgba(59, 130, 246, 0.32);
+}
+
+.light .landing-profile-pod__btn--primary {
+  color: rgb(29, 78, 216);
+}
+
+.landing-profile-pod__btn--secondary {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.landing-profile-pod__btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.light .landing-profile-pod__btn--secondary {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.04);
+  color: rgb(39, 39, 42);
+}
+
+/* Profile network strip — parity `ProfileNetworkStrip.tsx` */
+.profile-network-strip {
+  position: relative;
+  width: 100%;
+  max-width: 470px;
+  min-width: 0;
+  box-sizing: border-box;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.profile-network-strip--embedded {
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.profile-network-strip__layout {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.profile-network-strip__stack {
+  position: relative;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 0 12px;
+  box-sizing: border-box;
+}
+
+.profile-network-strip__avatar-backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.profile-network-strip__avatars-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  text-align: center;
+}
+
+.profile-network-strip__avatars-row {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.profile-network-strip__hero-overlay {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 48px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  pointer-events: none;
+  text-align: center;
+}
+
+/* Standalone card only — embedded strips use per-avatar depth, not a strip-wide scrim. */
+.profile-network-strip:not(.profile-network-strip--embedded) .profile-network-strip__hero-overlay::before {
+  content: "";
+  position: absolute;
+  inset: -4px -12px;
+  z-index: -1;
+  border-radius: 14px;
+  background: radial-gradient(
+    ellipse 85% 120% at 50% 50%,
+    rgba(0, 0, 0, 0.42),
+    rgba(0, 0, 0, 0.08) 62%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+.profile-network-strip__hero-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #fff;
+  text-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.35);
+}
+
+.profile-network-strip--embedded .profile-network-strip__hero-title {
+  text-shadow:
+    0 0 10px rgba(0, 0, 0, 0.55),
+    0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.light .profile-network-strip--embedded .profile-network-strip__hero-title {
+  color: rgba(9, 9, 11, 0.92);
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.9),
+    0 1px 1px rgba(255, 255, 255, 0.75);
+}
+
+.profile-network-strip__connections-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 2px solid var(--color-green-3, #86efac);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.15);
+  isolation: isolate;
+}
+
+.profile-network-strip__connections-badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: var(--color-green-1, #052e16);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.profile-network-strip__connections-badge-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 5px 0;
+  font-size: 12px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  text-align: center;
+  max-width: min(100%, 280px);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--color-green-5, #bbf7d0);
+}
+
+.profile-network-strip__avatars-spacer {
+  min-height: 40px;
+  width: 1px;
+}
+
+/* Each preview peer floats independently — no shared strip veil. */
+.profile-network-strip__avatar-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 41px;
+  border-radius: 999px;
+  overflow: hidden;
+  opacity: 0.42;
+  background: rgba(255, 255, 255, 0.08);
+  position: relative;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.28),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.light .profile-network-strip__avatar-wrap {
+  background: rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.14),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.profile-network-strip__avatar-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-network-strip__avatar-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

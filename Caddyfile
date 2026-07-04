@@ -1,0 +1,67 @@
+# Local dev only — optional Caddy mirror of production routing.
+# **Production:** Railway uses `server/railway.ts` (Node) via `Dockerfile`, not this file.
+# **Parity:** Redirects and SPA fallback match `server/static-middleware.ts`.
+
+:{$PORT:3000} {
+	root * /srv
+
+	route {
+		@wwwHost header Host www.jokuh.com
+		handle @wwwHost {
+			redir https://jokuh.com{uri} 308
+		}
+
+		@appleAppSiteAssociation path /.well-known/apple-app-site-association /apple-app-site-association
+		handle @appleAppSiteAssociation {
+			header Content-Type application/json
+			rewrite * /.well-known/apple-app-site-association
+			file_server
+		}
+
+		@sandbox path /sandbox /sandbox/*
+		handle @sandbox {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@dd path /dd /dd/*
+		handle @dd {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@dataroom path /dataroom /dataroom/*
+		handle @dataroom {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@pitchdeckExact path /pitchdeck
+		handle @pitchdeckExact {
+			redir https://app.jokuh.com/pitch-deck 302
+		}
+
+		@pitchdeckSub path /pitchdeck/*
+		handle @pitchdeckSub {
+			uri strip_prefix /pitchdeck
+			redir https://app.jokuh.com/pitch-deck{uri} 302
+		}
+
+		@pitchdeckLegacy path /pitch-deck /pitch-deck/*
+		handle @pitchdeckLegacy {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@oo path /oo /oo/*
+		handle @oo {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		@investpipeline path /xx/investpipeline /xx/investpipeline/*
+		handle @investpipeline {
+			redir https://app.jokuh.com{uri} 302
+		}
+
+		handle {
+			try_files {path} /index.html
+			file_server
+		}
+	}
+}

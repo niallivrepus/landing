@@ -1,0 +1,359 @@
+/**
+ * **Purpose:** Blurbs immersive page — public feed column + bottom composer (parity `BlurbsPage.tsx`).
+ * **Connects to:** `ProductPage`, `ImmersiveAppChrome`, `/download` intercept.
+ */
+
+.landing-public-blurbs-feed {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: min(72vh, 640px);
+  min-height: min(48vh, 420px);
+  overflow: hidden;
+}
+
+.landing-public-blurbs-feed__list {
+  flex: 1;
+  min-height: 0;
+  list-style: none;
+  margin: 0;
+  padding: 4px 2px 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.landing-public-blurbs-feed__list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.landing-public-blurbs-feed__list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.landing-public-blurbs-feed__item {
+  margin: 0;
+  padding: 0;
+}
+
+.landing-public-blurbs-feed__gap {
+  height: 14px;
+}
+
+.landing-public-blurbs-feed__state {
+  margin: 0 0 12px;
+  text-align: center;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.light .landing-public-blurbs-feed__state,
+[data-theme="light"] .landing-public-blurbs-feed__state {
+  color: rgba(10, 10, 10, 0.55);
+}
+
+.landing-public-blurbs-feed__note {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.light .landing-public-blurbs-feed__note,
+[data-theme="light"] .landing-public-blurbs-feed__note {
+  color: rgba(10, 10, 10, 0.45);
+}
+
+/** Figma `cards / message / others` — avatar left, asymmetric speech bubble right (parity `BlurbsPage.tsx`). */
+.landing-public-blurbs-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+}
+
+.landing-public-blurbs-card__avatar-hit {
+  flex-shrink: 0;
+  display: block;
+  width: 40px;
+  padding-top: 2px;
+  text-decoration: none;
+  border-radius: 20px;
+}
+
+.landing-public-blurbs-card__bubble {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 4px 22px 22px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    0 14px 34px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 4px 12px 12px;
+}
+
+.light .landing-public-blurbs-card__bubble,
+[data-theme="light"] .landing-public-blurbs-card__bubble {
+  border-color: rgba(10, 10, 10, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.86) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.landing-public-blurbs-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 24px;
+}
+
+.landing-public-blurbs-card__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.landing-public-blurbs-card__author {
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.94);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.landing-public-blurbs-card__author:hover,
+.landing-public-blurbs-card__author:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.light .landing-public-blurbs-card__author,
+[data-theme="light"] .landing-public-blurbs-card__author {
+  color: #0a0a0a;
+}
+
+.landing-public-blurbs-card__handle {
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.48);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.light .landing-public-blurbs-card__handle,
+[data-theme="light"] .landing-public-blurbs-card__handle {
+  color: rgba(10, 10, 10, 0.45);
+}
+
+.landing-public-blurbs-card__time {
+  flex-shrink: 0;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  padding-top: 2px;
+}
+
+.light .landing-public-blurbs-card__time,
+[data-theme="light"] .landing-public-blurbs-card__time {
+  color: rgba(10, 10, 10, 0.42);
+}
+
+.landing-public-blurbs-card__body-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.landing-public-blurbs-card__body {
+  margin: 0;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.015em;
+  font-weight: 450;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.light .landing-public-blurbs-card__body,
+[data-theme="light"] .landing-public-blurbs-card__body {
+  color: #0a0a0a;
+}
+
+.landing-public-blurbs-card__media {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.landing-public-blurbs-card__media--audio {
+  aspect-ratio: auto;
+  min-height: 48px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+
+.landing-public-blurbs-card__media-image,
+.landing-public-blurbs-card__media-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.landing-public-blurbs-card__media-video-peek {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.landing-public-blurbs-card__media-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.landing-public-blurbs-card__media-audio {
+  width: 100%;
+}
+
+.landing-public-blurbs-card__media-fallback {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(216, 255, 61, 0.82);
+}
+
+.landing-public-blurbs-card__permalink {
+  display: inline-flex;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(120, 170, 255, 0.95);
+  text-decoration: none;
+}
+
+.landing-public-blurbs-card__permalink:hover,
+.landing-public-blurbs-card__permalink:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Bottom composer — parity `jokuh-blurbs-composer-field-shell--main` peek capsule. */
+.landing-blurbs-composer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.landing-blurbs-composer__glass {
+  flex-shrink: 0;
+}
+
+.landing-blurbs-composer__field {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-height: 42px;
+  align-items: center;
+  padding: 8px 18px;
+  box-sizing: border-box;
+}
+
+.landing-blurbs-composer__input {
+  width: 100%;
+  min-height: 22px;
+  max-height: 96px;
+  resize: none;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 16px;
+  line-height: 22px;
+  color: rgba(255, 255, 255, 0.94);
+  field-sizing: content;
+}
+
+.landing-blurbs-composer__input::placeholder {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.landing-blurbs-composer__input:focus {
+  outline: none;
+}
+
+.landing-blurbs-composer__input:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.light .landing-blurbs-composer__input,
+[data-theme="light"] .landing-blurbs-composer__input {
+  color: #0a0a0a;
+}
+
+.light .landing-blurbs-composer__input::placeholder,
+[data-theme="light"] .landing-blurbs-composer__input::placeholder {
+  color: rgba(10, 10, 10, 0.42);
+}
+
+@media (max-width: 640px) {
+  .landing-blurbs-composer__glass {
+    width: min(
+      calc(100vw - max(144px, env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px) + 144px)),
+      450px
+    ) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-public-blurbs-feed {
+    max-height: min(68vh, 560px);
+  }
+
+  .landing-blurbs-composer__field {
+    padding-inline: 14px;
+  }
+}

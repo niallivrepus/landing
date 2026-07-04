@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "jokuh-landing-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "preview", "--port", "4174"],
+      "port": 4174,
+      "cwd": "/Users/lord/Desktop/landing"
+    }
+  ]
+}

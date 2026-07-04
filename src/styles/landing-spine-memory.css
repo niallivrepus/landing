@@ -1,0 +1,283 @@
+/**
+ * **Purpose:** Gooey memory pill + inline expand panel for landing Spine Independence Day essay.
+ * **Connects to:** `SpineJuly4Memory.tsx`, `landing-spine-capsules.css` hour memory tones.
+ */
+
+.landing-spine-memory {
+  width: 100%;
+}
+
+.landing-spine-memory__shell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(178, 0, 255, 0.22) 0%, rgba(119, 0, 255, 0.14) 55%, rgba(255, 255, 255, 0.04) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 10px 28px -18px rgba(119, 0, 255, 0.65);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  transition:
+    border-radius 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.light .landing-spine-memory__shell {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, rgba(178, 0, 255, 0.1) 0%, rgba(119, 0, 255, 0.06) 55%, rgba(0, 0, 0, 0.02) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 10px 28px -18px rgba(119, 0, 255, 0.25);
+}
+
+.landing-spine-memory__shell--expanded {
+  border-radius: 28px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 18px 44px -24px rgba(119, 0, 255, 0.75);
+}
+
+.landing-spine-memory__pill {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px 10px 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.landing-spine-memory__pill:active {
+  transform: scale(0.995);
+}
+
+.landing-spine-memory__pill-date {
+  flex-shrink: 0;
+  min-width: 2.6rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.light .landing-spine-memory__pill-date {
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.landing-spine-memory__pill-thumb {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.light .landing-spine-memory__pill-thumb {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.landing-spine-memory__pill-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.landing-spine-memory__pill-eyebrow {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.light .landing-spine-memory__pill-eyebrow {
+  color: rgba(0, 0, 0, 0.42);
+}
+
+.landing-spine-memory__pill-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-light-space, #fff);
+}
+
+.light .landing-spine-memory__pill-title {
+  color: #18181b;
+}
+
+.landing-spine-memory__pill-snippet {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.light .landing-spine-memory__pill-snippet {
+  color: rgba(0, 0, 0, 0.48);
+}
+
+.landing-spine-memory__pill-chevron {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.55;
+}
+
+.landing-spine-memory__panel {
+  display: flex;
+  max-height: min(46vh, 440px);
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 14px 12px;
+  overflow: hidden;
+}
+
+.landing-spine-memory__panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.landing-spine-memory__panel-meta {
+  margin: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.light .landing-spine-memory__panel-meta {
+  color: rgba(0, 0, 0, 0.42);
+}
+
+.landing-spine-memory__panel-title {
+  margin: 4px 0 0;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-light-space, #fff);
+}
+
+.light .landing-spine-memory__panel-title {
+  color: #18181b;
+}
+
+.landing-spine-memory__panel-dek {
+  margin: 6px 0 0;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.light .landing-spine-memory__panel-dek {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.landing-spine-memory__close {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+}
+
+.light .landing-spine-memory__close {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.04);
+  color: rgba(0, 0, 0, 0.72);
+}
+
+.landing-spine-memory__hero {
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .landing-spine-memory__hero {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.landing-spine-memory__hero-image {
+  display: block;
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.landing-spine-memory__poem-scroll {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.landing-spine-memory__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+}
+
+.light .landing-spine-memory__footer {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.landing-spine-memory__full-link,
+.landing-spine-memory__collapse-link {
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.light .landing-spine-memory__full-link,
+.light .landing-spine-memory__collapse-link {
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.landing-spine-memory__collapse-link {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-spine-memory__shell {
+    transition: none;
+  }
+
+  .landing-spine-memory__pill:active {
+    transform: none;
+  }
+}

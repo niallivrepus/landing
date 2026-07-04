@@ -1,0 +1,384 @@
+import mediumPayload from "./medium-feed.json";
+import type { LAVA_LAMP_STYLES } from "../components/LavaLamp";
+
+/** Fallback when feed items omit `cardGradient` */
+export const DEFAULT_NEWS_CARD_GRADIENT =
+  "linear-gradient(135deg, #0a0a0c 0%, #1e293b 38%, #334155 100%)";
+
+// Exact news id -> thumbnail file. No rotation/hash assignment.
+const LOCKED_CARD_IMAGES_BY_NEWS_ID: Record<string, string> = {
+  "bnb-chain-partnership-discussions": "/news-art/news-art-60a3c40e6d.jpg",
+  "jokuh-at-consensus-2026-miami": "/news-art/news-art-a1e833939f.jpg",
+  "backing-redbeard-denarii": "/news-art/news-art-6c8d0b8410.jpg",
+  "spine-ships-testflight": "/news-art/news-art-d8b26214c8.jpg",
+  "grant-stack-avalanche-runpod-hume-kihew": "/news-art/news-art-fba6b6f6b1.jpg",
+  "ethics-compliance-operating-principles": "/news-art/news-art-07354d4ef5.jpg",
+  "3": "/news-art/news-art-8fd17453c8.jpg",
+  "4": "/news-art/news-art-904958eb92.jpg",
+  "5": "/news-art/news-art-96868c3c28.jpg",
+  "6": "/news-art/news-art-ab88697a68.jpg",
+  "7": "/news-art/news-art-b40d239353.jpg",
+  "8": "/news-art/news-art-b6d9b6fe70.jpg",
+};
+
+if (new Set(Object.values(LOCKED_CARD_IMAGES_BY_NEWS_ID)).size !== Object.keys(LOCKED_CARD_IMAGES_BY_NEWS_ID).length) {
+  throw new Error("Every locked newsroom thumbnail must belong to exactly one news item.");
+}
+
+export type NewsCategory =
+  | "Company"
+  | "Product"
+  | "Engineering"
+  | "Safety"
+  | "Community"
+  | "Funding"
+  | "Release"
+  | "Milestone";
+
+export const NEWS_CATEGORIES: (NewsCategory | "All")[] = [
+  "Company",
+  "Product",
+  "Engineering",
+  "Safety",
+  "Community",
+  "Funding",
+  "Release",
+  "Milestone",
+  "All",
+];
+
+export const NEWS_FILTER_TOPICS = [
+  "Pods",
+  "Blurbs",
+  "Agent Portal",
+  "Community",
+  "Culture & careers",
+  "Events",
+  "Safety",
+] as const;
+
+const PUBLIC_NEWS_ITEM_LIMIT = 4;
+
+/**
+ * On-site news `id`s (same string as URL slug for these briefs) withheld from the public feed
+ * and from `/newsroom/:slug` until partners/events confirm we may name them on the marketing site.
+ * Remove an id from this set when clearance is granted.
+ */
+export const NEWS_ITEM_IDS_PENDING_PARTNER_PERMISSION: ReadonlySet<string> = new Set([
+  "bnb-chain-partnership-discussions",
+  "jokuh-at-consensus-2026-miami",
+  "backing-redbeard-denarii",
+]);
+
+export type NewsTopic = (typeof NEWS_FILTER_TOPICS)[number];
+export type NewsCardArtMode = "image" | "lavaLamp" | "gradient";
+export type NewsCardArtDescriptor = {
+  gradient: string;
+  image?: string;
+  lavaLamp?: keyof typeof LAVA_LAMP_STYLES;
+  overlayImage?: string;
+  overlayAlt?: string;
+  overlayClassName?: string;
+};
+
+export type NewsItem = {
+  id: string;
+  title: string;
+  excerpt?: string;
+  category: NewsCategory;
+  topics: NewsTopic[];
+  publishedAt: string;
+  readMinutes: number;
+  cardGradient: string;
+  /** Optional cover art (local `/…` or URL). Falls back to `cardGradient` if missing or broken. */
+  cardImage?: string;
+  /** Optional logo or motif overlaid centered above the lava lamp / gradient (e.g. event lockups). */
+  cardOverlayImage?: string;
+  /** Optional alt text for `cardOverlayImage` (decorative if omitted). */
+  cardOverlayAlt?: string;
+  /** Tailwind class controlling the overlay image size (default ≈58% width). */
+  cardOverlayClassName?: string;
+  /** Explicit visual mode for every surface that renders this article thumbnail. */
+  cardArtMode?: NewsCardArtMode;
+  /** Lava lamp art style used only when `cardArtMode` is `lavaLamp`. */
+  lavaLamp?: keyof typeof LAVA_LAMP_STYLES;
+  /** Canonical slug for on-site newsroom articles. */
+  slug?: string;
+  /** Opens in new tab, Medium or other off-site posts */
+  externalUrl?: string;
+  /** On-site path for announcements that are not on Medium */
+  internalHref?: string;
+  /** Pin this item as the featured (large) card on the newsroom page, regardless of recency. */
+  pinFeatured?: boolean;
+};
+
+type MediumFeedFile = {
+  feedUrl: string | null;
+  syncedAt: string | null;
+  items: Array<{
+    id: string;
+    title: string;
+    excerpt?: string;
+    publishedAt: string;
+    url: string;
+    readMinutes: number;
+    cardGradient?: string;
+    cardImage?: string;
+  }>;
+};
+
+const mediumFile = mediumPayload as MediumFeedFile;
+
+function newsroomPath(slug: string) {
+  return `/newsroom/${slug}`;
+}
+
+function mediumToNewsItem(entry: MediumFeedFile["items"][number]): NewsItem {
+  return {
+    id: `medium-${entry.id}`,
+    title: entry.title,
+    excerpt: entry.excerpt,
+    category: "Company",
+    topics: ["Community"],
+    publishedAt: entry.publishedAt,
+    readMinutes: entry.readMinutes,
+    cardGradient: entry.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT,
+    cardImage: entry.cardImage?.trim() || undefined,
+    externalUrl: entry.url,
+  };
+}
+
+const STATIC_NEWS_ITEMS: NewsItem[] = [
+  {
+    id: "bnb-chain-partnership-discussions",
+    title: "Jokuh and BNB Chain Align Ahead of Consensus Miami",
+    excerpt: "BNB Chain's ecosystem team has opened technical alignment with Jokuh ahead of Consensus 2026 in Miami, with Jokuh architecting natively across BSC, opBNB, and Greenfield from day one.",
+    category: "Milestone",
+    topics: ["Community", "Events"],
+    publishedAt: "2026-05-04",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(140deg, #020617 0%, #422006 38%, #f0b90b 100%)",
+    cardOverlayImage: "/news/bnb-chain-logo.svg",
+    cardOverlayAlt: "BNB Chain",
+    cardOverlayClassName: "w-[88px] h-[88px]",
+    lavaLamp: "sunrise",
+    slug: "bnb-chain-partnership-discussions",
+    internalHref: newsroomPath("bnb-chain-partnership-discussions"),
+  },
+  {
+    id: "jokuh-at-consensus-2026-miami",
+    title: "Jokuh at Consensus 2026",
+    excerpt: "Jokuh will be at Consensus 2026 in Miami to demonstrate the Sovereign Agentic Operating System and meet investors, builders, and partners working at the intersection of AI, identity, and on-chain settlement.",
+    category: "Milestone",
+    topics: ["Events", "Community"],
+    publishedAt: "2026-04-30",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(160deg, #020617 0%, #0f172a 45%, #1e3a5f 100%)",
+    cardOverlayImage: "/news/consensus-2026-logo.svg",
+    cardOverlayAlt: "Consensus 2026, Miami",
+    cardArtMode: "lavaLamp",
+    lavaLamp: "aurora",
+    slug: "jokuh-at-consensus-2026-miami",
+    internalHref: newsroomPath("jokuh-at-consensus-2026-miami"),
+    pinFeatured: true,
+  },
+  {
+    id: "backing-redbeard-denarii",
+    title: "Backing from Red Beard Ventures and Denarii Labs",
+    excerpt: "Jokuh confirms institutional backing from Red Beard Ventures and Denarii Labs to advance the Sovereign Agentic Operating System, a private, local-first runtime for memory, identity, and agent workflows.",
+    category: "Funding",
+    topics: ["Community"],
+    publishedAt: "2026-04-22",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(145deg, #020617 0%, #0f3d3e 42%, #152238 100%)",
+    cardImage: "/journal-art/news-green-flow.png",
+    cardOverlayImage: "/news/red-beard-ventures-logo.svg",
+    cardOverlayAlt: "Red Beard Ventures",
+    cardOverlayClassName: "w-[88px] h-[88px]",
+    lavaLamp: "jungle",
+    slug: "backing-redbeard-denarii",
+    internalHref: newsroomPath("backing-redbeard-denarii"),
+  },
+  {
+    id: "spine-ships-testflight",
+    title: "Spine ships to TestFlight",
+    excerpt: "The encrypted personal memory layer at the core of Jokuh is now live for active TestFlight users, keys held by the user, computation verified through TEE, ZKP, and FHE.",
+    category: "Release",
+    topics: ["Agent Portal"],
+    publishedAt: "2026-04-15",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(145deg, #020617 0%, #1e1b4b 50%, #312e81 100%)",
+    cardImage: "/journal-art/news-blue-lens.png",
+    lavaLamp: "arctic",
+    slug: "spine-ships-testflight",
+    internalHref: newsroomPath("spine-ships-testflight"),
+  },
+  {
+    id: "grant-stack-avalanche-runpod-hume-kihew",
+    title: "Grants from Avalanche, RunPod, Hume AI, and Kihew",
+    excerpt: "Four ecosystem grants, across settlement, compute, voice, and regional infrastructure, confirm independent technical validation of the Jokuh stack.",
+    category: "Milestone",
+    topics: ["Community", "Events"],
+    publishedAt: "2026-04-08",
+    readMinutes: 3,
+    cardGradient: "linear-gradient(135deg, #020617 0%, #0c4a6e 55%, #164e63 100%)",
+    cardImage: "/journal-art/news-coral-wash.png",
+    lavaLamp: "coral",
+    slug: "grant-stack-avalanche-runpod-hume-kihew",
+    internalHref: newsroomPath("grant-stack-avalanche-runpod-hume-kihew"),
+  },
+  {
+    id: "ethics-compliance-operating-principles",
+    title: "Ethics, Compliance & Responsible Deployment",
+    excerpt: "Ethics and compliance are product behaviors, not a policy appendix.",
+    category: "Safety",
+    topics: ["Safety"],
+    publishedAt: "2026-03-28",
+    readMinutes: 6,
+    cardGradient: "linear-gradient(145deg, #020617 0%, #0f3d3e 42%, #152238 100%)",
+    cardImage: "/journal-art/news-green-flow.png",
+    lavaLamp: "jungle",
+    slug: "ethics-compliance-responsible-deployment",
+    internalHref: newsroomPath("ethics-compliance-responsible-deployment"),
+  },
+  {
+    id: "3",
+    title: "Gooey 0.9: accessible focus rings and motion prefs",
+    excerpt: "Respects reduced motion and improves keyboard navigation across primitives.",
+    category: "Engineering",
+    topics: ["Blurbs", "Agent Portal"],
+    publishedAt: "2026-02-20",
+    readMinutes: 6,
+    cardGradient: "linear-gradient(150deg, #020617 0%, #1e293b 40%, #334155 100%)",
+    cardImage: "/journal-art/news-orb-violet.png",
+    lavaLamp: "ultraviolet",
+    slug: "gooey-accessible-focus-rings-motion-prefs",
+    internalHref: newsroomPath("gooey-accessible-focus-rings-motion-prefs"),
+  },
+  {
+    id: "4",
+    title: "Responsible use guidelines for V1llains lab",
+    excerpt: "We tightened sandbox language, escalation rules, and disclosure expectations for experimental agents.",
+    category: "Safety",
+    topics: ["Safety", "Community"],
+    publishedAt: "2026-02-05",
+    readMinutes: 5,
+    cardGradient: "linear-gradient(135deg, #020617 0%, #14532d 42%, #0f172a 100%)",
+    cardImage: "/journal-art/news-green-flow.png",
+    lavaLamp: "jungle",
+    slug: "responsible-use-guidelines-v1llains-lab",
+    internalHref: newsroomPath("responsible-use-guidelines-v1llains-lab"),
+  },
+  {
+    id: "5",
+    title: "Blurbs composer: markdown tables and paste cleanup",
+    excerpt: "Composer paste now normalizes tables, strips inline cruft, and keeps formatting safer across exports.",
+    category: "Product",
+    topics: ["Blurbs"],
+    publishedAt: "2026-01-28",
+    readMinutes: 2,
+    cardGradient: "linear-gradient(140deg, #020617 0%, #312e81 50%, #1e1b4b 100%)",
+    cardImage: "/journal-art/news-glass-ribbon.png",
+    lavaLamp: "nebula",
+    slug: "blurbs-composer-markdown-tables-paste-cleanup",
+    internalHref: newsroomPath("blurbs-composer-markdown-tables-paste-cleanup"),
+  },
+  {
+    id: "6",
+    title: "Open office hours: identity & claim flow",
+    excerpt: "We are opening product office hours around identity verification, claims, and account portability.",
+    category: "Community",
+    topics: ["Events", "Community"],
+    publishedAt: "2026-01-12",
+    readMinutes: 1,
+    cardGradient: "linear-gradient(135deg, #020617 0%, #1e293b 55%, #0f172a 100%)",
+    cardImage: "/journal-art/news-sunburst.png",
+    lavaLamp: "sunrise",
+    slug: "open-office-hours-identity-claim-flow",
+    internalHref: newsroomPath("open-office-hours-identity-claim-flow"),
+  },
+  {
+    id: "7",
+    title: "Hiring: design systems and realtime infra",
+    excerpt: "We are growing the teams behind Gooey, realtime transcription, and the infra that keeps them reliable.",
+    category: "Company",
+    topics: ["Culture & careers"],
+    publishedAt: "2025-11-30",
+    readMinutes: 2,
+    cardGradient: "linear-gradient(145deg, #020617 0%, #422006 35%, #1c1917 100%)",
+    cardImage: "/journal-art/news-blue-berries.png",
+    lavaLamp: "electric",
+    slug: "hiring-design-systems-realtime-infra",
+    internalHref: newsroomPath("hiring-design-systems-realtime-infra"),
+  },
+  {
+    id: "8",
+    title: "Pod encryption at rest: what changed",
+    excerpt: "We rotated key handling, narrowed access paths, and tightened how encrypted pod state moves through storage.",
+    category: "Engineering",
+    topics: ["Pods", "Safety"],
+    publishedAt: "2025-10-08",
+    readMinutes: 7,
+    cardGradient: "linear-gradient(135deg, #020617 0%, #172554 50%, #0c4a6e 100%)",
+    cardImage: "/journal-art/news-blue-lens.png",
+    lavaLamp: "void",
+    slug: "pod-encryption-at-rest-what-changed",
+    internalHref: newsroomPath("pod-encryption-at-rest-what-changed"),
+  },
+];
+
+function mergeNews(): NewsItem[] {
+  const mediumItems = mediumFile.items.map((e) => mediumToNewsItem(e));
+  const byUrl = new Map<string, NewsItem>();
+  for (const m of mediumItems) {
+    if (m.externalUrl) byUrl.set(m.externalUrl, m);
+  }
+  const merged: NewsItem[] = [...mediumItems];
+  for (const s of STATIC_NEWS_ITEMS) {
+    if (s.externalUrl && byUrl.has(s.externalUrl)) continue;
+    merged.push({ ...s });
+  }
+  merged.sort((a, b) => {
+    const ta = new Date(a.publishedAt + "T12:00:00").getTime();
+    const tb = new Date(b.publishedAt + "T12:00:00").getTime();
+    return tb - ta;
+  });
+  for (const item of merged) {
+    item.cardImage = LOCKED_CARD_IMAGES_BY_NEWS_ID[item.id] ?? item.cardImage?.trim();
+  }
+  return merged.filter((item) => !NEWS_ITEM_IDS_PENDING_PARTNER_PERMISSION.has(item.id));
+}
+
+/** Full public newsroom list (home, `/newsroom`, search) after permission filters. */
+export const NEWS_FEED_ITEMS: NewsItem[] = mergeNews();
+
+/** First `PUBLIC_NEWS_ITEM_LIMIT` entries for compact surfaces (e.g. home hero rail). */
+export const NEWS_ITEMS: NewsItem[] = NEWS_FEED_ITEMS.slice(0, PUBLIC_NEWS_ITEM_LIMIT);
+
+export function getNewsCardArt(item: NewsItem): NewsCardArtDescriptor {
+  const mode = item.cardArtMode ?? (item.cardImage ? "image" : "gradient");
+
+  return {
+    gradient: item.cardGradient?.trim() || DEFAULT_NEWS_CARD_GRADIENT,
+    image: mode === "image" ? item.cardImage : undefined,
+    lavaLamp: mode === "lavaLamp" ? item.lavaLamp : undefined,
+    overlayImage: item.cardOverlayImage,
+    overlayAlt: item.cardOverlayAlt,
+    overlayClassName: item.cardOverlayClassName,
+  };
+}
+
+const yearSet = new Set<number>();
+for (const n of NEWS_FEED_ITEMS) {
+  yearSet.add(new Date(n.publishedAt + "T12:00:00").getFullYear());
+}
+export const NEWS_FILTER_YEARS = [...yearSet].sort((a, b) => b - a);
+
+export function formatNewsDate(iso: string) {
+  const d = new Date(iso + "T12:00:00");
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+export function getNewsHref(item: NewsItem) {
+  return item.externalUrl ?? item.internalHref ?? "/newsroom";
+}
