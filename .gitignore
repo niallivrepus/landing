@@ -6,6 +6,9 @@ server-dist
 .env.local
 .env.*.local
 
+# Large release binaries (copy in before deploy; see public/downloads/README.md)
+public/downloads/*.dmg
+
 # Playwright
 /test-results/
 /playwright-report/

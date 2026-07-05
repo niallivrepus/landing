@@ -6,6 +6,7 @@ import { CtaLordIcon } from "../CtaLordIcon";
 import { SquircleMedia } from "../system/squircle";
 import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
 import { DOWNLOAD_INTENTS, type DownloadIntentId } from "../../data/download-intents";
+import { EARLY_ACCESS_EMAIL, resolveMacDownloadUrl, resolveWebAppOrigin } from "../../config/download-links";
 import { useClaimIdentityFlowContext } from "../../context/ClaimIdentityFlowContext";
 import { ClaimIdentityCta } from "./ClaimIdentityCta";
 import { ClaimIdentityLandingOverlay } from "./ClaimIdentityLandingOverlay";
@@ -13,7 +14,6 @@ import { LandingBlueCta } from "./LandingBlueCta";
 
 const MOBILE_PREVIEW_IMAGE = "/download/mobile-preview.png";
 const DESKTOP_PREVIEW_IMAGE = "/download/2.png";
-const EARLY_ACCESS_EMAIL = "mailto:sean@sierri.com?subject=Jokuh%20early%20access";
 
 /** **Purpose:** Resolves marketing copy from the `/download?intent=` query param. */
 function resolveDownloadCopy(intentParam: string | null) {
@@ -29,6 +29,8 @@ export function DownloadImmersiveShell() {
   const [params] = useSearchParams();
   const copy = resolveDownloadCopy(params.get("intent"));
   const claimFlow = useClaimIdentityFlowContext();
+  const macDownloadUrl = resolveMacDownloadUrl();
+  const webAppOrigin = resolveWebAppOrigin();
 
   const showMobile = copy.platformFocus !== "desktop";
   const showDesktop = copy.platformFocus !== "mobile";
@@ -73,7 +75,8 @@ export function DownloadImmersiveShell() {
                 imageSrc={MOBILE_PREVIEW_IMAGE}
                 imageAlt="Jokuh mobile app on a smartphone"
                 title="For mobile"
-                body="Mobile builds are part of the early-access rollout. Request access and we will share availability when your account is eligible."
+                body="iPhone and iPad builds ship through TestFlight during early access. Request an invite and we will add you when your account is eligible."
+                ctaHref={EARLY_ACCESS_EMAIL}
                 ctaLabel="Request mobile access"
               />
             ) : null}
@@ -83,9 +86,19 @@ export function DownloadImmersiveShell() {
                 platform="desktop"
                 imageSrc={DESKTOP_PREVIEW_IMAGE}
                 imageAlt="Jokuh desktop app on a laptop"
-                title="For desktop"
-                body="Desktop builds are available by rollout wave. We will confirm platform support and install steps during onboarding."
-                ctaLabel="Request desktop access"
+                title="For Mac"
+                body="Download the official native Mac app — the same Swift build as our desktop product, signed with our Apple Developer ID and notarized by Apple."
+                ctaHref={macDownloadUrl}
+                ctaLabel="Download for Mac"
+                ctaDownload
+                secondaryHref={`${webAppOrigin}/`}
+                secondaryLabel="Open in browser (Windows & Linux)"
+                installSteps={[
+                  "Download Jokuh.dmg",
+                  "Open the disk image",
+                  "Drag Jokuh to Applications",
+                  "Launch from Applications",
+                ]}
               />
             ) : null}
           </div>
@@ -109,29 +122,39 @@ export function DownloadImmersiveShell() {
             <FaqSection
               items={[
                 {
+                  question: "How do I install Jokuh on Mac?",
+                  answer:
+                    "Download Jokuh.dmg from this page, open it, and drag Jokuh into Applications. The app is signed with our Apple Developer ID and notarized so macOS Gatekeeper accepts it — no Mac App Store required.",
+                },
+                {
+                  question: "What about Windows?",
+                  answer:
+                    "A native Windows app is on the roadmap. Today, open Jokuh in your browser at app.jokuh.com — the full product runs there on Windows and Linux.",
+                },
+                {
                   question: "What are the system requirements?",
                   answer:
-                    "ARC Terminal currently runs on iOS via TestFlight. macOS and additional platforms are on the roadmap. You'll need an iOS device on a recent OS version and a TestFlight invite from the team.",
+                    "Mac: macOS 14 or later (Apple Silicon or Intel). Mobile: iOS via TestFlight during early access. Web: a modern Chromium, Safari, or Firefox browser.",
                 },
                 {
                   question: "Is Jokuh free to download?",
                   answer:
-                    "Yes. Early access through TestFlight is free. Tiered pricing for advanced features and capacity arrives alongside public release; existing testers will be informed before anything changes.",
+                    "Yes. The Mac download and TestFlight access are free during early access. Tiered pricing for advanced features arrives with public release; testers will be informed first.",
                 },
                 {
-                  question: "How do I update the app?",
+                  question: "How do I update the Mac app?",
                   answer:
-                    "Updates ship through TestFlight while we're in beta. Turn on auto-updates inside TestFlight to always run the latest build, or pull updates manually when a new version is released.",
+                    "Download the latest Jokuh.dmg from this page when we ship a new version. Automatic updates via Sparkle or the Mac App Store may come later.",
                 },
                 {
                   question: "Can I use Jokuh offline?",
                   answer:
-                    "Yes. Jokuh is built local-first. Your data, identity, and core memory layer live on your device, so the app works without a continuous connection. Network access is only required for peer sync, model calls you authorize, and on-chain settlement.",
+                    "Yes. Jokuh is built local-first. Your data, identity, and core memory layer live on your device. Network access is only required for peer sync, model calls you authorize, and on-chain settlement.",
                 },
                 {
                   question: "Where is my data stored?",
                   answer:
-                    "On your device, encrypted, under keys you hold. Jokuh does not aggregate your knowledge, messages, or identity into a centralized cloud. Peer-to-peer sync moves your own data between your own devices and chosen peers.",
+                    "On your device, encrypted, under keys you hold. Jokuh does not aggregate your knowledge, messages, or identity into a centralized cloud.",
                 },
               ]}
             />
@@ -154,15 +177,28 @@ function DownloadPlatformCard({
   imageAlt,
   title,
   body,
+  ctaHref,
   ctaLabel,
+  ctaDownload = false,
+  secondaryHref,
+  secondaryLabel,
+  installSteps,
 }: {
   platform: "mobile" | "desktop";
   imageSrc: string;
   imageAlt: string;
   title: string;
   body: string;
+  ctaHref: string;
   ctaLabel: string;
+  /** When true, sets the `download` attribute for direct file saves (`.dmg`). */
+  ctaDownload?: boolean;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+  installSteps?: string[];
 }) {
+  const isExternalFile = ctaDownload || ctaHref.endsWith(".dmg");
+
   return (
     <article
       className="flex w-full max-w-[420px] flex-col items-center gap-5 text-center"
@@ -193,10 +229,37 @@ function DownloadPlatformCard({
         <p className="max-w-[36ch] font-sans text-[14px] leading-relaxed text-light-space/65 light:text-zinc-600 sm:text-[15px]">
           {body}
         </p>
-        <LandingBlueCta href={EARLY_ACCESS_EMAIL} className="mt-1">
-          <CtaLordIcon icon="downloadSave" size={18} darkColor="#ffffff" lightColor="#ffffff" />
-          {ctaLabel}
-        </LandingBlueCta>
+
+        {installSteps && installSteps.length > 0 ? (
+          <ol className="mt-1 max-w-[34ch] list-decimal space-y-1 pl-5 text-left font-sans text-[13px] leading-relaxed text-light-space/55 light:text-zinc-500">
+            {installSteps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+        ) : null}
+
+        {isExternalFile ? (
+          <LandingBlueCta href={ctaHref} download className="mt-1">
+            <CtaLordIcon icon="downloadSave" size={18} darkColor="#ffffff" lightColor="#ffffff" />
+            {ctaLabel}
+          </LandingBlueCta>
+        ) : (
+          <LandingBlueCta href={ctaHref} className="mt-1">
+            <CtaLordIcon icon="downloadSave" size={18} darkColor="#ffffff" lightColor="#ffffff" />
+            {ctaLabel}
+          </LandingBlueCta>
+        )}
+
+        {secondaryHref && secondaryLabel ? (
+          <a
+            href={secondaryHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-sans text-[13px] font-medium text-light-space/55 underline-offset-4 hover:text-light-space/80 hover:underline light:text-zinc-500 light:hover:text-zinc-800"
+          >
+            {secondaryLabel}
+          </a>
+        ) : null}
       </div>
     </article>
   );

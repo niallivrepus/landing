@@ -11,16 +11,25 @@ export function LandingBlueCta({
   href,
   children,
   className,
+  download,
+  target,
+  rel,
 }: {
   href: string;
   children: ReactNode;
   className?: string;
+  download?: boolean;
+  target?: string;
+  rel?: string;
 }) {
   const hoverSoundProps = useGentleHoverSound(true, "premium");
 
   return (
     <SiteLink
       href={href}
+      download={download}
+      target={target}
+      rel={rel}
       {...hoverSoundProps}
       className={cn(
         "inline-flex h-[50px] shrink-0 items-center justify-center gap-2 rounded-full px-5 font-sans text-sm font-bold text-white no-underline",

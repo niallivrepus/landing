@@ -28,7 +28,7 @@ export type DownloadIntentCopy = {
 export const DOWNLOAD_INTENTS: Record<DownloadIntentId, DownloadIntentCopy> = {
   default: {
     headline: "Download Jokuh",
-    subcopy: "Early access through TestFlight and desktop rollout waves.",
+    subcopy: "Official Mac app for desktop. iOS via TestFlight. Windows and Linux in the browser.",
     platformFocus: "both",
   },
   identity: {

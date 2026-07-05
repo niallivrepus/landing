@@ -289,8 +289,12 @@ export const VOICE_POLICY = {
 } as const;
 
 export const PLATFORM_AVAILABILITY = {
-  live: [{ id: "ios-testflight", label: "iOS TestFlight" }],
-  roadmap: [{ id: "macos-q3", label: "macOS desktop", timing: "Q3" }],
+  live: [
+    { id: "macos-direct", label: "macOS direct download" },
+    { id: "ios-testflight", label: "iOS TestFlight" },
+    { id: "web-app", label: "Web app (Windows & Linux)" },
+  ],
+  roadmap: [{ id: "windows-native", label: "Windows desktop", timing: "TBD" }],
 } as const;
 
 export const SECURITY_CLAIM_POLICY = {
