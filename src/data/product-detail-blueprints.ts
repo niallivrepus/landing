@@ -200,7 +200,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           body: "Each pod is a purposeful surface. Audio, links, files, and credentials all keep the same visual rhythm.",
           media: {
             kind: "image",
-            src: "/story-art/story-office-focus.png",
+            src: "/story-art/story-office-focus.webp",
             alt: "Person focused at a desk.",
             objectPosition: "center center",
           },
@@ -224,7 +224,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           body: "Choose what is public, shared with a group, or held back until the moment is right.",
           media: {
             kind: "image",
-            src: "/story-art/story-office-smile.png",
+            src: "/story-art/story-office-smile.webp",
             alt: "Person smiling in an office.",
             objectPosition: "center center",
           },
@@ -674,7 +674,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           media: {
             kind: "blurbCallScene",
             panelPlacement: "center",
-            backgroundImage: "/product-hero/calls-room-deal.png",
+            backgroundImage: "/product-hero/calls-room-deal.webp",
             callTitle: "Sterling close",
             callStatus: "Deal room",
             participants: [
@@ -753,7 +753,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           body: "Turn a good conversation into the next message, draft, or task while the context is still warm.",
           media: {
             kind: "image",
-            src: "/product-hero/calls-move-after-call.png",
+            src: "/product-hero/calls-move-after-call.webp",
             alt: "OO preparing the next action after a call.",
             objectPosition: "center center",
           },
@@ -1096,7 +1096,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           body: "Write the long-form story behind your squircle — links, references, tone, and context cards visitors can actually read. Edit inline and reorder sections without rebuilding the page from scratch.",
           media: {
             kind: "image",
-            src: "/story-art/story-office-focus.png",
+            src: "/story-art/story-office-focus.webp",
             alt: "Person focused at a desk.",
             objectPosition: "center center",
           },
@@ -1120,7 +1120,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           body: "Set wallpaper, interests, and presence status. Choose which blurbs and pods appear on your profile, and what stays private until the right context asks for it.",
           media: {
             kind: "image",
-            src: "/story-art/story-office-smile.png",
+            src: "/story-art/story-office-smile.webp",
             alt: "Person smiling in an office.",
             objectPosition: "center center",
           },

@@ -103,10 +103,17 @@ function createEmptyMap(): GooeyGlassMapData {
   return { href: "", maximumDisplacement: 0 };
 }
 
+// Maps are pure functions of the lens geometry — cache across instances so N pills
+// with the same lens rasterize + encode once instead of N times.
+const glassMapCache = new Map<string, GooeyGlassMapData>();
+
 export function createGooeyGlassMapData(lensInput: GooeyGlassLens = {}): GooeyGlassMapData {
   if (typeof document === "undefined") return createEmptyMap();
 
   const lens = { ...DEFAULT_LENS, ...lensInput };
+  const cacheKey = [lens.width, lens.height, lens.borderRadius, lens.depth, lens.curvature, lens.splay, lens.blur].join("|");
+  const cached = glassMapCache.get(cacheKey);
+  if (cached) return cached;
   const width = Math.max(8, Math.round(lens.width));
   const height = Math.max(8, Math.round(lens.height));
   const radius = clamp(lens.borderRadius, 0, Math.min(width, height) / 2);
@@ -183,7 +190,10 @@ export function createGooeyGlassMapData(lensInput: GooeyGlassLens = {}): GooeyGl
     const source = document.createElement("canvas");
     source.width = width;
     source.height = height;
-    source.getContext("2d")?.drawImage(canvas, 0, 0);
+    // willReadFrequently keeps this canvas on the CPU raster path. A GPU-backed
+    // canvas here forces toDataURL below into a synchronous GPU readback, which
+    // stalls the main thread for seconds when the compositor is busy at page load.
+    source.getContext("2d", { willReadFrequently: true })?.drawImage(canvas, 0, 0);
 
     context.clearRect(0, 0, width, height);
     context.filter = `blur(${lens.blur}px)`;
@@ -191,7 +201,9 @@ export function createGooeyGlassMapData(lensInput: GooeyGlassLens = {}): GooeyGl
     context.filter = "none";
   }
 
-  return { href: canvas.toDataURL("image/png"), maximumDisplacement };
+  const map = { href: canvas.toDataURL("image/png"), maximumDisplacement };
+  glassMapCache.set(cacheKey, map);
+  return map;
 }
 
 export function createGooeyGlassMap(lensInput: GooeyGlassLens = {}) {

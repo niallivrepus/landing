@@ -61,14 +61,19 @@ function useTypewriter(text: string, active: boolean) {
       return;
     }
 
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += 1;
+    // Time-based reveal on rAF: at most one state update per display frame,
+    // same ~18ms/char pace regardless of refresh rate.
+    let frame = 0;
+    let start = 0;
+    const tick = (now: number) => {
+      if (!start) start = now;
+      const i = Math.min(text.length, Math.floor((now - start) / 18) + 1);
       setShown(text.slice(0, i));
-      if (i >= text.length) window.clearInterval(id);
-    }, 18);
+      if (i < text.length) frame = window.requestAnimationFrame(tick);
+    };
+    frame = window.requestAnimationFrame(tick);
 
-    return () => window.clearInterval(id);
+    return () => window.cancelAnimationFrame(frame);
   }, [text, active]);
 
   return shown;
@@ -122,7 +127,7 @@ export function ProductDemoSection() {
   }
 
   return (
-    <section id="demo" className="scroll-mt-24 bg-dark-space px-4 py-16 light:bg-white md:px-8 md:py-20">
+    <section id="demo" className="landing-cv scroll-mt-24 bg-dark-space px-4 py-16 light:bg-white md:px-8 md:py-20">
       <div className={CONTENT_SHELL_WIDE}>
         <div className="mb-10 flex items-baseline justify-between gap-4">
           <h2 className="font-sans text-lg font-semibold tracking-[0em] text-light-space light:text-zinc-950 md:text-xl">

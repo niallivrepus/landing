@@ -1,6 +1,10 @@
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 export function GooeyBackdrop() {
+  // Each animation frame re-rasterizes the gooey SVG filter (blur + composite)
+  // over the whole blob layer — skip the drift entirely for reduced motion.
+  const reduceMotion = useReducedMotion();
+
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <svg className="absolute h-0 w-0" aria-hidden>
@@ -23,17 +27,17 @@ export function GooeyBackdrop() {
       >
         <motion.div
           className="absolute left-[10%] top-[18%] size-[48%] rounded-full bg-purple-5/45 light:bg-zinc-200/85"
-          animate={{ x: [0, 20, 0], y: [0, -14, 0] }}
+          animate={reduceMotion ? undefined : { x: [0, 20, 0], y: [0, -14, 0] }}
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute right-[6%] top-[30%] size-[44%] rounded-full bg-blue-5/40 light:bg-zinc-300/80"
-          animate={{ x: [0, -16, 0], y: [0, 18, 0] }}
+          animate={reduceMotion ? undefined : { x: [0, -16, 0], y: [0, 18, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute bottom-[8%] left-[26%] size-[36%] rounded-full bg-pink-5/35 light:bg-zinc-100/90"
-          animate={{ x: [0, -12, 0], y: [0, 12, 0] }}
+          animate={reduceMotion ? undefined : { x: [0, -12, 0], y: [0, 12, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>

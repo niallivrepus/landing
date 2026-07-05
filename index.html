@@ -42,36 +42,38 @@
       (function () {
         var mediaByPath = {
           "/blurbs": {
-            poster: "/product-hero/blurbs-poster.jpg",
+            poster: "/product-hero/blurbs-poster.webp",
           },
           "/messages": {
-            poster: "/product-hero/texts.jpg",
+            poster: "/product-hero/texts.webp",
           },
         };
         var path = window.location.pathname.replace(/\/+$/, "") || "/";
-        var media = mediaByPath[path];
-        if (!media) return;
 
-        function preloadHeroAsset(href, as, type, fetchPriority) {
+        function addLink(rel, href, fetchPriority) {
           var link = document.createElement("link");
-          link.rel = "preload";
-          link.as = as;
+          link.rel = rel;
+          link.as = "image";
           link.href = href;
-          if (type) link.type = type;
           if (fetchPriority) link.setAttribute("fetchpriority", fetchPriority);
           document.head.appendChild(link);
         }
 
-        preloadHeroAsset(media.poster, "image", "", "high");
+        var media = mediaByPath[path];
+        if (media) addLink("preload", media.poster, "high");
+
+        // Story/about art is multi-MB — only warm it on the routes that render it.
+        if (path === "/about" || path.indexOf("/stories") === 0) {
+          addLink("preload", "/story-art/maren-workspace.png", "high");
+        }
+        if (path.indexOf("/stories") === 0) {
+          addLink("prefetch", "/story-art/maren-tulum-coast.png");
+          addLink("prefetch", "/story-art/maren-tulum-kitchen.png");
+          addLink("prefetch", "/story-art/maren-tulum-call.png");
+          addLink("prefetch", "/story-art/maren-tulum-bungalow.png");
+        }
       })();
     </script>
-    <link rel="preload" as="image" href="/story-art/maren-workspace.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="/story-art/story-office-focus.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="/story-art/story-office-smile.png" fetchpriority="high" />
-    <link rel="prefetch" as="image" href="/story-art/maren-tulum-coast.png" />
-    <link rel="prefetch" as="image" href="/story-art/maren-tulum-kitchen.png" />
-    <link rel="prefetch" as="image" href="/story-art/maren-tulum-call.png" />
-    <link rel="prefetch" as="image" href="/story-art/maren-tulum-bungalow.png" />
     <link
       rel="alternate"
       type="application/rss+xml"

@@ -41,7 +41,7 @@ export const BUSINESS_SOLUTIONS: BusinessSolutionCard[] = [
     href: "/messages",
     gradient: dark,
     lavaLamp: "arctic",
-    image: "/product-hero/texts.jpg",
+    image: "/product-hero/texts.webp",
   },
   {
     title: "Spine",
@@ -66,7 +66,7 @@ export const BUSINESS_SOLUTIONS: BusinessSolutionCard[] = [
     href: "/calls",
     gradient: dark,
     lavaLamp: "ember",
-    image: "/product-hero/calls.jpg",
+    image: "/product-hero/calls.webp",
     imageClassName: "object-[35%_center]",
   },
 ] as const;

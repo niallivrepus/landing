@@ -51,7 +51,7 @@ export function ProductShowcaseSection() {
   return (
     <section
       id="product"
-      className="scroll-mt-24 bg-dark-space px-4 py-16 light:bg-white md:px-8 md:py-20"
+      className="landing-cv scroll-mt-24 bg-dark-space px-4 py-16 light:bg-white md:px-8 md:py-20"
     >
       <div className={CONTENT_SHELL_WIDE}>
         <SectionHeaderRow title="One machine, five ways in" actionLabel="See everything" actionTo="/calls" />

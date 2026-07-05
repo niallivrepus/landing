@@ -11,6 +11,8 @@ export function LandingHomeBackdrop() {
         src={LANDING_HOME_HERO_IMAGE}
         alt=""
         aria-hidden
+        fetchPriority="high"
+        decoding="async"
         className="pointer-events-none absolute inset-0 size-full object-cover object-[center_42%]"
       />
       <div

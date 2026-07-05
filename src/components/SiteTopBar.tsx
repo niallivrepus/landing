@@ -5,6 +5,8 @@ import closeMenuLordicon from "../../node_modules/@jokuh/gooey/src/assets/lordic
 import searchLordicon from "../../node_modules/@jokuh/gooey/src/assets/lordicon/outline/search.json";
 import { AnimatePresence, motion } from "motion/react";
 import {
+  Suspense,
+  lazy,
   useCallback,
   useEffect,
   useMemo,
@@ -19,7 +21,12 @@ import { useSiteSearch } from "../context/SiteSearchContext";
 import { resolveRigidNavColumns } from "../config/site-subdomains";
 import { showOffSiteNavGlyph } from "../lib/off-site-href";
 import { useGentleHoverSound } from "../hooks/useGentleHoverSound";
-import { NavSearchMegaPanel } from "./NavSearchMegaPanel";
+// Lazy: pulls in the full site-search article index (~100KB gzip) — only load
+// it when the search panel actually opens, not on every page render.
+const NavSearchMegaPanel = lazy(async () => {
+  const mod = await import("./NavSearchMegaPanel");
+  return { default: mod.NavSearchMegaPanel };
+});
 import { OffSiteGlyph } from "./OffSiteGlyph";
 import { SearchPanelToggleGlyph } from "./SearchPanelToggleGlyph";
 import { TopNavAnchor } from "./TopNavAnchor";
@@ -495,7 +502,9 @@ export function SiteTopBar({
               className="nav-topbar-mega hidden md:block"
               onMouseEnter={cancelClose}
             >
-              <NavSearchMegaPanel onNavigate={() => setOpenId(null)} />
+              <Suspense fallback={null}>
+                <NavSearchMegaPanel onNavigate={() => setOpenId(null)} />
+              </Suspense>
             </motion.div>
           )}
           {!mobileOpen && openGroup && (

@@ -28,7 +28,7 @@ export function IdentityBlock() {
   );
 
   return (
-    <section id="identity" className="relative scroll-mt-24 overflow-hidden bg-transparent px-3 py-[120px] md:px-8">
+    <section id="identity" className="landing-cv relative scroll-mt-24 overflow-hidden bg-transparent px-3 py-[120px] md:px-8">
       <style>{`
         #identity .avatar-border {
           background: linear-gradient(135deg, #121212 0%, #0A0A0A 100%) !important;

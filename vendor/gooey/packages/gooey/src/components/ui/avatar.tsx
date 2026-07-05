@@ -48,7 +48,7 @@ function AvatarImage({ src, alt }: { src: string; alt: string }) {
   const [avifFailed, setAvifFailed] = useState(false);
 
   if (!avif || avifFailed) {
-    return <img src={src} alt={alt} decoding="async" style={AVATAR_IMG_STYLE} />;
+    return <img src={src} alt={alt} decoding="async" loading="lazy" style={AVATAR_IMG_STYLE} />;
   }
 
   return (
@@ -58,6 +58,7 @@ function AvatarImage({ src, alt }: { src: string; alt: string }) {
         src={src}
         alt={alt}
         decoding="async"
+        loading="lazy"
         style={AVATAR_IMG_STYLE}
         onError={() => setAvifFailed(true)}
       />

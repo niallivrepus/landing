@@ -54,11 +54,11 @@ export const LANDING_CORNER_ACTIONS: readonly LandingCornerConfig[] = [
 
 /** Product surfaces rotated inside the hero squircle — same art as the showcase row. */
 export const LANDING_SHELL_PRODUCT_SLIDES = [
-  { id: "blurbs", title: "Blurbs", image: "/product-hero/blurbs-poster.jpg" },
-  { id: "spine", title: "Spine", image: "/product-hero/spine-featured-hero.png" },
-  { id: "calls", title: "Calls", image: "/product-hero/calls.jpg" },
-  { id: "messages", title: "Texts", image: "/product-hero/texts.jpg" },
-  { id: "profile", title: "Profile", image: "/product-hero/profile.png" },
+  { id: "blurbs", title: "Blurbs", image: "/product-hero/blurbs-poster.webp" },
+  { id: "spine", title: "Spine", image: "/product-hero/spine-featured-hero.webp" },
+  { id: "calls", title: "Calls", image: "/product-hero/calls.webp" },
+  { id: "messages", title: "Texts", image: "/product-hero/texts.webp" },
+  { id: "profile", title: "Profile", image: "/product-hero/profile.webp" },
 ] as const;
 
 /** Inset for corner pills inside the scaled hero preview frame. */
