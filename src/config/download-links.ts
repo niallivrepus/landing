@@ -8,7 +8,7 @@
  */
 
 const DEFAULT_MACOS_RELEASE_URL =
-  "https://github.com/niallivrepus/landing/releases/download/macos-1.0.0/Jokuh.dmg";
+  "https://github.com/niallivrepus/landing/releases/download/macos-1.0.1/Jokuh.dmg";
 const DEFAULT_WEB_APP_ORIGIN = "https://app.jokuh.com";
 
 /** **Returns** the public HTTPS URL for the official macOS `.dmg` (Developer ID + notarized). */
