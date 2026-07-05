@@ -39,3 +39,15 @@ service-role key on Railway.
 1. Railway service `www`: set `LANDING_CANONICAL_HOST=www`.
 2. GoDaddy: forward `jokuh.com` → `https://www.jokuh.com` (301, forward-only) after this deploys.
 3. Optional: `SUPABASE_SERVICE_ROLE_KEY` on Railway for direct signing + blurb media thumbnails.
+
+---
+
+## 2026-07-04T22:24 (UTC-4) — Mac direct download on /download
+
+**Release:** [landing macos-1.0.0](https://github.com/niallivrepus/landing/releases/tag/macos-1.0.0) — `Jokuh.dmg` (Developer ID signed, 112MB).
+
+**jokuh-live:** `scripts/release-macos-direct.sh`, `jokuh-macos` Xcode scheme, `docs/macos-direct-distribution.md`.
+
+**Landing:** `/download` → **Download for Mac** → GitHub release asset URL (public repo).
+
+**Notarization:** Pending `xcrun notarytool store-credentials "Jokuh-Notary"` — signed build ships; Gatekeeper may prompt until notarized.
