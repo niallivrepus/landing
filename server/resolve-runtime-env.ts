@@ -9,6 +9,8 @@ import { resolvePublicProfileDemoEnv } from "../public-profile-service";
 export function resolveLandingRuntimeEnv(env: NodeJS.ProcessEnv) {
   const supabaseUrl = env.SUPABASE_URL ?? "";
   const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY || "";
+  const canonicalHostRaw = (env.LANDING_CANONICAL_HOST ?? "apex").trim().toLowerCase();
+  const canonicalHost = canonicalHostRaw === "www" ? "www" : "apex";
 
   return {
     groqKey: env.GROQ_API_KEY ?? "",
@@ -29,5 +31,7 @@ export function resolveLandingRuntimeEnv(env: NodeJS.ProcessEnv) {
     appOrigin: env.VITE_ORIGIN_APP?.trim() || "https://app.jokuh.com",
     staticRoot: env.STATIC_ROOT?.trim() || "",
     port: Number(env.PORT || 3000),
+    /** `www` for GoDaddy apex forwarding; `apex` when root CNAME works (e.g. Cloudflare). */
+    canonicalHost,
   };
 }

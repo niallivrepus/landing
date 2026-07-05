@@ -100,8 +100,11 @@ function resolveSafePath(root: string, requestPath: string): string | null {
 export function createStaticMiddleware(options: {
   staticRoot: string;
   appOrigin: string;
+  /** `apex` (default): 308 www → apex. `www`: serve www (GoDaddy forwards apex → www). */
+  canonicalHost?: "apex" | "www";
 }): Connect.NextHandleFunction {
   const redirectRules = buildRedirectRules(options.appOrigin);
+  const canonicalHost = options.canonicalHost ?? "apex";
 
   return (req, res, next) => {
     const resNode = res as ServerResponse;
@@ -110,7 +113,7 @@ export function createStaticMiddleware(options: {
     const url = new URL(rawUrl, `http://${host}`);
     const pathname = url.pathname;
 
-    if (host.startsWith("www.")) {
+    if (canonicalHost === "apex" && host.startsWith("www.")) {
       redirect(resNode, `https://${host.slice(4)}${url.pathname}${url.search}`, 308);
       return;
     }

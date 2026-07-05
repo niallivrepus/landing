@@ -89,9 +89,18 @@
 }
 
 .landing-home-suggestion-strip {
+  position: relative;
   width: 100%;
   max-width: 520px;
   margin-top: 10px;
+}
+
+/**
+ * Horizontal scroller — edge mask fades (see `LandingHomeSuggestionPills`) replace the hard clip
+ * when pills overflow the prompt column width.
+ */
+.landing-home-suggestion-strip__scroller {
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
@@ -99,7 +108,15 @@
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   overscroll-behavior-x: contain;
-  padding: 4px 4px 2px;
+  padding: 4px 2px 2px;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.landing-home-suggestion-strip__scroller::-webkit-scrollbar {
+  display: none;
 }
 
 .landing-home-suggestion-strip::-webkit-scrollbar {

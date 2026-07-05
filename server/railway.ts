@@ -32,6 +32,7 @@ const middlewares = [
   createStaticMiddleware({
     staticRoot,
     appOrigin: runtime.appOrigin,
+    canonicalHost: runtime.canonicalHost,
   }),
 ];
 

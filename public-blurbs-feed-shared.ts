@@ -8,7 +8,7 @@ export type PublicBlurbFeedItem = {
   publicSlug: string;
   hasMedia: boolean;
   mediaKind: "image" | "video" | "audio" | null;
-  /** Signed `identity-photos` URL when service role or anon signing succeeds. */
+  /** Public avatar URL — direct Storage signing or `public-identity-avatar` edge redirect. */
   avatarUrl: string | null;
   /** Signed `blurbs-media` playback/thumbnail URL for the primary attachment. */
   mediaUrl: string | null;

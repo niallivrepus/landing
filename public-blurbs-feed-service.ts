@@ -22,9 +22,12 @@ type PublicBlurbShareRpcRow = {
   media_kind?: string | null;
   image_object_path?: string | null;
   poster_object_path?: string | null;
+  identity_photo_path?: string | null;
+  identity_photo_masked?: boolean | null;
 };
 
 type PeekPublicProfileRow = {
+  ok?: boolean;
   identity_photo_path?: string | null;
 };
 
@@ -64,6 +67,7 @@ function rpcUrl(supabaseUrl: string, fn: string): string {
 type PublicBlurbShareDraft = PublicBlurbFeedItem & {
   imageObjectPath: string | null;
   posterObjectPath: string | null;
+  identityPhotoPath: string | null;
 };
 
 /** **Calls** anon-safe `peek_public_profile` to resolve `identity_photo_path` for avatar signing. */
@@ -86,6 +90,7 @@ async function fetchIdentityPhotoPathForUsername(
   if (!response.ok) return null;
   const data = await response.json();
   const row = (Array.isArray(data) ? data[0] : data) as PeekPublicProfileRow | undefined;
+  if (row?.ok === false) return null;
   return row?.identity_photo_path?.trim() || null;
 }
 
@@ -132,6 +137,7 @@ async function fetchPublicBlurbShareServer(
     posterUrl: null,
     imageObjectPath,
     posterObjectPath,
+    identityPhotoPath: row.identity_photo_path?.trim() || null,
   };
 }
 
@@ -140,11 +146,20 @@ async function enrichPublicBlurbItems(
   drafts: PublicBlurbShareDraft[],
   runtime: PublicBlurbsFeedRuntimeEnv,
 ): Promise<PublicBlurbFeedItem[]> {
-  const uniqueUsernames = Array.from(new Set(drafts.map((item) => item.username.trim().toLowerCase()).filter(Boolean)));
   const identityPathByUsername = new Map<string, string | null>();
 
+  for (const draft of drafts) {
+    const usernameKey = draft.username.trim().toLowerCase();
+    if (!usernameKey || identityPathByUsername.has(usernameKey)) continue;
+    identityPathByUsername.set(usernameKey, draft.identityPhotoPath);
+  }
+
+  const usernamesNeedingPeek = Array.from(identityPathByUsername.entries())
+    .filter(([, path]) => !path)
+    .map(([username]) => username);
+
   await Promise.all(
-    uniqueUsernames.map(async (username) => {
+    usernamesNeedingPeek.map(async (username) => {
       const path = await fetchIdentityPhotoPathForUsername(username, runtime);
       identityPathByUsername.set(username, path);
     }),
@@ -152,7 +167,7 @@ async function enrichPublicBlurbItems(
 
   const avatarUrlByUsername = new Map<string, string | null>();
   await Promise.all(
-    uniqueUsernames.map(async (username) => {
+    Array.from(identityPathByUsername.keys()).map(async (username) => {
       const path = identityPathByUsername.get(username) ?? null;
       const url = await signedIdentityPhotoUrl(path, runtime);
       avatarUrlByUsername.set(username, url);
@@ -173,7 +188,7 @@ async function enrichPublicBlurbItems(
         posterUrl = await signedBlurbsMediaUrl(draft.posterObjectPath, runtime);
       }
 
-      const { imageObjectPath: _image, posterObjectPath: _poster, ...item } = draft;
+      const { imageObjectPath: _image, posterObjectPath: _poster, identityPhotoPath: _photo, ...item } = draft;
       return {
         ...item,
         avatarUrl,

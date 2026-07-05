@@ -1,5 +1,26 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import { LANDING_HOME_SUGGESTIONS, type LandingHomeSuggestion } from "../../data/landing-home-suggestions";
 import type { LandingArcadeGameId } from "../../data/landing-arcade-games";
+
+const SCROLL_FADE_EDGE_PX = 36;
+const SCROLL_EDGE_EPSILON = 2;
+
+/** **Builds** a horizontal mask gradient that softens pill edges when the row scrolls. */
+function buildSuggestionStripMask(fadeStart: boolean, fadeEnd: boolean): string | undefined {
+  if (!fadeStart && !fadeEnd) return undefined;
+  const stops: string[] = [];
+  if (fadeStart) {
+    stops.push("transparent 0", `black ${SCROLL_FADE_EDGE_PX}px`);
+  } else {
+    stops.push("black 0");
+  }
+  if (fadeEnd) {
+    stops.push(`black calc(100% - ${SCROLL_FADE_EDGE_PX}px)`, "transparent 100%");
+  } else {
+    stops.push("black 100%");
+  }
+  return `linear-gradient(to right, ${stops.join(", ")})`;
+}
 
 /**
  * **Purpose:** OO suggestion pills anchored below the homepage prompt bar (app `home-search-suggestion-strip` parity).
@@ -13,22 +34,68 @@ export function LandingHomeSuggestionPills({
   /** Opens a bundled arcade game overlay (e.g. chess). */
   onOpenGame?: (gameId: LandingArcadeGameId) => void;
 }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [fadeStart, setFadeStart] = useState(false);
+  const [fadeEnd, setFadeEnd] = useState(false);
+
+  const updateScrollFades = useCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const overflows = scroller.scrollWidth > scroller.clientWidth + SCROLL_EDGE_EPSILON;
+    if (!overflows) {
+      setFadeStart(false);
+      setFadeEnd(false);
+      return;
+    }
+    setFadeStart(scroller.scrollLeft > SCROLL_EDGE_EPSILON);
+    setFadeEnd(scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - SCROLL_EDGE_EPSILON);
+  }, []);
+
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    updateScrollFades();
+    const observer = new ResizeObserver(updateScrollFades);
+    observer.observe(scroller);
+    const inner = scroller.firstElementChild;
+    if (inner) observer.observe(inner);
+    return () => observer.disconnect();
+  }, [updateScrollFades]);
+
+  const maskImage = buildSuggestionStripMask(fadeStart, fadeEnd);
+
   return (
     <div
       className="landing-home-suggestion-strip"
       aria-label="Suggested prompts"
       onPointerDown={(event) => event.stopPropagation()}
     >
-      <div className="landing-home-suggestion-strip__inner">
-        {LANDING_HOME_SUGGESTIONS.map((suggestion, index) => (
-          <SuggestionPill
-            key={suggestion.id}
-            suggestion={suggestion}
-            index={index}
-            onPrompt={onPrompt}
-            onOpenGame={onOpenGame}
-          />
-        ))}
+      <div
+        ref={scrollerRef}
+        className="landing-home-suggestion-strip__scroller"
+        data-fade-start={fadeStart ? "true" : undefined}
+        data-fade-end={fadeEnd ? "true" : undefined}
+        onScroll={updateScrollFades}
+        style={
+          maskImage
+            ? {
+                WebkitMaskImage: maskImage,
+                maskImage,
+              }
+            : undefined
+        }
+      >
+        <div className="landing-home-suggestion-strip__inner">
+          {LANDING_HOME_SUGGESTIONS.map((suggestion, index) => (
+            <SuggestionPill
+              key={suggestion.id}
+              suggestion={suggestion}
+              index={index}
+              onPrompt={onPrompt}
+              onOpenGame={onOpenGame}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

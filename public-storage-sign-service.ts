@@ -61,11 +61,34 @@ export async function signedStorageObjectUrl(
 }
 
 /** **Signs** an `identity-photos` object for public profile / blurb author avatars. */
+export function publicIdentityAvatarEdgeUrl(
+  supabaseUrl: string,
+  objectPath: string | null | undefined,
+): string | null {
+  const path = objectPath?.trim();
+  if (!path) return null;
+  if (path.startsWith("data:") || path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+  const base = supabaseUrl.replace(/\/$/, "");
+  return `${base}/functions/v1/public-identity-avatar?path=${encodeURIComponent(path)}`;
+}
+
+/** **Signs** an `identity-photos` object for public profile / blurb author avatars. */
 export async function signedIdentityPhotoUrl(
   objectPath: string | null | undefined,
   runtime: PublicStorageSignRuntime,
 ): Promise<string | null> {
-  return signedStorageObjectUrl(IDENTITY_PHOTOS_BUCKET, objectPath, runtime);
+  const path = objectPath?.trim();
+  if (!path) return null;
+  if (path.startsWith("data:") || path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+  if (runtime.supabaseServiceKey) {
+    const signed = await signedStorageObjectUrl(IDENTITY_PHOTOS_BUCKET, path, runtime);
+    if (signed) return signed;
+  }
+  return publicIdentityAvatarEdgeUrl(runtime.supabaseUrl, path);
 }
 
 /** **Signs** a `blurbs-media` object for public blurb attachments (requires service role). */
