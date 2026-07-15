@@ -1,6 +1,7 @@
 /**
- * **Purpose:** Canonical outbound URLs for the `/download` page (Mac dmg, web app, early access).
- * **Connects to:** `DownloadImmersiveShell`, `brand-taxonomy.ts` platform availability.
+ * **Purpose:** Canonical outbound URLs for the `/download` page (Mac dmg, TestFlight, web app).
+ * **Connects to:** `DownloadImmersiveShell`, `brand-taxonomy.ts` platform availability,
+ * `ProductCenteredShowcase` Join Beta CTAs.
  *
  * **Mac direct download:** Host `Jokuh.dmg` at `public/downloads/Jokuh.dmg` before deploy, or override
  * `VITE_MACOS_DOWNLOAD_URL` on Railway `www` to a CDN/object-storage URL (see jokuh-live
@@ -10,6 +11,9 @@
 const DEFAULT_MACOS_RELEASE_URL =
   "https://github.com/niallivrepus/landing/releases/download/macos-1.0.1/Jokuh.dmg";
 const DEFAULT_WEB_APP_ORIGIN = "https://app.jokuh.com";
+
+/** Public Jokuh iOS / iPadOS TestFlight invite — used by “Download beta” / mobile access CTAs. */
+export const TESTFLIGHT_JOIN_URL = "https://testflight.apple.com/join/tjudrA2u";
 
 /** **Returns** the public HTTPS URL for the official macOS `.dmg` (Developer ID + notarized). */
 export function resolveMacDownloadUrl(): string {
@@ -27,5 +31,6 @@ export function resolveWebAppOrigin(): string {
   return (configured || DEFAULT_WEB_APP_ORIGIN).replace(/\/$/, "");
 }
 
+/** @deprecated Prefer `TESTFLIGHT_JOIN_URL` — kept for any mail-based early-access references. */
 export const EARLY_ACCESS_EMAIL =
   "mailto:sean@sierri.com?subject=Jokuh%20early%20access";

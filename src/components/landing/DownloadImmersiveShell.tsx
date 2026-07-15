@@ -6,7 +6,8 @@ import { CtaLordIcon } from "../CtaLordIcon";
 import { SquircleMedia } from "../system/squircle";
 import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
 import { DOWNLOAD_INTENTS, type DownloadIntentId } from "../../data/download-intents";
-import { EARLY_ACCESS_EMAIL, resolveMacDownloadUrl, resolveWebAppOrigin } from "../../config/download-links";
+import { TESTFLIGHT_JOIN_URL, resolveMacDownloadUrl } from "../../config/download-links";
+import { buildWebAppOnboardingHandoffUrl } from "../../lib/claim-identity-handoff";
 import { useClaimIdentityFlowContext } from "../../context/ClaimIdentityFlowContext";
 import { ClaimIdentityCta } from "./ClaimIdentityCta";
 import { ClaimIdentityLandingOverlay } from "./ClaimIdentityLandingOverlay";
@@ -30,7 +31,12 @@ export function DownloadImmersiveShell() {
   const copy = resolveDownloadCopy(params.get("intent"));
   const claimFlow = useClaimIdentityFlowContext();
   const macDownloadUrl = resolveMacDownloadUrl();
-  const webAppOrigin = resolveWebAppOrigin();
+  const intentParam = params.get("intent") ?? "default";
+  /** Browser entry without a handle — app stays language-first; attribution travels in the query. */
+  const browserOnboardingHref = buildWebAppOnboardingHandoffUrl({
+    source: "download",
+    intent: intentParam,
+  });
 
   const showMobile = copy.platformFocus !== "desktop";
   const showDesktop = copy.platformFocus !== "mobile";
@@ -75,9 +81,12 @@ export function DownloadImmersiveShell() {
                 imageSrc={MOBILE_PREVIEW_IMAGE}
                 imageAlt="Jokuh mobile app on a smartphone"
                 title="For mobile"
-                body="iPhone and iPad builds ship through TestFlight during early access. Request an invite and we will add you when your account is eligible."
-                ctaHref={EARLY_ACCESS_EMAIL}
-                ctaLabel="Request mobile access"
+                body="iPhone and iPad builds ship through TestFlight. Join the public beta to install Jokuh on your device — or continue in the browser now."
+                ctaHref={TESTFLIGHT_JOIN_URL}
+                ctaLabel="Download beta"
+                secondaryHref={browserOnboardingHref}
+                secondaryLabel="Continue in browser"
+                onSecondaryClick={() => claimFlow.openFrom("download")}
               />
             ) : null}
 
@@ -91,7 +100,7 @@ export function DownloadImmersiveShell() {
                 ctaHref={macDownloadUrl}
                 ctaLabel="Download for Mac"
                 ctaDownload
-                secondaryHref={`${webAppOrigin}/`}
+                secondaryHref={browserOnboardingHref}
                 secondaryLabel="Open in browser (Windows & Linux)"
                 installSteps={[
                   "Download Jokuh.dmg",
@@ -134,12 +143,12 @@ export function DownloadImmersiveShell() {
                 {
                   question: "What are the system requirements?",
                   answer:
-                    "Mac: macOS 14 or later (Apple Silicon or Intel). Mobile: iOS via TestFlight during early access. Web: a modern Chromium, Safari, or Firefox browser.",
+                    "Mac: macOS 14 or later (Apple Silicon or Intel). Mobile: iOS via TestFlight — use Download beta on this page. Web: a modern Chromium, Safari, or Firefox browser.",
                 },
                 {
                   question: "Is Jokuh free to download?",
                   answer:
-                    "Yes. The Mac download and TestFlight access are free during early access. Tiered pricing for advanced features arrives with public release; testers will be informed first.",
+                    "Yes. The Mac download and TestFlight beta are free during early access. Tiered pricing for advanced features arrives with public release; testers will be informed first.",
                 },
                 {
                   question: "How do I update the Mac app?",
@@ -182,6 +191,8 @@ function DownloadPlatformCard({
   ctaDownload = false,
   secondaryHref,
   secondaryLabel,
+  /** When set, secondary click opens landing claim (username-first) instead of leaving immediately. */
+  onSecondaryClick,
   installSteps,
 }: {
   platform: "mobile" | "desktop";
@@ -195,6 +206,7 @@ function DownloadPlatformCard({
   ctaDownload?: boolean;
   secondaryHref?: string;
   secondaryLabel?: string;
+  onSecondaryClick?: () => void;
   installSteps?: string[];
 }) {
   const isExternalFile = ctaDownload || ctaHref.endsWith(".dmg");
@@ -253,9 +265,13 @@ function DownloadPlatformCard({
         {secondaryHref && secondaryLabel ? (
           <a
             href={secondaryHref}
-            target="_blank"
-            rel="noopener noreferrer"
             className="font-sans text-[13px] font-medium text-light-space/55 underline-offset-4 hover:text-light-space/80 hover:underline light:text-zinc-500 light:hover:text-zinc-800"
+            onClick={(event) => {
+              if (!onSecondaryClick) return;
+              // Mobile: keep username-first on landing, then hand off — do not jump straight into app language.
+              event.preventDefault();
+              onSecondaryClick();
+            }}
           >
             {secondaryLabel}
           </a>

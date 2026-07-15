@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { cn } from "@jokuh/gooey";
 import { ProductSectionIntro, ProductShowcaseSurface, ProductStorySection } from "./ProductDetailPrimitives";
 
+/**
+ * **Purpose:** Centered product story card with optional CTA (internal route or external URL).
+ * **Connects to:** `product-detail-blueprints.ts` Join Beta → TestFlight / download.
+ */
 export function ProductCenteredShowcase({
   title,
   body,
@@ -18,6 +22,10 @@ export function ProductCenteredShowcase({
   backgroundImage?: string;
   surfaceTone?: "default" | "neutral";
 }) {
+  const isExternal = Boolean(ctaTo && /^https?:\/\//i.test(ctaTo));
+  const ctaClassName =
+    "inline-flex h-11 items-center justify-center rounded-full bg-white px-5 font-sans text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100";
+
   return (
     <ProductStorySection>
       <ProductShowcaseSurface
@@ -50,12 +58,20 @@ export function ProductCenteredShowcase({
             />
             {ctaLabel && ctaTo ? (
               <div className="mt-8 flex justify-center">
-                <Link
-                  to={ctaTo}
-                  className="inline-flex h-11 items-center justify-center rounded-full bg-white px-5 font-sans text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100"
-                >
-                  {ctaLabel}
-                </Link>
+                {isExternal ? (
+                  <a
+                    href={ctaTo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={ctaClassName}
+                  >
+                    {ctaLabel}
+                  </a>
+                ) : (
+                  <Link to={ctaTo} className={ctaClassName}>
+                    {ctaLabel}
+                  </Link>
+                )}
               </div>
             ) : null}
           </div>

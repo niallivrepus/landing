@@ -1,4 +1,5 @@
 import type { ProductId } from "./products";
+import { TESTFLIGHT_JOIN_URL } from "../config/download-links";
 
 export type ProductDetailMedia =
   | {
@@ -94,6 +95,16 @@ export type ProductDetailMedia =
         | "lifelog"
         | "search"
         | "recap";
+    }
+  | {
+      kind: "messagesHighlight";
+      variant:
+        | "inbox"
+        | "e2ee"
+        | "ooAgent"
+        | "mentions"
+        | "attachments"
+        | "spineLink";
     };
 
 export type ProductHighlightSlide = {
@@ -245,8 +256,8 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
     },
     centerpiece: {
       title: "Identity, your way.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "pods-corner-1",
@@ -494,8 +505,8 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       eyebrow: "Blurbs",
       title: "Talk becomes your product data.",
       body: "When Jokuh is with you in the conversation, every blurb becomes useful context for you and your community. The right people can prompt against what was said, improve the shared memory, and turn everyday talk into momentum.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [],
       surfaceTone: "neutral",
     },
@@ -625,8 +636,8 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       eyebrow: "Spine",
       title: "Your operating timeline.",
       body: "Spine is the long-term home for structured personal context — data, files, memories, and activity. Not a feed that erases context. A history OO can actually work with.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "spine-corner-1",
@@ -670,7 +681,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           eyebrow: "Room",
           title: "Close while the room is live.",
           titleTone: "light",
-          body: "Calls keeps the full deal context intact: who pushed, who paused, and what changed before anyone left the room.",
+          body: "HD voice and video native to Jokuh — deal rooms, guest knock queues, host moderation, and in-call reactions while E2EE keeps the room yours.",
           media: {
             kind: "blurbCallScene",
             panelPlacement: "center",
@@ -719,10 +730,59 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           },
         },
         {
+          id: "calls-captions",
+          eyebrow: "Captions",
+          title: "Read every word.\nIn any language.",
+          titleTone: "light",
+          body: "Live captions roll in-call — translation on demand so global rooms stay fluid without losing nuance or privacy.",
+          media: {
+            kind: "blurbCallScene",
+            panelPlacement: "center",
+            backgroundImage: "/product-hero/calls.webp",
+            callTitle: "Investor sync",
+            callStatus: "Live · captions on",
+            participants: [
+              {
+                src: "/aliens/alien-0010.jpg",
+                borderColor: "#77FF00",
+                alt: "Host on the call",
+              },
+              {
+                src: "/aliens/alien-0011.jpg",
+                borderColor: "#00D4FF",
+                alt: "Guest on the call",
+              },
+              {
+                src: "/aliens/alien-0012.jpg",
+                borderColor: "#FF00E5",
+                alt: "OO transcribing",
+              },
+            ],
+            subtitles: [
+              {
+                speaker: "Guest",
+                text: "¿Podemos cerrar hoy si legal aprueba?",
+              },
+              {
+                speaker: "Captions",
+                text: "Can we close today if legal approves?",
+              },
+              {
+                speaker: "Host",
+                text: "Yes — send terms before six.",
+              },
+              {
+                speaker: "OO",
+                text: "Translated recap saved to Spine.",
+              },
+            ],
+          },
+        },
+        {
           id: "calls-moments",
           eyebrow: "Moments",
-          title: "Pull Up What Matters.",
-          body: "Ask from the call context and OO returns the decision, blocker, and next move without replaying the room.",
+          title: "Pull up what matters.",
+          body: "Infinity Dialog tier lets you ask from call context — OO returns the decision, blocker, and next move without replaying the room.",
           media: {
             kind: "promptBar",
             turns: [
@@ -750,12 +810,80 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           eyebrow: "Action",
           title: "Move after the call.",
           titleTone: "light",
-          body: "Turn a good conversation into the next message, draft, or task while the context is still warm.",
+          body: "Host recording, moderation, and post-call Spine writeback — transcript, action items, and follow-up drafts land while context is still warm.",
           media: {
             kind: "image",
             src: "/product-hero/calls-move-after-call.webp",
             alt: "OO preparing the next action after a call.",
             objectPosition: "center center",
+          },
+        },
+        {
+          id: "calls-spine",
+          eyebrow: "Spine",
+          title: "Every call\nwrites itself back.",
+          body: "When the room ends, OO files the transcript to your Spine timeline — searchable alongside messages, blurbs, and calendar.",
+          media: {
+            kind: "promptBar",
+            turns: [
+              {
+                prompt: "Save this call to Spine",
+                response: "Done — Sterling close is on your timeline with transcript, decisions, and three follow-ups attached.",
+              },
+              {
+                prompt: "What changed in the deal room?",
+                response: "Leadership confirmed, legal cleared, final terms due before 6pm. Guest knock queue had two observers.",
+              },
+            ],
+          },
+        },
+        {
+          id: "calls-schedule",
+          eyebrow: "Schedule",
+          title: "Invite from a DM.\nShow up on time.",
+          titleTone: "light",
+          body: "Schedule calls from any thread — invite-via-DM, calendar holds, and native reminders so nobody hunts a link.",
+          media: {
+            kind: "blurbCallScene",
+            panelPlacement: "center",
+            backgroundImage: "/product-hero/calls-room-deal.webp",
+            callTitle: "Sterling · 6pm",
+            callStatus: "Scheduled",
+            participants: [
+              {
+                src: "/aliens/alien-0020.jpg",
+                borderColor: "#77FF00",
+                alt: "You on the scheduled call",
+              },
+              {
+                src: "/aliens/alien-0021.jpg",
+                borderColor: "#00D4FF",
+                alt: "Sterling on the scheduled call",
+              },
+              {
+                src: "/aliens/alien-0022.jpg",
+                borderColor: "#FF00E5",
+                alt: "OO on the scheduled call",
+              },
+            ],
+            subtitles: [
+              {
+                speaker: "DM",
+                text: "Invite sent from your thread with Sterling.",
+              },
+              {
+                speaker: "Calendar",
+                text: "Today · 6:00 PM · Deal room",
+              },
+              {
+                speaker: "Reminder",
+                text: "Reminder · tap to join",
+              },
+              {
+                speaker: "OO",
+                text: "Prep brief ready when you enter.",
+              },
+            ],
           },
         },
       ],
@@ -767,48 +895,65 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           id: "calls-live",
           label: "Live",
           title: "Stay present.",
-          body: "The system listens for structure in the background so the call can still feel like a call.",
+          body: "HD voice and video, guest knock queue, and in-call chat — end-to-end encrypted so the room feels like a call, not a webinar.",
           media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)",
-            accent: "#2563eb",
+            kind: "blurbCallScene",
+            panelPlacement: "closerLookRight",
+            backgroundImage: "/product-hero/calls-room-deal.webp",
+            callTitle: "Deal room",
+            callStatus: "Live",
+            participants: [
+              { src: "/aliens/alien-0030.jpg", borderColor: "#77FF00", alt: "Participant one" },
+              { src: "/aliens/alien-0031.jpg", borderColor: "#00D4FF", alt: "Participant two" },
+              { src: "/aliens/alien-0032.jpg", borderColor: "#FF00E5", alt: "OO listening" },
+            ],
+            subtitles: [
+              { speaker: "Host", text: "Recording on — moderation active." },
+              { speaker: "Guest", text: "Knock queue cleared." },
+            ],
           },
         },
         {
           id: "calls-recap",
           label: "Recap",
           title: "Return to the signal.",
-          body: "Recaps keep the strongest moments easy to scan without losing the route back to the source.",
+          body: "Live captions and translation feed Infinity Dialog — ask what was decided without scrubbing an hour of video.",
           media: {
-            kind: "gradient",
-            variant: "fan",
-            gradient: "linear-gradient(180deg, #ecfeff 0%, #eef2ff 100%)",
-            accent: "#0ea5e9",
+            kind: "promptBar",
+            turns: [
+              {
+                prompt: "Summarize the closing call",
+                response: "Sterling will lead if terms land before six. Legal is clear. Three action items attached.",
+              },
+              {
+                prompt: "Who still owes a follow-up?",
+                response: "You owe final terms. Sterling owes leadership confirmation in writing.",
+              },
+            ],
           },
         },
         {
           id: "calls-followups",
           label: "Follow-ups",
           title: "Keep promises visible.",
-          body: "Action items stay attached to the conversation that created them.",
+          body: "Post-call Spine writeback keeps action items attached to the conversation that created them — not lost in a separate notes app.",
           media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #f0fdfa 0%, #eff6ff 100%)",
-            accent: "#14b8a6",
+            kind: "image",
+            src: "/product-hero/calls-move-after-call.webp",
+            alt: "Follow-up actions prepared after a call.",
+            objectPosition: "center center",
           },
         },
         {
           id: "calls-sharing",
           label: "Sharing",
           title: "Share the right amount.",
-          body: "Send the useful context without exposing the whole call to everyone.",
+          body: "Send recap clips, transcript excerpts, or the full room context — scoped to who was in the call and what they are allowed to see.",
           media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%)",
-            accent: "#6366f1",
+            kind: "image",
+            src: "/product-hero/calls-room-deal.webp",
+            alt: "Deal room call with shared context.",
+            objectPosition: "center center",
           },
         },
       ],
@@ -816,19 +961,26 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
     centerpiece: {
       eyebrow: "Calls",
       title: "Conversation with memory.",
-      body: "Calls gives live conversation a durable shape so the best parts do not vanish when the room closes.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      body: "Calls gives live conversation a durable shape — crisp HD rooms, native reminders, and automatic Spine writeback so the best parts do not vanish when the room closes.",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "calls-corner-1",
           position: "top-left",
           rotation: -8,
           media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #eef2ff 0%, #ecfeff 100%)",
-            accent: "#2563eb",
+            kind: "blurbCallScene",
+            panelPlacement: "center",
+            backgroundImage: "/product-hero/calls.webp",
+            callTitle: "Investor sync",
+            callStatus: "Live",
+            participants: [
+              { src: "/aliens/alien-0040.jpg", borderColor: "#77FF00", alt: "Host" },
+              { src: "/aliens/alien-0041.jpg", borderColor: "#00D4FF", alt: "Guest" },
+              { src: "/aliens/alien-0042.jpg", borderColor: "#FF00E5", alt: "OO" },
+            ],
+            subtitles: [{ speaker: "Captions", text: "Live · translated" }],
           },
         },
         {
@@ -836,10 +988,13 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           position: "top-right",
           rotation: 8,
           media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%)",
-            accent: "#0ea5e9",
+            kind: "promptBar",
+            turns: [
+              {
+                prompt: "What did we decide?",
+                response: "Close today if legal clears. Final terms before six.",
+              },
+            ],
           },
         },
         {
@@ -847,10 +1002,10 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           position: "bottom-left",
           rotation: -10,
           media: {
-            kind: "gradient",
-            variant: "fan",
-            gradient: "linear-gradient(180deg, #ecfeff 0%, #f0fdfa 100%)",
-            accent: "#06b6d4",
+            kind: "image",
+            src: "/product-hero/calls-move-after-call.webp",
+            alt: "Post-call action flow.",
+            objectPosition: "center center",
           },
         },
         {
@@ -858,10 +1013,17 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           position: "bottom-right",
           rotation: 10,
           media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #eef2ff 0%, #f0fdfa 100%)",
-            accent: "#14b8a6",
+            kind: "blurbCallScene",
+            panelPlacement: "center",
+            backgroundImage: "/product-hero/calls-room-deal.webp",
+            callTitle: "Sterling · 6pm",
+            callStatus: "Scheduled",
+            participants: [
+              { src: "/aliens/alien-0050.jpg", borderColor: "#77FF00", alt: "You" },
+              { src: "/aliens/alien-0051.jpg", borderColor: "#00D4FF", alt: "Sterling" },
+              { src: "/aliens/alien-0052.jpg", borderColor: "#FF00E5", alt: "OO" },
+            ],
+            subtitles: [{ speaker: "Reminder", text: "Tap to join" }],
           },
         },
       ],
@@ -869,12 +1031,12 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
     reveal: {
       eyebrow: "Call memory",
       title: "Let the conversation open up.",
-      body: "A short recap can expand into the full shape of the conversation when the details matter.",
+      body: "A short recap expands into full transcript, captions, and Spine timeline entries — the same UI you get after every live room.",
       media: {
-        kind: "gradient",
-        variant: "screen",
-        gradient: "linear-gradient(180deg, #eef2ff 0%, #ecfeff 100%)",
-        accent: "#2563eb",
+        kind: "image",
+        src: "/product-hero/calls.webp",
+        alt: "Calls hero — live rooms with memory.",
+        objectPosition: "center center",
       },
     },
   },
@@ -883,40 +1045,46 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Highlights.",
       slides: [
         {
-          id: "messages-context",
-          eyebrow: "Context",
-          title: "Keep the story together.",
-          body: "Messages links threads to the people, projects, and moments they actually belong to.",
-          media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
-            accent: "#8b5cf6",
-          },
+          id: "messages-inbox",
+          eyebrow: "Inbox",
+          title: "One place\nfor every thread.",
+          body: "OO pinned at the top, customer stories, and E2EE DMs — tap a person and the full thread opens without hunting apps or channels.",
+          media: { kind: "messagesHighlight", variant: "inbox" },
         },
         {
-          id: "messages-return",
-          eyebrow: "Return",
-          title: "Find the thread faster.",
-          body: "Return to the right exchange without remembering which app or channel held it.",
-          media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #f5f3ff 0%, #eff6ff 100%)",
-            accent: "#6366f1",
-          },
+          id: "messages-e2ee",
+          eyebrow: "Private",
+          title: "Only you two\ncan read this.",
+          body: "Peer-to-peer encryption by default. Read receipts and link previews stay inside the thread — nothing aggregated server-side.",
+          media: { kind: "messagesHighlight", variant: "e2ee" },
         },
         {
-          id: "messages-people",
-          eyebrow: "People",
-          title: "Keep people at the center.",
-          body: "The message stays attached to the relationship, not just the inbox.",
-          media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #fdf2f8 0%, #eef2ff 100%)",
-            accent: "#a855f7",
-          },
+          id: "messages-oo",
+          eyebrow: "OO",
+          title: "Your agent\nin every chat.",
+          body: "@oo in any thread with suggestion pills — drafts, memory lookups, and module help without leaving the conversation.",
+          media: { kind: "messagesHighlight", variant: "ooAgent" },
+        },
+        {
+          id: "messages-mentions",
+          eyebrow: "Mentions",
+          title: "@people and @oo\nin one composer.",
+          body: "Typeahead for connections and your agent — loop someone in or ask OO to draft without breaking flow.",
+          media: { kind: "messagesHighlight", variant: "mentions" },
+        },
+        {
+          id: "messages-attachments",
+          eyebrow: "Rich media",
+          title: "GIFs, photos,\nand files.",
+          body: "GIF picker, resumable uploads, voice messages, and doc vault cards — rich attachments with previews in-thread.",
+          media: { kind: "messagesHighlight", variant: "attachments" },
+        },
+        {
+          id: "messages-spine",
+          eyebrow: "Spine",
+          title: "Unified transcript\nacross calls and texts.",
+          body: "Messages and calls land on one Spine timeline — searchable, shared with Together, and ready for OO context.",
+          media: { kind: "messagesHighlight", variant: "spineLink" },
         },
       ],
     },
@@ -927,115 +1095,77 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
           id: "messages-threads",
           label: "Threads",
           title: "Threads stay readable.",
-          body: "Long-running conversations can compress into the moments that still need attention.",
-          media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #faf5ff 0%, #f8fafc 100%)",
-            accent: "#8b5cf6",
-          },
+          body: "Long-running DMs compress into the moments that need attention — Joki reactions, read receipts, and voice notes included.",
+          media: { kind: "messagesHighlight", variant: "inbox" },
         },
         {
           id: "messages-memory",
           label: "Memory",
           title: "Context comes back.",
-          body: "Past details can resurface when they explain the message in front of you.",
-          media: {
-            kind: "gradient",
-            variant: "fan",
-            gradient: "linear-gradient(180deg, #eef2ff 0%, #f5f3ff 100%)",
-            accent: "#6366f1",
-          },
+          body: "Unified transcript ties messages to calls and Spine — past details resurface when they explain the message in front of you.",
+          media: { kind: "messagesHighlight", variant: "spineLink" },
         },
         {
           id: "messages-next",
-          label: "Next",
-          title: "Know what comes next.",
-          body: "The system can separate passing chatter from the reply, commitment, or update that matters.",
-          media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #f5f3ff 0%, #eff6ff 100%)",
-            accent: "#7c3aed",
-          },
+          label: "OO",
+          title: "Agent when you want it.",
+          body: "Suggestion pills, @oo mentions, and private agent threads — OO sees only what you allow, on-device first.",
+          media: { kind: "messagesHighlight", variant: "ooAgent" },
         },
         {
           id: "messages-private",
           label: "Private",
           title: "Keep boundaries clear.",
-          body: "Personal threads and shared context stay scoped to where they belong.",
-          media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
-            accent: "#a855f7",
-          },
+          body: "E2EE DMs with lock badges in-thread — personal conversations stay scoped to the devices that hold the keys.",
+          media: { kind: "messagesHighlight", variant: "e2ee" },
+        },
+        {
+          id: "messages-compose",
+          label: "Compose",
+          title: "Rich attachments.",
+          body: "GIF picker, photo uploads, and doc vault cards in the composer — resumable uploads and link previews before you send.",
+          media: { kind: "messagesHighlight", variant: "attachments" },
         },
       ],
     },
     centerpiece: {
       eyebrow: "Texts",
       title: "Threads with memory.",
-      body: "Messages makes communication feel less scattered by keeping the human context close to every exchange.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      body: "Texts makes communication feel less scattered — E2EE DMs, @oo in-thread, and Spine writeback so every exchange keeps its human context.",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "messages-corner-1",
           position: "top-left",
           rotation: -8,
-          media: {
-            kind: "gradient",
-            variant: "screen",
-            gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
-            accent: "#8b5cf6",
-          },
+          media: { kind: "messagesHighlight", variant: "inbox" },
         },
         {
           id: "messages-corner-2",
           position: "top-right",
           rotation: 8,
-          media: {
-            kind: "gradient",
-            variant: "slab",
-            gradient: "linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%)",
-            accent: "#6366f1",
-          },
+          media: { kind: "messagesHighlight", variant: "e2ee" },
         },
         {
           id: "messages-corner-3",
           position: "bottom-left",
           rotation: -10,
-          media: {
-            kind: "gradient",
-            variant: "fan",
-            gradient: "linear-gradient(180deg, #f5f3ff 0%, #eff6ff 100%)",
-            accent: "#7c3aed",
-          },
+          media: { kind: "messagesHighlight", variant: "ooAgent" },
         },
         {
           id: "messages-corner-4",
           position: "bottom-right",
           rotation: 10,
-          media: {
-            kind: "gradient",
-            variant: "stack",
-            gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
-            accent: "#a855f7",
-          },
+          media: { kind: "messagesHighlight", variant: "spineLink" },
         },
       ],
     },
     reveal: {
       eyebrow: "Thread reveal",
       title: "Let the context widen.",
-      body: "A single message can open into the history, people, and decisions that explain why it matters.",
-      media: {
-        kind: "gradient",
-        variant: "screen",
-        gradient: "linear-gradient(180deg, #faf5ff 0%, #eef2ff 100%)",
-        accent: "#8b5cf6",
-      },
+      body: "A single message opens into inbox history, OO suggestions, and Spine timeline entries — the same surfaces you get in the app.",
+      media: { kind: "messagesHighlight", variant: "mentions" },
     },
   },
   profile: {
@@ -1143,7 +1273,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Identity, your way.",
       body: "Compose biography, network, and pods into one sovereign surface — then share a link that still feels personal.",
       ctaLabel: "Claim yours",
-      ctaTo: "/download",
+      ctaTo: "/download?intent=identity",
       items: [
         {
           id: "profile-corner-1",
@@ -1299,8 +1429,8 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
     },
     centerpiece: {
       title: "One question. Fewer tabs.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "vortex-corner-1",
@@ -1459,8 +1589,8 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       eyebrow: "Passport",
       title: "Your identity. Everywhere.",
       body: "Passport collapses fragmented identities into one portable layer. The goal is not another login—it is proving who you are without starting over.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "passport-corner-1",
@@ -1619,8 +1749,8 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       eyebrow: "V1llains",
       title: "Forged in opposition.",
       body: "V1llains exist because the best ideas are the ones that survive their toughest critic. This is not about negativity—it is about pressure-tested clarity.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "v1llains-corner-1",
@@ -1779,8 +1909,8 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       eyebrow: "Realms",
       title: "Your world. Your rules.",
       body: "Realms collapse the gap between identity and community. The space shapes itself around the people inside it.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "realms-corner-1",
@@ -1939,8 +2069,8 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       eyebrow: "Orb",
       title: "The show lands here.",
       body: "Orb is what happens when a concert and an alien encounter share the same coordinates. The stage is infinite, the crowd is everywhere, and the music shapes the world.",
-      ctaLabel: "Join Beta",
-      ctaTo: "/download",
+      ctaLabel: "Download beta",
+      ctaTo: TESTFLIGHT_JOIN_URL,
       items: [
         {
           id: "orb-corner-1",
