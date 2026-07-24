@@ -7,9 +7,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: min(72vh, 640px);
-  min-height: min(48vh, 420px);
-  overflow: hidden;
+  flex: 1;
+  min-height: 0;
 }
 
 .landing-public-blurbs-feed__list {
@@ -81,9 +80,11 @@
   flex-shrink: 0;
   display: block;
   width: 40px;
+  height: 54px;
   padding-top: 2px;
   text-decoration: none;
   border-radius: 20px;
+  box-sizing: border-box;
 }
 
 .landing-public-blurbs-card__bubble {

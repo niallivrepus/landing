@@ -5,14 +5,16 @@ import { useTypewriterHeadline } from "../../hooks/useTypewriterHeadline";
 type LandingHeroTypewriterProps = {
   /** Full headline string — always exposed to assistive tech via `aria-label`. */
   text: string;
+  /** When false, defers typing until the mission intro finishes. */
+  enabled?: boolean;
 };
 
 /**
  * **Purpose:** Homepage hero h1 with a one-shot typewriter reveal and branded caret.
  * **Connects to:** `LandingImmersiveShell`, `landing-home-prompt.css`, `landing-hero-copy.ts`.
  */
-export function LandingHeroTypewriter({ text }: LandingHeroTypewriterProps) {
-  const { displayText, phase, reduceMotion } = useTypewriterHeadline(text);
+export function LandingHeroTypewriter({ text, enabled = true }: LandingHeroTypewriterProps) {
+  const { displayText, phase, reduceMotion } = useTypewriterHeadline(text, { enabled });
   const [caretVisible, setCaretVisible] = useState(!reduceMotion);
 
   const handleCaretAnimationEnd = useCallback(() => {
@@ -28,7 +30,7 @@ export function LandingHeroTypewriter({ text }: LandingHeroTypewriterProps) {
     >
       <span aria-hidden="true">
         {displayText}
-        {!reduceMotion && caretVisible ? (
+        {enabled && !reduceMotion && caretVisible ? (
           <span
             className={cn(
               "landing-hero-typewriter-caret",

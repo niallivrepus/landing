@@ -125,7 +125,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
           { label: "Brand Book", href: "/brand", surfaces: ["primary"] },
           { label: "Pitch Deck", href: "/pitchdeck", surfaces: ["primary"] },
           { label: "Data Room", href: "/dataroom", surfaces: ["primary"] },
-          { label: "Invest", href: "/invest", surfaces: ["primary"] },
+          { label: "Invest", href: "/invest", surfaces: ["primary", "footer"] },
         ],
       },
     ],

@@ -1,0 +1,36 @@
+/**
+ * OO speak chrome — Pokémon-style dialogue typing (caret lives inside bubble text as ▌).
+ * **Connects to:** `OoSpeakBubble`, `useOoSpeak`.
+ */
+
+.oo-speak-bubble {
+  display: inline-flex;
+  cursor: default;
+}
+
+.oo-speak-bubble--speaking {
+  cursor: pointer;
+}
+
+/* Soft pulse on the bubble while OO is mid-sentence — feels alive without shaking layout. */
+@media (prefers-reduced-motion: no-preference) {
+  .oo-speak-bubble__body--typing {
+    animation: oo-speak-bubble-breathe 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes oo-speak-bubble-breathe {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oo-speak-bubble__body--typing {
+    animation: none;
+  }
+}

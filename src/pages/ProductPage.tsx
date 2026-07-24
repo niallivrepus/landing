@@ -78,8 +78,8 @@ const PRODUCT_HERO_CTA: Record<ProductId, { label: string; action: string }> = {
   pods: { label: "Build your profile", action: "Compose" },
   blurbs: { label: "Capture the spark", action: "Post" },
   spine: { label: "Hold every memory", action: "Save" },
-  calls: { label: "Keep every word", action: "Listen" },
-  messages: { label: "Stay in the loop", action: "Send" },
+  calls: { label: "HD rooms with memory", action: "Join a call" },
+  messages: { label: "E2EE texts with @oo", action: "Start texting" },
   profile: { label: "Own your identity", action: "Claim" },
   vortex: { label: "One question, all of it", action: "Ask" },
   passport: { label: "Carry your identity", action: "Verify" },
@@ -94,9 +94,9 @@ const PRODUCT_FAQ_SUMMARIES: Partial<Record<ProductId, string>> = {
   spine:
     "Spine is Jokuh's long-term home for structured personal context: a year timeline with Today Brief, day planner (notes, tasks, reminders, files, memories), mood logging, Sky Lens, calendar and photo import, memory search, streaks, and automatic lifelogging from calls, captures, wallet, and more — synced local-first across your devices.",
   calls:
-    "Calls are end-to-end-encrypted voice and video native to Jokuh, with agent-assisted summaries, action items, and memory written back to your Spine automatically.",
+    "Calls are end-to-end-encrypted HD voice and video native to Jokuh — live captions, translation, Infinity Dialog tier, guest knock queue, host recording and moderation, in-call reactions and chat, scheduled calls with invite-via-DM, and automatic post-call Spine transcript writeback.",
   messages:
-    "Messages is private peer-to-peer chat with full agent context. Your AI sees what you allow it to see, and nothing leaves your device unless you say so.",
+    "Texts are E2EE peer-to-peer DMs with @mentions, @oo agent threads, suggestion pills, GIF picker, rich attachments with resumable uploads, voice messages, link previews, read receipts, Joki reactions, doc vault cards, and a unified Spine transcript shared with calls — your agent sees only what you allow, on-device first.",
   profile:
     "Profile is your sovereign identity surface: photo, @handle, biography pod, network strip, and composable pods you customize — tied to Spine so the rest of Jokuh remembers who you are.",
   vortex:
@@ -125,8 +125,7 @@ export function ProductPage({ productId }: { productId: ProductId }) {
   preloadProductHeroPoster(productId);
   useDocumentTitle(`${product.title} Jokuh`);
 
-  const showCloserLook =
-    productId !== "profile" && productId !== "messages" && productId !== "calls";
+  const showCloserLook = productId !== "profile";
 
   return (
     <MarketingPageFrame

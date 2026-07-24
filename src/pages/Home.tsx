@@ -5,7 +5,6 @@ import {
   GooeyBackdrop,
   IdentityBlock,
   InvestorBranchSection,
-  LandingEditorialSection,
   LandingHero,
   ProductDemoSection,
   ProductShowcaseSection,
@@ -15,6 +14,11 @@ import { NEWS_ITEMS } from "../data/news";
 import { preloadNewsArticleSlugs } from "../lib/article-audio";
 import { useTheme } from "@jokuh/gooey";
 
+/**
+ * **Purpose:** Homepage funnel — hero (Claim) → compact product strip → proof demo → Claim close.
+ * Editorial and full Bubbles beats stay off the critical path; investors sit as a thin strip after Claim.
+ * **Connects to:** claim-identity overlay, `ProductDemoSection` power proofs, MegaFooter.
+ */
 export default function Home() {
   useDocumentTitle("Jokuh");
   const { resolvedTheme } = useTheme();
@@ -36,9 +40,8 @@ export default function Home() {
         <LandingHero />
         <ProductShowcaseSection />
         <ProductDemoSection />
-        <LandingEditorialSection />
-        <InvestorBranchSection />
         <IdentityBlock />
+        <InvestorBranchSection />
       </MarketingPageFrame>
     </ClaimIdentityFlowProvider>
   );

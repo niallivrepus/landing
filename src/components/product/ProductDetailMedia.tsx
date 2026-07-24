@@ -3,7 +3,6 @@ import {
   ActiveCalls,
   Avatar as GooeyAvatar,
   cn,
-  IncomingMessageBubble,
   MessageBubble,
   PromptBar,
   Soundwave,
@@ -12,6 +11,8 @@ import {
 import { Captions, Mic, PhoneOff, Sparkles } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import type { ProductDetailMedia as ProductDetailMediaConfig } from "../../data/product-detail-blueprints";
+import { MessagesHighlightVisual } from "../landing/MessagesHighlightVisual";
+import { OoSpeakBubble } from "../landing/OoSpeakBubble";
 import { ProfileHighlightVisual } from "../landing/ProfileHighlightVisual";
 import { SpineHighlightVisual } from "../landing/SpineHighlightVisual";
 
@@ -166,6 +167,12 @@ export function ProductDetailMedia({
     );
   }
 
+  if (media.kind === "messagesHighlight") {
+    return (
+      <MessagesHighlightVisual variant={media.variant} active={active} className={className} />
+    );
+  }
+
   if (media.kind === "gradient") {
     if (media.gradient === "none" || !media.gradient.trim()) {
       return null;
@@ -239,12 +246,15 @@ function ProductPromptBarScene({
           setVisibleMessageCount((current) => Math.max(current, turnIndex * 2 + 2));
         }, 520));
 
+        // Hold until OO finishes speaking (~28ms/char + punctuation slack), then advance.
+        const ooSpeakHoldMs = Math.min(9000, Math.max(2000, turn.response.length * 42 + 700));
+
         if (turnIndex < media.turns.length - 1) {
-          timers.push(window.setTimeout(() => startCycle(turnIndex + 1), 2200));
+          timers.push(window.setTimeout(() => startCycle(turnIndex + 1), 520 + ooSpeakHoldMs));
           return;
         }
 
-        timers.push(window.setTimeout(() => startCycle(0), 5200));
+        timers.push(window.setTimeout(() => startCycle(0), 520 + ooSpeakHoldMs + 2400));
       };
 
       timers.push(window.setTimeout(typeNextCharacter, 460));
@@ -316,10 +326,11 @@ function ProductPromptBarScene({
                       className="max-w-[82%]"
                     />
                   ) : (
-                    <IncomingMessageBubble
+                    <OoSpeakBubble
                       name="00"
                       message={message.text}
-                      className="max-w-none flex-1 !shadow-none"
+                      speak
+                      className="max-w-none flex-1"
                     />
                   )}
                 </motion.div>

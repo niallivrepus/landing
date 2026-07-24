@@ -6,7 +6,7 @@
 
 import { Avatar as GooeyAvatar, cn } from "@jokuh/gooey";
 import { Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   PROFILE_DEMO_HERO_AGENT,
@@ -15,6 +15,16 @@ import {
   profileDemoNetworkPeers,
 } from "../../lib/profile-demo-identity";
 import { ProfileNetworkStripPanel } from "./ProfileNetworkStripPanel";
+import { IdPodSquircleShell } from "./IdPodSquircleShell";
+
+/** Carousel-scale profile squircle — tighter radius than full immersive pod. */
+function HighlightSquircle({ children }: { children: React.ReactNode }) {
+  return (
+    <IdPodSquircleShell cornerRadius={28} contentClassName="p-[1.1rem]">
+      {children}
+    </IdPodSquircleShell>
+  );
+}
 
 /** Carousel slide variants — one mini mockup per profile highlight theme. */
 export type ProfileHighlightVariant =
@@ -45,7 +55,7 @@ function OoContextChip({ children }: { children: string }) {
 function IdentityHighlightMockup() {
   return (
     <div className="profile-highlight-visual__stage">
-      <div className="profile-highlight-visual__squircle">
+      <HighlightSquircle>
         <div className="profile-highlight-visual__identity-row">
           <img
             src={PROFILE_DEMO_HERO_AGENT.avatarPath}
@@ -60,7 +70,7 @@ function IdentityHighlightMockup() {
             <p className="profile-highlight-visual__identity-handle">@{PROFILE_DEMO_HERO_AGENT.username}</p>
           </div>
         </div>
-      </div>
+      </HighlightSquircle>
       <OoContextChip>OO reads this as your anchor</OoContextChip>
     </div>
   );
@@ -70,7 +80,7 @@ function IdentityHighlightMockup() {
 function BiographyHighlightMockup({ active }: { active: boolean }) {
   return (
     <div className="profile-highlight-visual__stage">
-      <div className="profile-highlight-visual__squircle">
+      <HighlightSquircle>
         <div className="profile-highlight-visual__bio-card">
           <p className="profile-highlight-visual__bio-label">Biography pod</p>
           <p className="profile-highlight-visual__bio-title">The story behind the squircle</p>
@@ -82,7 +92,7 @@ function BiographyHighlightMockup({ active }: { active: boolean }) {
             {active ? <span className="profile-highlight-visual__bio-cursor" aria-hidden /> : null}
           </p>
         </div>
-      </div>
+      </HighlightSquircle>
       <OoContextChip>OO learns your voice from what you write here</OoContextChip>
     </div>
   );
@@ -94,14 +104,14 @@ function NetworkHighlightMockup() {
 
   return (
     <div className="profile-highlight-visual__stage">
-      <div className="profile-highlight-visual__squircle">
+      <HighlightSquircle>
         <div className="profile-highlight-visual__network-wrap">
           <ProfileNetworkStripPanel
             connectionCount={PROFILE_DEMO_CONNECTION_COUNT}
             peers={peers.slice(0, 6)}
           />
         </div>
-      </div>
+      </HighlightSquircle>
       <OoContextChip>OO helps you show up in real relationships</OoContextChip>
     </div>
   );
@@ -111,7 +121,7 @@ function NetworkHighlightMockup() {
 function PersonalityHighlightMockup() {
   return (
     <div className="profile-highlight-visual__stage">
-      <div className="profile-highlight-visual__squircle">
+      <HighlightSquircle>
         <div className="profile-highlight-visual__context-flow">
           <div className="profile-highlight-visual__context-mini">
             <img
@@ -149,7 +159,7 @@ function PersonalityHighlightMockup() {
           <span className="profile-highlight-visual__memory-chip">Rhythms</span>
           <span className="profile-highlight-visual__memory-chip">Connections</span>
         </div>
-      </div>
+      </HighlightSquircle>
       <OoContextChip>Not a generic chatbot — context that compounds</OoContextChip>
     </div>
   );

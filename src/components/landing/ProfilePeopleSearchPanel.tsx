@@ -1,13 +1,14 @@
-import { Avatar, cn } from "@jokuh/gooey";
+import { Avatar, cn, useCurrentGooeyViewport } from "@jokuh/gooey";
 import { motion } from "motion/react";
-import { useCallback, useId, useState } from "react";
+import { useCallback, useState } from "react";
 import { useDownloadIntercept } from "../../hooks/useDownloadIntercept";
 import { useGentleHoverSound } from "../../hooks/useGentleHoverSound";
 import { usePublicPeopleSearch } from "../../hooks/usePublicPeopleSearch";
 import type { PublicPeopleSearchItem } from "../../lib/public-people-search";
+import { LandingPromptBar } from "./LandingPromptBar";
 
 /** Parity `friends.search.placeholder` — `frontend/src/i18n/en.json`. */
-const SEARCH_PLACEHOLDER = "Search People";
+const SEARCH_PLACEHOLDER = "Search people…";
 
 /** Parity `friends.search.hint`. */
 const SEARCH_HINT =
@@ -28,16 +29,16 @@ type ProfilePeopleSearchPanelProps = {
 
 /**
  * **Purpose:** Live people discovery on the Profile product page — reusable center panel or bottom composer.
- * **Connects to:** `ProfileImmersiveShell`, `/api/public-people-search`, `/download` intercept.
+ * **Connects to:** `ProfileImmersiveShell`, `/api/public-people-search`, `/download` intercept, `LandingPromptBar`.
  * **Gate:** browsing results and public profile links work unsigned; Connect/Message routes to signup.
+ * **Parity:** web `AddFriendSheet.tsx` / Text inbox frosted prompt bar (not blue discovery accent).
  */
 export function ProfilePeopleSearchPanel({
   className,
   variant = "panel",
 }: ProfilePeopleSearchPanelProps) {
-  const inputId = useId();
+  const viewport = useCurrentGooeyViewport();
   const [query, setQuery] = useState("");
-  const [focused, setFocused] = useState(false);
   const { intercept } = useDownloadIntercept("profile-people-search");
   const { items, source, loading, error } = usePublicPeopleSearch(query);
   const hoverSoundProps = useGentleHoverSound(true, "gentle");
@@ -45,7 +46,7 @@ export function ProfilePeopleSearchPanel({
   const isBottomComposer = variant === "bottomComposer";
   const showHint = trimmed.length < 2;
   const showResults = trimmed.length >= 2;
-  const showTray = isBottomComposer ? focused || showResults || items.length > 0 : true;
+  const showTray = isBottomComposer ? trimmed.length >= 1 || items.length > 0 : true;
 
   const openPublicProfile = useCallback((item: PublicPeopleSearchItem) => {
     const url = `${APP_ORIGIN}/u/${encodeURIComponent(item.username)}`;
@@ -151,35 +152,14 @@ export function ProfilePeopleSearchPanel({
       aria-label="Search people on Jokuh"
       {...hoverSoundProps}
     >
-      <label className="landing-profile-people-search__field" htmlFor={inputId}>
-        <span
-          className={cn(
-            "landing-profile-people-search__input-wrap landing-control-surface",
-            "landing-profile-people-search__input-wrap--discovery",
-          )}
-        >
-          <img
-            src="/pods-bento/search-icon.svg"
-            alt=""
-            className="landing-profile-people-search__icon"
-            aria-hidden
-          />
-          <input
-            id={inputId}
-            type="search"
-            enterKeyHint="search"
-            autoComplete="off"
-            spellCheck={false}
-            className="landing-profile-people-search__input"
-            placeholder={SEARCH_PLACEHOLDER}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            aria-label={SEARCH_PLACEHOLDER}
-          />
-        </span>
-      </label>
+      <LandingPromptBar
+        variant={viewport === "phone" ? "phone" : "desktop"}
+        viewport={viewport}
+        previewText={SEARCH_PLACEHOLDER}
+        onTextChange={setQuery}
+        onSend={(text) => setQuery(text)}
+        onPlus={() => intercept("prompt-plus")}
+      />
 
       {showTray ? (
         <div className="landing-profile-people-search__tray">{resultsContent}</div>

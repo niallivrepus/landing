@@ -17,6 +17,12 @@
   --ob-rim-35: rgba(255, 255, 255, 0.35);
   --ob-accent-bg: #fff;
   --ob-accent-fg: #000;
+  /**
+   * Centered bottom composer — @handle row matches plain-home vortex search idle width.
+   * Parity: `frontend/src/styles/bond-onboarding.css` `--onboarding-bottom-composer-max-width`.
+   */
+  --home-search-compact-max: 264px;
+  --onboarding-bottom-composer-max-width: min(100%, var(--home-search-compact-max));
 }
 
 :root.light,
@@ -166,12 +172,213 @@
 
 .claim-identity-feed__stack {
   width: 100%;
-  max-width: 520px;
+  max-width: 450px;
+}
+
+/**
+ * Figma `3486:259326` / `3505:41076` — claim-identity desktop onboarding card.
+ * Handle composer stays in `.claim-identity-bottom-chrome` (product spec).
+ */
+.claim-identity-glass-card {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 54px;
+  overflow: visible;
+  isolation: isolate;
+  background: var(--ob-rim-05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.claim-identity-glass-card__clip {
+  position: relative;
+  overflow: hidden;
+  border-radius: 54px;
+  background: var(--ob-rim-05);
+}
+
+.claim-identity-glass-card__squircle {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.claim-identity-glass-card__squircle-rim {
+  fill: none;
+  stroke: var(--ob-rim-10);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.claim-identity-glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.15),
+    inset 0 2px 3px rgba(255, 255, 255, 0.15);
+}
+
+.claim-identity-glass-card__header {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse 80% 120% at 50% 100%,
+    rgb(27, 27, 27) 0%,
+    rgb(14, 14, 14) 50%,
+    rgb(7, 7, 7) 75%,
+    rgb(0, 0, 0) 100%
+  );
+}
+
+.claim-identity-glass-card__body {
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.claim-identity-glass-card__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.claim-identity-glass-card__title {
+  margin: 0;
+  font-family: var(--font-sans, "Satoshi", system-ui, sans-serif);
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0;
+  color: var(--ob-ink);
+  word-break: break-word;
+}
+
+.claim-identity-glass-card__subtitle {
+  margin: 0;
+  font-family: var(--font-sans, "Satoshi", system-ui, sans-serif);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.56;
+  color: var(--ob-ink-80);
+}
+
+/** Compact handle constraints under claim-identity title/copy. Parity: product `ClaimIdentityOnboardingOverlay`. */
+.claim-identity-glass-card__rules {
+  margin: 0;
+  font-family: var(--font-sans, "Satoshi", system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ob-ink-45);
+}
+
+.claim-identity-glass-card__error {
+  margin: 0;
+  font-family: var(--font-sans, "Satoshi", system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #ff6b8a;
+}
+
+/** Figma swirl stack inside the card header (`3505:41121`). */
+.claim-identity-swirl {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.claim-identity-swirl__backdrop {
+  position: absolute;
+  left: 50%;
+  top: -28px;
+  width: 122%;
+  height: 122%;
+  transform: translateX(-50%);
+  object-fit: cover;
+  object-position: center 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.claim-identity-swirl__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.claim-identity-swirl__bonding-ring {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 999px;
+  border: 4px solid var(--ob-rim-05);
+  background: var(--ob-rim-05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.15);
+}
+
+/** Claim-identity user portrait — 64×86 vertical pill (20:27 Gooey medium ratio), not a circle. */
+.claim-identity-swirl__avatar {
+  width: 64px;
+  height: 86px;
+  border-radius: 999px;
+  border: 4px solid #7700ff;
+  object-fit: cover;
+  object-position: center;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.15),
+    0 0 24px rgba(119, 0, 255, 0.45);
+}
+
+.claim-identity-swirl__oo-chip {
+  position: absolute;
+  right: 28px;
+  top: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ob-rim-20);
+  background: #ff0700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.claim-identity-swirl__oo {
+  display: block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  object-position: center;
 }
 
 .onboarding-glass-card {
   width: 100%;
-  border-radius: 40px;
+  border-radius: 54px;
+  corner-shape: squircle;
   overflow: hidden;
   isolation: isolate;
   background: var(--ob-rim-05);
@@ -236,12 +443,12 @@
 }
 
 .onboarding-bottom-bar {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 4px;
   width: 100%;
-  max-width: 520px;
-  margin: 0 auto;
+  box-sizing: border-box;
   pointer-events: none;
 }
 
@@ -250,14 +457,36 @@
   flex-shrink: 0;
 }
 
-.onboarding-handle-field {
+/** Centered composer — @handle field shares width with signed-in app Continue/Confirm pills. */
+.onboarding-bottom-composer {
   flex: 1;
+  width: 100%;
+  max-width: var(--onboarding-bottom-composer-max-width);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  pointer-events: auto;
+  min-width: 0;
+}
+
+.onboarding-bottom-composer > .onboarding-handle-field {
+  width: 100%;
+  flex: none;
+}
+
+.onboarding-handle-field {
+  width: 100%;
+  flex: none;
   display: flex;
   align-items: center;
   gap: 8px;
   height: 50px;
   padding: 4px;
   border-radius: 9999px;
+  border: 2px solid var(--ob-rim-20);
+  background: var(--ob-rim-05);
   box-sizing: border-box;
   cursor: text;
   pointer-events: auto;
@@ -266,8 +495,7 @@
 .onboarding-handle-field:focus-within {
   box-shadow:
     0 0 0 3px var(--ob-rim-35),
-    var(--landing-control-inner-highlight),
-    var(--landing-control-shadow);
+    var(--landing-control-inner-highlight, inset 0 2px 4px rgba(255, 255, 255, 0.15));
 }
 
 .onboarding-handle-prefix {
@@ -289,17 +517,35 @@
 .onboarding-handle-input {
   flex: 1;
   min-width: 0;
+  margin: 0;
+  padding: 0;
   border: none;
   background: transparent;
   color: var(--ob-ink);
+  font: inherit;
   font-size: 16px;
   font-weight: 600;
+  line-height: 1.4;
   outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.onboarding-handle-input:focus,
+.onboarding-handle-input:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .onboarding-handle-input::placeholder {
   color: var(--ob-ink-45);
   font-weight: 500;
+}
+
+.onboarding-field-submit:focus-visible {
+  outline: 2px solid var(--ob-ink);
+  outline-offset: 3px;
 }
 
 .onboarding-field-submit {
@@ -321,43 +567,6 @@
 .onboarding-field-submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.onboarding-handle-rules {
-  margin: 0 auto;
-  width: 100%;
-  max-width: 520px;
-  text-align: center;
-}
-
-.onboarding-handle-rules__summary {
-  list-style: none;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ob-ink-55);
-  user-select: none;
-}
-
-.onboarding-handle-rules__summary::-webkit-details-marker {
-  display: none;
-}
-
-.onboarding-handle-input:focus-visible,
-.onboarding-field-submit:focus-visible {
-  outline: 2px solid var(--ob-ink);
-  outline-offset: 3px;
-}
-
-.onboarding-handle-rules[open] .onboarding-handle-rules__summary {
-  margin-bottom: 4px;
-}
-
-.onboarding-handle-rules__hint {
-  margin: 0;
-  font-size: 12px;
-  color: var(--ob-ink-45);
-  text-align: center;
 }
 
 /* Nexus pill — Gooey glass host; dimensions set inline on `LandingNexusPill`. */

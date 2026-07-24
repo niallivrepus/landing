@@ -65,6 +65,9 @@ export function IdentityBlock() {
           <br />
           next move.
         </h2>
+        <p className="mt-5 max-w-[34ch] font-sans text-[15px] leading-relaxed text-light-space/60 light:text-zinc-600">
+          Claim identity to keep memory, privacy, and Bubbles with you.
+        </p>
         <div className="mt-10 flex w-full max-w-sm justify-center md:mt-12 md:max-w-none">
           <ClaimIdentityCta
             href="/download?intent=identity"

@@ -15,18 +15,34 @@ export type TypewriterHeadlineState = {
   reduceMotion: boolean;
 };
 
+type UseTypewriterHeadlineOptions = {
+  /** When false, stays blank until enabled (e.g. after mission intro completes). */
+  enabled?: boolean;
+};
+
 /**
  * **Purpose:** Reveal a hero headline one character at a time on first mount.
  * **Connects to:** `LandingHeroTypewriter`, `landing-hero-copy.ts`.
  */
-export function useTypewriterHeadline(text: string): TypewriterHeadlineState {
+export function useTypewriterHeadline(
+  text: string,
+  { enabled = true }: UseTypewriterHeadlineOptions = {},
+): TypewriterHeadlineState {
   const reduceMotion = useReducedMotion();
-  const [displayText, setDisplayText] = useState(reduceMotion ? text : "");
-  const [phase, setPhase] = useState<TypewriterHeadlinePhase>(
-    reduceMotion ? "complete" : "typing",
+  const [displayText, setDisplayText] = useState(() =>
+    enabled && reduceMotion ? text : "",
+  );
+  const [phase, setPhase] = useState<TypewriterHeadlinePhase>(() =>
+    enabled && reduceMotion ? "complete" : "typing",
   );
 
   useEffect(() => {
+    if (!enabled) {
+      setDisplayText("");
+      setPhase("typing");
+      return;
+    }
+
     if (reduceMotion) {
       setDisplayText(text);
       setPhase("complete");
@@ -47,7 +63,7 @@ export function useTypewriterHeadline(text: string): TypewriterHeadlineState {
     }, TYPEWRITER_CHAR_DELAY_MS);
 
     return () => window.clearInterval(id);
-  }, [text, reduceMotion]);
+  }, [text, reduceMotion, enabled]);
 
   return { displayText, phase, reduceMotion: !!reduceMotion };
 }

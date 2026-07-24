@@ -54,7 +54,7 @@ export function ProductShowcaseSection() {
       className="landing-cv scroll-mt-24 bg-dark-space px-4 py-16 light:bg-white md:px-8 md:py-20"
     >
       <div className={CONTENT_SHELL_WIDE}>
-        <SectionHeaderRow title="One machine, five ways in" actionLabel="See everything" actionTo="/calls" />
+        <SectionHeaderRow title="One machine, five ways in" actionLabel="See it work" actionTo="#demo" />
         <div className={cn("mt-0 md:grid-cols-5 md:gap-6 xl:gap-8", PHONE_CARD_RAIL_CLASS)}>
           {SHOWCASE_CARDS.map((card) => (
             <div key={card.id} className={PHONE_CARD_WIDTH_CLASS}>

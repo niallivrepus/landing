@@ -56,9 +56,9 @@ export const PRODUCTS: Record<ProductId, Product> = {
     title: "Calls",
     summary: "Talk freely. Truly private.",
     body: [
-      "Every call, every message, every \u201cremember when\u201d — OO is listening, learning, and building. From a late-night message with your best friend to a pitch meeting with your team, OO holds the thread.",
-      "It knows who you are, who you're talking to, what they mean to you, what they're allowed to know, and what should stay between you.",
-      "When the call ends, the work is already done — reminders set, birthdays saved, plans on your calendar, notes written, decks delivered. You just talked. Somehow, everything got handled.",
+      "HD voice and video native to Jokuh — deal rooms, live captions, translation, guest knock queues, host recording, and in-call reactions. Every room is end-to-end encrypted.",
+      "Infinity Dialog tier lets you ask from call context: who decided what, what you owe, and what happens next — without replaying an hour of video.",
+      "When the room ends, OO writes transcript, action items, and follow-up drafts back to your Spine timeline. Schedule from a DM, invite via thread, and show up on time with native reminders.",
     ],
   },
   messages: {
@@ -66,9 +66,9 @@ export const PRODUCTS: Record<ProductId, Product> = {
     title: "Texts",
     summary: "Messages only you two can see. Private. Actually private.",
     body: [
-      "Conversations that build themselves. OO is the intelligence inside every chat — quietly understanding who you are, who you're talking to, and what matters between you.",
-      "From \u201clet's go to the park Saturday\u201d to \u201cwe need a marketing deck by Friday,\u201d OO turns words into work. Reminders, notes, plans, assets, decks — ready by the time you say goodbye.",
-      "Private things stay private. Shared things show up where they belong. You just talked. It's already done.",
+      "E2EE DMs with read receipts, link previews, voice messages, and rich attachments — GIF picker, resumable uploads, and doc vault cards in-thread.",
+      "@mentions and @oo in one composer: loop people in, tap suggestion pills, and let your private agent draft without leaving the chat.",
+      "Calls and messages share a unified Spine transcript — searchable, shared with Together, and ready for OO context. You just talked; the thread remembers.",
     ],
   },
   profile: {

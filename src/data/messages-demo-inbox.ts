@@ -1,3 +1,9 @@
+/**
+ * **Purpose:** Demo DM bodies for homepage “See it work” and Texts immersive parity.
+ * Plain, human conversation — no em dashes — so visitors grasp OO’s memory in one glance.
+ * **Connects to:** `ProductDemoSection`, `MessagesImmersiveShell`.
+ */
+
 import { HOME_STORIES } from "./home-stories";
 import { getStoryDetail } from "./stories-detail";
 
@@ -24,27 +30,29 @@ export type MessagesDmMessage = {
 export type MessagesDmThread = {
   id: string;
   messages: MessagesDmMessage[];
+  /** OO agent note after the peer exchange — spoken via `OoSpeakBubble`, not shown as the human. */
   reply: string;
 };
 
-/** **Purpose:** Demo DM bodies keyed by inbox thread id (parity with `ProductDemoSection` threads). */
+/** **Purpose:** Demo DM bodies keyed by inbox thread id. */
 export const MESSAGES_DM_THREADS: Record<string, MessagesDmThread> = {
   maya: {
     id: "maya",
     messages: [
-      { from: "them", text: "did you ever send over the deck from last week?" },
-      { from: "me", text: "yeah — sent the Figma link, not a PDF" },
-      { from: "them", text: "ha, it remembered that" },
+      { from: "them", text: "Hey, did you send last week's deck?" },
+      { from: "me", text: "Yep. I sent the Figma link, not a PDF." },
+      { from: "them", text: "Perfect, that's exactly what I needed." },
     ],
-    reply: "Noted — Maya gets links, not PDFs, from now on.",
+    reply: "Got it. Maya prefers Figma links over PDFs. I'll remember that.",
   },
   sam: {
     id: "sam",
     messages: [
-      { from: "them", text: "can we push the call to next week?" },
-      { from: "me", text: "works for me, same time?" },
+      { from: "them", text: "Can we move our call to next week?" },
+      { from: "me", text: "Sure. Same time work for you?" },
+      { from: "them", text: "Same time is great. Thanks!" },
     ],
-    reply: "Moved — Sam's call is now next week, same time. Calendar updated.",
+    reply: "Done. Sam's call is next week at the same time.",
   },
 };
 
@@ -81,7 +89,7 @@ export function buildMessagesInboxThreads(): MessagesInboxThread[] {
       id: "maya",
       kind: "dm",
       name: "Maya",
-      preview: "did you send the deck?",
+      preview: "Hey, did you send last week's deck?",
       accentColor: "var(--color-flame-4, #fb923c)",
       unread: true,
     },
@@ -89,7 +97,7 @@ export function buildMessagesInboxThreads(): MessagesInboxThread[] {
       id: "sam",
       kind: "dm",
       name: "Sam",
-      preview: "next week works",
+      preview: "Can we move our call to next week?",
       accentColor: "var(--color-insight-4, #a855f7)",
     },
   ];

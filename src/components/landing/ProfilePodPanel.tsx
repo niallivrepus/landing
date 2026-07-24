@@ -13,6 +13,7 @@ import {
   profileDemoNetworkPeers,
 } from "../../lib/profile-demo-identity";
 import { ProfileNetworkStripPanel } from "./ProfileNetworkStripPanel";
+import { IdPodSquircleShell } from "./IdPodSquircleShell";
 
 type ProfilePodPanelProps = {
   className?: string;
@@ -29,7 +30,7 @@ export function ProfilePodPanel({ className }: ProfilePodPanelProps) {
 
   return (
     <div className={cn("id-page-profile-stack id-page-profile-stack--no-biography landing-profile-pod", className)}>
-      <div className="id-pod-squircle">
+      <IdPodSquircleShell>
         <div className="landing-profile-pod__identity">
           <p className="landing-profile-pod__display-name">{PROFILE_DEMO_PLACEHOLDER.displayName}</p>
           <p className="landing-profile-pod__handle">{handle}</p>
@@ -50,7 +51,7 @@ export function ProfilePodPanel({ className }: ProfilePodPanelProps) {
             peers={networkPeers}
           />
         </div>
-      </div>
+      </IdPodSquircleShell>
 
       <div className="landing-profile-pod__actions">
         <button

@@ -1,4 +1,9 @@
-/** **Purpose:** OO demo chat helpers for the immersive Messages product page. */
+/**
+ * **Purpose:** OO demo chat helpers for Texts immersive + homepage “See it work”.
+ * Replies stay plain and concrete so visitors see agent powers, not chatbot filler.
+ */
+
+import { LANDING_DEMO_POWERS } from "./landing-demo-powers";
 
 export type MessagesOoMessage = {
   id: string;
@@ -7,23 +12,14 @@ export type MessagesOoMessage = {
   thinking?: boolean;
 };
 
-export const MESSAGES_OO_WELCOME =
-  "Hi — I'm OO, your private agent. Ask about memory, encryption, or how modules work inside messages.";
+export const MESSAGES_OO_WELCOME = "Tap a power below. I'll show you what I can do.";
 
-export const MESSAGES_OO_SUGGESTIONS = [
-  "how private are my messages?",
-  "what is spine?",
-  "help me claim identity",
-] as const;
+/** Homepage chips — map 1:1 to `LANDING_DEMO_POWERS` labels for the demo strip. */
+export const MESSAGES_OO_SUGGESTIONS = LANDING_DEMO_POWERS.map((power) => power.prompt);
 
-const OO_REPLIES: Record<string, string> = {
-  "how private are my messages?":
-    "end-to-end by default. your agent only sees what you allow — nothing leaves your device unless you say so.",
-  "what is spine?":
-    "spine is your operating timeline — calls, blurbs, notes, and prompts in one chronological surface.",
-  "help me claim identity":
-    "tap claim identity below — i'll walk you through handle, bond, and your first module.",
-};
+const OO_REPLIES: Record<string, string> = Object.fromEntries(
+  LANDING_DEMO_POWERS.map((power) => [power.prompt.toLowerCase(), power.reply]),
+);
 
 export function createOoUserMessage(body: string, id = crypto.randomUUID()): MessagesOoMessage {
   return { id, author: "user", body };
@@ -35,16 +31,22 @@ export function createOoThinkingMessage(id = crypto.randomUUID()): MessagesOoMes
 
 export function createOoReply(source: string, id?: string): MessagesOoMessage {
   const normalized = source.trim().toLowerCase();
-  const matched = Object.entries(OO_REPLIES).find(([key]) => normalized.includes(key.split(" ")[0]!));
+  const powerHit = LANDING_DEMO_POWERS.find(
+    (power) =>
+      normalized === power.prompt.toLowerCase() ||
+      normalized.includes(power.label.toLowerCase()) ||
+      normalized.includes(power.id),
+  );
   const body =
     OO_REPLIES[normalized] ??
-    matched?.[1] ??
+    powerHit?.reply ??
     (source.length > 60
-      ? "got it. i can hold that as a module once you claim identity."
-      : "received. claim identity to unlock full agent context.");
+      ? "Got it. Claim identity and I can hold that as lasting context."
+      : "Received. Claim identity to unlock full agent context across Texts, Spine, and Bubbles.");
 
   return { id: id ?? crypto.randomUUID(), author: "oo", body };
 }
 
 export const MESSAGES_OO_THINKING_MS = 1100;
+/** Soft-stop after two power proofs so the claim bridge becomes the next step. */
 export const MESSAGES_OO_INTERCEPT_AFTER = 2;

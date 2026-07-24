@@ -19,6 +19,8 @@ export const HANDOFF_SOURCE_QUERY_PARAM = 'source';
 export const HANDOFF_INTENT_QUERY_PARAM = 'intent';
 export const HANDOFF_REF_QUERY_PARAM = 'ref';
 export const HANDOFF_OPEN_ONBOARDING_QUERY_PARAM = 'openOnboarding';
+/** Homepage proof power (memory, spine, calendar, …) continued into app onboarding. */
+export const HANDOFF_POWER_QUERY_PARAM = 'power';
 
 export type ClaimIdentityHandoffSource =
   | 'hero'
@@ -33,6 +35,8 @@ export type ClaimIdentityHandoffOptions = {
   intent?: string;
   /** Optional referral user id (UUID) — app stashes via `stashInboundReferralFromUrl`. */
   ref?: string;
+  /** Homepage “See it work” power id so the app can continue that beat. */
+  power?: string;
 };
 
 /** Appends shared marketing→app attribution params (cross-origin safe). */
@@ -49,6 +53,9 @@ function appendHandoffAttribution(
   }
   if (options.ref?.trim()) {
     params.set(HANDOFF_REF_QUERY_PARAM, options.ref.trim());
+  }
+  if (options.power?.trim()) {
+    params.set(HANDOFF_POWER_QUERY_PARAM, options.power.trim());
   }
 }
 

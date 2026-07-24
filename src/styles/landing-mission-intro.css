@@ -1,0 +1,150 @@
+/**
+ * Mission intro over the landing hero photo — matches home headline Satoshi semibold
+ * (`font-semibold`, `tracking-[-0.03em]`, `leading-[1.02]`), left-aligned.
+ * **Connects to:** `MissionIntroOverlay`, `LandingHomeBackdrop`, `landing-hero-headline`.
+ */
+
+.landing-mission-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  padding:
+    max(72px, calc(env(safe-area-inset-top, 0px) + 48px))
+    max(28px, env(safe-area-inset-right, 0px))
+    max(48px, calc(env(safe-area-inset-bottom, 0px) + 32px))
+    max(28px, calc(env(safe-area-inset-left, 0px) + 8px));
+  background-color: #050505;
+  cursor: pointer;
+  user-select: none;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.landing-mission-intro__backdrop {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.landing-mission-intro__backdrop > * {
+  position: absolute;
+  inset: 0;
+}
+
+/* LandingHomeBackdrop uses absolute children — give the wrapper a positioning context. */
+.landing-mission-intro__backdrop {
+  display: block;
+}
+
+.landing-mission-intro__stage {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 720px);
+  margin-inline: max(4vw, 12px) auto;
+  text-align: left;
+}
+
+.landing-mission-intro__line {
+  margin: 0;
+  /* Match `.landing-hero-headline` + `LandingHeroTypewriter` type recipe. */
+  font-family: var(--font-sans, "Satoshi", -apple-system, sans-serif);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 3.8vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #f5f5f5;
+}
+
+.landing-mission-intro__line--lock {
+  margin-top: 0.85em;
+}
+
+.landing-mission-intro__glyph {
+  display: inline;
+  transition: color 180ms ease, opacity 220ms ease;
+}
+
+.landing-mission-intro__glyph--locked {
+  opacity: 1;
+  color: #f5f5f5;
+}
+
+/* Soft brand-blue shimmer — same family as the home typewriter caret. */
+.landing-mission-intro__glyph--shimmer {
+  opacity: 0.7;
+  color: #6aa2ff;
+}
+
+.landing-mission-intro__glyph--pending {
+  opacity: 0.12;
+  color: #f5f5f5;
+}
+
+/* Inline 00 avatar — align to the text x-height without changing the mini avatar size. */
+.landing-mission-intro__oo {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-inline: 0.28em 0.12em;
+  opacity: 0;
+  transform: translateY(-7px) scale(0.86);
+  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.landing-mission-intro__oo--visible {
+  opacity: 1;
+  transform: translateY(-7px) scale(1);
+}
+
+.landing-mission-intro__oo-avatar {
+  display: block !important;
+}
+
+.landing-mission-intro__hint {
+  position: absolute;
+  z-index: 1;
+  bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  left: max(28px, calc(env(safe-area-inset-left, 0px) + 8px));
+  margin: 0;
+  font-family: var(--font-sans, "Satoshi", -apple-system, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(245, 245, 245, 0.4);
+}
+
+@media (max-width: 640px) {
+  .landing-mission-intro {
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+
+  .landing-mission-intro__stage {
+    width: min(100%, 100%);
+    margin-inline: 0;
+  }
+
+  .landing-mission-intro__line {
+    font-size: clamp(1.2rem, 6.2vw, 1.75rem);
+    line-height: 1.12;
+  }
+
+  .landing-mission-intro__hint {
+    left: max(20px, env(safe-area-inset-left, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-mission-intro__hint {
+    display: none;
+  }
+
+  .landing-mission-intro__glyph {
+    transition: none;
+  }
+}

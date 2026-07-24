@@ -145,6 +145,7 @@ function LandingDemoShellInner() {
       <ClaimIdentityLandingOverlay
         open={claimFlow.isOpen}
         source={claimFlow.source}
+        power={claimFlow.power}
         onClose={claimFlow.close}
       />
     </>

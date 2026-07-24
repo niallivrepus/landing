@@ -2,7 +2,6 @@ import {
   Avatar,
   ClaimIdentity,
   GooeyViewportProvider,
-  IncomingMessageBubble,
   MessageBubble,
   cn,
   useCurrentGooeyViewport,
@@ -28,6 +27,7 @@ import {
 } from "../../data/messages-oo-demo-chat";
 import { useDownloadIntercept } from "../../hooks/useDownloadIntercept";
 import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
+import { OoSpeakBubble } from "./OoSpeakBubble";
 import { ImmersiveCenterColumn } from "../system/ImmersiveCenterColumn";
 import { SquircleShell } from "../system/squircle";
 import { ImmersiveProductBackdrop } from "./ImmersiveProductBackdrop";
@@ -195,9 +195,17 @@ function MessagesImmersiveShellInner() {
           />
         </div>
 
-        <p className="mt-6 text-center font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
-          Texts
-        </p>
+        <div className="text-center">
+          <p className="mt-6 font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
+            Texts
+          </p>
+          <p className="mt-1 font-sans text-[clamp(0.85rem,2.5vw,1rem)] font-medium text-light-space/72 light:text-zinc-600">
+            E2EE DMs, @oo in-thread, and a unified Spine transcript.
+          </p>
+          <p className="mx-auto mt-2 max-w-[22rem] font-sans text-[clamp(0.75rem,2vw,0.875rem)] leading-relaxed text-light-space/48 light:text-zinc-500">
+            GIFs, voice notes, read receipts, and suggestion pills — one inbox for people, stories, and your agent.
+          </p>
+        </div>
       </ImmersiveCenterColumn>
     </section>
   );
@@ -244,7 +252,21 @@ function ThreadPanel({
           {dmThread.messages.map((message, index) => (
             <DmBubble key={`${thread.id}-${index}`} from={message.from} text={message.text} />
           ))}
-          <DmBubble from="them" text={dmThread.reply} />
+          {/* Agent memory note after the DM — OO speaks it (not the human peer). */}
+          <motion.div
+            initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 }}
+            className="flex items-end gap-2 pt-1"
+          >
+            <Avatar showOO originColor="aether" size={32} className="mb-1 shrink-0" />
+            <OoSpeakBubble
+              key={`${thread.id}-oo-note`}
+              message={dmThread.reply}
+              speak
+              className="flex-1"
+            />
+          </motion.div>
         </div>
       </>
     );
@@ -254,30 +276,37 @@ function ThreadPanel({
     <>
       <ThreadHeader thread={thread} onBack={onBack} />
       <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
-        {ooMessages.map((message, index) => (
-          <motion.div
-            key={message.id}
-            initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.03 }}
-          >
-            {message.author === "user" ? (
-              <div className="flex justify-end">
-                <MessageBubble message={message.body} color="light" showTime={false} />
-              </div>
-            ) : (
-              <div className="flex items-end gap-2">
-                <Avatar showOO originColor="aether" size={32} className="mb-1 shrink-0" />
-                <IncomingMessageBubble
-                  name="OO"
-                  message={message.body}
-                  showTime={false}
-                  className={message.thinking ? "animate-pulse" : undefined}
-                />
-              </div>
-            )}
-          </motion.div>
-        ))}
+        {ooMessages.map((message, index) => {
+          const isLatestOo =
+            message.author === "oo" &&
+            !message.thinking &&
+            ooMessages.findLastIndex((item) => item.author === "oo" && !item.thinking) === index;
+
+          return (
+            <motion.div
+              key={message.id}
+              initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.03 }}
+            >
+              {message.author === "user" ? (
+                <div className="flex justify-end">
+                  <MessageBubble message={message.body} color="light" showTime={false} />
+                </div>
+              ) : (
+                <div className="flex items-end gap-2">
+                  <Avatar showOO originColor="aether" size={32} className="mb-1 shrink-0" />
+                  <OoSpeakBubble
+                    message={message.body}
+                    thinking={Boolean(message.thinking)}
+                    speak={isLatestOo}
+                    className="flex-1"
+                  />
+                </div>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
 
       {gated ? (

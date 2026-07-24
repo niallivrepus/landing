@@ -1,3 +1,4 @@
+import { GooeyViewportProvider } from "@jokuh/gooey";
 import { motion } from "motion/react";
 import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
 import { ImmersiveCenterColumn } from "../system/ImmersiveCenterColumn";
@@ -8,8 +9,17 @@ import { ProfilePodPanel } from "./ProfilePodPanel";
 /**
  * **Purpose:** Full-viewport Profile product page — inspirational identity preview in center, live people search below.
  * **Connects to:** `ProfilePodPanel`, `ProfilePeopleSearchPanel`, `profile-demo-identity.ts`, `/download` intercept.
+ * **Parity:** web `AddFriendSheet.tsx` frosted search chrome; `MessagesImmersiveShell` Gooey viewport + prompt bar.
  */
 export function ProfileImmersiveShell() {
+  return (
+    <GooeyViewportProvider>
+      <ProfileImmersiveShellInner />
+    </GooeyViewportProvider>
+  );
+}
+
+function ProfileImmersiveShellInner() {
   return (
     <section className="relative min-h-[100svh] overflow-hidden" aria-label="Profile preview">
       <ImmersiveProductBackdrop productId="profile" />

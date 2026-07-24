@@ -1,31 +1,43 @@
-import { OO } from "@jokuh/gooey";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
-import { useDownloadIntercept } from "../../hooks/useDownloadIntercept";
+import { useCallback, useEffect, useState } from "react";
+import { landingDemoPowerBridgeLabel } from "../../data/landing-demo-powers";
+import { buildClaimIdentityAppHandoffUrl } from "../../lib/claim-identity-handoff";
+import { isValidJokuhUsername, normalizeUsernameInput } from "../../lib/jokuh-username";
 import type { ClaimIdentitySource } from "../../hooks/useClaimIdentityFlow";
 import { ClaimIdentityAvatarBackground } from "./ClaimIdentityAvatarBackground";
+import { ClaimIdentityOnboardingCard } from "./ClaimIdentityOnboardingCard";
 import { OnboardingHandleField } from "./OnboardingHandleField";
 
 /**
- * **Purpose:** Full-screen claim-identity overlay matching the signed-in app layout (glass card + bottom @handle row).
- * **Connects to:** `useClaimIdentityFlow`, `landing-onboarding.css`, `/download` intercept.
+ * **Purpose:** Full-screen claim-identity overlay — **username-first on marketing only**.
+ * Validates handle format, then hands off to the web app with optional proof-power context.
+ * App order: language → birthday → claim (pre-filled) → Bond.
+ * **Connects to:** `useClaimIdentityFlow`, `landing-demo-powers.ts`, `claim-identity-handoff.ts`.
  */
 export function ClaimIdentityLandingOverlay({
   open,
   source,
+  power = null,
   onClose,
 }: {
   open: boolean;
   source: ClaimIdentitySource;
+  /** Homepage demo power id when claim started from a proof bridge. */
+  power?: string | null;
   onClose: () => void;
 }) {
-  const { intercept } = useDownloadIntercept("claim-overlay");
   const [handle, setHandle] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [inputError, setInputError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const bridgeSubtitle = landingDemoPowerBridgeLabel(power);
 
   useEffect(() => {
     if (!open) {
       setMounted(false);
+      setHandle("");
+      setInputError(null);
+      setSubmitting(false);
       return;
     }
     const id = window.requestAnimationFrame(() => setMounted(true));
@@ -41,8 +53,28 @@ export function ClaimIdentityLandingOverlay({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
+  const handleChange = useCallback((next: string) => {
+    setHandle(next);
+    setInputError(null);
+  }, []);
+
   const submit = () => {
-    intercept("identity", { ref: source });
+    if (submitting) return;
+    const u = normalizeUsernameInput(handle);
+    if (!isValidJokuhUsername(u)) {
+      setInputError("Pick a handle with letters, numbers, or hyphens.");
+      return;
+    }
+    setInputError(null);
+    setSubmitting(true);
+
+    // Attribution must live on the URL — sessionStorage does not cross jokuh.com → app.jokuh.com.
+    const handoffUrl = buildClaimIdentityAppHandoffUrl(u, {
+      source,
+      intent: "identity",
+      power: power ?? undefined,
+    });
+    window.location.assign(handoffUrl);
   };
 
   return (
@@ -66,46 +98,22 @@ export function ClaimIdentityLandingOverlay({
 
           <div className="claim-identity-feed">
             <div className="claim-identity-feed__stack">
-              <motion.article
-                className="onboarding-glass-card"
-                initial={{ opacity: 0, y: 14 }}
-                animate={{
-                  opacity: mounted ? 1 : 0,
-                  y: mounted ? 0 : 14,
-                }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <div className="onboarding-glass-card__header flex items-center justify-center">
-                  <OO expression="happy" />
-                </div>
-                <div className="onboarding-glass-card__body flex flex-col gap-2">
-                  <h1
-                    id="claim-identity-title"
-                    className="m-0 font-sans text-[32px] font-bold leading-[1.1] text-[var(--ob-ink)]"
-                  >
-                    Claim your @handle
-                  </h1>
-                  <p className="m-0 font-sans text-[14px] leading-relaxed text-[var(--ob-ink-80)]">
-                    Your identity is portable, private, and yours alone.
-                  </p>
-                </div>
-              </motion.article>
+              <ClaimIdentityOnboardingCard
+                mounted={mounted}
+                errorMessage={inputError}
+                subtitle={bridgeSubtitle ?? "Type your handle below"}
+              />
             </div>
           </div>
 
           <div className="claim-identity-bottom-chrome">
             <OnboardingHandleField
               value={handle}
-              onChange={setHandle}
+              onChange={handleChange}
               onSubmit={submit}
-              submitLabel="Continue"
+              submitLabel={submitting ? "Continue…" : "Continue"}
+              disabled={submitting}
             />
-            <details className="onboarding-handle-rules">
-              <summary className="onboarding-handle-rules__summary">Handle rules</summary>
-              <p className="onboarding-handle-rules__hint">
-                Letters, numbers, and hyphens. Unique across Jokuh — display name can change anytime.
-              </p>
-            </details>
           </div>
         </motion.div>
       ) : null}

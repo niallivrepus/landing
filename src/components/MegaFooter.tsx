@@ -9,6 +9,7 @@ import { resolveRigidNavColumns } from "../config/site-subdomains";
 import { showOffSiteNavGlyph } from "../lib/off-site-href";
 import { OffSiteGlyph } from "./OffSiteGlyph";
 import { SiteBottomNav } from "./SiteBottomNav";
+import { SiteThemeToggle } from "./SiteThemeToggle";
 import { FOOTER_SIGNATURE } from "../data/site-directory";
 import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
 import {
@@ -194,22 +195,25 @@ export function MegaFooter() {
               </button>
             </p>
 
-            <button
-              type="button"
-              onClick={() => setLangOpen(true)}
-              className="premium-soft-button inline-flex items-center gap-2 rounded-full bg-light-space/[0.06] px-3 py-2 font-sans text-[12px] text-light-space/65 hover:bg-light-space/[0.1] hover:shadow-[0_14px_32px_-26px_rgba(0,0,0,0.6)] light:bg-section-grey-light light:text-zinc-900 light:hover:bg-zinc-200/80 light:hover:shadow-[0_14px_28px_-24px_rgba(0,0,0,0.14)] md:shrink-0"
-              aria-label="Select language and region"
-              aria-haspopup="dialog"
-              aria-expanded={langOpen}
-            >
-              <Globe className="size-[15px] shrink-0 opacity-70 light:opacity-60" strokeWidth={1.5} aria-hidden />
-              <span className="text-left">
-                <span className="font-medium text-light-space/85 light:text-zinc-900">{footerLang.native}</span>{" "}
-                <span className="text-light-space/45 light:text-zinc-500">
-                  {footerLang.region ?? footerLang.english}
+            <div className="flex shrink-0 items-center gap-2 md:shrink-0">
+              <SiteThemeToggle />
+              <button
+                type="button"
+                onClick={() => setLangOpen(true)}
+                className="premium-soft-button inline-flex items-center gap-2 rounded-full bg-light-space/[0.06] px-3 py-2 font-sans text-[12px] text-light-space/65 hover:bg-light-space/[0.1] hover:shadow-[0_14px_32px_-26px_rgba(0,0,0,0.6)] light:bg-section-grey-light light:text-zinc-900 light:hover:bg-zinc-200/80 light:hover:shadow-[0_14px_28px_-24px_rgba(0,0,0,0.14)]"
+                aria-label="Select language and region"
+                aria-haspopup="dialog"
+                aria-expanded={langOpen}
+              >
+                <Globe className="size-[15px] shrink-0 opacity-70 light:opacity-60" strokeWidth={1.5} aria-hidden />
+                <span className="text-left">
+                  <span className="font-medium text-light-space/85 light:text-zinc-900">{footerLang.native}</span>{" "}
+                  <span className="text-light-space/45 light:text-zinc-500">
+                    {footerLang.region ?? footerLang.english}
+                  </span>
                 </span>
-              </span>
-            </button>
+              </button>
+            </div>
           </div>
         </div>
       </div>

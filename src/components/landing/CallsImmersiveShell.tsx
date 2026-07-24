@@ -206,9 +206,17 @@ function CallsImmersiveShellInner() {
             />
           </div>
 
-          <p className="text-center font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
-            Calls
-          </p>
+          <div className="text-center">
+            <p className="font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
+              Calls
+            </p>
+            <p className="mt-1 font-sans text-[clamp(0.85rem,2.5vw,1rem)] font-medium text-light-space/72 light:text-zinc-600">
+              HD voice and video — captions, translation, and Spine writeback.
+            </p>
+            <p className="mx-auto mt-2 max-w-[22rem] font-sans text-[clamp(0.75rem,2vw,0.875rem)] leading-relaxed text-light-space/48 light:text-zinc-500">
+              E2EE deal rooms, guest knock queue, Infinity Dialog, and post-call follow-ups — scheduled from any DM.
+            </p>
+          </div>
         </div>
       </ImmersiveCenterColumn>
     </section>

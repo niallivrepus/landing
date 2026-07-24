@@ -1,4 +1,5 @@
 import { useId, type FormEvent } from "react";
+import { tidyUsernameFieldInput } from "../../lib/jokuh-username";
 
 /**
  * **Purpose:** App-parity @handle composer — pill field with prefix chip and inline submit button.
@@ -29,7 +30,8 @@ export function OnboardingHandleField({
   return (
     <form className="onboarding-bottom-bar" onSubmit={handleSubmit}>
       <div className="onboarding-bottom-bar__spacer" aria-hidden />
-      <label className="onboarding-handle-field landing-control-surface" htmlFor={inputId}>
+      <div className="onboarding-bottom-composer">
+      <label className="onboarding-handle-field" htmlFor={inputId}>
         <span className="onboarding-handle-prefix" aria-hidden>
           @
         </span>
@@ -37,18 +39,25 @@ export function OnboardingHandleField({
           id={inputId}
           className="onboarding-handle-input"
           type="text"
-          autoComplete="username"
+          autoComplete="username webauthn"
           autoCapitalize="none"
           spellCheck={false}
           placeholder={placeholder}
           value={value}
           disabled={disabled}
-          onChange={(event) => onChange(event.target.value)}
+          onChange={(event) => {
+            const tidied = tidyUsernameFieldInput(event.target.value);
+            if (tidied !== event.target.value) {
+              event.target.value = tidied;
+            }
+            onChange(tidied);
+          }}
         />
         <button type="submit" className="onboarding-field-submit" disabled={disabled || !value.trim()}>
           {submitLabel}
         </button>
       </label>
+      </div>
       <div className="onboarding-bottom-bar__spacer" aria-hidden />
     </form>
   );

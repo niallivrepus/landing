@@ -21,6 +21,7 @@ export { LandingDemoChat, LandingOoWelcomeRow } from "./LandingDemoChat";
 export { LandingDemoShell } from "./LandingDemoShell";
 export { LandingProductSlideshow } from "./LandingProductSlideshow";
 export { LandingBubblesOverlay } from "./LandingBubblesOverlay";
+export { LandingBubblesSection } from "./LandingBubblesSection";
 export { LandingDayYearCapsules } from "./LandingDayYearCapsules";
 export { LandingMessagesInbox } from "./LandingMessagesInbox";
 export { LandingStoryReader } from "./LandingStoryReader";

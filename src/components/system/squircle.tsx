@@ -11,6 +11,8 @@ type SquircleShellProps = {
   cornerSmoothing?: number;
   borderWidth?: number;
   strokeClassName?: string;
+  /** Explicit SVG path stroke — avoids `currentColor` inheriting light page text. */
+  strokeColor?: string;
   fillClassName?: string;
 };
 
@@ -27,6 +29,7 @@ export function SquircleShell({
   cornerSmoothing = 1,
   borderWidth = 0,
   strokeClassName,
+  strokeColor,
   fillClassName = "",
 }: SquircleShellProps) {
   return (
@@ -36,6 +39,7 @@ export function SquircleShell({
         cornerSmoothing={cornerSmoothing}
         borderWidth={borderWidth}
         strokeClassName={strokeClassName}
+        strokeColor={strokeColor}
         aria-hidden
         className={cn("pointer-events-none absolute inset-0 -z-10", fillClassName)}
       />

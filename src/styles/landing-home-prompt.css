@@ -194,6 +194,8 @@
   text-align: center;
   white-space: nowrap;
   font-size: clamp(1.15rem, 4.6vw, 4.5rem);
+  /* Optical nudge — Satoshi display reads right of geometric center over the prompt. */
+  transform: translateX(-1.15ch);
 }
 
 /* Branded Jokuh blue block caret for homepage hero typewriter. */
