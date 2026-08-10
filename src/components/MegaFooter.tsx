@@ -186,6 +186,24 @@ export function MegaFooter() {
               <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
                 ·
               </span>
+              <SiteLink href="/privacy" className={footerMetaLink}>
+                Privacy
+              </SiteLink>
+              <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
+                ·
+              </span>
+              <SiteLink href="/terms" className={footerMetaLink}>
+                Terms
+              </SiteLink>
+              <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
+                ·
+              </span>
+              <SiteLink href="/support" className={footerMetaLink}>
+                Support
+              </SiteLink>
+              <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
+                ·
+              </span>
               <button
                 type="button"
                 className={footerMetaLink}

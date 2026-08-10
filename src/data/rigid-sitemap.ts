@@ -143,6 +143,14 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
           { label: "RSS", href: "/rss.xml", surfaces: ["footer"] },
         ],
       },
+      {
+        heading: "Legal",
+        links: [
+          { label: "Support", href: "/support", surfaces: ["footer", "sitemap"] },
+          { label: "Privacy Policy", href: "/privacy", surfaces: ["footer", "sitemap"] },
+          { label: "Terms of Service", href: "/terms", surfaces: ["footer", "sitemap"] },
+        ],
+      },
     ],
   },
   {

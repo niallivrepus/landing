@@ -41,6 +41,9 @@ const ManifestoPage = lazyNamed(() => import("./pages/ManifestoPage"), "Manifest
 const NewsDetailPage = lazyNamed(() => import("./pages/NewsDetailPage"), "NewsDetailPage");
 const NewsPage = lazyNamed(() => import("./pages/NewsPage"), "NewsPage");
 const ProductPage = lazyNamed(() => import("./pages/ProductPage"), "ProductPage");
+const PrivacyPolicyPage = lazyNamed(() => import("./pages/PrivacyPolicyPage"), "PrivacyPolicyPage");
+const SupportPage = lazyNamed(() => import("./pages/SupportPage"), "SupportPage");
+const TermsOfServicePage = lazyNamed(() => import("./pages/TermsOfServicePage"), "TermsOfServicePage");
 const StoryDetailPage = lazyNamed(() => import("./pages/StoryDetailPage"), "StoryDetailPage");
 const ShareYourStoryPage = lazyNamed(() => import("./pages/ShareYourStoryPage"), "ShareYourStoryPage");
 const StoriesPage = lazyNamed(() => import("./pages/StoriesPage"), "StoriesPage");
@@ -163,6 +166,13 @@ export default function App() {
           <Route path="/prompt" element={<Navigate to="/demo" replace />} />
           <Route path="/research" element={<Navigate to="/about" replace />} />
           <Route path="/contact" element={<ContactSalesPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/legal/privacy-policy.html" element={<Navigate to="/privacy" replace />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
+          <Route path="/legal/terms-of-service.html" element={<Navigate to="/terms" replace />} />
+          <Route path="/support" element={<SupportPage />} />
+          <Route path="/help" element={<Navigate to="/support" replace />} />
+          <Route path="/legal/support.html" element={<Navigate to="/support" replace />} />
           <Route path="/brand" element={<BrandPage />} />
           <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
           <Route path="/manifesto" element={<ManifestoPage />} />
