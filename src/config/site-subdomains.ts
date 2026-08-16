@@ -25,8 +25,6 @@ export const APP_ORIGIN =
 /** Marketing same-origin paths that Railway/Caddy redirect to `app.jokuh.com` — must use full navigation, not SPA `Link`. */
 const APP_HANDOFF_PREFIXES = [
   "/dataroom",
-  "/pitchdeck",
-  "/pitch-deck",
   "/xx/investpipeline",
 ] as const;
 

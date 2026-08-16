@@ -33,22 +33,6 @@
 			redir https://app.jokuh.com{uri} 302
 		}
 
-		@pitchdeckExact path /pitchdeck
-		handle @pitchdeckExact {
-			redir https://app.jokuh.com/pitch-deck 302
-		}
-
-		@pitchdeckSub path /pitchdeck/*
-		handle @pitchdeckSub {
-			uri strip_prefix /pitchdeck
-			redir https://app.jokuh.com/pitch-deck{uri} 302
-		}
-
-		@pitchdeckLegacy path /pitch-deck /pitch-deck/*
-		handle @pitchdeckLegacy {
-			redir https://app.jokuh.com{uri} 302
-		}
-
 		@oo path /oo /oo/*
 		handle @oo {
 			redir https://app.jokuh.com{uri} 302

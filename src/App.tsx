@@ -47,6 +47,7 @@ const TermsOfServicePage = lazyNamed(() => import("./pages/TermsOfServicePage"),
 const StoryDetailPage = lazyNamed(() => import("./pages/StoryDetailPage"), "StoryDetailPage");
 const ShareYourStoryPage = lazyNamed(() => import("./pages/ShareYourStoryPage"), "ShareYourStoryPage");
 const StoriesPage = lazyNamed(() => import("./pages/StoriesPage"), "StoriesPage");
+const PitchDeckPage = lazyNamed(() => import("./pages/PitchDeckPage"), "PitchDeckPage");
 
 const PRODUCT_ROUTES = [
   { path: "/blurbs", productId: "blurbs" },
@@ -100,6 +101,14 @@ function RouteFallback() {
   return <div className="landing-cinema min-h-screen bg-dark-space text-light-space" aria-hidden />;
 }
 
+/** Hides marketing chrome on the investor theatre so `/pitchdeck` is full-bleed. */
+function PitchDeckChrome() {
+  const location = useLocation();
+  const isTheatre = location.pathname === "/pitchdeck" || location.pathname === "/pitch-deck";
+  if (isTheatre) return null;
+  return <CookieBanner />;
+}
+
 function RouteScrollManager() {
   const location = useLocation();
 
@@ -124,12 +133,15 @@ export default function App() {
     primeGentleHoverSfx();
   }, []);
 
+  const location = useLocation();
+  const isPitchTheatre = location.pathname === "/pitchdeck" || location.pathname === "/pitch-deck";
+
   return (
     <>
-      <ConsentManagedScripts />
-      <GoogleTranslateHost />
+      {isPitchTheatre ? null : <ConsentManagedScripts />}
+      {isPitchTheatre ? null : <GoogleTranslateHost />}
       <RouteScrollManager />
-      <CookieBanner />
+      <PitchDeckChrome />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -179,6 +191,8 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/business" element={<BusinessOverviewPage />} />
           <Route path="/invest" element={<InvestPage />} />
+          <Route path="/pitchdeck" element={<PitchDeckPage />} />
+          <Route path="/pitch-deck" element={<Navigate to="/pitchdeck" replace />} />
           <Route path="/charter" element={<Navigate to="/manifesto" replace />} />
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/careers/roles" element={<CareersRolesPage />} />

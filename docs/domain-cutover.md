@@ -121,7 +121,8 @@ No extra DNS work — handled by [`server/static-middleware.ts`](../server/stati
 | Request | Response |
 |---------|----------|
 | `www.jokuh.com/*` | **308** → `https://jokuh.com{path}` |
-| `/dataroom`, `/pitchdeck`, `/pitch-deck`, `/xx/investpipeline`, `/sandbox`, `/oo`, `/dd` | **302** → `https://app.jokuh.com{path}` |
+| `/dataroom`, `/xx/investpipeline`, `/sandbox`, `/oo`, `/dd` | **302** → `https://app.jokuh.com{path}` |
+| `/pitchdeck`, `/pitch-deck` | **200** landing theatre (no app handoff) |
 | `/.well-known/apple-app-site-association` | **200** JSON (no redirect — required for Apple) |
 
 ---

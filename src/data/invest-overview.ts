@@ -37,7 +37,6 @@ export const INVEST_RESOURCE_LINKS: InvestResourceLink[] = [
     label: "Pitch deck",
     href: "/pitchdeck",
     description: "Pre-seed narrative, market, traction, and capital plan.",
-    external: true,
   },
   {
     label: "Customer stories",

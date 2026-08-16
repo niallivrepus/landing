@@ -14,6 +14,7 @@ const MIME_TYPES: Record<string, string> = {
   ".map": "application/json; charset=utf-8",
   ".mp3": "audio/mpeg",
   ".mp4": "video/mp4",
+  ".pdf": "application/pdf",
   ".png": "image/png",
   ".svg": "image/svg+xml",
   ".txt": "text/plain; charset=utf-8",
@@ -50,18 +51,6 @@ function buildRedirectRules(appOrigin: string): RedirectRule[] {
     },
     {
       match: (path) => path === "/oo" || path.startsWith("/oo/"),
-      location: (path, search) => `${app}${path}${search}`,
-    },
-    {
-      match: (path) => path === "/pitchdeck",
-      location: () => `${app}/pitch-deck`,
-    },
-    {
-      match: (path) => path.startsWith("/pitchdeck/"),
-      location: (path) => `${app}/pitch-deck${path.slice("/pitchdeck".length)}`,
-    },
-    {
-      match: (path) => path === "/pitch-deck" || path.startsWith("/pitch-deck/"),
       location: (path, search) => `${app}${path}${search}`,
     },
     {
