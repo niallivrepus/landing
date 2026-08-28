@@ -38,10 +38,9 @@ test("calls product nav omits closer look and showcase anchor scrolls correctly"
   await expect(showcase).toBeInViewport({ ratio: 0.15 });
 });
 
-test("prompt hash lands on the home prompt block", async ({ page }) => {
+test("legacy /prompt redirects to the live demo", async ({ page }) => {
   await page.goto("/prompt");
   await page.waitForLoadState("networkidle");
 
-  await expect(page).toHaveURL(/\/#prompt$/);
-  await expect(page.locator("#prompt")).toBeInViewport({ ratio: 0.2 });
+  await expect(page).toHaveURL(/\/demo$/);
 });

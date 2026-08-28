@@ -11,6 +11,10 @@ const ALL_ALIEN_AVATARS = Array.from({ length: ALIEN_COUNT }, (_, i) => ({
   alt: "Person",
 }));
 
+/**
+ * **Purpose:** Picks `count` unique items from `items` without replacement.
+ * **Connects to:** IdentityBlock avatar wheel (random faces each homepage load).
+ */
 function shuffleUnique<T>(items: readonly T[], count: number): T[] {
   const pool = items.slice();
   for (let i = pool.length - 1; i > 0; i--) {
@@ -20,6 +24,10 @@ function shuffleUnique<T>(items: readonly T[], count: number): T[] {
   return pool.slice(0, count);
 }
 
+/**
+ * **Purpose:** Homepage identity close — handle CTA after the OO proof, not a second jargon “claim” beat.
+ * **Connects to:** `ClaimIdentityFlowContext`, `ClaimIdentityCta` (Get started).
+ */
 export function IdentityBlock() {
   const claimFlow = useClaimIdentityFlowContext();
   const wheelAvatars = useMemo(
@@ -66,7 +74,7 @@ export function IdentityBlock() {
           next move.
         </h2>
         <p className="mt-5 max-w-[34ch] font-sans text-[15px] leading-relaxed text-light-space/60 light:text-zinc-600">
-          Claim a handle to keep memory, privacy, and Bubbles with you.
+          Create an account to keep memory, privacy, and Bubbles with you.
         </p>
         <div className="mt-10 flex w-full max-w-sm justify-center md:mt-12 md:max-w-none">
           <ClaimIdentityCta

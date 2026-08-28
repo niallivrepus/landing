@@ -131,11 +131,30 @@ const KNOWN_SPA_PREFIXES = [
   "/research",
 ] as const;
 
+/**
+ * **Purpose:** True for client-side routes that must receive `index.html` at HTTP 200.
+ * **Connects to:** `KNOWN_SPA_PREFIXES`; `/` is always the marketing homepage.
+ * **Inputs:** Request pathname (no query).
+ * **Outputs:** Whether the Node server should SPA-fallback instead of serving `not-found.html`.
+ */
 function isKnownSpaPath(pathname: string): boolean {
   if (pathname === "/") return true;
   return KNOWN_SPA_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
+/** Old App Store / legal HTML URLs that React still redirects onto live pages. */
+const KNOWN_HTML_SPA_ALIASES = [
+  "/legal/privacy-policy.html",
+  "/legal/terms-of-service.html",
+  "/legal/support.html",
+] as const;
+
+/**
+ * **Purpose:** Read the original request scheme behind Railway / a TLS terminator.
+ * **Connects to:** HTTP→HTTPS 301 in `createStaticMiddleware`.
+ * **Inputs:** Incoming headers (`x-forwarded-proto` may be a comma list).
+ * **Outputs:** First hop proto, lowercased, or empty if absent.
+ */
 function forwardedProto(req: { headers: { [key: string]: string | string[] | undefined } }): string {
   const raw = req.headers["x-forwarded-proto"];
   const value = Array.isArray(raw) ? raw[0] : raw;
@@ -338,12 +357,13 @@ export function createStaticMiddleware(options: {
     }
 
     const hasFileExtension = extname(pathname).length > 0;
-    if (hasFileExtension) {
+    const isHtmlSpaAlias = (KNOWN_HTML_SPA_ALIASES as readonly string[]).includes(pathname);
+    if (hasFileExtension && !isHtmlSpaAlias) {
       sendPlainNotFound(resNode, method);
       return;
     }
 
-    if (!isKnownSpaPath(pathname)) {
+    if (!isHtmlSpaAlias && !isKnownSpaPath(pathname)) {
       sendUnknownPathNotFound(resNode, options.staticRoot, method);
       return;
     }

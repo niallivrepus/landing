@@ -4,6 +4,21 @@ Traceable change log for landing deploys. Newest entries appended at top.
 
 ---
 
+## 2026-08-28T11:52 (UTC-4) — Follow-up from spec review
+
+**Commit:** this landing `main` push.
+**Rationale:** Post-ship review: `/prompt` Playwright still expected `/#prompt`; identity close still said “Claim a handle”; old `/legal/*.html` URLs 404d before React could redirect.
+
+### Modified files
+
+| File | Nature | Reasoning |
+|------|--------|-----------|
+| `tests/product-scroll.spec.ts` | `/prompt` expects `/demo` | Matches `App.tsx` Navigate; `#prompt` no longer exists. |
+| `IdentityBlock.tsx` | Copy + purpose comments | “Create an account…” instead of Claim jargon. |
+| `server/static-middleware.ts` | HTML legal aliases; comments on SPA helpers | Old App Store legal URLs SPA-fallback to live pages. |
+
+---
+
 ## 2026-08-28T11:48 (UTC-4) — SEO, crawl 404, production landing chunk
 
 **Commit:** this landing `main` push (Railway `www` auto-deploy).
