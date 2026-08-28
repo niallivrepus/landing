@@ -43,6 +43,7 @@ const NewsPage = lazyNamed(() => import("./pages/NewsPage"), "NewsPage");
 const ProductPage = lazyNamed(() => import("./pages/ProductPage"), "ProductPage");
 const PrivacyPolicyPage = lazyNamed(() => import("./pages/PrivacyPolicyPage"), "PrivacyPolicyPage");
 const SupportPage = lazyNamed(() => import("./pages/SupportPage"), "SupportPage");
+const SecurityPage = lazyNamed(() => import("./pages/SecurityPage"), "SecurityPage");
 const TermsOfServicePage = lazyNamed(() => import("./pages/TermsOfServicePage"), "TermsOfServicePage");
 const PricingPage = lazyNamed(() => import("./pages/PricingPage"), "PricingPage");
 const NotFoundPage = lazyNamed(() => import("./pages/NotFoundPage"), "NotFoundPage");
@@ -79,10 +80,6 @@ const REDIRECT_HOME_PATHS = [
   "/developers/open-models",
   "/developers/sdk",
   "/developers/accessibility",
-  "/chatgpt/explore",
-  "/chatgpt/business",
-  "/chatgpt/enterprise",
-  "/chatgpt/education",
 ] as const;
 
 function LegacyNewsRedirect() {
@@ -185,6 +182,7 @@ export default function App() {
           <Route path="/terms" element={<TermsOfServicePage />} />
           <Route path="/legal/terms-of-service.html" element={<Navigate to="/terms" replace />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/security" element={<SecurityPage />} />
           <Route path="/help" element={<Navigate to="/support" replace />} />
           <Route path="/legal/support.html" element={<Navigate to="/support" replace />} />
           <Route path="/brand" element={<BrandPage />} />

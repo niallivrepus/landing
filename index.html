@@ -80,15 +80,37 @@
       title="Jokuh newsroom and stories RSS"
       href="/rss.xml"
     />
+    <title>Jokuh — a private workspace with your own AI</title>
     <meta
       name="description"
-      content="Jokuh is a private AI workspace for memory, identity, and agent workflows, built for teams that need clearer control over sensitive context."
+      content="Jokuh is a private workspace with your own AI, OO, that remembers your calls, chats, and files — without giving that context to anyone else."
     />
-    <meta property="og:title" content="Jokuh" />
-    <meta property="og:description" content="A private AI workspace for memory, identity, and agent workflows." />
+    <meta property="og:title" content="Jokuh — a private workspace with your own AI" />
+    <meta
+      property="og:description"
+      content="Jokuh is a private workspace with your own AI, OO, that remembers your calls, chats, and files — without giving that context to anyone else."
+    />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
-    <title>Jokuh</title>
+    <meta property="og:url" content="https://www.jokuh.com/" />
+    <meta property="og:image" content="https://www.jokuh.com/og-default.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jokuh — a private workspace with your own AI" />
+    <meta
+      name="twitter:description"
+      content="Jokuh is a private workspace with your own AI, OO, that remembers your calls, chats, and files — without giving that context to anyone else."
+    />
+    <meta name="twitter:image" content="https://www.jokuh.com/og-default.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- Organization JSON-LD — keep description identical to SITE_PRODUCT_SENTENCE. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Jokuh",
+        "url": "https://www.jokuh.com/",
+        "description": "Jokuh is a private workspace with your own AI, OO, that remembers your calls, chats, and files — without giving that context to anyone else."
+      }
+    </script>
   </head>
   <body>
     <script>
@@ -113,7 +135,17 @@
           meta.setAttribute("content", resolved === "dark" ? "#000000" : "#ffffff");
       })();
     </script>
-    <div id="root"></div>
+    <!--
+      Crawler-visible homepage copy inside #root. React replaces this on hydrate.
+      Required so `curl https://www.jokuh.com/` still contains the H1.
+    -->
+    <div id="root">
+      <h1>Your mind. Your machine.</h1>
+      <p>
+        Jokuh is a private workspace with your own AI, OO, that remembers your calls, chats, and files — without giving that context to anyone else.
+      </p>
+      <p><a href="/download">Get started</a></p>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

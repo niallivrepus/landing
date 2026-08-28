@@ -175,11 +175,11 @@ If the feed changes, the workflow commits updates to `src/data/medium-feed.json`
 │   ├── data/            # Content modules + generated Medium JSON
 │   ├── pages/           # Route-level screens
 │   ├── styles/          # Tailwind entry + app overrides
-│   ├── bootstrap-dev.tsx   # Full app (dev)
-│   ├── bootstrap-prod.tsx  # Mask-only shell (production)
+│   ├── bootstrap-landing.tsx  # Full marketing SPA (dev + build:landing)
+│   ├── bootstrap-prod.tsx     # Mask-only shell (default production)
 │   ├── ProdMaskPage.tsx
 │   ├── prod-mask.css
-│   └── main.tsx         # PROD vs DEV dynamic import
+│   └── main.tsx               # MASK vs landing dynamic import
 ├── index.html
 ├── vite.config.ts
 └── package.json

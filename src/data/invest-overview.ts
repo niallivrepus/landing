@@ -1,6 +1,6 @@
 /**
  * **Purpose:** Copy, links, vesting tiers, fund allocation, and FAQ for `/invest`.
- * **Connects to:** `InvestPage`, `InvestTokenCountdown`, search corpus, home suggestion pill.
+ * **Connects to:** `InvestPage`, `InvestTokenCountdown`, search corpus. Not linked from homepage chips.
  * **Parity:** Institutional resources proxy to `app.jokuh.com`; token rules are illustrative until definitive docs ship.
  */
 

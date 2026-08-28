@@ -150,6 +150,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
         heading: "Legal",
         links: [
           { label: "Support", href: "/support", surfaces: ALL_SOURCES },
+          { label: "Security", href: "/security", surfaces: ["footer", "sitemap"] },
           { label: "Privacy Policy", href: "/privacy", surfaces: ["footer", "sitemap"] },
           { label: "Terms of Service", href: "/terms", surfaces: ["footer", "sitemap"] },
         ],

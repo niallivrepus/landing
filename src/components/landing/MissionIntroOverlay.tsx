@@ -23,7 +23,7 @@ type MissionIntroOverlayProps = {
  * **Purpose:** Full-viewport mission intro — same Satoshi semibold as the home headline,
  * left-aligned over the landing hero photo, soft scramble, then fade into the hero.
  * The `00` mention unlocks an inline OO avatar beside the digits.
- * Plays on every homepage visit (`?intro=0` skips, `?intro=1` forces).
+ * Plays once per session (`?intro=0` skips, `?intro=1` forces).
  * **Connects to:** `LandingImmersiveShell`, `LandingHomeBackdrop`, Gooey `Avatar`, `useScrambleReveal`.
  */
 export function MissionIntroOverlay({ onComplete }: MissionIntroOverlayProps) {

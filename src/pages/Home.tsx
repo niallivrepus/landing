@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { SITE_DOCUMENT_TITLE } from "../data/landing-hero-copy";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { ClaimIdentityFlowProvider } from "../context/ClaimIdentityFlowContext";
 import {
@@ -18,10 +19,11 @@ import { useTheme } from "@jokuh/gooey";
 /**
  * **Purpose:** Homepage funnel — hero (Get started) → product strip → proof demo → identity close → waitlist.
  * Editorial and full Bubbles beats stay off the critical path; investors sit as a thin strip after Claim.
- * **Connects to:** claim-identity overlay, `ProductDemoSection` power proofs, MegaFooter.
+ * **Connects to:** claim-identity overlay, `ProductDemoSection` power proofs, MegaFooter,
+ * `SITE_DOCUMENT_TITLE` / `index.html` title.
  */
 export default function Home() {
-  useDocumentTitle("Jokuh");
+  useDocumentTitle(SITE_DOCUMENT_TITLE);
   const { resolvedTheme } = useTheme();
 
   useEffect(() => {

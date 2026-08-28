@@ -7,6 +7,12 @@ export type FaqEntry = {
   answer: string;
 };
 
+/**
+ * **Purpose:** One FAQ row — question button + height-animated answer.
+ * `overflow-hidden` on the motion wrapper clips the collapse; the inner copy
+ * uses `min-w-0` / `break-words` so long answers wrap at 375px instead of clipping.
+ * **Connects to:** Support and Contact pages.
+ */
 export function FaqItem({ question, answer }: FaqEntry) {
   const [open, setOpen] = useState(false);
   const answerId = useId();
@@ -53,7 +59,7 @@ export function FaqItem({ question, answer }: FaqEntry) {
             className="overflow-hidden"
           >
             <div className="overflow-visible pb-5 pr-1">
-              <p className="max-w-[640px] text-pretty break-words font-sans text-[15px] leading-relaxed text-light-space/60 light:text-zinc-600">
+              <p className="max-w-[640px] min-w-0 text-pretty break-words font-sans text-[15px] leading-relaxed text-light-space/60 light:text-zinc-600">
                 {answer}
               </p>
             </div>
@@ -64,6 +70,11 @@ export function FaqItem({ question, answer }: FaqEntry) {
   );
 }
 
+/**
+ * **Purpose:** Two-column FAQ block (sticky title + wrapping items).
+ * The items column is `min-w-0` so the CSS grid does not overflow on narrow viewports.
+ * **Connects to:** `SupportPage`, `ContactSalesPage`.
+ */
 export function FaqSection({
   items,
   title = "FAQs",
@@ -81,7 +92,7 @@ export function FaqSection({
             {title}
           </h2>
         </div>
-        <div>
+        <div className="min-w-0">
           {items.map((item) => (
             <FaqItem key={item.question} {...item} />
           ))}

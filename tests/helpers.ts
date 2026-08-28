@@ -1,5 +1,9 @@
 import { expect, type Page } from '@playwright/test';
 
+/**
+ * Primes cookie consent and skips the homepage mission intro so e2e assertions
+ * hit the hero immediately. **Connects to:** `mission-intro-storage.ts` (`jokuh.missionIntro.seen`).
+ */
 export async function primeCookieConsent(page: Page) {
   await page.addInitScript(() => {
     const record = {
@@ -12,6 +16,11 @@ export async function primeCookieConsent(page: Page) {
     window.localStorage.setItem('jokuh.cookieConsent', 'custom');
     window.localStorage.setItem('jokuh.cookiePreferences', JSON.stringify(record));
     document.cookie = `jokuh_cookie_consent=${encodeURIComponent(JSON.stringify(record))}; Path=/; Max-Age=15552000; SameSite=Lax`;
+    try {
+      window.sessionStorage.setItem('jokuh.missionIntro.seen', '1');
+    } catch {
+      /* ignore */
+    }
   });
 }
 

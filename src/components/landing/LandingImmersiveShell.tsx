@@ -28,7 +28,7 @@ import { SiteLink } from "../SiteLink";
 
 /**
  * **Purpose:** Full-viewport home hero — brand, Get-started CTAs, prompt that seeds the live OO demo.
- * Mission scramble intro plays on every homepage visit before the hero typewriter.
+ * Mission scramble intro plays once per session before the hero typewriter.
  * **Connects to:** `LandingHero`, `ProductDemoSection` (`#demo`), `MissionIntroOverlay`.
  */
 export function LandingImmersiveShell() {
@@ -67,7 +67,7 @@ function LandingImmersiveShellInner() {
       >
         <LandingHomeBackdrop />
 
-        <ImmersiveAppChrome bottomCenter={<LandingBlurbsPill />} />
+        <ImmersiveAppChrome showLibraryRail={false} bottomCenter={<LandingBlurbsPill />} />
 
         <ImmersiveCenterColumn
           maxWidthClass="max-w-[720px]"

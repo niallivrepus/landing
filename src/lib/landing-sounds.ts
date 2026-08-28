@@ -49,7 +49,7 @@ export const LANDING_SOUND_GENTLE = {
 } as const;
 
 /**
- * **premium** — high-intent CTAs (Claim identity, Download, product glow buttons).
+ * **premium** — high-intent CTAs (Get started, Download, product glow buttons).
  * Leather latch: soft mechanical body + restrained click transient, warmer than gentle.
  */
 export const LANDING_SOUND_PREMIUM = {

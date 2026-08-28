@@ -4,6 +4,33 @@ Traceable change log for landing deploys. Newest entries appended at top.
 
 ---
 
+## 2026-08-28T11:48 (UTC-4) — SEO, crawl 404, production landing chunk
+
+**Commit:** this landing `main` push (Railway `www` auto-deploy).
+**Rationale:** After the conversion-path ship, crawlers still saw an empty `#root`, no share card, `/robots.txt` 404, and a production bundle named `bootstrap-dev`. Close those P1 items plus leftover homepage/product holes so www matches the spec except GoDaddy apex.
+
+### Modified files
+
+| File | Nature | Reasoning |
+|------|--------|-----------|
+| `index.html`, `landing-hero-copy.ts`, `site-directory.ts`, `useDocumentTitle.ts` | One sentence, title, OG/Twitter, JSON-LD, `#root` H1 | Crawlers and share cards use the same product line as the footer. |
+| `public/og-default.png`, `public/og-default.svg`, `public/apple-touch-icon.png` | 1200×630 OG + 180 apple-touch | Stops 404 share image and iOS home-screen icon. |
+| `public/robots.txt`, `public/sitemap.xml` | Allow `/` + public URLs including `/security` | Googlebot no longer 404s robots/sitemap. |
+| `public/not-found.html`, `server/static-middleware.ts` | Dedicated 404 HTML; HEAD; HSTS/nosniff/Referrer/frame/CSP-RO | Unknown paths are crawl-honest; `/chatgpt/*` and unpublished stubs are not 200. |
+| `src/bootstrap-dev.tsx` → `src/bootstrap-landing.tsx`, `src/main.tsx`, `README.md` | Landing entry rename | `pnpm build:landing` emits `bootstrap-landing-*.js`, not `-dev-`. |
+| `src/pages/SecurityPage.tsx`, `App.tsx`, `rigid-sitemap.ts`, `ProductDemoSection.tsx` | `/security` explainer | Backs the E2EE homepage claim with a real page. |
+| `LandingImmersiveShell.tsx`, `landing-home-suggestions.ts` | Hide library rail; drop Invest chip | Homepage first screen is product, not token. |
+| `landing-mission-intro.ts`, `mission-intro-storage.ts` | Private-workspace splash; skip after first session | P2 splash length + return visits land on the hero. |
+| `StoriesPage.tsx`, `SupportPage.tsx`, `FaqSection.tsx` | Honest stories intro; Bond/Cortex → passkeys/OO; 375 wrap | Wording polish and FAQ overflow. |
+| `vite.config.ts`, `tests/*` | Preview uses static 404s; unpublished paths expect 404 | E2E matches Railway. |
+
+### Deploy / ops follow-up
+
+1. Push `main` — Railway `www` rebuilds. Confirm `curl -s https://www.jokuh.com/` contains the H1, `/robots.txt` and `/sitemap.xml` 200, `/zzz` 404 body, no `bootstrap-dev` in HTML, `/security` 200.
+2. Apex `jokuh.com` is still GoDaddy parking (405). Forward `jokuh.com` → `https://www.jokuh.com` (301, no mask). Code cannot finish P0-1.
+
+---
+
 ## 2026-08-27T21:20 (UTC-4) — First-visit conversion + production download/HTTPS
 
 **Commit:** this landing `main` push (Railway `www` auto-deploy).

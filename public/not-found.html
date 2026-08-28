@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--
+      Crawl-honest 404 served by server/static-middleware.ts for unknown SPA paths.
+      Vite copies this file from public/ into dist/. Do not replace with the homepage shell.
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Page not found — Jokuh</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root {
+        color-scheme: dark light;
+        --bg: #000000;
+        --fg: #f4f4f5;
+        --muted: rgba(244, 244, 245, 0.6);
+        --label: rgba(244, 244, 245, 0.55);
+        --border: rgba(244, 244, 245, 0.2);
+        --btn-bg: #f4f4f5;
+        --btn-fg: #09090b;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #ffffff;
+          --fg: #09090b;
+          --muted: #52525b;
+          --label: #71717a;
+          --border: #d4d4d8;
+          --btn-bg: #09090b;
+          --btn-fg: #ffffff;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      main {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 7rem 1.5rem 7rem;
+        text-align: center;
+      }
+      .code {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        color: var(--label);
+      }
+      h1 {
+        margin: 1rem 0 0;
+        font-size: clamp(2.1rem, 5vw, 3rem);
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 1.08;
+      }
+      .lede {
+        margin: 1.5rem 0 0;
+        font-size: 1.0625rem;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 2rem;
+      }
+      a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 3rem;
+        padding: 0 1.5rem;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--fg);
+        border: 1px solid var(--border);
+      }
+      a.primary {
+        background: var(--btn-bg);
+        color: var(--btn-fg);
+        border-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>This page is not here.</h1>
+      <p class="lede">
+        The link may be old, or the path was never published. Head home, open support, or download
+        Jokuh.
+      </p>
+      <nav>
+        <a class="primary" href="/">Go home</a>
+        <a href="/support">Support</a>
+        <a href="/download">Download</a>
+      </nav>
+    </main>
+  </body>
+</html>

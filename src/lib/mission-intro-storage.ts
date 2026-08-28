@@ -1,14 +1,14 @@
 /**
- * **Purpose:** Optional force/skip helpers for the homepage mission scramble intro.
- * Default is to play on every homepage visit (marketing moment).
- * **Connects to:** `MissionIntroOverlay`, `LandingImmersiveShell`.
+ * **Purpose:** Force/skip helpers for the homepage mission scramble intro.
+ * Plays once per browser session, then skips so return visits land on the hero.
+ * **Connects to:** `MissionIntroOverlay`, `LandingImmersiveShell`, Playwright `primeCookieConsent`.
  */
 
 const STORAGE_KEY = "jokuh.missionIntro.seen";
 
 /**
  * Query helpers: `?intro=1` forces play; `?intro=0` skips for this load.
- * Cleared `seen` flag is retained for analytics / optional experiments.
+ * Default skips when this session already saw the intro.
  */
 export function resolveMissionIntroForce(): "play" | "skip" | "default" {
   if (typeof window === "undefined") return "default";
@@ -22,10 +22,19 @@ export function resolveMissionIntroForce(): "play" | "skip" | "default" {
     return "play";
   }
   if (raw === "0" || raw === "false") return "skip";
-  return "default";
+  return hasSeenMissionIntro() ? "skip" : "default";
 }
 
-/** Marks intro played — retained for analytics; default gating still plays every visit. */
+/** True when this session already played (or tests primed) the mission intro. */
+export function hasSeenMissionIntro(): boolean {
+  try {
+    return sessionStorage.getItem(STORAGE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+/** Marks intro played so the next homepage load in this session skips the overlay. */
 export function markMissionIntroSeen(): void {
   try {
     sessionStorage.setItem(STORAGE_KEY, "1");

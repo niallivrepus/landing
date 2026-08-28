@@ -30,7 +30,7 @@ export type LandingHomeSuggestion =
       gameId: LandingArcadeGameId;
     };
 
-/** OO-first pills teach the product; one nav pill routes to investors without crowding the row. */
+/** OO-first pills teach the product. Token/invest stays off this consumer row. */
 export const LANDING_HOME_SUGGESTIONS: LandingHomeSuggestion[] = [
   {
     id: "oo-context",
@@ -64,11 +64,5 @@ export const LANDING_HOME_SUGGESTIONS: LandingHomeSuggestion[] = [
     label: "Play chess",
     kind: "game",
     gameId: "chess",
-  },
-  {
-    id: "invest",
-    label: "Invest",
-    kind: "link",
-    href: "/invest",
   },
 ];

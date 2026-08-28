@@ -10,7 +10,7 @@ export function resolveLandingRuntimeEnv(env: NodeJS.ProcessEnv) {
   const supabaseUrl = env.SUPABASE_URL ?? "";
   const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY || "";
   const canonicalHostRaw = (env.LANDING_CANONICAL_HOST ?? "apex").trim().toLowerCase();
-  const canonicalHost = canonicalHostRaw === "www" ? "www" : "apex";
+  const canonicalHost: "www" | "apex" = canonicalHostRaw === "www" ? "www" : "apex";
 
   return {
     groqKey: env.GROQ_API_KEY ?? "",

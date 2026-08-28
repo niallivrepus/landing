@@ -115,8 +115,8 @@ export function StoriesPage() {
             </SiteLink>
           </div>
           <p className="max-w-3xl font-sans text-[1.0625rem] leading-[1.7] text-light-space/62 light:text-zinc-600 md:text-[1.125rem]">
-          Stories are the human side of Jokuh. Some are published editorials; others are labeled
-          illustrative scenarios so we never present invented customers as case studies.
+            These are pieces about how Jokuh shows up in a day. Some come from real people. Others
+            are labeled as scenarios we wrote so you can see the product — they are not case studies.
           </p>
         </header>
 

@@ -43,6 +43,7 @@ import { createPublicPeopleSearchMiddleware } from "./public-people-search-middl
 import { resolvePublicPeopleSearchEnv } from "./public-people-search-service";
 import { createPublicProfileDemoMiddleware } from "./public-profile-demo-middleware";
 import { resolvePublicProfileDemoEnv } from "./public-profile-service";
+import { createStaticMiddleware } from "./server/static-middleware";
 
 /** Tailwind/Vite may resolve url(/pods-bento/*.svg) from scanned classes; ensure files exist for fresh clones. */
 function ensurePodsBentoPublicAssets() {
@@ -155,6 +156,16 @@ export default defineConfig(({ mode }) => {
           server.middlewares.use(createPublicBlurbsFeedMiddleware(publicBlurbsFeedEnv));
           server.middlewares.use(createPublicPeopleSearchMiddleware(publicPeopleSearchEnv));
           server.middlewares.use(createPublicProfileDemoMiddleware(publicProfileDemoEnv));
+          /**
+           * Match Railway: unknown SPA paths return `not-found.html` at HTTP 404.
+           * Leave canonicalHost unset so 127.0.0.1 is not 308'd to www.127.0.0.1.
+           */
+          server.middlewares.use(
+            createStaticMiddleware({
+              staticRoot: resolve(__dirname, "dist"),
+              appOrigin: env.VITE_ORIGIN_APP?.trim() || "https://app.jokuh.com",
+            }),
+          );
         },
       },
     ],

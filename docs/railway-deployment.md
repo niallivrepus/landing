@@ -14,7 +14,7 @@ Production target for this repo is **Railway + Supabase**, not Vercel.
 3. **Run** — Node serves:
    - `GET/POST /api/*` via the same middleware as Vite dev/preview
    - Static files from `STATIC_ROOT` (default `/srv/static` in Docker)
-   - SPA fallback to `index.html`
+   - Known SPA routes fallback to `index.html`; unknown paths serve `not-found.html` at HTTP 404
    - App handoff redirects (`/dataroom`, `/xx/investpipeline`, `/sandbox`, `/oo`, `/dd`) → `https://app.jokuh.com`
    - `/pitchdeck` (and `/pitch-deck`) stay on this site as the investor theatre
    - `www` → apex redirect (308)

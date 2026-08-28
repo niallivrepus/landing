@@ -32,6 +32,10 @@ test('opens pricing instead of bouncing home', async ({ page }) => {
 test('unknown paths render a 404 page', async ({ page }) => {
   await page.goto('/this-page-does-not-exist');
   await expect(page.getByRole('heading', { level: 1, name: 'This page is not here.' })).toBeVisible();
+  await expect(page.locator('body')).toContainText('This page is not here');
+  await expect(page.getByRole('link', { name: 'Go home' })).toHaveAttribute('href', '/');
+  await expect(page.getByRole('link', { name: 'Download' }).first()).toHaveAttribute('href', /\/download/);
+  await expect(page.getByRole('link', { name: 'Support' }).first()).toHaveAttribute('href', /\/support/);
 });
 
 test('lets visitors join the waitlist from the homepage', async ({ page }) => {

@@ -1,5 +1,5 @@
 import { createReadStream, existsSync, statSync } from "node:fs";
-import { extname, join, normalize } from "node:path";
+import { dirname, extname, join, normalize } from "node:path";
 import type { ServerResponse } from "node:http";
 import type { Connect } from "vite";
 
@@ -28,6 +28,25 @@ const MIME_TYPES: Record<string, string> = {
 /** GitHub Release asset used when the image was not baked into `/downloads/Jokuh.dmg`. */
 export const DEFAULT_MACOS_DMG_FALLBACK_URL =
   "https://github.com/niallivrepus/landing/releases/download/macos-1.0.1/Jokuh.dmg";
+
+/**
+ * Report-only CSP for the Vite marketing SPA: self, Google fonts, app.jokuh.com, and images.
+ * Inline scripts in `index.html` (theme, SW cleanup, preloads) stay allowed; enforcement would break them.
+ */
+const CSP_REPORT_ONLY = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' blob:",
+  "connect-src 'self' https://app.jokuh.com https://*.supabase.co",
+  "frame-src 'self' https://app.jokuh.com",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
 
 type RedirectRule = {
   match: (path: string) => boolean;
@@ -65,15 +84,17 @@ function buildRedirectRules(appOrigin: string): RedirectRule[] {
   ];
 }
 
+/** 302/301/308 with security headers so HSTS applies on protocol/host hops too. */
 function redirect(res: ServerResponse, location: string, status = 302) {
   res.statusCode = status;
   res.setHeader("Location", location);
+  applySecurityHeaders(res);
   res.end();
 }
 
 /**
- * Client-side routes that should SPA-fallback with HTTP 200.
- * Unknown paths still serve `index.html` so React can render the 404 page, but with HTTP 404.
+ * Client-side routes that SPA-fallback with HTTP 200 + `index.html`.
+ * Unknown paths serve `not-found.html` with HTTP 404 — never the homepage shell.
  */
 const KNOWN_SPA_PREFIXES = [
   "/demo",
@@ -93,9 +114,11 @@ const KNOWN_SPA_PREFIXES = [
   "/privacy",
   "/terms",
   "/support",
+  "/security",
   "/help",
   "/legal",
   "/brand",
+  "/brand-guidelines",
   "/manifesto",
   "/about",
   "/business",
@@ -104,12 +127,6 @@ const KNOWN_SPA_PREFIXES = [
   "/pitch-deck",
   "/charter",
   "/careers",
-  "/platform",
-  "/pods",
-  "/v1llains",
-  "/ecosystem",
-  "/developers",
-  "/chatgpt",
   "/prompt",
   "/research",
 ] as const;
@@ -125,19 +142,110 @@ function forwardedProto(req: { headers: { [key: string]: string | string[] | und
   return value?.split(",")[0]?.trim().toLowerCase() ?? "";
 }
 
-/** **Sends** a static file with Content-Length, HSTS on HTML, and an attachment name for `.dmg`. */
-function sendFile(res: ServerResponse, filePath: string, contentType: string, status = 200) {
+/**
+ * **Purpose:** Normalize the request verb so HEAD can share GET header logic without a body.
+ * **Connects to:** `sendFile`, `sendPlainNotFound` — Node `IncomingMessage.method`.
+ * **Inputs:** Raw `req.method` (may be missing).
+ * **Outputs:** Uppercase method string; defaults to GET.
+ */
+function requestMethod(method: string | undefined): string {
+  return (method ?? "GET").toUpperCase();
+}
+
+/**
+ * **Purpose:** Attach browser security headers on every HTML and static file response.
+ * **Connects to:** `sendFile` and `sendPlainNotFound` in this middleware.
+ * **Inputs:** Node `ServerResponse` about to be committed.
+ * **Outputs:** Mutates response headers. CSP is Report-Only so Gooey/inline `index.html` scripts keep working.
+ */
+function applySecurityHeaders(res: ServerResponse): void {
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Content-Security-Policy-Report-Only", CSP_REPORT_ONLY);
+}
+
+/**
+ * **Purpose:** Send a static file with Content-Length, security headers, and an attachment name for `.dmg`.
+ * **Connects to:** AASA, hashed Vite assets, SPA `index.html`, and `not-found.html`.
+ * **Inputs:** Response, absolute file path, MIME type, status (default 200), HTTP method.
+ * **Outputs:** Headers + status always. GET pipes the file body; HEAD ends with no body.
+ */
+function sendFile(
+  res: ServerResponse,
+  filePath: string,
+  contentType: string,
+  status = 200,
+  method = "GET",
+) {
   const size = statSync(filePath).size;
   res.statusCode = status;
   res.setHeader("Content-Type", contentType);
   res.setHeader("Content-Length", String(size));
-  if (contentType.startsWith("text/html")) {
-    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-  }
+  applySecurityHeaders(res);
   if (extname(filePath).toLowerCase() === ".dmg") {
     res.setHeader("Content-Disposition", 'attachment; filename="Jokuh.dmg"');
   }
+  if (requestMethod(method) === "HEAD") {
+    res.end();
+    return;
+  }
   createReadStream(filePath).pipe(res);
+}
+
+/**
+ * **Purpose:** 404 for missing files-with-extensions and a last-resort missing `not-found.html`.
+ * **Connects to:** `applySecurityHeaders`; used when no crawl document is on disk.
+ * **Inputs:** Response and HTTP method.
+ * **Outputs:** HTTP 404 text/plain. HEAD sends headers only.
+ */
+function sendPlainNotFound(res: ServerResponse, method: string): void {
+  const body = "Not found";
+  res.statusCode = 404;
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.setHeader("Content-Length", String(Buffer.byteLength(body)));
+  applySecurityHeaders(res);
+  if (requestMethod(method) === "HEAD") {
+    res.end();
+    return;
+  }
+  res.end(body);
+}
+
+/**
+ * **Purpose:** Locate the crawl-honest 404 document without falling back to the homepage shell.
+ * **Connects to:** Vite copies `public/not-found.html` into `dist/` (`STATIC_ROOT`); sibling `public/` covers local runs that point `STATIC_ROOT` at `dist` before a rebuild.
+ * **Inputs:** `staticRoot` from Railway / Vite (`dist`).
+ * **Outputs:** Absolute path to `not-found.html`, or null if neither the root nor its sibling tree has the file.
+ */
+function resolveNotFoundHtml(staticRoot: string): string | null {
+  const candidates = [
+    join(staticRoot, "not-found.html"),
+    join(dirname(staticRoot), "not-found.html"),
+    join(dirname(staticRoot), "public", "not-found.html"),
+  ];
+  for (const candidate of candidates) {
+    if (existsSync(candidate) && statSync(candidate).isFile()) {
+      return candidate;
+    }
+  }
+  return null;
+}
+
+/**
+ * **Purpose:** Serve a dedicated 404 document for junk SPA URLs instead of the homepage `index.html`.
+ * **Connects to:** `public/not-found.html` (copied into `dist` by Vite), `KNOWN_SPA_PREFIXES`.
+ * **Inputs:** Response, static root, HTTP method.
+ * **Outputs:** HTTP 404 with `not-found.html` body (or short text if the file is missing). HEAD sends headers only.
+ */
+function sendUnknownPathNotFound(res: ServerResponse, staticRoot: string, method: string): void {
+  const notFoundPath = resolveNotFoundHtml(staticRoot);
+  if (notFoundPath) {
+    sendFile(res, notFoundPath, "text/html; charset=utf-8", 404, method);
+    return;
+  }
+  sendPlainNotFound(res, method);
 }
 
 function resolveSafePath(root: string, requestPath: string): string | null {
@@ -171,6 +279,7 @@ export function createStaticMiddleware(options: {
 
   return (req, res, next) => {
     const resNode = res as ServerResponse;
+    const method = requestMethod(req.method);
     const host = req.headers.host ?? "";
     const rawUrl = req.url ?? "/";
     const url = new URL(rawUrl, `http://${host}`);
@@ -202,7 +311,7 @@ export function createStaticMiddleware(options: {
     if (pathname === "/apple-app-site-association") {
       const aasaPath = resolveSafePath(options.staticRoot, "/.well-known/apple-app-site-association");
       if (aasaPath && existsSync(aasaPath)) {
-        sendFile(resNode, aasaPath, "application/json");
+        sendFile(resNode, aasaPath, "application/json", 200, method);
         return;
       }
     }
@@ -210,7 +319,7 @@ export function createStaticMiddleware(options: {
     if (pathname === "/.well-known/apple-app-site-association") {
       const aasaPath = resolveSafePath(options.staticRoot, pathname);
       if (aasaPath && existsSync(aasaPath)) {
-        sendFile(resNode, aasaPath, "application/json");
+        sendFile(resNode, aasaPath, "application/json", 200, method);
         return;
       }
     }
@@ -218,7 +327,7 @@ export function createStaticMiddleware(options: {
     const filePath = resolveSafePath(options.staticRoot, pathname);
     if (filePath && existsSync(filePath) && statSync(filePath).isFile()) {
       const ext = extname(filePath).toLowerCase();
-      sendFile(resNode, filePath, MIME_TYPES[ext] ?? "application/octet-stream");
+      sendFile(resNode, filePath, MIME_TYPES[ext] ?? "application/octet-stream", 200, method);
       return;
     }
 
@@ -230,14 +339,18 @@ export function createStaticMiddleware(options: {
 
     const hasFileExtension = extname(pathname).length > 0;
     if (hasFileExtension) {
-      resNode.statusCode = 404;
-      resNode.end("Not found");
+      sendPlainNotFound(resNode, method);
+      return;
+    }
+
+    if (!isKnownSpaPath(pathname)) {
+      sendUnknownPathNotFound(resNode, options.staticRoot, method);
       return;
     }
 
     const indexPath = resolveSafePath(options.staticRoot, "/index.html");
     if (indexPath && existsSync(indexPath)) {
-      sendFile(resNode, indexPath, "text/html; charset=utf-8", isKnownSpaPath(pathname) ? 200 : 404);
+      sendFile(resNode, indexPath, "text/html; charset=utf-8", 200, method);
       return;
     }
 

@@ -45,10 +45,10 @@ export function SupportPage() {
             <ul className={cn("mt-6 max-w-[720px] space-y-4 pl-5 list-disc marker:text-light-space/35 light:marker:text-zinc-400", bodyText)}>
               <li>
                 <strong className="text-light-space light:text-zinc-950">Signing in.</strong> Jokuh
-                uses passwordless sign-in with your device’s passkey/biometrics (“Bond”) — no password
-                to remember or reset. If you’re stuck at sign-in, make sure your device has Face ID,
-                Touch ID, or a passcode enabled, and that you’re using the same device (or an iCloud
-                Keychain–synced device) you signed up with.
+                uses passwordless sign-in with your device’s passkey (Face ID, Touch ID, or Windows
+                Hello) — no password to remember or reset. If you’re stuck at sign-in, make sure
+                your device has biometrics or a passcode enabled, and that you’re using the same
+                device (or an iCloud Keychain–synced device) you signed up with.
               </li>
               <li>
                 <strong className="text-light-space light:text-zinc-950">Age.</strong> Jokuh is for
@@ -70,9 +70,9 @@ export function SupportPage() {
                 Settings → Privacy on your device to confirm Jokuh has both.
               </li>
               <li>
-                <strong className="text-light-space light:text-zinc-950">AI (Cortex / OO).</strong>{" "}
-                Optional assistants that can use context from your Spine and conversations you choose
-                to include. They can be wrong. Do not paste passwords or recovery codes into chat.
+                <strong className="text-light-space light:text-zinc-950">OO (your private AI).</strong>{" "}
+                Optional. It can use context from your Spine and conversations you choose to include.
+                It can be wrong. Do not paste passwords or recovery codes into chat.
               </li>
               <li>
                 <strong className="text-light-space light:text-zinc-950">Arcade.</strong> Optional

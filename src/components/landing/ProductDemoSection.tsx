@@ -37,6 +37,7 @@ import {
 import { LANDING_LIBRARY_SERVERS, type LandingLibraryServer } from "../../data/landing-library-rail-data";
 import { SquircleShell } from "../system/squircle";
 import { CONTENT_SHELL_WIDE } from "../system/shells";
+import { SiteLink } from "../SiteLink";
 import { LandingMessagesInbox } from "./LandingMessagesInbox";
 import { OoSpeakBubble } from "./OoSpeakBubble";
 import { ClaimIdentityCta } from "./ClaimIdentityCta";
@@ -81,6 +82,12 @@ export function ProductDemoSection() {
               Not another chat app. OO remembers, stays private, pulls from Spine, moves your calendar,
               and works inside Bubbles.
             </p>
+            <SiteLink
+              href="/security"
+              className="mt-2 inline-block font-sans text-[13px] font-semibold text-light-space/55 no-underline transition-colors hover:text-light-space/85 light:text-zinc-500 light:hover:text-zinc-800"
+            >
+              How encryption works
+            </SiteLink>
           </div>
           <div className="flex items-center gap-2" aria-hidden>
             <div className="flex items-center -space-x-1.5">
