@@ -52,7 +52,7 @@ export function DownloadImmersiveShell() {
           aria-hidden
         />
 
-        <ImmersiveAppChrome showLibraryRail />
+        <ImmersiveAppChrome showLibraryRail={false} />
 
         <div className="relative z-10 mx-auto flex w-full max-w-[640px] flex-col items-center px-4 pb-[calc(env(safe-area-inset-bottom,0px)+48px)] pt-[calc(env(safe-area-inset-top,0px)+88px)]">
           <motion.header

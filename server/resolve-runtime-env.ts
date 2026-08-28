@@ -33,5 +33,7 @@ export function resolveLandingRuntimeEnv(env: NodeJS.ProcessEnv) {
     port: Number(env.PORT || 3000),
     /** `www` for GoDaddy apex forwarding; `apex` when root CNAME works (e.g. Cloudflare). */
     canonicalHost,
+    /** Runtime 302 if `/downloads/Jokuh.dmg` was not baked into the Docker image. */
+    macosDmgFallbackUrl: env.MACOS_DMG_FALLBACK_URL?.trim() || "",
   };
 }

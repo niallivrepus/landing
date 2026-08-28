@@ -13,7 +13,7 @@ export const INVEST_HERO = {
   eyebrow: "Capital & economy",
   title: "Build with us. Own the machine layer.",
   subtitle:
-    "Qualified capital partners can review our pre-seed materials. Everyone else gets the same transparency on how the Jokuh economy token launches — on-platform only, vesting for every allocation, and rules we publish before a dollar moves.",
+    "Qualified capital partners can review our pre-seed materials. The economy token launched on-platform on August 8, 2026 — allocation continues in the Jokuh app under published vesting rules, not on third-party exchanges.",
   primary: { label: "Open data room", href: "/dataroom" },
   secondary: { label: "Talk to the team", href: "/contact" },
 } as const;
@@ -79,7 +79,7 @@ export const INVEST_TOKEN_SECTION = {
   rules: [
     {
       title: "On-platform only at launch",
-      body: "Purchase and allocation happen inside Jokuh — on the website and in the app. No CEX listings, no crypto.com, no third-party wallet swaps at release. World Liberty Fi–style distribution: you participate in our economy, not someone else's exchange.",
+      body: "Purchase and allocation happen inside Jokuh — on the website and in the app. No CEX listings and no third-party wallet swaps at release. You participate in our economy, not someone else's exchange.",
     },
     {
       title: "Everyone vests — no exceptions",
@@ -213,9 +213,9 @@ export const INVEST_FAQ = [
       "Equity is ownership in Jokuh the company. The economy token powers on-chain features inside the OS. They are related strategically but legally separate. Investors in the company receive equity docs; economy participants receive token docs. Neither substitutes for the other.",
   },
   {
-    question: "What happens on August 8, 2026?",
+    question: "What happened on August 8, 2026?",
     answer:
-      "That is our published economy token release date. Before then we publish final vesting calendars, allocation tiers, and on-platform purchase flow. The countdown above tracks to noon Eastern on August 8 — follow the data room and this page for T-minus updates.",
+      "That was our published economy token release date. Vesting calendars, allocation tiers, and on-platform purchase remain in the Jokuh app. Follow the data room and this page for updates — nothing here is an offer to sell where prohibited.",
   },
   {
     question: "Is this investment advice?",

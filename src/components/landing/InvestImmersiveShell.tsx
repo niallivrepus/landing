@@ -37,7 +37,7 @@ function InvestImmersiveShellInner({ children }: { children: ReactNode }) {
       />
 
       <ImmersiveAppChrome
-        showLibraryRail
+        showLibraryRail={false}
         topLeadingSlot={<ImmersiveBackCornerButton onBack={handleBack} />}
       />
 

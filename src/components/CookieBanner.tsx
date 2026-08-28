@@ -67,7 +67,10 @@ export function CookieBanner() {
         >
           <p id="cookie-banner-title" className="font-sans text-[13px] leading-relaxed text-light-space/80 light:text-zinc-700">
             We use cookies for essential site function and, with your consent, analytics and marketing. See our{" "}
-            privacy notice for details.
+            <a href="/privacy#cookies" className="rounded-sm text-[var(--color-blue-4)] underline-offset-2 hover:underline">
+              Privacy Policy
+            </a>{" "}
+            for details.
           </p>
 
           {customizing ? (

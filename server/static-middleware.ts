@@ -22,7 +22,12 @@ const MIME_TYPES: Record<string, string> = {
   ".woff": "font/woff",
   ".woff2": "font/woff2",
   ".xml": "application/xml; charset=utf-8",
+  ".dmg": "application/x-apple-diskimage",
 };
+
+/** GitHub Release asset used when the image was not baked into `/downloads/Jokuh.dmg`. */
+export const DEFAULT_MACOS_DMG_FALLBACK_URL =
+  "https://github.com/niallivrepus/landing/releases/download/macos-1.0.1/Jokuh.dmg";
 
 type RedirectRule = {
   match: (path: string) => boolean;
@@ -66,9 +71,72 @@ function redirect(res: ServerResponse, location: string, status = 302) {
   res.end();
 }
 
-function sendFile(res: ServerResponse, filePath: string, contentType: string) {
-  res.statusCode = 200;
+/**
+ * Client-side routes that should SPA-fallback with HTTP 200.
+ * Unknown paths still serve `index.html` so React can render the 404 page, but with HTTP 404.
+ */
+const KNOWN_SPA_PREFIXES = [
+  "/demo",
+  "/download",
+  "/newsroom",
+  "/journal",
+  "/news",
+  "/rss",
+  "/stories",
+  "/blurbs",
+  "/spine",
+  "/calls",
+  "/messages",
+  "/profile",
+  "/contact",
+  "/pricing",
+  "/privacy",
+  "/terms",
+  "/support",
+  "/help",
+  "/legal",
+  "/brand",
+  "/manifesto",
+  "/about",
+  "/business",
+  "/invest",
+  "/pitchdeck",
+  "/pitch-deck",
+  "/charter",
+  "/careers",
+  "/platform",
+  "/pods",
+  "/v1llains",
+  "/ecosystem",
+  "/developers",
+  "/chatgpt",
+  "/prompt",
+  "/research",
+] as const;
+
+function isKnownSpaPath(pathname: string): boolean {
+  if (pathname === "/") return true;
+  return KNOWN_SPA_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
+
+function forwardedProto(req: { headers: { [key: string]: string | string[] | undefined } }): string {
+  const raw = req.headers["x-forwarded-proto"];
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  return value?.split(",")[0]?.trim().toLowerCase() ?? "";
+}
+
+/** **Sends** a static file with Content-Length, HSTS on HTML, and an attachment name for `.dmg`. */
+function sendFile(res: ServerResponse, filePath: string, contentType: string, status = 200) {
+  const size = statSync(filePath).size;
+  res.statusCode = status;
   res.setHeader("Content-Type", contentType);
+  res.setHeader("Content-Length", String(size));
+  if (contentType.startsWith("text/html")) {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
+  if (extname(filePath).toLowerCase() === ".dmg") {
+    res.setHeader("Content-Disposition", 'attachment; filename="Jokuh.dmg"');
+  }
   createReadStream(filePath).pipe(res);
 }
 
@@ -91,9 +159,15 @@ export function createStaticMiddleware(options: {
   appOrigin: string;
   /** `apex` (default): 308 www → apex. `www`: serve www (GoDaddy forwards apex → www). */
   canonicalHost?: "apex" | "www";
+  /**
+   * Same-origin `/downloads/Jokuh.dmg` 302 target when the disk image is missing from the image.
+   * **Connects to:** Docker bake in `Dockerfile`, `resolveMacDownloadUrl`.
+   */
+  macosDmgFallbackUrl?: string;
 }): Connect.NextHandleFunction {
   const redirectRules = buildRedirectRules(options.appOrigin);
   const canonicalHost = options.canonicalHost ?? "apex";
+  const macosDmgFallbackUrl = options.macosDmgFallbackUrl?.trim() || DEFAULT_MACOS_DMG_FALLBACK_URL;
 
   return (req, res, next) => {
     const resNode = res as ServerResponse;
@@ -101,6 +175,17 @@ export function createStaticMiddleware(options: {
     const rawUrl = req.url ?? "/";
     const url = new URL(rawUrl, `http://${host}`);
     const pathname = url.pathname;
+    const proto = forwardedProto(req);
+
+    if (proto === "http" && host && !host.startsWith("localhost") && !host.startsWith("127.")) {
+      redirect(resNode, `https://${host}${url.pathname}${url.search}`, 301);
+      return;
+    }
+
+    if (canonicalHost === "www" && host && !host.startsWith("www.") && !host.startsWith("localhost")) {
+      redirect(resNode, `https://www.${host}${url.pathname}${url.search}`, 308);
+      return;
+    }
 
     if (canonicalHost === "apex" && host.startsWith("www.")) {
       redirect(resNode, `https://${host.slice(4)}${url.pathname}${url.search}`, 308);
@@ -137,6 +222,12 @@ export function createStaticMiddleware(options: {
       return;
     }
 
+    /** Official Mac download stays on jokuh.com even if the 117MB dmg was not copied into the image. */
+    if (pathname.toLowerCase() === "/downloads/jokuh.dmg") {
+      redirect(resNode, macosDmgFallbackUrl, 302);
+      return;
+    }
+
     const hasFileExtension = extname(pathname).length > 0;
     if (hasFileExtension) {
       resNode.statusCode = 404;
@@ -146,7 +237,7 @@ export function createStaticMiddleware(options: {
 
     const indexPath = resolveSafePath(options.staticRoot, "/index.html");
     if (indexPath && existsSync(indexPath)) {
-      sendFile(resNode, indexPath, "text/html; charset=utf-8");
+      sendFile(resNode, indexPath, "text/html; charset=utf-8", isKnownSpaPath(pathname) ? 200 : 404);
       return;
     }
 

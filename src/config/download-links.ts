@@ -3,13 +3,12 @@
  * **Connects to:** `DownloadImmersiveShell`, `brand-taxonomy.ts` platform availability,
  * `ProductCenteredShowcase` Join Beta CTAs.
  *
- * **Mac direct download:** Host `Jokuh.dmg` at `public/downloads/Jokuh.dmg` before deploy, or override
- * `VITE_MACOS_DOWNLOAD_URL` on Railway `www` to a CDN/object-storage URL (see jokuh-live
- * `docs/macos-direct-distribution.md`).
+ * **Mac direct download:** Default href is same-origin `/downloads/Jokuh.dmg`. Docker bakes the
+ * notarized GitHub Release asset into the image; if the file is missing the Node server 302s to
+ * that release so the page never links at github.com. Override with `VITE_MACOS_DOWNLOAD_URL`.
  */
 
-const DEFAULT_MACOS_RELEASE_URL =
-  "https://github.com/niallivrepus/landing/releases/download/macos-1.0.1/Jokuh.dmg";
+const DEFAULT_MACOS_RELEASE_URL = "/downloads/Jokuh.dmg";
 const DEFAULT_WEB_APP_ORIGIN = "https://app.jokuh.com";
 
 /** Public Jokuh iOS / iPadOS TestFlight invite — used by “Download beta” / mobile access CTAs. */
@@ -21,7 +20,6 @@ export function resolveMacDownloadUrl(): string {
   if (configured) {
     return configured;
   }
-  // Hosted GitHub Release asset (see jokuh-live `scripts/release-macos-direct.sh`).
   return DEFAULT_MACOS_RELEASE_URL;
 }
 

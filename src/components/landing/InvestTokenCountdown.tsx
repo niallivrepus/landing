@@ -61,18 +61,20 @@ export function InvestTokenCountdown() {
   }, [targetMs]);
 
   const ariaLabel = parts.complete
-    ? "Economy token release is live"
+    ? "Economy token release opened August 8, 2026. Purchase continues in the Jokuh app."
     : `${parts.days} days, ${parts.hours} hours, ${parts.minutes} minutes, and ${parts.seconds} seconds until economy token release on August 8, 2026`;
 
   return (
     <div className="landing-invest-countdown" role="timer" aria-live="polite" aria-label={ariaLabel}>
       <div className="landing-invest-countdown__eyebrow">
         <span className="landing-invest-countdown__pulse" aria-hidden />
-        Economy token release · August 8, 2026
+        {parts.complete ? "Economy token · live in the Jokuh app" : "Economy token release · August 8, 2026"}
       </div>
 
       {parts.complete ? (
-        <p className="landing-invest-countdown__live">Release window open — purchase in the Jokuh app.</p>
+        <p className="landing-invest-countdown__live">
+          Release opened August 8, 2026. Purchase and vesting continue in the Jokuh app — not on public exchanges.
+        </p>
       ) : (
         <div className="landing-invest-countdown__grid">
           <CountdownDigit label="Days" value={String(parts.days)} />

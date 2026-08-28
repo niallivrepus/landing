@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn, useTheme } from "@jokuh/gooey";
+import { SiteTopBar } from "../SiteTopBar";
 import { MarketingPageFrame } from "./MarketingPageFrame";
 import { CONTENT_SHELL_WIDE } from "./shells";
 
@@ -19,8 +20,8 @@ export function TertiaryPageChrome({
   const pageTheme = theme ?? (resolvedTheme === "light" ? "light" : "dark");
 
   return (
-    <MarketingPageFrame wrapMain={false} withAntialiased withFontSans theme={pageTheme}>
-      <div className={cn("pt-14", className)}>
+    <MarketingPageFrame wrapMain={false} withAntialiased withFontSans theme={pageTheme} topBar={<SiteTopBar />}>
+      <div className={cn("pt-16 md:pt-[4.25rem]", className)}>
         {children}
       </div>
     </MarketingPageFrame>

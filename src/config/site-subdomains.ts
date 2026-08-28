@@ -53,11 +53,10 @@ export function resolveStatusHref(href: string = "/"): string {
   return path === "" ? `${STATUS_PORTAL_ORIGIN}/` : `${STATUS_PORTAL_ORIGIN}${path}`;
 }
 
+/** Help center is on-site (`/support`) until a live knowledge-base origin is proven. */
 export function resolveHelpHref(href: string = "/"): string {
-  if (!HELP_PORTAL_ORIGIN) return "mailto:support@jokuh.com?subject=Support%20request";
-  const raw = href && href !== "/" ? href : "";
-  const path = raw === "" ? "" : raw.startsWith("/") ? raw : `/${raw}`;
-  return path === "" ? `${HELP_PORTAL_ORIGIN}/` : `${HELP_PORTAL_ORIGIN}${path}`;
+  if (!href || href === "/") return "/support";
+  return href.startsWith("/") ? href : `/${href}`;
 }
 
 export function isDevPortalAbsoluteHref(href: string): boolean {

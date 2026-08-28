@@ -8,6 +8,7 @@ import {
   LandingHero,
   ProductDemoSection,
   ProductShowcaseSection,
+  WaitlistSection,
 } from "../components/landing";
 import { MarketingPageFrame } from "../components/system";
 import { NEWS_ITEMS } from "../data/news";
@@ -15,7 +16,7 @@ import { preloadNewsArticleSlugs } from "../lib/article-audio";
 import { useTheme } from "@jokuh/gooey";
 
 /**
- * **Purpose:** Homepage funnel — hero (Claim) → compact product strip → proof demo → Claim close.
+ * **Purpose:** Homepage funnel — hero (Get started) → product strip → proof demo → identity close → waitlist.
  * Editorial and full Bubbles beats stay off the critical path; investors sit as a thin strip after Claim.
  * **Connects to:** claim-identity overlay, `ProductDemoSection` power proofs, MegaFooter.
  */
@@ -41,6 +42,7 @@ export default function Home() {
         <ProductShowcaseSection />
         <ProductDemoSection />
         <IdentityBlock />
+        <WaitlistSection />
         <InvestorBranchSection />
       </MarketingPageFrame>
     </ClaimIdentityFlowProvider>

@@ -174,9 +174,12 @@ function HourList({
     );
   }
 
+  /** Chronological hour order so 2 AM is never listed above 12 PM. */
+  const orderedHours = [...hours].sort((a, b) => a.hour - b.hour || a.id.localeCompare(b.id));
+
   return (
     <div className={cn("landing-spine-capsules__hours", className)} role="list" aria-label="Hours">
-      {hours.map((hour) => {
+      {orderedHours.map((hour) => {
         const expanded = hour.id === expandedHourId;
         return (
           <div key={hour.id} className="landing-spine-capsules__hour-wrap" role="listitem">

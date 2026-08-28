@@ -25,7 +25,7 @@ export function FaqItem({ question, answer }: FaqEntry) {
         aria-expanded={open}
         aria-controls={answerId}
         onClick={() => setOpen((value) => !value)}
-        className="flex w-full cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-sans text-[16px] font-semibold text-light-space outline-none transition-colors hover:text-light-space/80 focus-visible:ring-2 focus-visible:ring-light-space/35 focus-visible:ring-offset-4 focus-visible:ring-offset-dark-space light:text-zinc-950 light:hover:text-zinc-700 light:focus-visible:ring-zinc-950/30 light:focus-visible:ring-offset-white [&::-webkit-details-marker]:hidden"
+        className="flex w-full cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-sans text-[16px] font-semibold leading-snug text-light-space outline-none transition-colors hover:text-light-space/80 focus-visible:ring-2 focus-visible:ring-light-space/35 focus-visible:ring-offset-4 focus-visible:ring-offset-dark-space light:text-zinc-950 light:hover:text-zinc-700 light:focus-visible:ring-zinc-950/30 light:focus-visible:ring-offset-white [&::-webkit-details-marker]:hidden"
       >
         {question}
         <span
@@ -52,8 +52,8 @@ export function FaqItem({ question, answer }: FaqEntry) {
             transition={answerTransition}
             className="overflow-hidden"
           >
-            <div className="pb-5">
-              <p className="max-w-[640px] font-sans text-[15px] leading-relaxed text-light-space/60 light:text-zinc-600">
+            <div className="overflow-visible pb-5 pr-1">
+              <p className="max-w-[640px] text-pretty break-words font-sans text-[15px] leading-relaxed text-light-space/60 light:text-zinc-600">
                 {answer}
               </p>
             </div>

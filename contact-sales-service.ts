@@ -14,10 +14,11 @@ export type ContactSalesPayload = {
   needs?: string;
   marketingOptIn: boolean;
   website?: string;
+  formKind?: "contact" | "waitlist";
 };
 
-export type SanitizedContactSalesPayload = Omit<ContactSalesPayload, "website"> & {
-  source: "jokuh-contact-sales";
+export type SanitizedContactSalesPayload = Omit<ContactSalesPayload, "website" | "formKind"> & {
+  source: "jokuh-contact-sales" | "jokuh-waitlist";
   submittedAt: string;
 };
 
@@ -77,7 +78,7 @@ function parsePayload(input: unknown): ContactSalesPayload | null {
 
     return {
       interest: tidy(parsed.interest, 120),
-      workEmail: tidy(parsed.workEmail, 240).toLowerCase(),
+      workEmail: tidy(parsed.workEmail ?? parsed.email, 240).toLowerCase(),
       companySize: tidy(parsed.companySize, 120),
       companyName: tidy(parsed.companyName, 160),
       firstName: tidy(parsed.firstName, 80),
@@ -86,6 +87,7 @@ function parsePayload(input: unknown): ContactSalesPayload | null {
       needs: tidy(parsed.needs, 3000),
       marketingOptIn: Boolean(parsed.marketingOptIn),
       website: tidy(parsed.website, 240),
+      formKind: parsed.formKind === "waitlist" ? "waitlist" : "contact",
     };
   } catch {
     return null;
@@ -95,12 +97,16 @@ function parsePayload(input: unknown): ContactSalesPayload | null {
 function validatePayload(payload: ContactSalesPayload) {
   const errors: string[] = [];
 
-  if (!CONTACT_SALES_INTEREST_OPTIONS.includes(payload.interest as (typeof CONTACT_SALES_INTEREST_OPTIONS)[number])) {
-    errors.push("Please select what you are interested in.");
+  if (!payload.workEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.workEmail)) {
+    errors.push("Please enter a valid work email.");
   }
 
-  if (!payload.workEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.workEmail)) {
-    errors.push("Please enter a valid work email.");
+  if (payload.formKind === "waitlist") {
+    return errors;
+  }
+
+  if (!CONTACT_SALES_INTEREST_OPTIONS.includes(payload.interest as (typeof CONTACT_SALES_INTEREST_OPTIONS)[number])) {
+    errors.push("Please select what you are interested in.");
   }
 
   if (!CONTACT_SALES_COMPANY_SIZE_OPTIONS.includes(payload.companySize as (typeof CONTACT_SALES_COMPANY_SIZE_OPTIONS)[number])) {
@@ -146,6 +152,9 @@ function createSubmissionId() {
 }
 
 function buildSubject(payload: SanitizedContactSalesPayload) {
+  if (payload.source === "jokuh-waitlist") {
+    return `[Jokuh waitlist] ${payload.workEmail}`.slice(0, 180);
+  }
   return `[Jokuh sales] ${payload.companyName} - ${payload.interest}`.slice(0, 180);
 }
 
@@ -293,14 +302,19 @@ export async function handleContactSalesSubmission(
     phoneNumber: payload.phoneNumber,
     needs: payload.needs,
     marketingOptIn: payload.marketingOptIn,
-    source: "jokuh-contact-sales",
+    source: payload.formKind === "waitlist" ? "jokuh-waitlist" : "jokuh-contact-sales",
     submittedAt: new Date().toISOString(),
   };
+
+  const successMessage =
+    payload.formKind === "waitlist"
+      ? "You're on the list. We'll email you when the next batch opens."
+      : SUCCESS_MESSAGE;
 
   if (!env.resendApiKey) {
     if (env.devMode === "log") {
       console.log("[contact-sales] dev-log", sanitizedPayload);
-      return { status: 200, body: { ok: true, mode: "dev-log", message: SUCCESS_MESSAGE } };
+      return { status: 200, body: { ok: true, mode: "dev-log", message: successMessage } };
     }
 
     return {
@@ -339,7 +353,7 @@ export async function handleContactSalesSubmission(
         ok: true,
         mode: "email",
         id: emailDeliveryId,
-        message: SUCCESS_MESSAGE,
+        message: successMessage,
       },
     };
   } catch {

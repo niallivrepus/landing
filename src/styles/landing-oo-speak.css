@@ -12,6 +12,25 @@
   cursor: pointer;
 }
 
+/*
+ * Incoming Gooey bubbles paint `white` body text by default. Light theme smoke fill is
+ * near-white (#FDFDFD), which made OO's privacy proof ("Only you and Sam…") invisible.
+ */
+.light .oo-speak-bubble [data-message-bubble],
+.light [data-message-bubble-side="left"] {
+  --message-bubble-incoming-text: #111111;
+  --message-bubble-incoming-meta: rgba(17, 17, 17, 0.58);
+}
+
+.light .oo-speak-bubble [data-message-bubble] span,
+.light [data-message-bubble-side="left"] p {
+  color: var(--message-bubble-incoming-text, #111111);
+}
+
+.oo-speak-bubble--speaking {
+  cursor: pointer;
+}
+
 /* Soft pulse on the bubble while OO is mid-sentence — feels alive without shaking layout. */
 @media (prefers-reduced-motion: no-preference) {
   .oo-speak-bubble__body--typing {

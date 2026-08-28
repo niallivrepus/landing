@@ -4,14 +4,17 @@
  */
 
 import type { LandingArcadeGameId } from "./landing-arcade-games";
+import type { LandingDemoPowerId } from "./landing-demo-powers";
 
 export type LandingHomeSuggestion =
   | {
       id: string;
       label: string;
       kind: "prompt";
-      /** Submitted through the prompt bar → `/demo` seed message. */
+      /** Submitted through the prompt bar → homepage demo seed. */
       query: string;
+      /** Optional explicit power so chips run the matching OO proof. */
+      powerId?: LandingDemoPowerId;
     }
   | {
       id: string;
@@ -33,19 +36,22 @@ export const LANDING_HOME_SUGGESTIONS: LandingHomeSuggestion[] = [
     id: "oo-context",
     label: "What does OO know?",
     kind: "prompt",
-    query: "What does OO understand about my calls, chats, and relationships?",
+    query: "What does Maya prefer for decks?",
+    powerId: "memory",
   },
   {
     id: "oo-spine",
     label: "Explain Spine",
     kind: "prompt",
-    query: "Explain Spine and how it holds my activity over time",
+    query: "What did we decide on pricing last Tuesday?",
+    powerId: "spine",
   },
   {
     id: "privacy",
     label: "How private is this?",
     kind: "prompt",
-    query: "How private is Jokuh and my confidential AI?",
+    query: "Who can read my messages with Sam?",
+    powerId: "privacy",
   },
   {
     id: "summarize",

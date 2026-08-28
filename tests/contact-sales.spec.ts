@@ -63,7 +63,7 @@ test('submits the contact sales form with a mocked backend', async ({ page }) =>
     firstName: 'Hyke',
     lastName: 'Designer',
     phoneNumber: '+31 6 12 34 56 78',
-    marketingOptIn: true,
+    marketingOptIn: false,
   });
 });
 

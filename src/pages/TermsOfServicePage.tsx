@@ -2,11 +2,17 @@ import { TertiaryDocBody, TertiaryPageHero } from "../components/system";
 import { CompanyPageLayout } from "../components/CompanyPageLayout";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
+/**
+ * Hosted Terms of Service for Jokuh apps and related sites.
+ * Age floor matches the App Store 17+ rating. Wallet / paid money features are not currently offered.
+ */
 const TOC_ITEMS = [
   { id: "who-may-use", label: "Who may use the Service" },
   { id: "accounts", label: "Accounts and Bond sign-in" },
   { id: "what-we-provide", label: "What the Service provides" },
   { id: "your-content", label: "Your content" },
+  { id: "ai-features", label: "AI features" },
+  { id: "arcade", label: "Arcade" },
   { id: "acceptable-use", label: "Acceptable use" },
   { id: "third-party", label: "Third-party services and links" },
   { id: "privacy", label: "Privacy" },
@@ -34,9 +40,9 @@ export function TermsOfServicePage() {
           title="Terms of Service"
           intro={
             <>
-              Last updated August 10, 2026. These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use
-              of Jokuh&rsquo;s applications, websites, and related services (the &ldquo;Service&rdquo;). By creating an
-              account, signing in, or otherwise using the Service, you agree to these Terms.
+              Last updated August 24, 2026. These Terms of Service (“Terms”) govern your access to and
+              use of Jokuh LLC’s applications, websites, and related services (the “Service”). By
+              creating an account, signing in, or otherwise using the Service, you agree to these Terms.
             </>
           }
         />
@@ -44,8 +50,9 @@ export function TermsOfServicePage() {
           <section id="who-may-use" className="scroll-mt-24 pb-10">
             <h2 className={sectionTitle}>1. Who may use the Service</h2>
             <p className={`mt-4 ${bodyText}`}>
-              You must be at least <strong className="text-light-space light:text-zinc-950">13</strong> years old (or
-              the age of digital consent in your country, if higher). If you use the Service on behalf of an
+              You must be at least{" "}
+              <strong className="text-light-space light:text-zinc-950">17</strong> years old (or the
+              age of majority in your country, if higher). If you use the Service on behalf of an
               organization, you represent that you have authority to bind that organization.
             </p>
           </section>
@@ -53,122 +60,158 @@ export function TermsOfServicePage() {
           <section id="accounts" className="scroll-mt-24 pb-10">
             <h2 className={sectionTitle}>2. Accounts and Bond sign-in</h2>
             <p className={`mt-4 ${bodyText}`}>
-              Jokuh uses passwordless sign-in with your device (&ldquo;Bond&rdquo; / passkeys). You are responsible for
-              activities under your account and for keeping your devices secure. Notify us at{" "}
-              <a href="mailto:legal@jokuh.com" className={linkClass}>legal@jokuh.com</a> if you suspect unauthorized
-              access.
+              Jokuh uses passwordless sign-in with your device (“Bond” / passkeys). You are responsible
+              for activities under your account and for keeping your devices secure. Notify us at{" "}
+              <a href="mailto:legal@jokuh.com" className={linkClass}>legal@jokuh.com</a> if you suspect
+              unauthorized access. We may ask you to capture a face portrait during onboarding to
+              create a profile image; that is not a substitute for keeping your device and passkeys
+              secure.
             </p>
           </section>
 
           <section id="what-we-provide" className="scroll-mt-24 pb-10">
             <h2 className={sectionTitle}>3. What the Service provides</h2>
             <p className={`mt-4 ${bodyText}`}>
-              Jokuh offers tools that may include messaging, voice and video calling, a personal timeline
-              (&ldquo;Spine&rdquo;), reminders and planning features, an in-app browser, and optional utilities (such
-              as translation or downloads). Features may change as we improve the product. Some capabilities depend on
-              your device permissions (for example microphone, camera, or notifications).
+              Jokuh offers tools that may include messaging, voice and video calling, a personal
+              timeline (“Spine”), reminders and planning, profiles and social posts, optional AI
+              assistance, an in-app browser, and optional Arcade games. Features may change as we
+              improve the product. Some capabilities depend on device permissions (for example
+              microphone, camera, photos, or notifications).
+            </p>
+            <p className={`mt-4 ${bodyText}`}>
+              <strong className="text-light-space light:text-zinc-950">Wallet.</strong> Jokuh Wallet
+              (including custodial spending balances and any self-custody vault) is not currently
+              available. We do not currently custody cryptoassets for you, process wallet transfers,
+              or offer paid Arcade tickets through the Service.
             </p>
           </section>
 
           <section id="your-content" className="scroll-mt-24 pb-10">
             <h2 className={sectionTitle}>4. Your content</h2>
             <p className={`mt-4 ${bodyText}`}>
-              You retain rights to content you submit. To operate the Service, you grant Jokuh a worldwide,
-              non-exclusive license to host, store, reproduce, and display your content solely to provide and improve
-              the Service for you and, where applicable, to other users you interact with (for example messages you
-              send).
+              You retain rights to content you submit. To operate the Service, you grant Jokuh a
+              worldwide, non-exclusive license to host, store, reproduce, transmit, and display your
+              content solely as needed to provide the Service to you and to the people you interact
+              with (for example messages you send). We do not claim a license to train our own
+              foundation models on your content.
             </p>
             <p className={`mt-4 ${bodyText}`}>
-              You are responsible for your content and for complying with law. Do not upload malware or attempt to
-              disrupt the Service.
+              You are responsible for your content and for complying with law. Do not upload malware
+              or attempt to disrupt the Service.
+            </p>
+          </section>
+
+          <section id="ai-features" className="scroll-mt-24 pb-10">
+            <h2 className={sectionTitle}>5. AI features</h2>
+            <p className={`mt-4 ${bodyText}`}>
+              Optional AI features send prompts and related context to third-party model providers to
+              generate a response or image. Outputs can be inaccurate or inappropriate. They are not
+              legal, medical, financial, or other professional advice. You remain responsible for how
+              you use outputs. Do not submit content you are not allowed to share with those providers.
+            </p>
+          </section>
+
+          <section id="arcade" className="scroll-mt-24 pb-10">
+            <h2 className={sectionTitle}>6. Arcade</h2>
+            <p className={`mt-4 ${bodyText}`}>
+              Arcade games are optional entertainment. Some games may simulate prize play. We do not
+              currently offer real-money wagering, paid tickets, or cash payouts. We may change,
+              pause, or remove games at any time.
             </p>
           </section>
 
           <section id="acceptable-use" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>5. Acceptable use</h2>
+            <h2 className={sectionTitle}>7. Acceptable use</h2>
             <p className={`mt-4 ${bodyText}`}>You agree not to misuse the Service. For example, you must not:</p>
             <ul className={`mt-4 space-y-2 pl-5 ${bodyText} list-disc marker:text-light-space/35 light:marker:text-zinc-400`}>
-              <li>Violate applicable law or infringe others&rsquo; rights;</li>
+              <li>Violate applicable law or infringe others’ rights;</li>
               <li>Harass, threaten, or harm people, or distribute illegal content;</li>
               <li>Attempt to gain unauthorized access to systems, accounts, or data;</li>
               <li>Scrape, overload, or interfere with the normal operation of the Service;</li>
-              <li>Use the Service to send spam or deceptive communications.</li>
+              <li>Use the Service to send spam or deceptive communications;</li>
+              <li>Bypass age, safety, or game-fairness controls.</li>
             </ul>
             <p className={`mt-4 ${bodyText}`}>
-              We may investigate and suspend or terminate accounts that violate these rules or create risk.
+              We may investigate and suspend or terminate accounts that violate these rules or create
+              risk. Report abuse to{" "}
+              <a href="mailto:support@jokuh.com" className={linkClass}>support@jokuh.com</a>.
             </p>
           </section>
 
           <section id="third-party" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>6. Third-party services and links</h2>
+            <h2 className={sectionTitle}>8. Third-party services and links</h2>
             <p className={`mt-4 ${bodyText}`}>
-              The Service may link to or embed third-party sites or services. Their terms and privacy policies apply
-              to your use of them. Jokuh is not responsible for third-party content or practices.
+              The Service may link to or embed third-party sites or services (including websites in
+              the in-app browser, AI model providers, and media infrastructure). Their terms and
+              privacy policies apply to your use of them. Jokuh is not responsible for third-party
+              content or practices.
             </p>
           </section>
 
           <section id="privacy" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>7. Privacy</h2>
+            <h2 className={sectionTitle}>9. Privacy</h2>
             <p className={`mt-4 ${bodyText}`}>
-              Our <a href="/privacy" className={linkClass}>Privacy Policy</a> explains how we handle personal
-              information.
+              Our <a href="/privacy" className={linkClass}>Privacy Policy</a> explains how we handle
+              personal information.
             </p>
           </section>
 
           <section id="disclaimers" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>8. Disclaimers</h2>
+            <h2 className={sectionTitle}>10. Disclaimers</h2>
             <p className={`mt-4 ${bodyText}`}>
-              THE SERVICE IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE.&rdquo; TO THE MAXIMUM EXTENT
-              PERMITTED BY LAW, JOKUH DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING
-              MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE
-              SERVICE WILL BE UNINTERRUPTED OR ERROR-FREE.
+              THE SERVICE IS PROVIDED “AS IS” AND “AS AVAILABLE.” TO THE MAXIMUM EXTENT PERMITTED BY
+              LAW, JOKUH DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING
+              MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT
+              WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED OR ERROR-FREE.
             </p>
           </section>
 
           <section id="liability" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>9. Limitation of liability</h2>
+            <h2 className={sectionTitle}>11. Limitation of liability</h2>
             <p className={`mt-4 ${bodyText}`}>
-              TO THE MAXIMUM EXTENT PERMITTED BY LAW, JOKUH AND ITS AFFILIATES, OFFICERS, EMPLOYEES, AND SUPPLIERS WILL
-              NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF
-              PROFITS, DATA, OR GOODWILL, ARISING FROM OR RELATED TO THE SERVICE OR THESE TERMS, EVEN IF ADVISED OF THE
-              POSSIBILITY.
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, JOKUH AND ITS AFFILIATES, OFFICERS, EMPLOYEES,
+              AND SUPPLIERS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL,
+              OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, DATA, OR GOODWILL, ARISING FROM OR RELATED
+              TO THE SERVICE OR THESE TERMS, EVEN IF ADVISED OF THE POSSIBILITY.
             </p>
             <p className={`mt-4 ${bodyText}`}>
-              TO THE MAXIMUM EXTENT PERMITTED BY LAW, OUR TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF OR RELATING TO
-              THE SERVICE OR THESE TERMS IS LIMITED TO THE GREATER OF{" "}
-              <strong className="text-light-space light:text-zinc-950">U.S. $100</strong> OR THE AMOUNTS YOU PAID
-              JOKUH FOR THE SERVICE IN THE <strong className="text-light-space light:text-zinc-950">SIX (6) MONTHS</strong>{" "}
-              BEFORE THE CLAIM (IF ANY). SOME JURISDICTIONS DO NOT ALLOW CERTAIN LIMITATIONS; IN THOSE CASES, OUR
-              LIABILITY IS LIMITED TO THE FULLEST EXTENT ALLOWED BY LAW.
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, OUR TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF
+              OR RELATING TO THE SERVICE OR THESE TERMS IS LIMITED TO THE GREATER OF{" "}
+              <strong className="text-light-space light:text-zinc-950">U.S. $100</strong> OR THE
+              AMOUNTS YOU PAID JOKUH FOR THE SERVICE IN THE{" "}
+              <strong className="text-light-space light:text-zinc-950">SIX (6) MONTHS</strong> BEFORE
+              THE CLAIM (IF ANY). SOME JURISDICTIONS DO NOT ALLOW CERTAIN LIMITATIONS; IN THOSE CASES,
+              OUR LIABILITY IS LIMITED TO THE FULLEST EXTENT ALLOWED BY LAW.
             </p>
           </section>
 
           <section id="indemnity" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>10. Indemnity</h2>
+            <h2 className={sectionTitle}>12. Indemnity</h2>
             <p className={`mt-4 ${bodyText}`}>
-              You will defend and indemnify Jokuh against claims, damages, losses, and expenses (including reasonable
-              attorneys&rsquo; fees) arising from your content, your use of the Service, or your violation of these
-              Terms, to the extent permitted by law.
+              You will defend and indemnify Jokuh against claims, damages, losses, and expenses
+              (including reasonable attorneys’ fees) arising from your content, your use of the
+              Service, or your violation of these Terms, to the extent permitted by law.
             </p>
           </section>
 
           <section id="termination" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>11. Termination</h2>
+            <h2 className={sectionTitle}>13. Termination</h2>
             <p className={`mt-4 ${bodyText}`}>
-              You may stop using the Service at any time. We may suspend or terminate access if you violate these
-              Terms, if we must comply with law, or if we discontinue the Service (where we will provide reasonable
-              notice when practicable). Provisions that by their nature should survive will survive termination.
+              You may stop using the Service at any time and may delete your account in Settings. We
+              may suspend or terminate access if you violate these Terms, if we must comply with law,
+              or if we discontinue the Service (where we will provide reasonable notice when
+              practicable). Provisions that by their nature should survive will survive termination.
             </p>
           </section>
 
           <section id="governing-law" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>12. Governing law and disputes</h2>
+            <h2 className={sectionTitle}>14. Governing law and disputes</h2>
             <p className={`mt-4 ${bodyText}`}>
               These Terms are governed by the laws of the{" "}
-              <strong className="text-light-space light:text-zinc-950">State of Delaware</strong>, United States,
-              excluding conflict-of-law rules. You agree that state and federal courts located in Delaware have
-              exclusive jurisdiction for disputes, subject to mandatory consumer protections in your country of
-              residence where applicable.
+              <strong className="text-light-space light:text-zinc-950">State of Delaware</strong>,
+              United States, excluding conflict-of-law rules. You agree that state and federal courts
+              located in Delaware have exclusive jurisdiction for disputes, subject to mandatory
+              consumer protections in your country of residence where applicable.
             </p>
             <p className={`mt-4 ${bodyText}`}>
               Before filing a claim, you agree to try to resolve the dispute informally by contacting{" "}
@@ -177,16 +220,17 @@ export function TermsOfServicePage() {
           </section>
 
           <section id="changes" className="scroll-mt-24 pb-10">
-            <h2 className={sectionTitle}>13. Changes</h2>
+            <h2 className={sectionTitle}>15. Changes</h2>
             <p className={`mt-4 ${bodyText}`}>
-              We may modify these Terms. We will post the updated Terms with a new &ldquo;Last updated&rdquo; date. If
-              changes are material, we will provide additional notice as appropriate (for example in the app or by
-              email). Continued use after the effective date constitutes acceptance of the updated Terms.
+              We may modify these Terms. We will post the updated Terms with a new “Last updated”
+              date. If changes are material, we will provide additional notice as appropriate (for
+              example in the app). Continued use after the effective date constitutes acceptance of
+              the updated Terms where permitted by law.
             </p>
           </section>
 
           <section id="contact" className="scroll-mt-24">
-            <h2 className={sectionTitle}>14. Contact</h2>
+            <h2 className={sectionTitle}>16. Contact</h2>
             <p className={`mt-4 ${bodyText}`}>
               General legal: <a href="mailto:legal@jokuh.com" className={linkClass}>legal@jokuh.com</a>
               <br />

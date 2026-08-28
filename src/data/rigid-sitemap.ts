@@ -81,7 +81,10 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       },
       {
         heading: "Get started",
-        links: [{ label: "Download", href: "/download", surfaces: ALL_SOURCES }],
+        links: [
+          { label: "Download", href: "/download", surfaces: ALL_SOURCES },
+          { label: "Pricing", href: "/pricing", surfaces: ALL_SOURCES },
+        ],
       },
     ],
   },
@@ -115,7 +118,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
         heading: "Business",
         links: [
           { label: "Overview", href: "/business", surfaces: ALL_SOURCES },
-          { label: "Customer Stories", href: "/stories", surfaces: ALL_SOURCES },
+          { label: "Stories", href: "/stories", surfaces: ALL_SOURCES },
           { label: "Contact Sales", href: "/contact", surfaces: ALL_SOURCES },
         ],
       },
@@ -146,7 +149,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       {
         heading: "Legal",
         links: [
-          { label: "Support", href: "/support", surfaces: ["footer", "sitemap"] },
+          { label: "Support", href: "/support", surfaces: ALL_SOURCES },
           { label: "Privacy Policy", href: "/privacy", surfaces: ["footer", "sitemap"] },
           { label: "Terms of Service", href: "/terms", surfaces: ["footer", "sitemap"] },
         ],

@@ -101,7 +101,7 @@ export function ClaimIdentityLandingOverlay({
               <ClaimIdentityOnboardingCard
                 mounted={mounted}
                 errorMessage={inputError}
-                subtitle={bridgeSubtitle ?? "Type your handle below"}
+                subtitle={bridgeSubtitle ?? "Pick a handle to continue"}
               />
             </div>
           </div>

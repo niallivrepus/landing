@@ -4,6 +4,33 @@ Traceable change log for landing deploys. Newest entries appended at top.
 
 ---
 
+## 2026-08-27T21:20 (UTC-4) — First-visit conversion + production download/HTTPS
+
+**Commit:** this landing `main` push (Railway `www` auto-deploy).
+**Rationale:** A first-time visitor audit found a premium page that would not convert: dead hero chips, jargon CTA, white-on-white OO proof, icon rail over the footer, `/pricing` bouncing home, 200-on-unknown-paths, pre-checked marketing consent, and a Mac download that 404d or leaked to GitHub. Ship those product fixes and bake the notarized `.dmg` into the Railway image so `/downloads/Jokuh.dmg` is same-origin.
+
+### Modified files
+
+| File | Nature | Reasoning |
+|------|--------|-----------|
+| `src/lib/landing-demo-seed.ts`, `LandingImmersiveShell`, `LandingPromptBar`, `ProductDemoSection`, `landing-home-suggestions.ts` | Hero prompt + chips seed `#demo` | First clicks run the live OO proof instead of doing nothing. |
+| `ClaimIdentityCta`, overlay, onboarding card, `download-intents.ts` | CTA copy **Get started** / Create your account | Signup is the primary action, not “Claim identity”. |
+| `src/styles/landing-oo-speak.css` | Light-theme incoming bubble text `#111` | Privacy line “Only you and Sam…” is readable on smoke fill. |
+| `ImmersiveAppChrome`, `InvestImmersiveShell`, `DownloadImmersiveShell` | Contained chrome; hide library rail on long pages | Icon rail no longer eats footer / five-ways tiles. |
+| `PricingPage.tsx`, `pricing.ts`, `App.tsx`, `NotFoundPage.tsx` | Real `/pricing`; splat is 404 | Stops home bounce and 200-on-unknown-URL. |
+| `server/static-middleware.ts`, `Dockerfile` | HTTP→HTTPS; SPA 404 status; bake/302 Mac dmg | Production download + crawler honesty + no GitHub href. |
+| `ContactSalesPage`, `email-validation.ts`, `contact-sales-service.ts` | GDPR opt-in off; stronger email | Marketing consent is explicit; waitlist shares the same API. |
+| `invest-overview.ts`, `landing-spine-capsules.ts`, `FaqSection`, `site-subdomains.ts` | Past-tense token window; hour order; FAQ wrap; `/support` | Stale/broken integrity items from the audit. |
+
+### Deploy / ops follow-up
+
+1. Push `main` — Railway project `live` service `www` clones and rebuilds.
+2. GoDaddy: forward apex `jokuh.com` → **`https://www.jokuh.com`** (301, no mask). Apex A records today are GoDaddy parking and return 405.
+3. Confirm Railway `LANDING_CANONICAL_HOST=www`.
+4. Confirm `https://www.jokuh.com/downloads/Jokuh.dmg` is 200 (baked) or 302 (fallback).
+
+---
+
 ## 2026-07-04T20:42 (UTC-4) — Canonical host + public avatar signing
 
 **Commit:** see `git log` (this entry committed alongside the change).

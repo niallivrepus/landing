@@ -32,10 +32,10 @@ export const DOWNLOAD_INTENTS: Record<DownloadIntentId, DownloadIntentCopy> = {
     platformFocus: "both",
   },
   identity: {
-    eyebrow: "Profile",
-    headline: "Claim your identity",
-    subcopy: "Keys, reputation, and agents you run — portable and under your control.",
-    platformFocus: "mobile",
+    eyebrow: "Account",
+    headline: "Create your Jokuh account",
+    subcopy: "Pick a handle, keep your keys, and run agents on a machine you control. Or try the web app first — no download required.",
+    platformFocus: "both",
   },
   "corner-call": {
     eyebrow: "Calls",

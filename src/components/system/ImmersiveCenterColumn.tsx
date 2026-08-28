@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 /**
  * **Purpose:** Horizontally centers immersive product content on the viewport.
- * The library rail is fixed overlay — content must not use left padding offset.
+ * The library rail is contained to the hero overlay — content must not use left padding offset.
  * **Connects to:** all `*ImmersiveShell` pages, `LandingImmersiveShell`, `LandingDemoShell`.
  */
 export function ImmersiveCenterColumn({

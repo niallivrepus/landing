@@ -23,7 +23,7 @@ export type ImmersiveAppChromeProps = {
   /** Highlight the pill for the current product route. */
   activeAction?: LandingCornerAction;
   /** fixed viewport overlay (default) or relative in-flow. */
-  mode?: "fixed" | "relative";
+  mode?: "fixed" | "relative" | "contained";
   /** Show the animated left library rail on desktop (default true). */
   showLibraryRail?: boolean;
   /** Optional bottom-center chrome (e.g. Blurbs 🌈 pill). */
@@ -35,12 +35,14 @@ export type ImmersiveAppChromeProps = {
 };
 
 /**
- * **Purpose:** Persistent four-corner `ActionButton` chrome + Nexus logo on every immersive page.
+ * **Purpose:** Persistent four-corner `ActionButton` chrome + Nexus logo on immersive heroes.
+ * Default `contained` is `absolute inset-0` so the library rail stays inside the hero and
+ * does not overlay marketing sections or the footer while the page scrolls.
  * **Connects to:** `landing-shell-preview.ts`, product immersive shells, `LandingImmersiveShell`.
  */
 export function ImmersiveAppChrome({
   activeAction,
-  mode = "fixed",
+  mode = "contained",
   showLibraryRail = true,
   bottomCenter,
   topLeadingSlot,
@@ -64,19 +66,25 @@ export function ImmersiveAppChrome({
     }
   };
 
+  const pinToOverlay = mode !== "relative";
+
+  const overlayPosition =
+    mode === "fixed"
+      ? "pointer-events-none fixed inset-0"
+      : mode === "relative"
+        ? "pointer-events-none relative min-h-0"
+        : "pointer-events-none absolute inset-0";
+
   return (
     <div
-      className={cn(
-        mode === "fixed" ? "pointer-events-none fixed inset-0" : "pointer-events-none relative min-h-0",
-        className,
-      )}
+      className={cn(overlayPosition, className)}
       style={{ zIndex }}
       aria-hidden={false}
     >
       <header
         className={cn(
           "pointer-events-none flex justify-center",
-          mode === "fixed"
+          pinToOverlay
             ? "absolute inset-x-0 top-0 pt-[calc(env(safe-area-inset-top,0px)+14px)]"
             : "pt-[calc(env(safe-area-inset-top,0px)+14px)]",
         )}
@@ -90,7 +98,7 @@ export function ImmersiveAppChrome({
         <footer
           className={cn(
             "pointer-events-none flex justify-center",
-            mode === "fixed"
+            pinToOverlay
               ? "absolute inset-x-0 bottom-0 pb-[calc(env(safe-area-inset-bottom,0px)+14px)]"
               : "pb-[calc(env(safe-area-inset-bottom,0px)+14px)]",
           )}
@@ -99,15 +107,21 @@ export function ImmersiveAppChrome({
         </footer>
       ) : null}
 
-      {showLibraryRail && mode === "fixed" ? (
+      {showLibraryRail && pinToOverlay ? (
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={reduceMotion ? { duration: 0 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="pointer-events-auto absolute left-[18px] top-1/2 z-20 hidden -translate-y-1/2 md:block"
           style={{
-            height: "calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 96px)",
-            maxHeight: "calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 96px)",
+            height:
+              mode === "fixed"
+                ? "calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 96px)"
+                : "calc(100% - 96px)",
+            maxHeight:
+              mode === "fixed"
+                ? "calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 96px)"
+                : "calc(100% - 96px)",
           }}
         >
           <LandingLibraryRail className="h-full" />

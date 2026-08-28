@@ -4,6 +4,10 @@ import { CompanyPageLayout } from "../components/CompanyPageLayout";
 import { FaqSection } from "../components/FaqSection";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
+/**
+ * Public support / FAQ for App Store Connect Support URL and in-app Settings → Support.
+ * Wallet is not currently offered; keep copy aligned with Privacy + Terms.
+ */
 const bodyText = "font-sans text-[15px] leading-relaxed text-light-space/60 light:text-zinc-600";
 const linkClass = "rounded-sm text-[var(--color-blue-4)] transition-colors hover:underline";
 
@@ -26,7 +30,8 @@ export function SupportPage() {
               <a href="mailto:support@jokuh.com" className={linkClass}>support@jokuh.com</a>
             </p>
             <p className={cn(bodyText, "mt-2")}>
-              Signed in? You can also send feedback from <strong className="text-light-space light:text-zinc-950">Settings → Support</strong>{" "}
+              Signed in? You can also send feedback from{" "}
+              <strong className="text-light-space light:text-zinc-950">Settings → Support</strong>{" "}
               inside the app — it goes straight to our team.
             </p>
           </div>
@@ -39,26 +44,40 @@ export function SupportPage() {
             </h2>
             <ul className={cn("mt-6 max-w-[720px] space-y-4 pl-5 list-disc marker:text-light-space/35 light:marker:text-zinc-400", bodyText)}>
               <li>
-                <strong className="text-light-space light:text-zinc-950">Signing in.</strong> Jokuh uses passwordless
-                sign-in with your device&rsquo;s passkey/biometrics (&ldquo;Bond&rdquo;) — no password to remember or
-                reset. If you&rsquo;re stuck at sign-in, make sure your device has Face ID, Touch ID, or a passcode
-                enabled, and that you&rsquo;re using the same device (or an iCloud Keychain&ndash;synced device) you
-                signed up with.
+                <strong className="text-light-space light:text-zinc-950">Signing in.</strong> Jokuh
+                uses passwordless sign-in with your device’s passkey/biometrics (“Bond”) — no password
+                to remember or reset. If you’re stuck at sign-in, make sure your device has Face ID,
+                Touch ID, or a passcode enabled, and that you’re using the same device (or an iCloud
+                Keychain–synced device) you signed up with.
               </li>
               <li>
-                <strong className="text-light-space light:text-zinc-950">Spine.</strong> Your personal timeline for
-                planning, notes, and synced calendar/reminder events. Grant Calendar or Reminders access in Settings if
-                you want two-way sync.
+                <strong className="text-light-space light:text-zinc-950">Age.</strong> Jokuh is for
+                people 17 and older.
               </li>
               <li>
-                <strong className="text-light-space light:text-zinc-950">Calls.</strong> Voice and video calls need
-                Microphone and Camera permission. If a call won&rsquo;t connect, check Settings → Privacy on your
-                device to confirm Jokuh has both.
+                <strong className="text-light-space light:text-zinc-950">Face portrait.</strong> New
+                accounts may be asked to take photos so we can generate a profile portrait. Camera
+                permission is required for that step. You can change your profile photo later in ID.
               </li>
               <li>
-                <strong className="text-light-space light:text-zinc-950">Wallet.</strong> Jokuh&rsquo;s built-in wallet
-                is self-custody — Jokuh cannot recover keys on your behalf, so back up any recovery information exactly
-                as instructed in the app.
+                <strong className="text-light-space light:text-zinc-950">Spine.</strong> Your personal
+                timeline for planning, notes, and synced calendar/reminder events. Grant Calendar or
+                Reminders access in Settings if you want two-way sync.
+              </li>
+              <li>
+                <strong className="text-light-space light:text-zinc-950">Calls.</strong> Voice and
+                video calls need Microphone and Camera permission. If a call won’t connect, check
+                Settings → Privacy on your device to confirm Jokuh has both.
+              </li>
+              <li>
+                <strong className="text-light-space light:text-zinc-950">AI (Cortex / OO).</strong>{" "}
+                Optional assistants that can use context from your Spine and conversations you choose
+                to include. They can be wrong. Do not paste passwords or recovery codes into chat.
+              </li>
+              <li>
+                <strong className="text-light-space light:text-zinc-950">Arcade.</strong> Optional
+                games, including simulated prize play. Paid tickets and Jokuh Wallet are not currently
+                available.
               </li>
             </ul>
           </section>
@@ -69,8 +88,9 @@ export function SupportPage() {
             </h2>
             <p className={cn("mt-6 max-w-[640px]", bodyText)}>
               To report abusive content, harassment, or a security concern, email{" "}
-              <a href="mailto:support@jokuh.com" className={linkClass}>support@jokuh.com</a> with as much detail as
-              you can (usernames, screenshots, timestamps). Urgent safety issues are prioritized.
+              <a href="mailto:support@jokuh.com" className={linkClass}>support@jokuh.com</a> with as
+              much detail as you can (usernames, screenshots, timestamps). Urgent safety issues are
+              prioritized.
             </p>
           </section>
 
@@ -90,7 +110,12 @@ export function SupportPage() {
               {
                 question: "I want to delete my account.",
                 answer:
-                  "Go to Settings → Account → Delete Account inside the app. This is permanent and removes your profile, messages, and Spine content per our Privacy Policy.",
+                  "Go to Settings → Account → Delete Account inside the app. This removes your profile and Spine data we hold for you. Messages you already sent may remain in other people's conversations. See the Privacy Policy for backups and retention.",
+              },
+              {
+                question: "Where is Wallet?",
+                answer:
+                  "Jokuh Wallet is not currently available. If we enable it later, Privacy and Terms will be updated first.",
               },
               {
                 question: "I found a bug or have a feature request.",
@@ -106,7 +131,9 @@ export function SupportPage() {
             </h2>
             <p className={cn("mt-4", bodyText)}>
               <a href="/terms" className={linkClass}>Terms of Service</a>
-              <span className="mx-2 text-light-space/30 light:text-zinc-300" aria-hidden>·</span>
+              <span className="mx-2 text-light-space/30 light:text-zinc-300" aria-hidden>
+                ·
+              </span>
               <a href="/privacy" className={linkClass}>Privacy Policy</a>
             </p>
           </section>

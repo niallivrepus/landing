@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LANDING_HOME_SUGGESTIONS, type LandingHomeSuggestion } from "../../data/landing-home-suggestions";
 import type { LandingArcadeGameId } from "../../data/landing-arcade-games";
+import type { LandingDemoPowerId } from "../../data/landing-demo-powers";
 
 const SCROLL_FADE_EDGE_PX = 36;
 const SCROLL_EDGE_EPSILON = 2;
@@ -30,7 +31,7 @@ export function LandingHomeSuggestionPills({
   onPrompt,
   onOpenGame,
 }: {
-  onPrompt: (query: string) => void;
+  onPrompt: (query: string, powerId?: LandingDemoPowerId) => void;
   /** Opens a bundled arcade game overlay (e.g. chess). */
   onOpenGame?: (gameId: LandingArcadeGameId) => void;
 }) {
@@ -109,7 +110,7 @@ function SuggestionPill({
 }: {
   suggestion: LandingHomeSuggestion;
   index: number;
-  onPrompt: (query: string) => void;
+  onPrompt: (query: string, powerId?: LandingDemoPowerId) => void;
   onOpenGame?: (gameId: LandingArcadeGameId) => void;
 }) {
   const className = "landing-home-suggestion-pill landing-control-surface";
@@ -154,7 +155,7 @@ function SuggestionPill({
         type="button"
         className={className}
         aria-label={`Suggested prompt: ${suggestion.label}`}
-        onClick={() => onPrompt(suggestion.query)}
+        onClick={() => onPrompt(suggestion.query, suggestion.powerId)}
       >
         {suggestion.label}
       </button>

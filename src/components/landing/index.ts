@@ -30,4 +30,5 @@ export { LandingHero } from "./LandingHero";
 export { IdentityBlock } from "./IdentityBlock";
 export { ProductDemoSection } from "./ProductDemoSection";
 export { ProductShowcaseSection } from "./ProductShowcaseSection";
+export { WaitlistSection } from "./WaitlistSection";
 export { RecentNewsSection } from "./RecentNewsSection";

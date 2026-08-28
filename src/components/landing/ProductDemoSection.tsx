@@ -8,7 +8,7 @@ import {
 } from "@jokuh/gooey";
 import { ArrowUp } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useClaimIdentityFlowContext } from "../../context/ClaimIdentityFlowContext";
 import {
   MESSAGES_DM_THREADS,
@@ -29,6 +29,11 @@ import {
   type LandingDemoPower,
   type LandingDemoPowerId,
 } from "../../data/landing-demo-powers";
+import {
+  LANDING_DEMO_SEED_EVENT,
+  resolveLandingDemoPower,
+  type LandingDemoSeedDetail,
+} from "../../lib/landing-demo-seed";
 import { LANDING_LIBRARY_SERVERS, type LandingLibraryServer } from "../../data/landing-library-rail-data";
 import { SquircleShell } from "../system/squircle";
 import { CONTENT_SHELL_WIDE } from "../system/shells";
@@ -49,8 +54,20 @@ export function ProductDemoSection() {
     [],
   );
   const [activeId, setActiveId] = useState(demoThreads[0]?.id ?? "oo");
+  const [heroSeed, setHeroSeed] = useState<LandingDemoSeedDetail | null>(null);
   const active = demoThreads.find((t) => t.id === activeId) ?? demoThreads[0]!;
   const previewServers = LANDING_LIBRARY_SERVERS.slice(0, 5);
+
+  useEffect(() => {
+    const onSeed = (event: Event) => {
+      const detail = (event as CustomEvent<LandingDemoSeedDetail>).detail;
+      if (!detail?.query) return;
+      setActiveId("oo");
+      setHeroSeed({ ...detail });
+    };
+    window.addEventListener(LANDING_DEMO_SEED_EVENT, onSeed);
+    return () => window.removeEventListener(LANDING_DEMO_SEED_EVENT, onSeed);
+  }, []);
 
   return (
     <section id="demo" className="landing-cv scroll-mt-24 bg-dark-space px-4 py-16 light:bg-white md:px-8 md:py-20">
@@ -103,7 +120,7 @@ export function ProductDemoSection() {
             </div>
 
             <div className="flex min-h-[480px] flex-col border-t border-white/[0.06] pt-4 md:border-l md:border-t-0 md:pl-5 md:pt-0 light:border-black/[0.06]">
-              <DemoThreadPanel thread={active} />
+              <DemoThreadPanel thread={active} heroSeed={heroSeed} />
             </div>
           </div>
         </div>
@@ -152,9 +169,15 @@ function BubbleStackMark({ server, size }: { server: LandingLibraryServer; size:
 /**
  * **Purpose:** Thread pane — OO agent chat or peer DM with OO memory note.
  */
-function DemoThreadPanel({ thread }: { thread: MessagesInboxThread }) {
+function DemoThreadPanel({
+  thread,
+  heroSeed,
+}: {
+  thread: MessagesInboxThread;
+  heroSeed: LandingDemoSeedDetail | null;
+}) {
   if (thread.kind === "oo") {
-    return <OoDemoThread />;
+    return <OoDemoThread heroSeed={heroSeed} />;
   }
 
   const dm = MESSAGES_DM_THREADS[thread.id];
@@ -201,7 +224,7 @@ function PowerArtifactCard({ power }: { power: LandingDemoPower }) {
 }
 
 /** **Purpose:** Interactive OO thread — power chips + artifacts + sticky Claim bridge. */
-function OoDemoThread() {
+function OoDemoThread({ heroSeed }: { heroSeed: LandingDemoSeedDetail | null }) {
   const shouldAnimate = useShouldAnimate();
   const claimFlow = useClaimIdentityFlowContext();
   const [messages, setMessages] = useState<MessagesOoMessage[]>([]);
@@ -210,6 +233,8 @@ function OoDemoThread() {
   const [revealedPowerId, setRevealedPowerId] = useState<LandingDemoPowerId | null>(null);
   const thinkingRef = useRef<number | null>(null);
   const [exchangeCount, setExchangeCount] = useState(0);
+  const exchangeCountRef = useRef(0);
+  exchangeCountRef.current = exchangeCount;
 
   useEffect(() => {
     return () => {
@@ -221,16 +246,17 @@ function OoDemoThread() {
   const showBridge = Boolean(activePower);
   const softStopped = exchangeCount >= MESSAGES_OO_INTERCEPT_AFTER;
 
-  function send(text: string, powerId?: LandingDemoPowerId) {
+  const send = useCallback((text: string, powerId?: LandingDemoPowerId) => {
     const trimmed = text.trim();
     if (!trimmed) return;
-    if (exchangeCount >= MESSAGES_OO_INTERCEPT_AFTER) return;
+    if (exchangeCountRef.current >= MESSAGES_OO_INTERCEPT_AFTER) return;
 
-    const userMessage = createOoUserMessage(trimmed);
+    const resolved = resolveLandingDemoPower(trimmed, powerId);
+    const userMessage = createOoUserMessage(resolved.prompt);
     const thinkingMessage = createOoThinkingMessage();
     setMessages((prev) => [...prev, userMessage, thinkingMessage]);
     setDraft("");
-    setActivePowerId(powerId ?? null);
+    setActivePowerId(resolved.id);
     setRevealedPowerId(null);
     setExchangeCount((count) => count + 1);
 
@@ -239,13 +265,22 @@ function OoDemoThread() {
       setMessages((prev) =>
         prev.map((message) =>
           message.id === thinkingMessage.id
-            ? { ...createOoReply(trimmed), id: thinkingMessage.id }
+            ? { ...createOoReply(resolved.prompt), id: thinkingMessage.id }
             : message,
         ),
       );
-      if (powerId) setRevealedPowerId(powerId);
+      setRevealedPowerId(resolved.id);
     }, MESSAGES_OO_THINKING_MS);
-  }
+  }, []);
+
+  const appliedSeedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!heroSeed?.query) return;
+    const token = `${heroSeed.nonce}:${heroSeed.powerId ?? ""}:${heroSeed.query}`;
+    if (appliedSeedRef.current === token) return;
+    appliedSeedRef.current = token;
+    send(heroSeed.query, heroSeed.powerId);
+  }, [heroSeed, send]);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -317,7 +352,7 @@ function OoDemoThread() {
             }
             className="justify-center sm:justify-end"
           >
-            Claim identity
+            Get started
           </ClaimIdentityCta>
         </motion.div>
       ) : null}
@@ -463,7 +498,7 @@ function DmDemoThread({ thread }: { thread: MessagesInboxThread }) {
             onActivate={() => claimFlow.openFrom("demo", { power: "memory" })}
             className="justify-center sm:justify-end"
           >
-            Claim identity
+            Get started
           </ClaimIdentityCta>
         </div>
       ) : (

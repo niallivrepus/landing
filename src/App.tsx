@@ -44,6 +44,8 @@ const ProductPage = lazyNamed(() => import("./pages/ProductPage"), "ProductPage"
 const PrivacyPolicyPage = lazyNamed(() => import("./pages/PrivacyPolicyPage"), "PrivacyPolicyPage");
 const SupportPage = lazyNamed(() => import("./pages/SupportPage"), "SupportPage");
 const TermsOfServicePage = lazyNamed(() => import("./pages/TermsOfServicePage"), "TermsOfServicePage");
+const PricingPage = lazyNamed(() => import("./pages/PricingPage"), "PricingPage");
+const NotFoundPage = lazyNamed(() => import("./pages/NotFoundPage"), "NotFoundPage");
 const StoryDetailPage = lazyNamed(() => import("./pages/StoryDetailPage"), "StoryDetailPage");
 const ShareYourStoryPage = lazyNamed(() => import("./pages/ShareYourStoryPage"), "ShareYourStoryPage");
 const StoriesPage = lazyNamed(() => import("./pages/StoriesPage"), "StoriesPage");
@@ -64,7 +66,6 @@ const REDIRECT_HOME_PATHS = [
   "/platform/wallet",
   "/platform/galaxy-nodes",
   "/pods",
-  "/pricing",
   "/v1llains",
   "/ecosystem/v1llains",
   "/developers/apps",
@@ -178,6 +179,7 @@ export default function App() {
           <Route path="/prompt" element={<Navigate to="/demo" replace />} />
           <Route path="/research" element={<Navigate to="/about" replace />} />
           <Route path="/contact" element={<ContactSalesPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/legal/privacy-policy.html" element={<Navigate to="/privacy" replace />} />
           <Route path="/terms" element={<TermsOfServicePage />} />
@@ -197,7 +199,7 @@ export default function App() {
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/careers/roles" element={<CareersRolesPage />} />
           <Route path="/careers/roles/:slug" element={<CareersRoleDetailPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </>

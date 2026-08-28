@@ -9,12 +9,12 @@ import {
   CONTENT_READING_MEASURE,
   CONTENT_SHELL_WIDE,
 } from "../components/system/shells";
-import { resolveHelpHref } from "../config/site-subdomains";
 import {
   CONTACT_SALES_COMPANY_SIZE_OPTIONS,
   CONTACT_SALES_INTEREST_OPTIONS,
 } from "../data/contact-sales";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
+import { isValidMarketingEmail } from "../lib/email-validation";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 
 const CONTACT_SALES_ENDPOINT = import.meta.env.VITE_CONTACT_SALES_ENDPOINT?.trim() || "/api/contact-sales";
@@ -52,7 +52,7 @@ const INITIAL_FORM: ContactSalesFormState = {
   lastName: "",
   phoneNumber: "",
   needs: "",
-  marketingOptIn: true,
+  marketingOptIn: false,
   website: "",
 };
 
@@ -162,7 +162,6 @@ export function ContactSalesPage() {
 
   const [form, setForm] = useState<ContactSalesFormState>(INITIAL_FORM);
   const [submitState, setSubmitState] = useState<SubmitState>({ kind: "idle" });
-  const helpCenterHref = resolveHelpHref("/");
 
   function updateField<K extends keyof ContactSalesFormState>(name: K, value: ContactSalesFormState[K]) {
     setForm((current) => ({ ...current, [name]: value }));
@@ -171,6 +170,13 @@ export function ContactSalesPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!isValidMarketingEmail(form.workEmail)) {
+      setSubmitState({
+        kind: "error",
+        message: "Enter a work email with a domain, like name@company.com.",
+      });
+      return;
+    }
     if (!event.currentTarget.reportValidity()) return;
     setSubmitState({ kind: "submitting" });
 
@@ -382,7 +388,7 @@ export function ContactSalesPage() {
                     </span>
                     <span>
                       I would like to receive marketing communications from Jokuh about products, services, and events.
-                      You can unsubscribe at any time.
+                      You can unsubscribe at any time. This box is optional and off by default.
                     </span>
                   </label>
                 </div>
@@ -399,7 +405,7 @@ export function ContactSalesPage() {
                         Sending
                       </>
                     ) : (
-                      "Submit"
+                      "Submit inquiry"
                     )}
                   </button>
                 </div>
@@ -462,7 +468,7 @@ export function ContactSalesPage() {
         <CompanyPageClosingCta
           headline="Need support instead of sales?"
           buttonLabel="Contact support"
-          buttonHref={helpCenterHref}
+          buttonTo="/support"
         />
       </>
     </CompanyPageLayout>

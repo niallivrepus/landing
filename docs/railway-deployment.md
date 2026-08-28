@@ -31,6 +31,23 @@ Connect this GitHub repo to Railway project **`live`**, service **`www`**. Railw
 
 **Do not** use `railway up` from a laptop — `public/` is too large for CLI uploads. Push to GitHub and let Railway clone.
 
+### DNS / HTTPS (GoDaddy)
+
+`www.jokuh.com` is a CNAME to Railway and must stay that way.
+
+`jokuh.com` (apex) currently sits on GoDaddy forwarding IPs (`3.33.251.168`, `15.197.225.128`). That forwarding must send visitors to **`https://www.jokuh.com`** (301, forward-only, not mask). HTTP→HTTP is a conversion leak; a 405 means forwarding is broken.
+
+In GoDaddy → Domain → DNS / Forwarding:
+
+1. Turn **off** masking.
+2. Forward `jokuh.com` → `https://www.jokuh.com` with **301** and HTTPS.
+3. Keep `www` CNAME on `koes01k3.up.railway.app` (or the current Railway service domain).
+4. Railway service `www` must have `LANDING_CANONICAL_HOST=www` so the app does not 308 `www` back to apex.
+
+Optional later: add `jokuh.com` as a Railway custom domain and replace the forwarding A records with Railway’s apex A records. Until that cutover, GoDaddy must forward over HTTPS.
+
+`help.jokuh.com` is not live — the site links `/support` until a knowledge-base origin exists.
+
 After DNS cutover, remove apex domains from any legacy Vercel project.
 
 ## Railway dashboard — variables
@@ -51,7 +68,7 @@ Set on service **`www`** (runtime unless noted as build):
 |----------|---------|
 | `VITE_ORIGIN_APP` | App handoff target (build arg, default `https://app.jokuh.com`) |
 | `VITE_COOKIE_DOMAIN` | Cookie consent across subdomains (build arg, e.g. `.jokuh.com`) |
-| `VITE_ORIGIN_HELP` | Help center origin (build) |
+| `VITE_ORIGIN_HELP` | Unused until a live help host exists (site uses `/support`) |
 | `VITE_ORIGIN_STATUS` | Status portal origin (build) |
 
 ### Optional feature APIs

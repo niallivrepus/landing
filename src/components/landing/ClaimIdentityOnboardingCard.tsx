@@ -10,7 +10,7 @@ import { ClaimIdentityOnboardingSwirl } from "./ClaimIdentityOnboardingSwirl";
 export function ClaimIdentityOnboardingCard({
   mounted,
   errorMessage,
-  subtitle = "Type your handle below",
+  subtitle = "Pick a handle to continue",
 }: {
   mounted: boolean;
   errorMessage?: string | null;
@@ -84,7 +84,7 @@ export function ClaimIdentityOnboardingCard({
         <div className="claim-identity-glass-card__body">
           <div className="claim-identity-glass-card__copy">
             <h1 id="claim-identity-title" className="claim-identity-glass-card__title">
-              Claim identity
+              Create your account
             </h1>
             <p className="claim-identity-glass-card__subtitle">{subtitle}</p>
             <p className="claim-identity-glass-card__rules">

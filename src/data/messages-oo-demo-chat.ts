@@ -41,8 +41,8 @@ export function createOoReply(source: string, id?: string): MessagesOoMessage {
     OO_REPLIES[normalized] ??
     powerHit?.reply ??
     (source.length > 60
-      ? "Got it. Claim identity and I can hold that as lasting context."
-      : "Received. Claim identity to unlock full agent context across Texts, Spine, and Bubbles.");
+      ? "Got it. Get started and I can hold that as lasting context."
+      : "Received. Get started to unlock full agent context across Texts, Spine, and Bubbles.");
 
   return { id: id ?? crypto.randomUUID(), author: "oo", body };
 }

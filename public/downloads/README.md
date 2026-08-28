@@ -14,6 +14,6 @@ cd ../jokuh-live
 JOKUH_LANDING_PUBLIC_DIR="$(pwd)/../landing/public/downloads" ./scripts/release-macos-direct.sh
 ```
 
-The `.dmg` is gitignored (large binary). Railway `www` serves it from `dist/downloads/Jokuh.dmg` after `pnpm build:landing`.
+The `.dmg` is gitignored (large binary). Railway `www` Docker build curls the `macos-1.0.1` GitHub Release into `dist/downloads/Jokuh.dmg`. If that fetch fails, `GET /downloads/Jokuh.dmg` 302s to the same release so the marketing href never points at GitHub.
 
-Override URL without copying into the repo: set `VITE_MACOS_DOWNLOAD_URL` on Railway.
+Override the client href: set `VITE_MACOS_DOWNLOAD_URL` on Railway `www`.

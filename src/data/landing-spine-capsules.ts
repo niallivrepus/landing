@@ -40,6 +40,12 @@ export const LANDING_SPINE_DAYS: LandingDayCapsule[] = [
 /** **Purpose:** Hour ticks keyed by day id — mirrors Spine baby hour capsules. */
 export const LANDING_SPINE_HOURS_BY_DAY: Record<string, LandingHourCapsule[]> = {
   "jul-4": [
+    { id: "h-2", hour: 2, label: "2 AM", tone: "note", summary: "Get new plants", detail: "Sticky note logged after late scroll." },
+    { id: "h-3", hour: 3, label: "3 AM", tone: "task", summary: "Ship the spine system", detail: "Planner task still open." },
+    { id: "h-4", hour: 4, label: "4 AM", tone: "call", summary: "Incoming call · Dad", detail: "4:00 AM · Pepper · answered on watch." },
+    { id: "h-5", hour: 5, label: "5 AM", tone: "memory", summary: "Blurb of the day", detail: "Highlighted memory from yesterday's call." },
+    { id: "h-6", hour: 6, label: "6 AM", tone: "reminder", summary: "Take medicine", detail: "Recurring health reminder." },
+    { id: "h-9", hour: 9, label: "9 AM", tone: "task", summary: "TBV Ventures", detail: "Calendar block with prep note attached." },
     {
       id: "h-july4-freedom",
       hour: 12,
@@ -48,12 +54,6 @@ export const LANDING_SPINE_HOURS_BY_DAY: Record<string, LandingHourCapsule[]> = 
       summary: "The Next Version of Freedom",
       detail: "Sean Rock · Independence Day essay on Spine.",
     },
-    { id: "h-2", hour: 2, label: "2 AM", tone: "note", summary: "Get new plants", detail: "Sticky note logged after late scroll." },
-    { id: "h-3", hour: 3, label: "3 AM", tone: "task", summary: "Ship the spine system", detail: "Planner task still open." },
-    { id: "h-4", hour: 4, label: "4 AM", tone: "call", summary: "Incoming call · Dad", detail: "4:00 AM · Pepper · answered on watch." },
-    { id: "h-5", hour: 5, label: "5 AM", tone: "memory", summary: "Blurb of the day", detail: "Highlighted memory from yesterday's call." },
-    { id: "h-6", hour: 6, label: "6 AM", tone: "reminder", summary: "Take medicine", detail: "Recurring health reminder." },
-    { id: "h-9", hour: 9, label: "9 AM", tone: "task", summary: "TBV Ventures", detail: "Calendar block with prep note attached." },
   ],
   "jul-3": [
     { id: "h-10-prev", hour: 10, label: "10 AM", tone: "memory", summary: "Voice memo · 0:42", detail: "Captured idea for Spine hour capsules." },

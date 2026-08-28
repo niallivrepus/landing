@@ -7,6 +7,13 @@ import { LandingHeroTypewriter } from "./LandingHeroTypewriter";
 import { MissionIntroOverlay } from "./MissionIntroOverlay";
 import { useDownloadIntercept } from "../../hooks/useDownloadIntercept";
 import { useClaimIdentityFlowContext } from "../../context/ClaimIdentityFlowContext";
+import { buildWebAppOnboardingHandoffUrl } from "../../lib/claim-identity-handoff";
+import {
+  LANDING_HERO_PREVIEW_PROMPT,
+  seedLandingDemo,
+  scrollLandingDemoIntoView,
+} from "../../lib/landing-demo-seed";
+import type { LandingDemoPowerId } from "../../data/landing-demo-powers";
 import { ClaimIdentityCta } from "./ClaimIdentityCta";
 import { ClaimIdentityLandingOverlay } from "./ClaimIdentityLandingOverlay";
 import { LandingHomeBackdrop } from "./LandingHomeBackdrop";
@@ -20,7 +27,7 @@ import { ImmersiveCenterColumn } from "../system/ImmersiveCenterColumn";
 import { SiteLink } from "../SiteLink";
 
 /**
- * **Purpose:** Full-viewport home hero — brand, Claim-primary CTAs, prompt that scrolls to proof.
+ * **Purpose:** Full-viewport home hero — brand, Get-started CTAs, prompt that seeds the live OO demo.
  * Mission scramble intro plays on every homepage visit before the hero typewriter.
  * **Connects to:** `LandingHero`, `ProductDemoSection` (`#demo`), `MissionIntroOverlay`.
  */
@@ -39,14 +46,10 @@ function LandingImmersiveShellInner() {
   const [arcadeGame, setArcadeGame] = useState<LandingArcadeGameId | null>(null);
   const [introComplete, setIntroComplete] = useState(false);
 
-  /** Scrolls to the homepage proof stage so visitors see OO powers without leaving `/`. */
-  const handleSend = useCallback((_text: string) => {
-    const demo = document.getElementById("demo");
-    if (demo) {
-      demo.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-    window.location.assign("/demo");
+  /** Seeds the homepage OO demo with the prompt (or chip power) and scrolls to proof. */
+  const handleSend = useCallback((text: string, powerId?: LandingDemoPowerId) => {
+    seedLandingDemo({ query: text.trim() || LANDING_HERO_PREVIEW_PROMPT, powerId });
+    scrollLandingDemoIntoView();
   }, []);
 
   const handleIntroComplete = useCallback(() => {
@@ -89,7 +92,7 @@ function LandingImmersiveShellInner() {
               <LandingPromptBar
                 variant={viewport === "phone" ? "phone" : "desktop"}
                 viewport={viewport}
-                previewText="see OO work"
+                previewText={LANDING_HERO_PREVIEW_PROMPT}
                 onSend={handleSend}
                 onPlus={() => intercept("prompt-plus")}
               />
@@ -107,13 +110,23 @@ function LandingImmersiveShellInner() {
               href="/download?intent=identity"
               morphLayout
               onActivate={() => claimFlow.openFrom("hero")}
-            />
-            <SiteLink
-              href="/download"
-              className="font-sans text-[13px] font-semibold text-light-space/55 no-underline transition-colors hover:text-light-space/85 light:text-zinc-500 light:hover:text-zinc-800"
             >
-              Download Jokuh
-            </SiteLink>
+              Get started
+            </ClaimIdentityCta>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+              <SiteLink
+                href="/download"
+                className="font-sans text-[13px] font-semibold text-light-space/55 no-underline transition-colors hover:text-light-space/85 light:text-zinc-500 light:hover:text-zinc-800"
+              >
+                Download Jokuh
+              </SiteLink>
+              <a
+                href={buildWebAppOnboardingHandoffUrl({ source: "hero", intent: "identity" })}
+                className="font-sans text-[13px] font-semibold text-light-space/55 no-underline transition-colors hover:text-light-space/85 light:text-zinc-500 light:hover:text-zinc-800"
+              >
+                Try in browser
+              </a>
+            </div>
           </motion.div>
         </ImmersiveCenterColumn>
       </section>

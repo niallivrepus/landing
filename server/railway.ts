@@ -33,6 +33,7 @@ const middlewares = [
     staticRoot,
     appOrigin: runtime.appOrigin,
     canonicalHost: runtime.canonicalHost,
+    macosDmgFallbackUrl: runtime.macosDmgFallbackUrl,
   }),
 ];
 

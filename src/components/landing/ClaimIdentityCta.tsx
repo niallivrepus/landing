@@ -8,10 +8,11 @@ import { CLAIM_IDENTITY_MORPH } from "./claim-identity-morph-ids";
 /**
  * **Purpose:** Primary claim-identity CTA using Gooey `primary-neutral` button chrome (app parity).
  * **Connects to:** `ClaimIdentityFlowContext`, `/download`, morph overlay handoff.
+ * Default label is “Get started” so the marketing CTA reads as signup, not jargon.
  */
 export function ClaimIdentityCta({
   href,
-  children = "Claim identity",
+  children = "Get started",
   className,
   onActivate,
   morphLayout = false,
