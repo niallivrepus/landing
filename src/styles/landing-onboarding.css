@@ -690,12 +690,107 @@
 }
 
 /* Bubbles explainer overlay — prompt-bar bubble affordance */
+.landing-bubbles-overlay {
+  background: #050505;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  z-index: 10040;
+}
+
+.light .landing-bubbles-overlay,
+[data-theme="light"] .landing-bubbles-overlay {
+  background: #f4f4f5;
+}
+
 .landing-bubbles-overlay__stack {
-  max-width: min(520px, calc(100vw - 32px));
+  max-width: min(920px, calc(100vw - 32px));
+}
+
+.landing-bubbles-overlay__stage {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.landing-bubbles-overlay__chats {
+  display: none;
+  position: relative;
+  width: 272px;
+  flex-shrink: 0;
+  flex-direction: column;
+  min-height: 0;
+  padding: 18px 12px 16px;
+  border-radius: 36px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.light .landing-bubbles-overlay__chats,
+[data-theme="light"] .landing-bubbles-overlay__chats {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 768px) {
+  .landing-bubbles-overlay__chats {
+    display: flex;
+  }
+}
+
+.landing-bubbles-overlay__chats-tab {
+  position: absolute;
+  left: -11px;
+  top: 28px;
+  margin: 0;
+  padding: 10px 4px;
+  border-radius: 8px 0 0 8px;
+  background: #111111;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.light .landing-bubbles-overlay__chats-tab,
+[data-theme="light"] .landing-bubbles-overlay__chats-tab {
+  background: #ffffff;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.landing-bubbles-overlay__chats-heading {
+  margin: 0 8px 10px;
+  font-family: var(--font-sans, "Satoshi", sans-serif);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ob-ink);
+}
+
+.landing-bubbles-overlay__chats-list {
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .landing-bubbles-card {
   width: 100%;
+  max-width: 520px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.light .landing-bubbles-card,
+[data-theme="light"] .landing-bubbles-card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
 .landing-bubbles-card__avatars {

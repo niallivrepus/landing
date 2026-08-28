@@ -4,6 +4,20 @@ Traceable change log for landing deploys. Newest entries appended at top.
 
 ---
 
+## 2026-08-28T12:03 (UTC-4) — Opaque Bubbles overlay + chat sidebar
+
+**Commit:** this landing `main` push (Railway `www` auto-deploy).
+**Rationale:** Homepage Bubbles popup was frosted glass over the hero, so “Your mind. Your machine.” bled through. Clicking Bubbles should also slide out the chat roster beside the explainer.
+
+### Modified files
+
+| File | Nature | Reasoning |
+|------|--------|-----------|
+| `src/components/landing/LandingBubblesOverlay.tsx` | Portal overlay; chats slide in; reduced-motion | Escapes transformed ancestors; OO/DM roster animates with the popup. |
+| `src/styles/landing-onboarding.css` | Opaque overlay/card; sidebar layout | Removes glass bleed; chats hidden below 768px. |
+
+---
+
 ## 2026-08-28T11:52 (UTC-4) — Follow-up from spec review
 
 **Commit:** this landing `main` push.
