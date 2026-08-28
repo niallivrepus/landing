@@ -50,9 +50,16 @@ function GoldStar() {
 /**
  * **Purpose:** Marketing left library rail — server pills, active-call avatars, rainbow burst, hover expand.
  * **Parity:** `jokuh-app-main/src/shell/CollapsedLibraryRail.tsx` (trimmed for landing).
- * **Connects to:** `ImmersiveAppChrome`, `landing-library-rail-data.ts`, `/download` intercept.
+ * **Connects to:** `ImmersiveAppChrome`, `LandingBubblesOverlay`, `landing-library-rail-data.ts`.
  */
-export function LandingLibraryRail({ className }: { className?: string }) {
+export function LandingLibraryRail({
+  className,
+  forceExpanded = false,
+}: {
+  className?: string;
+  /** When true, server names and extras stay revealed (Bubbles overlay entrance). */
+  forceExpanded?: boolean;
+}) {
   const shouldAnimate = useShouldAnimate();
   const { intercept } = useDownloadIntercept("library-rail");
   const [libraryHovered, setLibraryHovered] = useState(false);
@@ -69,7 +76,8 @@ export function LandingLibraryRail({ className }: { className?: string }) {
   const hoverLeaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const simulatedStepRef = useRef(0);
 
-  const libraryOpen = libraryHovered || hoveredServerId != null || pinnedServerId != null;
+  const libraryOpen =
+    forceExpanded || libraryHovered || hoveredServerId != null || pinnedServerId != null;
 
   const servers = useMemo(
     () =>

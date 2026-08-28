@@ -4,6 +4,21 @@ Traceable change log for landing deploys. Newest entries appended at top.
 
 ---
 
+## 2026-08-28T12:07 (UTC-4) — Bubbles overlay uses the left library rail
+
+**Commit:** this landing `main` push (Railway `www` auto-deploy).
+**Rationale:** The overlay had a fake inbox card. The homepage Bubbles click should slide in the real left library rail (server pills) that immersive chrome already uses.
+
+### Modified files
+
+| File | Nature | Reasoning |
+|------|--------|-----------|
+| `LandingBubblesOverlay.tsx` | Swap inbox for `LandingLibraryRail` on the viewport left | Matches “things on the left of the screen popping out.” |
+| `LandingLibraryRail.tsx` | `forceExpanded` after slide-in | Names and extras expand once the rail is on screen. |
+| `landing-onboarding.css` | Rail pin; drop inbox card layout | Overlay chrome matches product left edge. |
+
+---
+
 ## 2026-08-28T12:03 (UTC-4) — Opaque Bubbles overlay + chat sidebar
 
 **Commit:** this landing `main` push (Railway `www` auto-deploy).
