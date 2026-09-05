@@ -20,7 +20,7 @@ ARG VITE_ORIGIN_DEVELOPERS=
 ARG VITE_COOKIE_DOMAIN=.jokuh.com
 ARG VITE_MACOS_DOWNLOAD_URL=
 # Notarized Mac disk image (gitignored). Baked into `/downloads/Jokuh.dmg` so the site href stays same-origin.
-ARG MACOS_DMG_URL=https://github.com/niallivrepus/landing/releases/download/macos-1.0.1/Jokuh.dmg
+ARG MACOS_DMG_URL=https://github.com/niallivrepus/landing/releases/download/macos-1.0.2/Jokuh.dmg
 ENV VITE_ORIGIN_APP=$VITE_ORIGIN_APP \
     VITE_ORIGIN_HELP=$VITE_ORIGIN_HELP \
     VITE_ORIGIN_STATUS=$VITE_ORIGIN_STATUS \

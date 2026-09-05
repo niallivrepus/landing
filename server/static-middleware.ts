@@ -27,7 +27,7 @@ const MIME_TYPES: Record<string, string> = {
 
 /** GitHub Release asset used when the image was not baked into `/downloads/Jokuh.dmg`. */
 export const DEFAULT_MACOS_DMG_FALLBACK_URL =
-  "https://github.com/niallivrepus/landing/releases/download/macos-1.0.1/Jokuh.dmg";
+  "https://github.com/niallivrepus/landing/releases/download/macos-1.0.2/Jokuh.dmg";
 
 /**
  * Report-only CSP for the Vite marketing SPA: self, Google fonts, app.jokuh.com, and images.
