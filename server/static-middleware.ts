@@ -48,6 +48,24 @@ const CSP_REPORT_ONLY = [
   "form-action 'self'",
 ].join("; ");
 
+/**
+ * Pulse meeting paths typed on the marketing domain. `/m/<code>` is the short canonical share link
+ * (`jokuh.com/m/<code>` → `app.jokuh.com/m/<code>` → `/pulse/join/<code>` in the app router); the rest are
+ * the hub aliases and join/RSVP routes. Permanent (308) so browsers and mail clients cache the hop and the
+ * method/body survive. **Parity:** `vercel.json` redirects, `services/www/Caddyfile` in `jokuh-live`.
+ */
+export const PULSE_MEETING_PREFIXES = [
+  "/m",
+  "/meet",
+  "/pulse",
+  "/join",
+  "/newmeet",
+  "/new-meeting",
+  "/newmeeting",
+  // Public shareable call recap page (`app.jokuh.com/recap/<token>`, jokuh-live plan §2.4).
+  "/recap",
+] as const;
+
 type RedirectRule = {
   match: (path: string) => boolean;
   location: (path: string, search: string) => string;
@@ -81,8 +99,14 @@ function buildRedirectRules(appOrigin: string): RedirectRule[] {
       match: (path) => path === "/xx/investpipeline" || path.startsWith("/xx/investpipeline/"),
       location: (path, search) => `${app}${path}${search}`,
     },
+    ...PULSE_MEETING_PREFIXES.map<RedirectRule>((prefix) => ({
+      match: (path) => path === prefix || path.startsWith(`${prefix}/`),
+      location: (path, search) => `${app}${path}${search}`,
+      status: 308,
+    })),
   ];
 }
+
 
 /** 302/301/308 with security headers so HSTS applies on protocol/host hops too. */
 function redirect(res: ServerResponse, location: string, status = 302) {

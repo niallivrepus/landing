@@ -65,6 +65,56 @@
       "source": "/xx/investpipeline/:path*",
       "destination": "https://app.jokuh.com/xx/investpipeline/:path*",
       "permanent": false
+    },
+    {
+      "source": "/m/:path*",
+      "destination": "https://app.jokuh.com/m/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/meet",
+      "destination": "https://app.jokuh.com/meet",
+      "permanent": true
+    },
+    {
+      "source": "/meet/:path*",
+      "destination": "https://app.jokuh.com/meet/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/pulse",
+      "destination": "https://app.jokuh.com/pulse",
+      "permanent": true
+    },
+    {
+      "source": "/pulse/:path*",
+      "destination": "https://app.jokuh.com/pulse/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/recap/:path*",
+      "destination": "https://app.jokuh.com/recap/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/join/:path*",
+      "destination": "https://app.jokuh.com/join/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/newmeet",
+      "destination": "https://app.jokuh.com/newmeet",
+      "permanent": true
+    },
+    {
+      "source": "/new-meeting",
+      "destination": "https://app.jokuh.com/new-meeting",
+      "permanent": true
+    },
+    {
+      "source": "/newmeeting",
+      "destination": "https://app.jokuh.com/newmeeting",
+      "permanent": true
     }
   ],
   "rewrites": [

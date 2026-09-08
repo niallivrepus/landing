@@ -4,7 +4,7 @@
     "details": [
       {
         "appIDs": ["A4XZK9JRPW.ai.antimatter.jokuh.mobile", "A4XZK9JRPW.app.jokuh"],
-        "paths": ["/pay/*", "/id/*", "/id/*/b/*", "/id/*/spine", "/id/*/spine/*", "/peer/*", "/invite/*", "/pulse/join/*", "/join/*", "/b/*", "/bubble/*", "/u/*", "/u/*/b/*", "/u/*/spine/rsvp"],
+        "paths": ["/pay/*", "/id/*", "/id/*/b/*", "/id/*/spine", "/id/*/spine/*", "/peer/*", "/invite/*", "/pulse/join/*", "/join/*", "/m/*", "/b/*", "/bubble/*", "/u/*", "/u/*/b/*", "/u/*/spine/rsvp"],
         "components": [
           {
             "/": "/pay/*",
@@ -37,6 +37,10 @@
           {
             "/": "/join/*",
             "comment": "Legacy call join links (redirect to /pulse/join on web)"
+          },
+          {
+            "/": "/m/*",
+            "comment": "Short Pulse call join links (jokuh.com/m/{code} → /pulse/join/{code})"
           },
           {
             "/": "/b/*",

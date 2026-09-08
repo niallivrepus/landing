@@ -43,6 +43,12 @@
 			redir https://app.jokuh.com{uri} 302
 		}
 
+		# Pulse meetings typed on the marketing domain: `/m/<code>` short share link + hub/join aliases.
+		@pulseMeeting path /m /m/* /meet /meet/* /pulse /pulse/* /join/* /newmeet /new-meeting /newmeeting
+		handle @pulseMeeting {
+			redir https://app.jokuh.com{uri} 308
+		}
+
 		handle {
 			try_files {path} /index.html
 			file_server
