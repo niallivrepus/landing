@@ -9,6 +9,7 @@ import {
   LandingHero,
   ProductDemoSection,
   ProductShowcaseSection,
+  RecentNewsSection,
   WaitlistSection,
 } from "../components/landing";
 import { MarketingPageFrame } from "../components/system";
@@ -44,6 +45,8 @@ export default function Home() {
         <ProductShowcaseSection />
         <ProductDemoSection />
         <IdentityBlock />
+        {/* Newsroom rail on the funnel so releases (Batcoin, 2026-09-08) are visible from the home page. */}
+        <RecentNewsSection />
         <WaitlistSection />
         <InvestorBranchSection />
       </MarketingPageFrame>

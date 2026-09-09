@@ -7,7 +7,15 @@
     <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Latest Jokuh newsroom articles and stories.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Aug 2026 03:16:03 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 09 Sep 2026 03:42:41 GMT</lastBuildDate>
+    <item>
+      <title>Batcoin is live in Jokuh</title>
+      <link>https://www.jokuh.com/newsroom/batcoin-live-in-jokuh</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/batcoin-live-in-jokuh</guid>
+      <description>Jokuh&apos;s own in-app currency is live in the app today: hold it in the Jokuh wallet, send it to someone instantly and for free, and tip a profile or a blurb with zero platform fee.</description>
+      <category>Release</category>
+      <pubDate>Tue, 08 Sep 2026 12:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>The Next Version of Freedom</title>
       <link>https://www.jokuh.com/stories/the-next-version-of-freedom</link>

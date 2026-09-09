@@ -150,6 +150,20 @@ function mediumToNewsItem(entry: MediumFeedFile["items"][number]): NewsItem {
 
 const STATIC_NEWS_ITEMS: NewsItem[] = [
   {
+    id: "batcoin-live-in-jokuh",
+    title: "Batcoin is live in Jokuh",
+    excerpt: "Jokuh's own in-app currency is live in the app today: hold it in the Jokuh wallet, send it to someone instantly and for free, and tip a profile or a blurb with zero platform fee.",
+    category: "Release",
+    topics: ["Blurbs", "Community"],
+    publishedAt: "2026-09-08",
+    readMinutes: 2,
+    cardGradient: "linear-gradient(140deg, #000000 0%, #0a0a0c 45%, #1c1917 100%)",
+    cardArtMode: "lavaLamp",
+    lavaLamp: "void",
+    slug: "batcoin-live-in-jokuh",
+    internalHref: newsroomPath("batcoin-live-in-jokuh"),
+  },
+  {
     id: "bnb-chain-partnership-discussions",
     title: "Jokuh and BNB Chain Align Ahead of Consensus Miami",
     excerpt: "BNB Chain's ecosystem team has opened technical alignment with Jokuh ahead of Consensus 2026 in Miami, with Jokuh architecting natively across BSC, opBNB, and Greenfield from day one.",

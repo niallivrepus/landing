@@ -67,6 +67,22 @@ const NEWSROOM_BRIEF_BY_SLUG: Record<
   string,
   Omit<NewsBriefDetailDocument, "kind" | "slug" | "metaLine" | "title">
 > = {
+  "batcoin-live-in-jokuh": {
+    subtitle: "Jokuh's own in-app currency is live in the app today. Hold it, send it, tip with it.",
+    introParagraphs: [
+      "**Batcoin** is now live inside the Jokuh app. It is Jokuh's own in-app currency, and it sits at the top of the Jokuh wallet alongside Bitcoin, Monero, and Zcash. The symbol is **BAT**, short for **Bit-Anonymous Transactions**. We use the full name, Batcoin, so it is not confused with Brave's BAT.",
+      "Three things work today. You can hold Batcoin in your Jokuh wallet. You can send it to another person, instantly and for free. And you can tip with it.",
+    ],
+    bodyTitle: "What you can do today",
+    bodyParagraphs: [
+      "**Tipping.** Throw coins at someone's profile, or at a blurb you liked. Tipping takes **zero platform fee**, the full amount reaches the person you tipped. Live streams, DMs, and calls are next.",
+      "**Sending.** Batcoin moves between people in the app instantly, with no transfer fee.",
+      "Batcoin is an in-app currency and a product feature, not an investment. It is not listed or traded anywhere, and there is nothing to buy or sell.",
+      "Privacy is the direction of travel for everything in the wallet. Jokuh is building toward self-custody and on-device privacy for its assets, and Batcoin is built on the same assumption: the keys, and the record of what you did with them, belong to the user.",
+      "Jokuh is in early access. Access, features, availability, and offers may change and may vary by region, device, account, or plan.",
+      "Jokuh. The Sovereign Agentic Operating System. Verify ↔ Trust.",
+    ],
+  },
   "bnb-chain-partnership-discussions": {
     subtitle: "The ecosystem team behind BNB Chain has opened technical alignment with Jokuh in the run-up to Consensus 2026, and Jokuh is architecting natively across BSC, opBNB, and Greenfield from day one.",
     introParagraphs: [
