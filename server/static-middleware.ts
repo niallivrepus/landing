@@ -210,6 +210,28 @@ function applySecurityHeaders(res: ServerResponse): void {
 }
 
 /**
+ * **Purpose:** Choose a caching policy per asset class so returning visitors stop re-downloading
+ * the bundle on every load.
+ * **Connects to:** `sendFile` — applied to every static response.
+ *
+ * Vite emits content-hashed filenames under `/assets/`, so those can be cached forever: a new build
+ * produces a new name and the old entry is simply never requested again. Everything else must
+ * revalidate. `index.html` is the shell that *points* at those hashes, so caching it would pin a
+ * visitor to a stale bundle. `/downloads/Jokuh.dmg` matters even more: the URL is stable across
+ * releases while the bytes change, so a long cache would keep handing people the previous build.
+ */
+function cacheControlFor(filePath: string): string {
+  const normalized = filePath.replace(/\\/g, "/");
+  if (normalized.includes("/assets/")) {
+    return "public, max-age=31536000, immutable";
+  }
+  if (extname(filePath).toLowerCase() === ".dmg") {
+    return "public, max-age=300, must-revalidate";
+  }
+  return "no-cache";
+}
+
+/**
  * **Purpose:** Send a static file with Content-Length, security headers, and an attachment name for `.dmg`.
  * **Connects to:** AASA, hashed Vite assets, SPA `index.html`, and `not-found.html`.
  * **Inputs:** Response, absolute file path, MIME type, status (default 200), HTTP method.
@@ -226,6 +248,7 @@ function sendFile(
   res.statusCode = status;
   res.setHeader("Content-Type", contentType);
   res.setHeader("Content-Length", String(size));
+  res.setHeader("Cache-Control", cacheControlFor(filePath));
   applySecurityHeaders(res);
   if (extname(filePath).toLowerCase() === ".dmg") {
     res.setHeader("Content-Disposition", 'attachment; filename="Jokuh.dmg"');
