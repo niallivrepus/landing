@@ -68,9 +68,9 @@ const NEWSROOM_BRIEF_BY_SLUG: Record<
   Omit<NewsBriefDetailDocument, "kind" | "slug" | "metaLine" | "title">
 > = {
   "fuel-arcade-token": {
-    subtitle: "The Jokuh Arcade gets its own token. Buy Fuel with Batcoin, burn it to play.",
+    subtitle: "The Jokuh Arcade's token now has a name. Buy Fuel with Batcoin, burn it to play.",
     introParagraphs: [
-      "**Fuel** is the token for the Jokuh Arcade. You buy it with Batcoin, and you burn it to play. That is the whole idea.",
+      "The Jokuh Arcade has had its own token since we built the Arcade's L1 protocol. It now has a name: **Fuel**. You buy it with Batcoin, and you burn it to play.",
       "Two tokens, each with one job. **Batcoin** is the currency you hold and send to people across Jokuh. **Fuel** is what you spend inside the Arcade. Keeping them separate means the thing you play with cannot be confused with the thing you keep.",
     ],
     bodyTitle: "How it works",
