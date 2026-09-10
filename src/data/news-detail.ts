@@ -67,6 +67,23 @@ const NEWSROOM_BRIEF_BY_SLUG: Record<
   string,
   Omit<NewsBriefDetailDocument, "kind" | "slug" | "metaLine" | "title">
 > = {
+  "fuel-arcade-token": {
+    subtitle: "The Jokuh Arcade gets its own token. Buy Fuel with Batcoin, burn it to play.",
+    introParagraphs: [
+      "**Fuel** is the token for the Jokuh Arcade. You buy it with Batcoin, and you burn it to play. That is the whole idea.",
+      "Two tokens, each with one job. **Batcoin** is the currency you hold and send to people across Jokuh. **Fuel** is what you spend inside the Arcade. Keeping them separate means the thing you play with cannot be confused with the thing you keep.",
+    ],
+    bodyTitle: "How it works",
+    bodyParagraphs: [
+      "**Buying.** Fuel is bought with Batcoin at a published rate, inside the app. There is no other way to get it and no other place to spend it.",
+      "**Burning.** Fuel is consumed when you play. It is not transferable between players, and it is not a balance you can cash out.",
+      "Fuel is a play credit and a product feature. It is not an investment, it is not listed or traded anywhere, and there is nothing to buy or sell outside the Arcade.",
+      "Fuel is built for the Jokuh Arcade's Avalanche L1. That chain is not live yet, and every on-chain capability stays switched off until it is. What ships today runs entirely inside the app.",
+      "Jokuh is in early access. Access, features, availability, and offers may change and may vary by region, device, account, or plan.",
+      "Issued by **Jokuh Labs LLC**.",
+      "Jokuh. The Sovereign Agentic Operating System. Verify ↔ Trust.",
+    ],
+  },
   "batcoin-live-in-jokuh": {
     subtitle: "Jokuh's own in-app currency is live in the app today. Hold it, send it, tip with it.",
     introParagraphs: [

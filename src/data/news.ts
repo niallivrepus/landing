@@ -150,6 +150,20 @@ function mediumToNewsItem(entry: MediumFeedFile["items"][number]): NewsItem {
 
 const STATIC_NEWS_ITEMS: NewsItem[] = [
   {
+    id: "fuel-arcade-token",
+    title: "Fuel: the Jokuh Arcade's token",
+    excerpt: "The Arcade gets its own token. Buy Fuel with Batcoin, burn it to play — two tokens, one loop.",
+    category: "Release",
+    topics: ["Community"],
+    publishedAt: "2026-09-10",
+    readMinutes: 2,
+    cardGradient: "linear-gradient(140deg, #1a0f00 0%, #2a1503 45%, #3d1c05 100%)",
+    cardArtMode: "lavaLamp",
+    lavaLamp: "ember",
+    slug: "fuel-arcade-token",
+    internalHref: newsroomPath("fuel-arcade-token"),
+  },
+  {
     id: "batcoin-live-in-jokuh",
     title: "Batcoin is live in Jokuh",
     excerpt: "Jokuh's own in-app currency is live in the app today: hold it in the Jokuh wallet, send it to someone instantly and for free, and tip a profile or a blurb with zero platform fee.",

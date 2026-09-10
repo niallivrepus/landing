@@ -7,7 +7,15 @@
     <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Latest Jokuh newsroom articles and stories.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 09 Sep 2026 03:42:41 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 10 Sep 2026 12:36:45 GMT</lastBuildDate>
+    <item>
+      <title>Fuel: the Jokuh Arcade&apos;s token</title>
+      <link>https://www.jokuh.com/newsroom/fuel-arcade-token</link>
+      <guid isPermaLink="true">https://www.jokuh.com/newsroom/fuel-arcade-token</guid>
+      <description>The Arcade gets its own token. Buy Fuel with Batcoin, burn it to play — two tokens, one loop.</description>
+      <category>Release</category>
+      <pubDate>Thu, 10 Sep 2026 12:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Batcoin is live in Jokuh</title>
       <link>https://www.jokuh.com/newsroom/batcoin-live-in-jokuh</link>
