@@ -152,7 +152,7 @@ const STATIC_NEWS_ITEMS: NewsItem[] = [
   {
     id: "fuel-arcade-token",
     title: "Fuel: the Jokuh Arcade's token",
-    excerpt: "The Jokuh Arcade's token now has a name. Buy Fuel with Batcoin, burn it to play — two tokens, one loop.",
+    excerpt: "The Jokuh Arcade's token now has a name. Buy Fuel with Batcoin, spend it in the Arcade — two tokens, one loop.",
     category: "Release",
     topics: ["Community"],
     publishedAt: "2026-09-08",
