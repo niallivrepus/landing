@@ -104,6 +104,18 @@ function buildRedirectRules(appOrigin: string): RedirectRule[] {
       location: (path, search) => `${app}${path}${search}`,
       status: 308,
     })),
+    // Public profile links shared as `jokuh.com/@handle` (plus canonical `/id/<handle>`, legacy `/u/<handle>`,
+    // and `/peer/<uuid>` universal links) render in the app, which serves the logged-out profile page.
+    // 302 so the canonical share host can move later without browsers caching the hop.
+    // **Parity:** `services/www/Caddyfile` `@publicProduct` in `jokuh-live`; share builder `JokuhProfileShare`.
+    {
+      match: (path) =>
+        /^\/@[A-Za-z0-9](?:[A-Za-z0-9-]{0,30}[A-Za-z0-9])?\/?$/.test(path) ||
+        path.startsWith("/id/") ||
+        path.startsWith("/u/") ||
+        path.startsWith("/peer/"),
+      location: (path, search) => `${app}${path}${search}`,
+    },
   ];
 }
 
