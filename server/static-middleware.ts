@@ -266,6 +266,10 @@ function sendFile(
   if (extname(filePath).toLowerCase() === ".dmg") {
     res.setHeader("Content-Disposition", 'attachment; filename="Jokuh.dmg"');
   }
+  // Public build-log feed the Jokuh apps (app.jokuh.com, iOS, Android) read for Spine update memories.
+  if (filePath.replace(/\\/g, "/").endsWith("/shipped-feed.json")) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
   if (requestMethod(method) === "HEAD") {
     res.end();
     return;

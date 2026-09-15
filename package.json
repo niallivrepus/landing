@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run sync:news-art && vite",
-    "generate:rss": "node scripts/generate-rss.mjs",
+    "generate:rss": "node scripts/generate-rss.mjs && node scripts/generate-shipped-feed.mjs",
     "sync:medium": "node scripts/sync-medium.mjs",
     "sync:news-art": "node scripts/sync-news-art.mjs",
     "watch:news-art": "node scripts/sync-news-art.mjs --watch",
