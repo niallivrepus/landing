@@ -99,6 +99,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
           { label: "Brand", href: "/brand", surfaces: ["footer", "sitemap"] },
           { label: "Stories", href: "/stories", surfaces: ALL_SOURCES },
           { label: "News", href: "/newsroom", surfaces: ALL_SOURCES },
+          { label: "Shipped", href: "/shipped", surfaces: ALL_SOURCES },
         ],
       },
       {
@@ -142,6 +143,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
         heading: "More",
         links: [
           { label: "News", href: "/newsroom", surfaces: ["footer"] },
+          { label: "Shipped", href: "/shipped", surfaces: ["footer"] },
           { label: "Stories", href: "/stories", surfaces: ["footer"] },
           { label: "RSS", href: "/rss.xml", surfaces: ["footer"] },
         ],

@@ -51,6 +51,8 @@ const StoryDetailPage = lazyNamed(() => import("./pages/StoryDetailPage"), "Stor
 const ShareYourStoryPage = lazyNamed(() => import("./pages/ShareYourStoryPage"), "ShareYourStoryPage");
 const StoriesPage = lazyNamed(() => import("./pages/StoriesPage"), "StoriesPage");
 const PitchDeckPage = lazyNamed(() => import("./pages/PitchDeckPage"), "PitchDeckPage");
+const ShippedPage = lazyNamed(() => import("./pages/ShippedPage"), "ShippedPage");
+const ShippedWeekPage = lazyNamed(() => import("./pages/ShippedPage"), "ShippedWeekPage");
 
 const PRODUCT_ROUTES = [
   { path: "/blurbs", productId: "blurbs" },
@@ -153,6 +155,8 @@ export default function App() {
           <Route path="/news" element={<Navigate to="/newsroom" replace />} />
           <Route path="/news/:slug" element={<LegacyNewsRedirect />} />
           <Route path="/rss" element={<RssRedirect />} />
+          <Route path="/shipped" element={<ShippedPage />} />
+          <Route path="/shipped/:slug" element={<ShippedWeekPage />} />
 
           <Route path="/stories" element={<StoriesPage />} />
           <Route path="/stories/share" element={<ShareYourStoryPage />} />

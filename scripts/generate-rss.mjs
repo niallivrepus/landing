@@ -272,7 +272,22 @@ function storyItems() {
   }));
 }
 
-const items = [...newsItems(), ...storyItems()].sort(
+/** Weekly build-log posts from `src/data/shipped.json`; drafts stay out of the feed. */
+function shippedItems() {
+  const payload = JSON.parse(readFileSync(join(root, "src/data/shipped.json"), "utf8"));
+  return (payload.weeks || [])
+    .filter((week) => !week.draft)
+    .map((week) => ({
+      id: `shipped-${week.slug}`,
+      title: `Week ${week.week}: ${week.headline}`,
+      description: week.dek,
+      category: "Shipped",
+      publishedAt: week.publishedAt,
+      url: `/shipped/${week.slug}`,
+    }));
+}
+
+const items = [...newsItems(), ...storyItems(), ...shippedItems()].sort(
   (a, b) => new Date(`${b.publishedAt}T12:00:00Z`) - new Date(`${a.publishedAt}T12:00:00Z`),
 );
 

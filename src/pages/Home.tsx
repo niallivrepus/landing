@@ -12,6 +12,7 @@ import {
   RecentNewsSection,
   WaitlistSection,
 } from "../components/landing";
+import { ShippedStrip } from "../components/shipped/ShippedStrip";
 import { MarketingPageFrame } from "../components/system";
 import { NEWS_ITEMS } from "../data/news";
 import { preloadNewsArticleSlugs } from "../lib/article-audio";
@@ -45,7 +46,8 @@ export default function Home() {
         <ProductShowcaseSection />
         <ProductDemoSection />
         <IdentityBlock />
-        {/* Newsroom rail on the funnel so releases (Batcoin, 2026-09-08) are visible from the home page. */}
+        {/* Latest weekly build log, then the Newsroom rail, so progress and releases are visible from the home page. */}
+        <ShippedStrip />
         <RecentNewsSection />
         <WaitlistSection />
         <InvestorBranchSection />

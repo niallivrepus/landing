@@ -11,6 +11,7 @@ const QUICK_LINKS: { label: string; href: string }[] = [
   { label: "Texts", href: "/messages" },
   { label: "Download Jokuh", href: "/download" },
   { label: "Newsroom", href: "/newsroom" },
+  { label: "Shipped", href: "/shipped" },
   { label: "Careers", href: "/careers" },
 ];
 

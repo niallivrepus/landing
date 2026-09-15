@@ -7,7 +7,23 @@
     <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Latest Jokuh newsroom articles and stories.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 10 Sep 2026 21:15:44 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 15 Sep 2026 12:29:22 GMT</lastBuildDate>
+    <item>
+      <title>Week 26: Messaging, remade</title>
+      <link>https://www.jokuh.com/shipped/2026-w38</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w38</guid>
+      <description>Photos you can mark up, voice notes that look like a radio intercept, and stickers that finally feel like messages. On every platform at once.</description>
+      <category>Shipped</category>
+      <pubDate>Tue, 15 Sep 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 25: Walkie-talkie, Fuel, and the week ahead</title>
+      <link>https://www.jokuh.com/shipped/2026-w37</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w37</guid>
+      <description>Our busiest week yet: voice messages you hold to talk, an Arcade that runs on its own token, and a Spine that knows what&apos;s on near you.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 13 Sep 2026 12:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Fuel: the Jokuh Arcade&apos;s token</title>
       <link>https://www.jokuh.com/newsroom/fuel-arcade-token</link>
@@ -25,6 +41,70 @@
       <pubDate>Tue, 08 Sep 2026 12:00:00 GMT</pubDate>
     </item>
     <item>
+      <title>Week 24: Gooey, for everyone</title>
+      <link>https://www.jokuh.com/shipped/2026-w36</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w36</guid>
+      <description>One look across every screen, calls that connect the first time, and a Mac palette that finds anything.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 06 Sep 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 23: A calmer Jokuh</title>
+      <link>https://www.jokuh.com/shipped/2026-w35</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w35</guid>
+      <description>We took things away this week. The core app gets quieter, and the extras wait until you ask for them.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 30 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 22: Under the hood</title>
+      <link>https://www.jokuh.com/shipped/2026-w34</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w34</guid>
+      <description>A quiet week on the surface. Underneath, we tightened the walls around your account.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 19: Blurbs on your profile</title>
+      <link>https://www.jokuh.com/shipped/2026-w31</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w31</guid>
+      <description>Your blurbs get a home on your ID, and OO learns to look after the people and pets in your life.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 02 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 18: Build your profile from pods</title>
+      <link>https://www.jokuh.com/shipped/2026-w30</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w30</guid>
+      <description>Your ID becomes a set of pods you pick and arrange: music, gallery, location, about. And claiming your handle now comes with confetti.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 26 Jul 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 17: Sealed</title>
+      <link>https://www.jokuh.com/shipped/2026-w29</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w29</guid>
+      <description>Messages go end-to-end encrypted. DMs, huddles and in-call chat are sealed on every platform, and we can&apos;t read them.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 19 Jul 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 16: Lighter and faster</title>
+      <link>https://www.jokuh.com/shipped/2026-w28</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w28</guid>
+      <description>A full-stack speed pass: smaller downloads, a quicker database, and live updates instead of constant checking.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 12 Jul 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 15: Blocks, widgets and GIFs</title>
+      <link>https://www.jokuh.com/shipped/2026-w27</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w27</guid>
+      <description>Answers come back as cards, Jokuh lands on your Home Screen, and chats get GIFs and mentions.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 05 Jul 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
       <title>The Next Version of Freedom</title>
       <link>https://www.jokuh.com/stories/the-next-version-of-freedom</link>
       <guid isPermaLink="true">https://www.jokuh.com/stories/the-next-version-of-freedom</guid>
@@ -34,6 +114,78 @@
       <media:thumbnail url="https://www.jokuh.com/images/spine-freedom-flag.png" />
     </item>
     <item>
+      <title>Week 14: Meet Cortex</title>
+      <link>https://www.jokuh.com/shipped/2026-w26</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w26</guid>
+      <description>An AI you can chat with that knows your Spine, a look at the sky, and Jokuh in more languages.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 28 Jun 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 12: Share anything into Spine</title>
+      <link>https://www.jokuh.com/shipped/2026-w24</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w24</guid>
+      <description>Send a link, a photo or a note from any app and Jokuh asks where it belongs.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 14 Jun 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 10: A wallet, and OO calls you back</title>
+      <link>https://www.jokuh.com/shipped/2026-w22</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w22</guid>
+      <description>The first wallet, OO that phones you when it has an answer, and an OO that can use your other apps.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 31 May 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 9: Go live</title>
+      <link>https://www.jokuh.com/shipped/2026-w21</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w21</guid>
+      <description>Broadcast from your profile, let people book time with you, and meet the agents who liven up Blurbs.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 24 May 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 8: Meetings on the calendar</title>
+      <link>https://www.jokuh.com/shipped/2026-w20</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w20</guid>
+      <description>One big drop: schedule a call ahead of time, and huddles on every platform.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 17 May 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 7: The Arcade opens</title>
+      <link>https://www.jokuh.com/shipped/2026-w19</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w19</guid>
+      <description>Games inside Jokuh, a voice agent you can just talk to, and calls that translate as you speak.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 10 May 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 6: Bubbles and huddles</title>
+      <link>https://www.jokuh.com/shipped/2026-w18</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w18</guid>
+      <description>Small group spaces with a voice room built in, and a place in Spine for your files.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 03 May 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 5: Your Daily Pulse</title>
+      <link>https://www.jokuh.com/shipped/2026-w17</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w17</guid>
+      <description>Spine starts the day with you, and everything gets a little snappier.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 26 Apr 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week 4: Speed week</title>
+      <link>https://www.jokuh.com/shipped/2026-w16</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w16</guid>
+      <description>We load-tested everything and fixed what we found. Plus a browser built for your thumb.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 19 Apr 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
       <title>Spine ships to TestFlight</title>
       <link>https://www.jokuh.com/newsroom/spine-ships-testflight</link>
       <guid isPermaLink="true">https://www.jokuh.com/newsroom/spine-ships-testflight</guid>
@@ -41,6 +193,14 @@
       <category>Release</category>
       <pubDate>Wed, 15 Apr 2026 12:00:00 GMT</pubDate>
       <media:thumbnail url="https://www.jokuh.com/news-art/news-art-d8b26214c8.jpg" />
+    </item>
+    <item>
+      <title>Week 3: Blurbs arrive</title>
+      <link>https://www.jokuh.com/shipped/2026-w15</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w15</guid>
+      <description>A social feed of your own, group chats, reactions, and the first Android build.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 12 Apr 2026 12:00:00 GMT</pubDate>
     </item>
     <item>
       <title>Grants from Avalanche, RunPod, Hume AI, and Kihew</title>
@@ -59,6 +219,14 @@
       <category>Stories</category>
       <pubDate>Wed, 08 Apr 2026 12:00:00 GMT</pubDate>
       <media:thumbnail url="https://www.jokuh.com/story-art/tomas-aldaz-card.png" />
+    </item>
+    <item>
+      <title>Week 2: It&apos;s called Jokuh</title>
+      <link>https://www.jokuh.com/shipped/2026-w14</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w14</guid>
+      <description>The app gets its name, and in one week learns to text, call, and remember.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 05 Apr 2026 12:00:00 GMT</pubDate>
     </item>
     <item>
       <title>A psychotherapy practice in New York</title>
@@ -86,6 +254,14 @@
       <category>Stories</category>
       <pubDate>Sun, 29 Mar 2026 12:00:00 GMT</pubDate>
       <media:thumbnail url="https://www.jokuh.com/story-art/maren-workspace.png" />
+    </item>
+    <item>
+      <title>Week 1: Day one</title>
+      <link>https://www.jokuh.com/shipped/2026-w13</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w13</guid>
+      <description>The first commit. One app for iPhone, Mac and the web, from the very first line.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 29 Mar 2026 12:00:00 GMT</pubDate>
     </item>
     <item>
       <title>Ethics, Compliance &amp; Responsible Deployment</title>

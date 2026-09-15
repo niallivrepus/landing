@@ -1,0 +1,821 @@
+{
+  "firstWeekStart": "2026-03-23",
+  "weeks": [
+    {
+      "slug": "2026-w38",
+      "week": 26,
+      "start": "2026-09-14",
+      "end": "2026-09-20",
+      "publishedAt": "2026-09-15",
+      "commits": 40,
+      "headline": "Messaging, remade",
+      "dek": "Photos you can mark up, voice notes that look like a radio intercept, and stickers that finally feel like messages. On every platform at once.",
+      "items": [
+        {
+          "area": "Messaging",
+          "title": "Edit a photo before you send it",
+          "body": "Crop, draw, add text and stickers, write a caption. Change your mind and re-open the edit before it goes.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Messaging",
+          "title": "Full-screen photos that zoom",
+          "body": "Tap any photo in a chat. Pinch, double-tap, scroll the wheel, pan around.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Messaging",
+          "title": "Voice notes, as a thermal readout",
+          "body": "Record right inside the text field. The waveform follows your real voice, and sent notes play back like a radio pickup.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Messaging",
+          "title": "Stickers and GIFs, one tap away",
+          "body": "They send as their own messages, and the picker stays open so you can send a few in a row.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Messaging",
+          "title": "A camera-first + button",
+          "body": "The + opens our own half sheet: camera up top, then photos, files, location.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "People",
+          "title": "Find anyone on Jokuh",
+          "body": "New Call and Find people now search everyone, not just the people you already know.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w37",
+      "week": 25,
+      "start": "2026-09-07",
+      "end": "2026-09-13",
+      "publishedAt": "2026-09-13",
+      "commits": 82,
+      "headline": "Walkie-talkie, Fuel, and the week ahead",
+      "dek": "Our busiest week yet: voice messages you hold to talk, an Arcade that runs on its own token, and a Spine that knows what's on near you.",
+      "items": [
+        {
+          "area": "Messaging",
+          "title": "Walkie-talkie voice messages",
+          "body": "Tap to record hands-free, or hold to talk and let go to send. With a little splat when it lands.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Spine",
+          "title": "Shared Spine, inside the chat",
+          "body": "Open a conversation and see the year you two have had: calls, photos, plans, all in one lane.",
+          "platforms": ["iOS", "Mac"]
+        },
+        {
+          "area": "Spine",
+          "title": "Events you're going to, and ones nearby",
+          "body": "Your RSVPs show up as rich Going rows, with suggestions for what's on around you. Hours with an event glow Jokuh orange.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Arcade",
+          "title": "The Arcade runs on Fuel",
+          "body": "Tickets, payouts and prizes all run on Fuel, the Arcade's own token. Everyday games stay free.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Wallet",
+          "title": "Tip with Batcoin, hold your own Zcash",
+          "body": "Tip people across the app, and keep Zcash in a wallet only you hold the keys to.",
+          "platforms": ["iOS", "Mac"]
+        },
+        {
+          "area": "Messaging",
+          "title": "Chats open instantly, even offline",
+          "body": "Your history paints from the device the moment you open a chat, signal or not.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w36",
+      "week": 24,
+      "start": "2026-08-31",
+      "end": "2026-09-06",
+      "publishedAt": "2026-09-06",
+      "commits": 30,
+      "headline": "Gooey, for everyone",
+      "dek": "One look across every screen, calls that connect the first time, and a Mac palette that finds anything.",
+      "items": [
+        {
+          "area": "Design",
+          "title": "Gooey is the new look",
+          "body": "Glassy chrome, Satoshi type, and Gooey Light and Dark themes, on by default for everyone.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Design",
+          "title": "Real squircles, everywhere",
+          "body": "Every container uses the same fully smoothed corner as our Figma files. You feel it more than you see it.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Calls",
+          "title": "Calls that just connect",
+          "body": "Audio that doesn't drop out, 1080p video, and one control dock instead of three.",
+          "platforms": ["iOS", "Mac"]
+        },
+        {
+          "area": "OO",
+          "title": "Connect your apps in one tap",
+          "body": "Link the apps you use, and OO can work with them inside your DMs and huddles.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Mac",
+          "title": "A palette that finds anything",
+          "body": "Memories, chats, people, sites you've visited, a world clock and unit conversions, a keystroke away.",
+          "platforms": ["Mac"]
+        },
+        {
+          "area": "Profile",
+          "title": "Your space",
+          "body": "Your own blurbs orbit your profile, and the pod turns into a composer while it's open.",
+          "platforms": ["iOS", "Mac"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w35",
+      "week": 23,
+      "start": "2026-08-24",
+      "end": "2026-08-30",
+      "publishedAt": "2026-08-30",
+      "commits": 17,
+      "headline": "A calmer Jokuh",
+      "dek": "We took things away this week. The core app gets quieter, and the extras wait until you ask for them.",
+      "items": [
+        {
+          "area": "Platform",
+          "title": "Extra tools, off until you want them",
+          "body": "The experimental stuff now lives behind one switch in Settings. Out of the box you get calls, texts, Spine and your profile.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Calls",
+          "title": "Calls and DMs show the essentials",
+          "body": "Beta buttons and message actions move behind the same switch, so the everyday screens stay clean.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Performance",
+          "title": "Less work in the background",
+          "body": "The web app skips the heavy background work until you need it.",
+          "platforms": ["Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w34",
+      "week": 22,
+      "start": "2026-08-17",
+      "end": "2026-08-23",
+      "publishedAt": "2026-08-23",
+      "commits": 7,
+      "headline": "Under the hood",
+      "dek": "A quiet week on the surface. Underneath, we tightened the walls around your account.",
+      "items": [
+        {
+          "area": "Privacy",
+          "title": "Stronger account boundaries",
+          "body": "A full pass over sign-in, database access rules and our service gateway.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Platform",
+          "title": "Recovers when things go wrong",
+          "body": "New crash and timeout recovery, so a bad network moment doesn't take the app down with it.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Wallet",
+          "title": "A cleaner wallet",
+          "body": "A new wallet header and simpler token rows.",
+          "platforms": ["iOS", "Mac"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w31",
+      "week": 19,
+      "start": "2026-07-27",
+      "end": "2026-08-02",
+      "publishedAt": "2026-08-02",
+      "commits": 25,
+      "headline": "Blurbs on your profile",
+      "dek": "Your blurbs get a home on your ID, and OO learns to look after the people and pets in your life.",
+      "items": [
+        {
+          "area": "Blurbs",
+          "title": "A Blurbs pod for your profile",
+          "body": "A chat-bubble thumbnail with little floaters, and a sheet with your latest blurbs.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Blurbs",
+          "title": "A rainbow identity",
+          "body": "Blurbs gets its own dark-rainbow look, with a bit of game to it.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "OO",
+          "title": "Pet care, partners and a daily check-in",
+          "body": "OO can help with pet care, there's a new bond for partners, and Spine asks how your day went.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Spine",
+          "title": "Months open where you stop",
+          "body": "Scroll Spine and the month you settle on opens by itself.",
+          "platforms": ["iOS", "Mac"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w30",
+      "week": 18,
+      "start": "2026-07-20",
+      "end": "2026-07-26",
+      "publishedAt": "2026-07-26",
+      "commits": 73,
+      "headline": "Build your profile from pods",
+      "dek": "Your ID becomes a set of pods you pick and arrange: music, gallery, location, about. And claiming your handle now comes with confetti.",
+      "items": [
+        {
+          "area": "Profile",
+          "title": "Profile pods",
+          "body": "Add music, a gallery, where you are, your story, and lay them out the way you like.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Profile",
+          "title": "About, expanded",
+          "body": "Tap About to open your whole story, on your own profile and on public ones.",
+          "platforms": ["Web", "Android"]
+        },
+        {
+          "area": "Onboarding",
+          "title": "Claim your @handle, with confetti",
+          "body": "Pick your handle and it bursts. If it's taken, you see who has it.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Onboarding",
+          "title": "A first-blurb reward",
+          "body": "New people get a reward for their first blurb, and topics picked for them from what they like.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Spine",
+          "title": "Today, sandwiched",
+          "body": "Past hours sit above the now pill, and what's coming sits below.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w29",
+      "week": 17,
+      "start": "2026-07-13",
+      "end": "2026-07-19",
+      "publishedAt": "2026-07-19",
+      "commits": 7,
+      "headline": "Sealed",
+      "dek": "Messages go end-to-end encrypted. DMs, huddles and in-call chat are sealed on every platform, and we can't read them.",
+      "items": [
+        {
+          "area": "Privacy",
+          "title": "End-to-end encrypted messaging",
+          "body": "DMs, huddles and chat inside calls are sealed on your device before they leave it.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Privacy",
+          "title": "Translation only with consent",
+          "body": "On sealed calls, live translation only runs when everyone in the call agrees.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Arcade",
+          "title": "The Arcade gets its own chain",
+          "body": "An Avalanche L1 for the Arcade, the groundwork for what later became Fuel.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Spine",
+          "title": "Your living week",
+          "body": "Spine keeps a rolling picture of your week, on every platform.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w28",
+      "week": 16,
+      "start": "2026-07-06",
+      "end": "2026-07-12",
+      "publishedAt": "2026-07-12",
+      "commits": 9,
+      "headline": "Lighter and faster",
+      "dek": "A full-stack speed pass: smaller downloads, a quicker database, and live updates instead of constant checking.",
+      "items": [
+        {
+          "area": "Performance",
+          "title": "A smaller, faster app",
+          "body": "We cut the app's download size and sped up the database behind it.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Calls",
+          "title": "Calls update live",
+          "body": "Pulse uses realtime updates instead of asking the server every few seconds.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Bubbles",
+          "title": "Bubbles opens in a snap",
+          "body": "The Bubbles drawer opens and scrolls faster, even with long histories.",
+          "platforms": ["iOS", "Mac"]
+        },
+        {
+          "area": "Privacy",
+          "title": "Delete your account from the app",
+          "body": "One place in Settings, no email required.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w27",
+      "week": 15,
+      "start": "2026-06-29",
+      "end": "2026-07-05",
+      "publishedAt": "2026-07-05",
+      "commits": 5,
+      "headline": "Blocks, widgets and GIFs",
+      "dek": "Answers come back as cards, Jokuh lands on your Home Screen, and chats get GIFs and mentions.",
+      "items": [
+        {
+          "area": "Cortex",
+          "title": "Cortex Blocks",
+          "body": "Answers come back as cards, lists and comparisons you can scan, not walls of text.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Platform",
+          "title": "Home Screen widgets",
+          "body": "A set of Jokuh widgets, so the day's brief is one glance away.",
+          "platforms": ["iOS"]
+        },
+        {
+          "area": "Messaging",
+          "title": "GIFs, mentions and attachments",
+          "body": "A GIF picker, @mentions and richer attachments in every chat.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Spine",
+          "title": "Today Brief chips",
+          "body": "Quick chips at the top of Spine for what matters today, with a few new sounds.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Arcade",
+          "title": "More Arcade",
+          "body": "More games to play inside Jokuh.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w26",
+      "week": 14,
+      "start": "2026-06-22",
+      "end": "2026-06-28",
+      "publishedAt": "2026-06-28",
+      "commits": 3,
+      "headline": "Meet Cortex",
+      "dek": "An AI you can chat with that knows your Spine, a look at the sky, and Jokuh in more languages.",
+      "items": [
+        {
+          "area": "Cortex",
+          "title": "Cortex chat",
+          "body": "Ask anything, and get answers grounded in your own memories.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Spine",
+          "title": "Sky lens",
+          "body": "What's happening overhead, right inside your day.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Platform",
+          "title": "More languages",
+          "body": "A big translation wave across the app.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Platform",
+          "title": "Your devices stay in sync",
+          "body": "Start on your phone, pick it up on your Mac.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w24",
+      "week": 12,
+      "start": "2026-06-08",
+      "end": "2026-06-14",
+      "publishedAt": "2026-06-14",
+      "commits": 11,
+      "headline": "Share anything into Spine",
+      "dek": "Send a link, a photo or a note from any app and Jokuh asks where it belongs.",
+      "items": [
+        {
+          "area": "Spine",
+          "title": "Share to Spine",
+          "body": "Use the share sheet from any app. Save it to Spine, or turn it into a text or a blurb.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        },
+        {
+          "area": "Spine",
+          "title": "A daily brief and photo moments",
+          "body": "Open Jokuh to a short brief of your day, with your best photos pulled forward.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Calls",
+          "title": "A soundboard",
+          "body": "Drop a sound into the call.",
+          "platforms": ["iOS", "Mac"]
+        },
+        {
+          "area": "Design",
+          "title": "Dark paper",
+          "body": "Sheets get a dark paper texture, and Nexus learns timers and toasts.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w22",
+      "week": 10,
+      "start": "2026-05-25",
+      "end": "2026-05-31",
+      "publishedAt": "2026-05-31",
+      "commits": 12,
+      "headline": "A wallet, and OO calls you back",
+      "dek": "The first wallet, OO that phones you when it has an answer, and an OO that can use your other apps.",
+      "items": [
+        {
+          "area": "Wallet",
+          "title": "The first wallet",
+          "body": "See and move what you hold, right inside Jokuh.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "OO",
+          "title": "OO calls you back",
+          "body": "Ask OO something that takes a while, and it calls you when it's done.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "OO",
+          "title": "OO uses your apps",
+          "body": "Connect services and OO can take real steps with them, not just talk.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Profile",
+          "title": "Smoother live streams",
+          "body": "Profile Live moves to a new streaming backbone, plus Beam rooms.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Performance",
+          "title": "Faster launch",
+          "body": "We measured cold launch and took the congestion out of it.",
+          "platforms": ["iOS", "Mac"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w21",
+      "week": 9,
+      "start": "2026-05-18",
+      "end": "2026-05-24",
+      "publishedAt": "2026-05-24",
+      "commits": 18,
+      "headline": "Go live",
+      "dek": "Broadcast from your profile, let people book time with you, and meet the agents who liven up Blurbs.",
+      "items": [
+        {
+          "area": "Profile",
+          "title": "Profile Live",
+          "body": "Go live from your profile. On iPhone you can broadcast your screen too.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Spine",
+          "title": "Book time with me",
+          "body": "Share a public Spine link and people can pick a slot. Meeting invites arrive by email with an RSVP.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Blurbs",
+          "title": "Agents that react",
+          "body": "AI characters show up on Blurbs, react to posts, and remember the conversation.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Studio",
+          "title": "Studio",
+          "body": "Make images without leaving Jokuh.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Platform",
+          "title": "Tell us what's off",
+          "body": "An in-app feedback inbox that goes straight to the team.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w20",
+      "week": 8,
+      "start": "2026-05-11",
+      "end": "2026-05-17",
+      "publishedAt": "2026-05-17",
+      "commits": 1,
+      "headline": "Meetings on the calendar",
+      "dek": "One big drop: schedule a call ahead of time, and huddles on every platform.",
+      "items": [
+        {
+          "area": "Calls",
+          "title": "Scheduled meetings",
+          "body": "Put a Pulse call on the calendar and everyone gets the link.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Bubbles",
+          "title": "Huddles, everywhere",
+          "body": "Drop-in group voice works the same on phone, Mac and web.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w19",
+      "week": 7,
+      "start": "2026-05-04",
+      "end": "2026-05-10",
+      "publishedAt": "2026-05-10",
+      "commits": 1,
+      "headline": "The Arcade opens",
+      "dek": "Games inside Jokuh, a voice agent you can just talk to, and calls that translate as you speak.",
+      "items": [
+        {
+          "area": "Arcade",
+          "title": "The Arcade",
+          "body": "Games you can play with friends, right in the app.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "OO",
+          "title": "A realtime voice agent",
+          "body": "Talk out loud and get an answer back in real time.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Calls",
+          "title": "Live call translation",
+          "body": "Speak your language and they hear theirs.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Design",
+          "title": "Dark app icons",
+          "body": "Jokuh matches your Home Screen in dark mode.",
+          "platforms": ["iOS"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w18",
+      "week": 6,
+      "start": "2026-04-27",
+      "end": "2026-05-03",
+      "publishedAt": "2026-05-03",
+      "commits": 2,
+      "headline": "Bubbles and huddles",
+      "dek": "Small group spaces with a voice room built in, and a place in Spine for your files.",
+      "items": [
+        {
+          "area": "Bubbles",
+          "title": "Bubbles and huddles",
+          "body": "A space for your group, with a huddle you can drop into any time.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Spine",
+          "title": "A file library",
+          "body": "Files you share and save, organised in Spine.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Calls",
+          "title": "Search and calls, more reliable",
+          "body": "Better search results, and fewer calls that fail to connect.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w17",
+      "week": 5,
+      "start": "2026-04-20",
+      "end": "2026-04-26",
+      "publishedAt": "2026-04-26",
+      "commits": 21,
+      "headline": "Your Daily Pulse",
+      "dek": "Spine starts the day with you, and everything gets a little snappier.",
+      "items": [
+        {
+          "area": "Spine",
+          "title": "Spine Daily Pulse",
+          "body": "A personal read of your day, written for you each morning.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Messaging",
+          "title": "Paste to send",
+          "body": "Paste an image straight into a DM, and send photos without typing anything.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Messaging",
+          "title": "Formatting and sources in bubbles",
+          "body": "Bold, lists and links render inside messages, and answers show their sources.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Performance",
+          "title": "Snappier by feel",
+          "body": "Sheets react the instant you touch them, pills tap back with haptics, and animations got a tighter budget.",
+          "platforms": ["iOS", "Mac", "Web", "Android"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w16",
+      "week": 4,
+      "start": "2026-04-13",
+      "end": "2026-04-19",
+      "publishedAt": "2026-04-19",
+      "commits": 19,
+      "headline": "Speed week",
+      "dek": "We load-tested everything and fixed what we found. Plus a browser built for your thumb.",
+      "items": [
+        {
+          "area": "Performance",
+          "title": "Faster everywhere",
+          "body": "Images load ahead of you, skeletons replace spinners, and Spine opens without waiting.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Platform",
+          "title": "A browser for your thumb",
+          "body": "The in-app browser goes full width, with tabs as dots under the address bar.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Platform",
+          "title": "Search that knows what you mean",
+          "body": "Type a command and it runs. Type anything else and you get the web.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Platform",
+          "title": "Push notifications",
+          "body": "Messages and calls reach you when the app is closed.",
+          "platforms": ["iOS", "Mac"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w15",
+      "week": 3,
+      "start": "2026-04-06",
+      "end": "2026-04-12",
+      "publishedAt": "2026-04-12",
+      "commits": 29,
+      "headline": "Blurbs arrive",
+      "dek": "A social feed of your own, group chats, reactions, and the first Android build.",
+      "items": [
+        {
+          "area": "Blurbs",
+          "title": "Blurbs",
+          "body": "Post short thoughts to a feed, each with its own public link you can share anywhere.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Messaging",
+          "title": "Groups, reactions and Joki packs",
+          "body": "Group threads, a shared planner, reactions, and our own sticker packs.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Calls",
+          "title": "Calling, rebuilt",
+          "body": "Clearer audio, group calls, deep links into a call, and transcripts.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Platform",
+          "title": "Hello, Android",
+          "body": "The first Android build of Jokuh.",
+          "platforms": ["Android"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w14",
+      "week": 2,
+      "start": "2026-03-30",
+      "end": "2026-04-05",
+      "publishedAt": "2026-04-05",
+      "commits": 40,
+      "headline": "It's called Jokuh",
+      "dek": "The app gets its name, and in one week learns to text, call, and remember.",
+      "items": [
+        {
+          "area": "Platform",
+          "title": "Sign in with a passkey",
+          "body": "No passwords. Your face or fingerprint is the key.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Messaging",
+          "title": "Texts and voice memos",
+          "body": "Messaging with voice memos, attachments and link previews.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Calls",
+          "title": "Pulse calls",
+          "body": "Voice and video calls, with our own ringtones and a branded incoming-call screen.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Spine",
+          "title": "Calls become memories",
+          "body": "A call's transcript can land in Spine, with privacy controls for what gets kept.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    },
+    {
+      "slug": "2026-w13",
+      "week": 1,
+      "start": "2026-03-23",
+      "end": "2026-03-29",
+      "publishedAt": "2026-03-29",
+      "commits": 3,
+      "headline": "Day one",
+      "dek": "The first commit. One app for iPhone, Mac and the web, from the very first line.",
+      "items": [
+        {
+          "area": "Platform",
+          "title": "The first commit",
+          "body": "A small cross-platform app in Swift and on the web. The same product on both from day one.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Spine",
+          "title": "Spine starts remembering",
+          "body": "The first version of Spine, the place your days get kept.",
+          "platforms": ["iOS", "Mac", "Web"]
+        },
+        {
+          "area": "Platform",
+          "title": "A command sheet",
+          "body": "One place to type and get things done.",
+          "platforms": ["iOS", "Mac", "Web"]
+        }
+      ]
+    }
+  ]
+}

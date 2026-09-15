@@ -139,6 +139,7 @@ const KNOWN_SPA_PREFIXES = [
   "/journal",
   "/news",
   "/rss",
+  "/shipped",
   "/stories",
   "/blurbs",
   "/spine",
