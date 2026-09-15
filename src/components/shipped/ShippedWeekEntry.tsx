@@ -2,7 +2,10 @@ import { cn } from "@jokuh/gooey";
 import { SiteLink } from "../SiteLink";
 import {
   formatShippedRange,
+  getShippedCommits,
   getShippedHref,
+  getShippedPeriodMark,
+  isShippedMonthPost,
   isShippedWeekInProgress,
   SHIPPED_PLATFORMS,
   type ShippedPlatform,
@@ -21,7 +24,7 @@ export function ShippedLiveBadge() {
   );
 }
 
-function PlatformChips({ platforms }: { platforms: ShippedPlatform[] }) {
+export function PlatformChips({ platforms }: { platforms: ShippedPlatform[] }) {
   const everywhere = SHIPPED_PLATFORMS.every((platform) => platforms.includes(platform));
   const labels = everywhere ? ["Everywhere"] : SHIPPED_PLATFORMS.filter((platform) => platforms.includes(platform));
 
@@ -45,20 +48,28 @@ function PlatformChips({ platforms }: { platforms: ShippedPlatform[] }) {
 }
 
 /**
- * **Purpose:** One week of the build log — sticky week numeral on the left, headline + update cards on the right.
+ * **Purpose:** One post of the build log — sticky period mark on the left (week number, or month for
+ * recaps), headline + update cards on the right.
  * **Connects to:** `ShippedPage` list and detail views.
  */
 export function ShippedWeekEntry({ week, linkHeadline = true }: { week: ShippedWeek; linkHeadline?: boolean }) {
-  const live = isShippedWeekInProgress(week);
+  const month = isShippedMonthPost(week);
+  const live = !month && isShippedWeekInProgress(week);
+  const commits = getShippedCommits(week);
 
   return (
     <article className="grid gap-6 border-t border-light-space/[0.1] pt-8 light:border-black/[0.08] md:pt-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
       <header className="lg:sticky lg:top-24 lg:self-start">
         <p className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/46 light:text-zinc-500">
-          Week
+          {month ? "Monthly recap" : "Week"}
         </p>
-        <p className="font-sans text-[3.5rem] font-semibold leading-none tabular-nums tracking-[-0.02em] text-light-space light:text-zinc-950 md:text-[4.5rem]">
-          {week.week}
+        <p
+          className={cn(
+            "font-sans font-semibold leading-none tabular-nums tracking-[-0.02em] text-light-space light:text-zinc-950",
+            month ? "mt-1 text-[2.5rem] md:text-[3rem]" : "text-[3.5rem] md:text-[4.5rem]",
+          )}
+        >
+          {getShippedPeriodMark(week)}
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 font-sans text-[13px] text-light-space/55 light:text-zinc-600">
           <span>{formatShippedRange(week)}</span>
@@ -66,7 +77,7 @@ export function ShippedWeekEntry({ week, linkHeadline = true }: { week: ShippedW
             ·
           </span>
           <span className="tabular-nums">
-            {week.commits} {week.commits === 1 ? "commit" : "commits"}
+            {commits.toLocaleString("en-US")} {commits === 1 ? "commit" : "commits"}
           </span>
         </div>
         {live ? (

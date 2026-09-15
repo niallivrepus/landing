@@ -279,7 +279,7 @@ function shippedItems() {
     .filter((week) => !week.draft)
     .map((week) => ({
       id: `shipped-${week.slug}`,
-      title: `Week ${week.week}: ${week.headline}`,
+      title: `${week.kind === "month" ? week.label : `Week ${week.week}`}: ${week.headline}`,
       description: week.dek,
       category: "Shipped",
       publishedAt: week.publishedAt,

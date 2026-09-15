@@ -1,10 +1,13 @@
+import activity from "./shipped-activity.json";
 import shippedPayload from "./shipped.json";
 
 /**
- * **Purpose:** Weekly "Shipped" build log — one post per active week, backdated from the jokuh-live
- * commit history (week 1 = the week of the first commit, 2026-03-23).
+ * **Purpose:** The "Shipped" build log — weekly posts from March 2026, monthly recaps from June 2025,
+ * and commit counts back to the first Jokuh commit (December 2023).
  * **Connects to:** `ShippedPage` (`/shipped`, `/shipped/:slug`), `ShippedStrip` on Home,
- * `scripts/generate-rss.mjs` (reads the JSON directly), `scripts/draft-shipped-week.mjs` (drafts new weeks).
+ * `scripts/generate-rss.mjs` (reads the JSON directly), `scripts/draft-shipped-week.mjs` (drafts new weeks),
+ * `scripts/count-shipped-activity.mjs` (refreshes `shipped-activity.json`, the only source of commit counts).
+ * Week numbers count from Week 1 = 2025-06-02 (the first week of the current Jokuh line).
  * Entries with `draft: true` are hidden from the site and RSS until the copy is approved.
  */
 
@@ -19,34 +22,43 @@ export type ShippedItem = {
 
 export type ShippedWeek = {
   slug: string;
-  week: number;
+  /** "week" posts cover one ISO week; "month" posts are recaps of a month (or a few quiet months). */
+  kind?: "week" | "month";
+  week?: number;
+  /** Month posts only: "October 2025", "Summer 2025". */
+  label?: string;
   start: string;
   end: string;
   publishedAt: string;
-  commits: number;
+  commits?: number;
   headline: string;
   dek: string;
   items: ShippedItem[];
   draft?: boolean;
 };
 
-export type ShippedRibbonBar = {
-  week: number;
-  start: string;
+export type ShippedBar = {
+  key: string;
+  label: string;
   commits: number;
   slug?: string;
 };
 
 export const SHIPPED_PLATFORMS: ShippedPlatform[] = ["iOS", "Mac", "Web", "Android"];
 
+const WEEKLY: Record<string, number> = activity.weekly;
+const MONTHLY: Record<string, number> = activity.monthly;
+
+/** First commit date across every Jokuh repo. */
+export const SHIPPED_SINCE: string = activity.since;
+export const SHIPPED_TOTAL_COMMITS: number = activity.total;
+
 /** Newest first. */
 export const SHIPPED_WEEKS: ShippedWeek[] = (shippedPayload.weeks as ShippedWeek[])
-  .filter((week) => !week.draft)
+  .filter((post) => !post.draft)
   .sort((a, b) => b.start.localeCompare(a.start));
 
-export const SHIPPED_TOTAL_COMMITS = SHIPPED_WEEKS.reduce((sum, week) => sum + week.commits, 0);
-
-export const SHIPPED_TOTAL_UPDATES = SHIPPED_WEEKS.reduce((sum, week) => sum + week.items.length, 0);
+export const SHIPPED_TOTAL_UPDATES = SHIPPED_WEEKS.reduce((sum, post) => sum + post.items.length, 0);
 
 const DAY_MS = 86_400_000;
 
@@ -54,55 +66,147 @@ function utcDate(iso: string) {
   return new Date(`${iso}T00:00:00Z`);
 }
 
-function isoDay(date: Date) {
-  return date.toISOString().slice(0, 10);
+export function isShippedMonthPost(post: Pick<ShippedWeek, "kind">) {
+  return post.kind === "month";
 }
 
-/** Every week from week 1 to the latest post, quiet weeks included, oldest first. */
-export function getShippedRibbon(): ShippedRibbonBar[] {
-  const latest = SHIPPED_WEEKS[0];
-  if (!latest) return [];
-  const bySlugWeek = new Map(SHIPPED_WEEKS.map((week) => [week.week, week]));
-  const first = utcDate(shippedPayload.firstWeekStart);
+/** "2026-W38" for a Monday (or any day) in that ISO week. */
+function isoWeekKeyOf(date: Date) {
+  const thursday = new Date(date.getTime() + (3 - ((date.getUTCDay() + 6) % 7)) * DAY_MS);
+  const year = thursday.getUTCFullYear();
+  const jan4 = new Date(Date.UTC(year, 0, 4));
+  const week1Monday = jan4.getTime() - ((jan4.getUTCDay() + 6) % 7) * DAY_MS;
+  const week = Math.round((thursday.getTime() - week1Monday) / (7 * DAY_MS)) + 1;
+  return `${year}-W${String(week).padStart(2, "0")}`;
+}
 
-  return Array.from({ length: latest.week }, (_, index) => {
-    const number = index + 1;
-    const post = bySlugWeek.get(number);
-    return {
-      week: number,
-      start: post?.start ?? isoDay(new Date(first.getTime() + index * 7 * DAY_MS)),
-      commits: post?.commits ?? 0,
-      slug: post?.slug,
-    };
-  });
+/** "2025-06" … "2025-08" inclusive. */
+function monthKeysBetween(startMonth: string, endMonth: string) {
+  const keys: string[] = [];
+  let [year, month] = startMonth.split("-").map(Number);
+  const [endYear, endMonthNumber] = endMonth.split("-").map(Number);
+  while (year < endYear || (year === endYear && month <= endMonthNumber)) {
+    keys.push(`${year}-${String(month).padStart(2, "0")}`);
+    month += 1;
+    if (month > 12) {
+      month = 1;
+      year += 1;
+    }
+  }
+  return keys;
+}
+
+/** Commits in the post's period, from `shipped-activity.json` (every Jokuh repo, deduped). */
+export function getShippedCommits(post: ShippedWeek) {
+  if (isShippedMonthPost(post)) {
+    return monthKeysBetween(post.start.slice(0, 7), post.end.slice(0, 7)).reduce(
+      (sum, key) => sum + (MONTHLY[key] ?? 0),
+      0,
+    );
+  }
+  return WEEKLY[isoWeekKeyOf(utcDate(post.start))] ?? post.commits ?? 0;
 }
 
 export function getShippedWeek(slug: string | undefined) {
   if (!slug) return undefined;
-  return SHIPPED_WEEKS.find((week) => week.slug === slug.toLowerCase());
+  return SHIPPED_WEEKS.find((post) => post.slug === slug.toLowerCase());
 }
 
-export function getShippedHref(week: Pick<ShippedWeek, "slug">) {
-  return `/shipped/${week.slug}`;
+export function getShippedHref(post: Pick<ShippedWeek, "slug">) {
+  return `/shipped/${post.slug}`;
 }
 
-/** True while the week's Sunday hasn't passed yet — the post is still filling in. */
-export function isShippedWeekInProgress(week: Pick<ShippedWeek, "end">, now = new Date()) {
-  return now.getTime() < utcDate(week.end).getTime() + DAY_MS;
+/** True while the period's last day hasn't passed yet — the post is still filling in. */
+export function isShippedWeekInProgress(post: Pick<ShippedWeek, "end">, now = new Date()) {
+  return now.getTime() < utcDate(post.end).getTime() + DAY_MS;
 }
 
 const monthDay = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 const dayOnly = new Intl.DateTimeFormat("en-US", { day: "numeric", timeZone: "UTC" });
+const monthShort = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" });
+const monthLong = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 const monthYear = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
 
-/** "Sep 7 – 13" or "Aug 31 – Sep 6". */
-export function formatShippedRange(week: Pick<ShippedWeek, "start" | "end">) {
-  const start = utcDate(week.start);
-  const end = utcDate(week.end);
+/** "Week 68" or "October 2025". */
+export function getShippedPeriodName(post: ShippedWeek) {
+  if (isShippedMonthPost(post)) return post.label ?? monthLong.format(utcDate(post.start));
+  return `Week ${post.week}`;
+}
+
+/** Big header text: the week number, or "Oct" / "Jun–Aug" for recaps. */
+export function getShippedPeriodMark(post: ShippedWeek) {
+  if (!isShippedMonthPost(post)) return String(post.week);
+  const start = monthShort.format(utcDate(post.start));
+  const end = monthShort.format(utcDate(post.end));
+  return start === end ? start : `${start}–${end}`;
+}
+
+/** "Sep 7 – 13", "Aug 31 – Sep 6", or "2025" for recaps. */
+export function formatShippedRange(post: ShippedWeek) {
+  const start = utcDate(post.start);
+  const end = utcDate(post.end);
+  if (isShippedMonthPost(post)) return String(start.getUTCFullYear());
   const sameMonth = start.getUTCMonth() === end.getUTCMonth();
   return `${monthDay.format(start)} – ${sameMonth ? dayOnly.format(end) : monthDay.format(end)}`;
 }
 
 export function formatShippedMonth(iso: string) {
   return monthYear.format(utcDate(iso));
+}
+
+function postCovering(startIso: string, endIso: string) {
+  return [...SHIPPED_WEEKS]
+    .reverse()
+    .find((post) => post.start <= endIso && post.end >= startIso);
+}
+
+export function getShippedMonthCommits(monthKey: string) {
+  return MONTHLY[monthKey] ?? 0;
+}
+
+export function getShippedYearCommits(year: number) {
+  return Object.entries(MONTHLY).reduce((sum, [key, count]) => (key.startsWith(`${year}-`) ? sum + count : sum), 0);
+}
+
+/** Every month from the first commit to the newest counted month, newest first ("2026-09", …, "2023-12"). */
+export function getShippedMonthKeys() {
+  const lastMonth = Object.keys(MONTHLY).sort().pop() ?? SHIPPED_SINCE.slice(0, 7);
+  return monthKeysBetween(SHIPPED_SINCE.slice(0, 7), lastMonth).reverse();
+}
+
+/** One bar per month since the first commit, oldest first; each links to the earliest post covering it. */
+export function getShippedMonthlyBars(): ShippedBar[] {
+  const lastMonth = Object.keys(MONTHLY).sort().pop() ?? SHIPPED_SINCE.slice(0, 7);
+  return monthKeysBetween(SHIPPED_SINCE.slice(0, 7), lastMonth).map((key) => {
+    const [year, month] = key.split("-").map(Number);
+    const monthEnd = new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10);
+    const commits = MONTHLY[key] ?? 0;
+    return {
+      key,
+      label: `${formatShippedMonth(`${key}-01`)}, ${commits.toLocaleString("en-US")} ${commits === 1 ? "commit" : "commits"}`,
+      commits,
+      slug: postCovering(`${key}-01`, monthEnd)?.slug,
+    };
+  });
+}
+
+/** The last `count` ISO weeks up to the newest weekly post, oldest first. */
+export function getShippedWeeklyBars(count: number): ShippedBar[] {
+  const latest = SHIPPED_WEEKS.find((post) => !isShippedMonthPost(post));
+  if (!latest) return [];
+  const latestMonday = utcDate(latest.start).getTime();
+
+  return Array.from({ length: count }, (_, index) => {
+    const monday = new Date(latestMonday - (count - 1 - index) * 7 * DAY_MS);
+    const key = isoWeekKeyOf(monday);
+    const startIso = monday.toISOString().slice(0, 10);
+    const commits = WEEKLY[key] ?? 0;
+    const post = SHIPPED_WEEKS.find((candidate) => !isShippedMonthPost(candidate) && candidate.start === startIso);
+    return {
+      key,
+      label: `Week of ${monthDay.format(monday)}, ${commits} ${commits === 1 ? "commit" : "commits"}`,
+      commits,
+      slug: post?.slug,
+    };
+  });
 }

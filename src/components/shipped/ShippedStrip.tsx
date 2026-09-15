@@ -4,10 +4,14 @@ import { CONTENT_SHELL_WIDE } from "../system/shells";
 import { ShippedRibbon } from "./ShippedRibbon";
 import { ShippedLiveBadge } from "./ShippedWeekEntry";
 import {
+  formatShippedMonth,
   formatShippedRange,
   getShippedHref,
-  getShippedRibbon,
+  getShippedPeriodName,
+  getShippedWeeklyBars,
   isShippedWeekInProgress,
+  SHIPPED_SINCE,
+  SHIPPED_TOTAL_COMMITS,
   SHIPPED_WEEKS,
 } from "../../data/shipped";
 
@@ -20,7 +24,7 @@ const HOME_RIBBON_WEEKS = 16;
 export function ShippedStrip() {
   const latest = SHIPPED_WEEKS[0];
   if (!latest) return null;
-  const bars = getShippedRibbon().slice(-HOME_RIBBON_WEEKS);
+  const bars = getShippedWeeklyBars(HOME_RIBBON_WEEKS);
   const live = isShippedWeekInProgress(latest);
 
   return (
@@ -30,7 +34,7 @@ export function ShippedStrip() {
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
               <p className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-light-space/46 light:text-zinc-500">
-                Shipped · Week {latest.week} · {formatShippedRange(latest)}
+                Shipped · {getShippedPeriodName(latest)} · {formatShippedRange(latest)}
               </p>
               {live ? <ShippedLiveBadge /> : null}
             </div>
@@ -52,15 +56,28 @@ export function ShippedStrip() {
                 </li>
               ))}
             </ul>
-            <SiteLink
-              href="/shipped"
-              className="mt-6 inline-flex items-center gap-2 font-sans text-sm font-semibold text-light-space transition-colors hover:text-light-space/80 light:text-zinc-950 light:hover:text-zinc-700"
-            >
-              Every week since day one
-              <ArrowRight className="size-4" strokeWidth={1.75} />
-            </SiteLink>
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <SiteLink
+                href="/shipped"
+                className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-light-space transition-colors hover:text-light-space/80 light:text-zinc-950 light:hover:text-zinc-700"
+              >
+                {SHIPPED_TOTAL_COMMITS.toLocaleString("en-US")} commits since {formatShippedMonth(SHIPPED_SINCE)}
+                <ArrowRight className="size-4" strokeWidth={1.75} />
+              </SiteLink>
+              <SiteLink
+                href="/shipped/spine"
+                className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-light-space/60 transition-colors hover:text-light-space light:text-zinc-500 light:hover:text-zinc-950"
+              >
+                Open our Spine
+              </SiteLink>
+            </div>
           </div>
-          <ShippedRibbon bars={bars} hrefFor={(slug) => `/shipped/${slug}`} className="h-28 md:h-32" showLabels={false} />
+          <ShippedRibbon
+            bars={bars}
+            hrefFor={(slug) => `/shipped/${slug}`}
+            className="h-28 md:h-32"
+            ariaLabel="Commits per week, last 16 weeks"
+          />
         </div>
       </div>
     </section>

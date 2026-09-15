@@ -7,9 +7,12 @@ import { ShippedWeekEntry } from "../components/shipped/ShippedWeekEntry";
 import { MarketingPageFrame } from "../components/system";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import {
+  formatShippedMonth,
   getShippedHref,
-  getShippedRibbon,
+  getShippedMonthlyBars,
+  getShippedPeriodName,
   getShippedWeek,
+  SHIPPED_SINCE,
   SHIPPED_TOTAL_COMMITS,
   SHIPPED_TOTAL_UPDATES,
   SHIPPED_WEEKS,
@@ -29,11 +32,12 @@ function Stat({ value, label }: { value: string | number; label: string }) {
   );
 }
 
-/** `/shipped` — the weekly build log, newest week first. */
+/** `/shipped` — the build log, newest post first. */
 export function ShippedPage() {
   useDocumentTitle("Shipped · Jokuh");
   const { resolvedTheme } = useTheme();
-  const ribbon = getShippedRibbon();
+  const bars = getShippedMonthlyBars();
+  const since = formatShippedMonth(SHIPPED_SINCE);
 
   return (
     <MarketingPageFrame
@@ -51,16 +55,31 @@ export function ShippedPage() {
             Shipped
           </h1>
           <p className="mt-4 max-w-xl text-pretty text-[15px] leading-7 text-light-space/60 light:text-zinc-600 md:text-[16px]">
-            What we built every week since the first commit, straight from the commit log.
+            Every commit since {since}, and what it added up to. Straight from the commit log: a post every week,
+            and monthly recaps before that.
           </p>
+          <SiteLink
+            href="/shipped/spine"
+            className="mt-5 inline-flex items-center gap-2 font-sans text-sm font-semibold text-light-space transition-colors hover:text-light-space/80 light:text-zinc-950 light:hover:text-zinc-700"
+          >
+            See it as a Spine
+            <ArrowRight className="size-4" strokeWidth={1.75} />
+          </SiteLink>
           <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-5">
-            <Stat value={ribbon.length} label="Weeks" />
-            <Stat value={SHIPPED_TOTAL_COMMITS} label="Commits" />
+            <Stat value={SHIPPED_SINCE.slice(0, 4)} label="Since" />
+            <Stat value={SHIPPED_TOTAL_COMMITS.toLocaleString("en-US")} label="Commits" />
             <Stat value={SHIPPED_TOTAL_UPDATES} label="Updates" />
             <Stat value={4} label="Platforms" />
           </dl>
         </div>
-        <ShippedRibbon bars={ribbon} hrefFor={(slug) => `#${slug}`} className="h-36 md:h-44" />
+        <ShippedRibbon
+          bars={bars}
+          hrefFor={(slug) => `#${slug}`}
+          className="h-36 md:h-44"
+          leftLabel={since}
+          rightLabel="Now"
+          ariaLabel="Commits per month"
+        />
       </header>
 
       <ol className="space-y-14 md:space-y-20">
@@ -89,7 +108,7 @@ function WeekNavLink({ slug, direction }: { slug?: string; direction: "newer" | 
     >
       <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-light-space/46 light:text-zinc-500">
         {direction === "older" ? <Icon className="size-3.5" strokeWidth={1.75} /> : null}
-        Week {week.week}
+        {getShippedPeriodName(week)}
         {direction === "newer" ? <Icon className="size-3.5" strokeWidth={1.75} /> : null}
       </span>
       <span className="text-[15px] font-semibold text-light-space transition-colors group-hover:text-light-space/80 light:text-zinc-950 light:group-hover:text-zinc-700">
@@ -99,12 +118,12 @@ function WeekNavLink({ slug, direction }: { slug?: string; direction: "newer" | 
   );
 }
 
-/** `/shipped/:slug` — one week on its own, for sharing. */
+/** `/shipped/:slug` — one post on its own, for sharing. */
 export function ShippedWeekPage() {
   const { slug } = useParams<{ slug: string }>();
   const week = getShippedWeek(slug);
   const { resolvedTheme } = useTheme();
-  useDocumentTitle(week ? `Week ${week.week}: ${week.headline} · Jokuh` : "Shipped · Jokuh");
+  useDocumentTitle(week ? `${getShippedPeriodName(week)}: ${week.headline} · Jokuh` : "Shipped · Jokuh");
 
   if (!week) return <Navigate to="/shipped" replace />;
 
@@ -130,7 +149,7 @@ export function ShippedWeekPage() {
       <ShippedWeekEntry week={week} linkHeadline={false} />
 
       <nav
-        aria-label="More weeks"
+        aria-label="More posts"
         className="mt-16 flex items-start justify-between gap-6 border-t border-light-space/[0.1] pt-8 light:border-black/[0.08]"
       >
         <WeekNavLink slug={older?.slug} direction="older" />

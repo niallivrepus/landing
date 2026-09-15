@@ -1,6 +1,6 @@
 import { cn } from "@jokuh/gooey";
 import { SiteLink } from "../SiteLink";
-import { formatShippedMonth, type ShippedRibbonBar } from "../../data/shipped";
+import type { ShippedBar } from "../../data/shipped";
 
 const RIBBON_KEYFRAMES = `
 @keyframes shipped-bar-grow {
@@ -13,60 +13,63 @@ const RIBBON_KEYFRAMES = `
 `;
 
 /**
- * **Purpose:** Commit-activity ribbon — one bar per week since week 1, height = commits that week.
- * Quiet weeks render as a stub so the gaps read honestly. The newest bar glows Jokuh orange.
- * **Connects to:** `getShippedRibbon()`; used on `/shipped` (hash links) and the Home strip (detail links).
+ * **Purpose:** Commit-activity ribbon — one bar per period, height = commits in it. Empty periods render
+ * as a stub so gaps read honestly; the newest bar glows Jokuh orange. Bars with a post link to it.
+ * **Connects to:** `getShippedMonthlyBars()` on `/shipped`, `getShippedWeeklyBars()` on the Home strip.
  */
 export function ShippedRibbon({
   bars,
   hrefFor,
   className,
-  showLabels = true,
+  leftLabel,
+  rightLabel,
+  ariaLabel = "Commits over time",
 }: {
-  bars: ShippedRibbonBar[];
+  bars: ShippedBar[];
   hrefFor: (slug: string) => string;
   className?: string;
-  showLabels?: boolean;
+  leftLabel?: string;
+  rightLabel?: string;
+  ariaLabel?: string;
 }) {
   if (bars.length === 0) return null;
   const max = Math.max(...bars.map((bar) => bar.commits), 1);
   const latest = bars[bars.length - 1];
-  const first = bars[0];
+  const stagger = Math.min(22, 900 / bars.length);
 
   return (
-    <figure className={cn("w-full", className)}>
+    <figure className={cn("flex w-full flex-col", className)}>
       <style>{RIBBON_KEYFRAMES}</style>
-      <div className="flex h-full items-end gap-[3px] sm:gap-1" role="list" aria-label="Commits per week">
+      <div className="flex min-h-0 flex-1 items-end gap-[2px] sm:gap-1" role="list" aria-label={ariaLabel}>
         {bars.map((bar, index) => {
           const isLatest = bar === latest;
-          const height = bar.commits > 0 ? Math.max(8, Math.round((bar.commits / max) * 100)) : 3;
+          const height = bar.commits > 0 ? Math.max(6, Math.round((bar.commits / max) * 100)) : 2;
           const barClass = cn(
             "shipped-bar block w-full origin-bottom rounded-[3px] transition-colors",
             isLatest
               ? "bg-[var(--color-orange-5,#ff6a1a)]"
               : bar.slug
-                ? "bg-light-space/28 group-hover:bg-light-space/70 light:bg-zinc-300 light:group-hover:bg-zinc-700"
-                : "bg-light-space/10 light:bg-zinc-200",
+                ? "bg-light-space/32 group-hover:bg-light-space/75 light:bg-zinc-300 light:group-hover:bg-zinc-700"
+                : "bg-light-space/16 light:bg-zinc-200",
           );
           const style = {
             height: `${height}%`,
-            animation: `shipped-bar-grow 640ms cubic-bezier(0.2, 0.8, 0.2, 1) ${index * 22}ms both`,
+            animation: `shipped-bar-grow 640ms cubic-bezier(0.2, 0.8, 0.2, 1) ${Math.round(index * stagger)}ms both`,
           };
-          const label = `Week ${bar.week}, ${bar.commits} ${bar.commits === 1 ? "commit" : "commits"}`;
 
           return (
-            <div key={bar.week} role="listitem" className="flex h-full min-w-[6px] flex-1 items-end">
+            <div key={bar.key} role="listitem" className="flex h-full min-w-0 flex-1 items-end">
               {bar.slug ? (
                 <SiteLink
                   href={hrefFor(bar.slug)}
-                  aria-label={label}
-                  title={label}
+                  aria-label={bar.label}
+                  title={bar.label}
                   className="group flex h-full w-full items-end"
                 >
                   <span className={barClass} style={style} />
                 </SiteLink>
               ) : (
-                <span className="flex h-full w-full items-end" title={label}>
+                <span className="flex h-full w-full items-end" title={bar.label} aria-label={bar.label}>
                   <span className={barClass} style={style} />
                 </span>
               )}
@@ -74,12 +77,10 @@ export function ShippedRibbon({
           );
         })}
       </div>
-      {showLabels ? (
+      {leftLabel || rightLabel ? (
         <figcaption className="mt-3 flex items-center justify-between font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-light-space/42 light:text-zinc-500">
-          <span>
-            Week {first.week} · {formatShippedMonth(first.start)}
-          </span>
-          <span className="text-light-space/72 light:text-zinc-800">Week {latest.week} · Now</span>
+          <span>{leftLabel}</span>
+          <span className="text-light-space/72 light:text-zinc-800">{rightLabel}</span>
         </figcaption>
       ) : null}
     </figure>
