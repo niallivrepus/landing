@@ -2,6 +2,83 @@
   "firstWeekStart": "2025-06-02",
   "weeks": [
     {
+      "slug": "2026-w40",
+      "kind": "week",
+      "week": 70,
+      "start": "2026-09-28",
+      "end": "2026-10-04",
+      "publishedAt": "2026-09-28",
+      "headline": "Your space, your inbox, your docs",
+      "dek": "Swipe up from home and your blurbs float around you. Everyone gets their own jokuh.com email address, and full documents now live in your Spine.",
+      "draft": true,
+      "items": [
+        {
+          "area": "Blurbs",
+          "title": "Swipe up into Your space",
+          "body": "Your blurbs float around you like a small galaxy. Replies orbit as moons, photos land as prints and voice blurbs as waveforms. Pinch out to see everything at once.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Blurbs",
+          "title": "Find blurbs like this one",
+          "body": "Open any blurb and Similar shows others on the same idea, photo blurbs included.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Messaging",
+          "title": "Your own @jokuh.com address",
+          "body": "Everyone gets username@jokuh.com. Email lands in the same inbox as your DMs, and you reply from the chat composer.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Spine",
+          "title": "Write full documents in your Spine",
+          "body": "Headings, checklists, tables and images, saved to the day you wrote them. Share a link and anyone can read it on the web.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Blurbs",
+          "title": "Notifications open right on the blurb",
+          "body": "Tap a blurb notification and Your space opens with that blurb front and center.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Messaging",
+          "title": "\"whats\" stays \"whats\"",
+          "body": "Typing \"whats\" no longer turns into \"WhatsApp\".",
+          "platforms": [
+            "iOS",
+            "Mac"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "2026-w39",
       "week": 69,
       "start": "2026-09-21",
@@ -42,12 +119,11 @@
         {
           "area": "App",
           "title": "Updates in one tap",
-          "body": "When a new version is ready, Jokuh tells you and takes you straight to it. The Mac download now updates itself.",
+          "body": "When a new version is ready, Jokuh tells you and takes you straight to it.",
           "platforms": [
             "iOS",
             "Mac",
-            "Web",
-            "Android"
+            "Web"
           ]
         },
         {

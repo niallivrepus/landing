@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-28T06:47:10.617Z",
-  "totalCommits": 3897,
+  "generatedAt": "2026-09-28T22:45:13.940Z",
+  "totalCommits": 3943,
   "since": "2023-12-08",
   "url": "https://www.jokuh.com/shipped",
   "weeks": [
@@ -47,12 +47,11 @@
         {
           "area": "App",
           "title": "Updates in one tap",
-          "body": "When a new version is ready, Jokuh tells you and takes you straight to it. The Mac download now updates itself.",
+          "body": "When a new version is ready, Jokuh tells you and takes you straight to it.",
           "platforms": [
             "iOS",
             "Mac",
-            "Web",
-            "Android"
+            "Web"
           ]
         },
         {
