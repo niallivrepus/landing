@@ -2,11 +2,82 @@
   "firstWeekStart": "2025-06-02",
   "weeks": [
     {
+      "slug": "2026-w39",
+      "week": 69,
+      "start": "2026-09-21",
+      "end": "2026-09-27",
+      "publishedAt": "2026-09-27",
+      "commits": 41,
+      "headline": "Batcoin, from day one",
+      "dek": "Every new account now starts with Batcoin, and posting each day keeps it coming. Plus a browser that skips the trackers and updates that take one tap.",
+      "items": [
+        {
+          "area": "Wallet",
+          "title": "Earn Batcoin from day one",
+          "body": "New accounts start with Batcoin. Invite a friend and you both get some. Post a blurb every day to build a streak, with bonuses along the way.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Wallet",
+          "title": "Batcoin tipping on Android",
+          "body": "Throw a coin to someone from their profile or on a blurb they posted.",
+          "platforms": [
+            "Android"
+          ]
+        },
+        {
+          "area": "Browser",
+          "title": "A browser that skips the trackers",
+          "body": "The built-in browser blocks ads and trackers by default, so busy sites load noticeably faster. Turn it off for any site you like.",
+          "platforms": [
+            "iOS",
+            "Mac"
+          ]
+        },
+        {
+          "area": "App",
+          "title": "Updates in one tap",
+          "body": "When a new version is ready, Jokuh tells you and takes you straight to it. The Mac download now updates itself.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "People",
+          "title": "Friend requests that make sense",
+          "body": "Adding, accepting and declining show you exactly what happened, and when something goes wrong you're told what to do next.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Onboarding",
+          "title": "Sign up on the web without a camera",
+          "body": "No webcam, or said no to the permission? Upload a photo instead and keep going.",
+          "platforms": [
+            "Web"
+          ]
+        }
+      ],
+      "kind": "week"
+    },
+    {
       "slug": "2026-w38",
       "week": 68,
       "start": "2026-09-14",
       "end": "2026-09-20",
-      "publishedAt": "2026-09-15",
+      "publishedAt": "2026-09-20",
       "commits": 40,
       "headline": "Messaging, remade",
       "dek": "Photos you can mark up, voice notes that look like a radio intercept, and stickers that finally feel like messages. On every platform at once.",
@@ -70,6 +141,17 @@
           "area": "People",
           "title": "Find anyone on Jokuh",
           "body": "New Call and Find people now search everyone, not just the people you already know.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Wallet",
+          "title": "Live price charts in the wallet",
+          "body": "Prices move as you watch, with a line that keeps up in real time.",
           "platforms": [
             "iOS",
             "Mac",
