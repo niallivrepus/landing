@@ -37,7 +37,7 @@ export function PrivacyPolicyPage() {
         <TertiaryPageHero
           eyebrow="Legal"
           title="Privacy Policy"
-          intro="Last updated August 24, 2026. This Privacy Policy describes how Jokuh LLC (“Jokuh,” “we,” “us,” or “our”) handles information when you use the Jokuh applications, websites, and related services (together, the “Service”)."
+          intro="Last updated September 28, 2026. This Privacy Policy describes how Jokuh LLC (“Jokuh,” “we,” “us,” or “our”) handles information when you use the Jokuh applications, websites, and related services (together, the “Service”)."
         />
         <TertiaryDocBody tocItems={TOC_ITEMS}>
           <section id="who-we-are" className="scroll-mt-24 pb-10">
@@ -92,6 +92,18 @@ export function PrivacyPolicyPage() {
                 <strong className="text-light-space light:text-zinc-950">Messages and social content.</strong>{" "}
                 Direct messages, group messages, Blurbs, and related metadata (for example delivery or
                 read state). Recipients keep copies of content you send them.
+              </li>
+              <li>
+                <strong className="text-light-space light:text-zinc-950">Jokuh Mail.</strong> Each
+                account has an email address (username@jokuh.com). We store the email you send and
+                receive — senders and recipients, subjects, message bodies, attachments, and the original
+                message file — so you can read it on all your devices. Unlike direct messages, email is
+                not end-to-end encrypted: it is stored encrypted at rest on our servers and is readable by
+                our systems to deliver it, file it (for example People vs. Updates), check it for spam and
+                phishing, and send you notifications. Images inside emails are loaded through a Jokuh
+                proxy so senders cannot see your IP address or device; you can turn remote images off in
+                Settings. We keep delivery status of mail you send and may pause sending from an account
+                that generates spam complaints.
               </li>
               <li>
                 <strong className="text-light-space light:text-zinc-950">Calls and live audio/video.</strong>{" "}
@@ -183,7 +195,8 @@ export function PrivacyPolicyPage() {
                 Vendors that host data and run the product, including cloud database / auth / storage
                 (Supabase), real-time media (LiveKit and similar), push delivery (Apple and Google),
                 crash diagnostics (Sentry), AI model routing (OpenRouter and the model vendors it
-                uses), email delivery, and our hosting provider. They are limited by contract to
+                uses), email sending and receiving for Jokuh Mail (Resend, which uses Amazon Web
+                Services), and our hosting provider. They are limited by contract to
                 providing services to us.
               </li>
               <li>
@@ -219,7 +232,8 @@ export function PrivacyPolicyPage() {
               We keep information as long as your account is active and as needed to provide the
               Service, comply with law, resolve disputes, and enforce our agreements. You may delete
               certain content in the app and may delete your account in Settings. Deleting your
-              account removes your profile and Spine data we hold for you; messages you already sent
+              account removes your profile, Spine data, and your Jokuh Mail mailbox (messages and
+              attachments) we hold for you; messages and email you already sent
               may remain in other people’s inboxes; some copies may persist in backups for a limited
               period.
             </p>
