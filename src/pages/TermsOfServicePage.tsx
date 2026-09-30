@@ -132,6 +132,11 @@ export function TermsOfServicePage() {
               <li>Bypass age, safety, or game-fairness controls.</li>
             </ul>
             <p className={`mt-4 ${bodyText}`}>
+              We have zero tolerance for objectionable content and abusive users. You can report a
+              message, blurb, or profile, or block someone, from inside the app. We review reports
+              within 24 hours and remove violating content and the accounts that post it.
+            </p>
+            <p className={`mt-4 ${bodyText}`}>
               We may investigate and suspend or terminate accounts that violate these rules or create
               risk. Report abuse to{" "}
               <a href="mailto:support@jokuh.com" className={linkClass}>support@jokuh.com</a>.
