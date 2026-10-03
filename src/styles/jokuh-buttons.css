@@ -1,0 +1,248 @@
+/**
+ * **Purpose:** One button system for the marketing site, built from the app's current Gooey recipes
+ * (jokuh-live `frontend/src/styles` as of 2026-10-03): solid inverted primary (the Send disc / update
+ * prompt), Gooey-blue accent (Jokuh Meet), Gooey glass secondary (dark) / raised white control (Gooey Light),
+ * quiet ghost, and the rainbow jelly bean reserved for "create" actions (Blurbs composer).
+ * Sizes: sm 32px (chips), md 40px, lg 48px (create lg 52px). Visual overrides must be a variant or size here:
+ * this file is unlayered, so Tailwind utility classes passed via className cannot override its properties.
+ * **Connects to:** `components/system/JokuhButton.tsx` (`jokuhButtonClass`), `PillLink`, `LandingBlueCta`,
+ * `ClaimIdentityCta`, `PrimaryNavCta`; corner `ActionButton` chrome at the bottom of this file.
+ * Light mode follows the site's `light` variant: any `.light` / `[data-theme='light']` ancestor.
+ */
+
+.jk-btn {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 150ms cubic-bezier(0.25, 1, 0.32, 1),
+    border-color 150ms cubic-bezier(0.25, 1, 0.32, 1),
+    box-shadow 150ms cubic-bezier(0.25, 1, 0.32, 1),
+    color 150ms ease,
+    transform 160ms cubic-bezier(0.25, 1, 0.32, 1);
+}
+
+.jk-btn--sm {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+  gap: 6px;
+}
+
+.jk-btn--md {
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.jk-btn--lg {
+  height: 48px;
+  padding: 0 22px;
+  font-size: 15px;
+}
+
+.jk-btn:active {
+  transform: scale(0.97);
+}
+
+.jk-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+}
+
+:is(.light, [data-theme="light"]) .jk-btn:focus-visible {
+  outline-color: rgba(10, 10, 11, 0.85);
+}
+
+.jk-btn:disabled,
+.jk-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Primary — solid inverted: white on dark, ink on light. */
+.jk-btn--primary {
+  background: #ffffff;
+  color: #0a0a0b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.jk-btn--primary:hover {
+  background: #ededed;
+}
+
+:is(.light, [data-theme="light"]) .jk-btn--primary {
+  background: #0a0a0b;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+:is(.light, [data-theme="light"]) .jk-btn--primary:hover {
+  background: #26262a;
+}
+
+/* Accent — Gooey blue-4 with a blue lift (Jokuh Meet primary). Same in both schemes. */
+.jk-btn--accent {
+  background: #0066ff;
+  color: #ffffff;
+  box-shadow: 0 10px 28px rgba(0, 102, 255, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.jk-btn--accent:hover {
+  background: #1a75ff;
+}
+
+.jk-btn--accent:focus-visible,
+:is(.light, [data-theme="light"]) .jk-btn--accent:focus-visible {
+  outline-color: rgba(0, 102, 255, 0.55);
+}
+
+/* Secondary — Gooey glass on dark; the raised white control on light (no blur). */
+.jk-btn--secondary {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.94);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.32), 0 2px 4px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+}
+
+.jk-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:is(.light, [data-theme="light"]) .jk-btn--secondary {
+  border-color: rgba(0, 0, 0, 0.12);
+  background: linear-gradient(180deg, #ffffff 0%, #f8f8f7 100%);
+  color: rgba(0, 0, 0, 0.86);
+  box-shadow: inset 0 1px 1px #ffffff, inset 0 -1px 0.5px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.042);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:is(.light, [data-theme="light"]) .jk-btn--secondary:hover {
+  background: linear-gradient(180deg, #fbfbfa 0%, #f3f3f2 100%);
+}
+
+:is(.light, [data-theme="light"]) .jk-btn--secondary:active {
+  background: linear-gradient(180deg, #f0f0ef 0%, #ebebea 100%);
+}
+
+/* Ghost — quiet text capsule for third-tier actions. */
+.jk-btn--ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.jk-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.94);
+}
+
+:is(.light, [data-theme="light"]) .jk-btn--ghost {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:is(.light, [data-theme="light"]) .jk-btn--ghost:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #0a0a0b;
+}
+
+/* Create — the rainbow jelly bean (Blurbs composer), reserved for sign-up / create actions. */
+.jk-btn--create {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: linear-gradient(to bottom, rgba(44, 129, 255, 0.65), rgba(44, 129, 255, 0.95));
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.5),
+    inset 0 -4px 6px rgba(0, 0, 0, 0.25),
+    0 4px 10px rgba(44, 129, 255, 0.45);
+  animation: jk-jelly-hue 14s linear infinite;
+  transition: transform 180ms cubic-bezier(0.34, 1.45, 0.5, 1);
+}
+
+.jk-btn--create.jk-btn--lg {
+  height: 52px;
+  padding: 0 24px;
+  font-size: 16px;
+}
+
+@keyframes jk-jelly-hue {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jk-btn {
+    transition: none;
+  }
+  .jk-btn--create {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .jk-btn {
+    border-color: ButtonText;
+  }
+}
+
+/**
+ * Corner ActionButton — the app's Gooey corner-action chrome. Dark: 5% glass, 2px white-20 rim, 25px blur,
+ * inner gloss (the intended `inset 0 2px 4px rgba(255,255,255,.15)`). Light: the raised white control with a
+ * symmetric ring + contact shadow (no directional lip, since the pills are rotated ±45° / ±135°).
+ */
+.landing-cinema [data-slot="action-button"] > :first-child {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    inset 0 2px 4px rgba(255, 255, 255, 0.15),
+    0 1px 4px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(25px) saturate(150%);
+  -webkit-backdrop-filter: blur(25px) saturate(150%);
+}
+
+.landing-cinema [data-slot="action-button"]:hover > :first-child {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+:is(.light, [data-theme="light"]) [data-slot="action-button"] > :first-child {
+  background: linear-gradient(180deg, #ffffff 0%, #f8f8f7 100%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.9) inset, 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:is(.light, [data-theme="light"]) [data-slot="action-button"]:hover > :first-child {
+  background: linear-gradient(180deg, #fbfbfa 0%, #f3f3f2 100%) !important;
+}
+
+.landing-cinema [data-slot="action-button"]:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 2px;
+}
+
+:is(.light, [data-theme="light"]) [data-slot="action-button"]:focus-visible {
+  outline-color: rgba(10, 10, 11, 0.85);
+}

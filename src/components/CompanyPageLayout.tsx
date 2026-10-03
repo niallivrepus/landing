@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Button, cn } from "@jokuh/gooey";
+import { cn } from "@jokuh/gooey";
 import { useGentleHoverSound } from "../hooks/useGentleHoverSound";
 import { MarketingDisplayTitle, MarketingEyebrow, TertiaryPageChrome } from "./system";
+import { jokuhButtonClass } from "./system/JokuhButton";
 import { CONTENT_SHELL_COMPANY } from "./system/shells";
 
 /** Shared content width for company/marketing pages (About, Careers, …). */
@@ -51,13 +52,13 @@ export function CompanyPageClosingCta({
 
   const cta =
     buttonHref != null ? (
-      <Button variant="primary-neutral" size="xl" className="px-10" asChild {...hoverSoundProps}>
-        <a href={buttonHref}>{buttonLabel}</a>
-      </Button>
+      <a href={buttonHref} className={jokuhButtonClass("primary", "lg")} {...hoverSoundProps}>
+        {buttonLabel}
+      </a>
     ) : (
-      <Button variant="primary-neutral" size="xl" className="px-10" asChild {...hoverSoundProps}>
-        <Link to={buttonTo ?? "/"}>{buttonLabel}</Link>
-      </Button>
+      <Link to={buttonTo ?? "/"} className={jokuhButtonClass("primary", "lg")} {...hoverSoundProps}>
+        {buttonLabel}
+      </Link>
     );
 
   return (

@@ -5,6 +5,7 @@ import {
   CompanyPageLayout,
 } from "../components/CompanyPageLayout";
 import { FaqSection } from "../components/FaqSection";
+import { JokuhButton } from "../components/system/JokuhButton";
 import {
   CONTENT_READING_MEASURE,
   CONTENT_SHELL_WIDE,
@@ -394,10 +395,11 @@ export function ContactSalesPage() {
                 </div>
 
                 <div className="mt-7">
-                  <button
+                  <JokuhButton
                     type="submit"
+                    variant="primary"
+                    size="lg"
                     disabled={submitState.kind === "submitting"}
-                    className="inline-flex h-[50px] items-center gap-2 rounded-full bg-light-space px-5 font-sans text-[13px] font-medium text-dark-space transition-colors hover:bg-light-space/90 disabled:opacity-60 light:bg-zinc-950 light:text-white light:hover:bg-zinc-800"
                   >
                     {submitState.kind === "submitting" ? (
                       <>
@@ -407,7 +409,7 @@ export function ContactSalesPage() {
                     ) : (
                       "Submit inquiry"
                     )}
-                  </button>
+                  </JokuhButton>
                 </div>
 
                 {submitState.kind !== "idle" && submitState.kind !== "submitting" ? (

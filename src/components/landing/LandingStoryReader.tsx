@@ -1,6 +1,6 @@
-import { Button } from "@jokuh/gooey";
 import type { StoryDetail } from "../../data/stories-detail";
 import { HOME_STORIES } from "../../data/home-stories";
+import { JokuhButton } from "../system/JokuhButton";
 
 /**
  * **Purpose:** Inline story reader inside the Texts immersive shell.
@@ -40,9 +40,9 @@ export function LandingStoryReader({
       <p className="landing-story-reader__dek">{story.dek}</p>
       <p className="landing-story-reader__excerpt">{excerpt}</p>
 
-      <Button variant="secondary-neutral" size="lg" className="mt-4 w-full" onClick={onReadFull}>
+      <JokuhButton variant="secondary" size="md" className="mt-4 w-full" onClick={onReadFull}>
         Read full story in Jokuh
-      </Button>
+      </JokuhButton>
     </article>
   );
 }

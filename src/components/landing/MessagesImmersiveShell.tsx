@@ -27,6 +27,7 @@ import {
 } from "../../data/messages-oo-demo-chat";
 import { useDownloadIntercept } from "../../hooks/useDownloadIntercept";
 import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
+import { JokuhButton, jokuhButtonClass } from "../system/JokuhButton";
 import { OoSpeakBubble } from "./OoSpeakBubble";
 import { ImmersiveCenterColumn } from "../system/ImmersiveCenterColumn";
 import { SquircleShell } from "../system/squircle";
@@ -320,7 +321,7 @@ function ThreadPanel({
               key={suggestion}
               type="button"
               onClick={() => onSendSuggestion(suggestion)}
-              className="rounded-full border border-light-space/12 bg-white/[0.05] px-3 py-1.5 font-sans text-[11px] font-semibold text-light-space/70 light:border-black/10 light:text-zinc-600"
+              className={jokuhButtonClass("secondary", "sm")}
             >
               {suggestion}
             </button>
@@ -340,13 +341,9 @@ function ThreadHeader({
 }) {
   return (
     <div className="mb-3 flex items-center gap-2 border-b border-light-space/[0.08] pb-3 light:border-black/[0.08]">
-      <button
-        type="button"
-        onClick={onBack}
-        className="mr-1 font-sans text-[11px] font-semibold text-light-space/50 light:text-zinc-500"
-      >
+      <JokuhButton variant="ghost" size="md" aria-label="Back" className="mr-1" onClick={onBack}>
         ←
-      </button>
+      </JokuhButton>
       {thread.kind === "oo" ? (
         <Avatar showOO originColor="aether" size={32} className="shrink-0" />
       ) : thread.avatarSrc ? (

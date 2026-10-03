@@ -1,5 +1,4 @@
 import {
-  Button,
   SAMPLE_SPINE_EVENTS,
   SpineTimeline,
 } from "@jokuh/gooey";
@@ -15,6 +14,7 @@ import { NEWS_ITEMS, formatNewsDate, getNewsCardArt, getNewsHref } from "../../d
 import { useDownloadIntercept } from "../../hooks/useDownloadIntercept";
 import { SiteLink } from "../SiteLink";
 import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
+import { JokuhButton } from "../system/JokuhButton";
 import { ImmersiveCenterColumn } from "../system/ImmersiveCenterColumn";
 import { SquircleShell } from "../system/squircle";
 import { NewsCardArt } from "../NewsCardArt";
@@ -147,14 +147,14 @@ export function SpineImmersiveShell() {
                         );
                       })}
                     </ul>
-                    <Button
-                      variant="secondary-neutral"
-                      size="lg"
+                    <JokuhButton
+                      variant="secondary"
+                      size="md"
                       className="mt-3 w-full"
                       onClick={() => intercept("save-memory")}
                     >
                       Blurb to Spine → claim to unlock
-                    </Button>
+                    </JokuhButton>
                   </div>
                 </motion.div>
               ) : null}

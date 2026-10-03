@@ -32,6 +32,7 @@ import { SearchPanelToggleGlyph } from "./SearchPanelToggleGlyph";
 import { TopNavAnchor } from "./TopNavAnchor";
 import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
 import { CONTENT_SHELL_WIDE } from "./system/shells";
+import { jokuhButtonClass } from "./system/JokuhButton";
 
 /** Sentinel `openId` value used to render the inline search panel in the same mega-menu slot. */
 const SEARCH_NAV_ID = "__search__";
@@ -198,13 +199,7 @@ export function PrimaryNavCta({
       style={style}
       data-nav-cta="primary"
       {...hoverSoundProps}
-      className={cn(
-        "inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-white px-5 font-sans text-[12px] font-semibold tracking-tight text-black",
-        "premium-soft-button shadow-[0_12px_30px_-22px_rgba(0,0,0,0.72)] hover:bg-white/92 hover:shadow-[0_18px_36px_-24px_rgba(0,0,0,0.72)] active:translate-y-px",
-        "light:bg-black light:text-white light:hover:bg-zinc-900 light:hover:shadow-[0_16px_34px_-26px_rgba(0,0,0,0.32)]",
-        "focus-visible:ring-2 focus-visible:ring-white/35 focus-visible:outline-none light:focus-visible:ring-black/25",
-        className,
-      )}
+      className={jokuhButtonClass("primary", "md", className)}
     >
       Start
     </Link>

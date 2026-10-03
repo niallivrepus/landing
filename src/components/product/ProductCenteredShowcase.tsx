@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { cn } from "@jokuh/gooey";
+import { jokuhButtonClass } from "../system/JokuhButton";
 import { ProductSectionIntro, ProductShowcaseSurface, ProductStorySection } from "./ProductDetailPrimitives";
 
 /**
@@ -23,8 +24,7 @@ export function ProductCenteredShowcase({
   surfaceTone?: "default" | "neutral";
 }) {
   const isExternal = Boolean(ctaTo && /^https?:\/\//i.test(ctaTo));
-  const ctaClassName =
-    "inline-flex h-11 items-center justify-center rounded-full bg-white px-5 font-sans text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-50 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100";
+  const ctaClassName = jokuhButtonClass("primary", "lg");
 
   return (
     <ProductStorySection>

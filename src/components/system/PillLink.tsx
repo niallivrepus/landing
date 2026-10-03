@@ -1,21 +1,11 @@
 import type { ReactNode } from "react";
-import { cn } from "@jokuh/gooey";
-import { SiteLink } from "../SiteLink";
+import { JokuhButton } from "./JokuhButton";
 
 export type PillLinkVariant = "muted" | "primary";
 
-const baseClass =
-  "inline-flex h-[50px] items-center rounded-full px-5 font-sans text-[13px] font-medium transition-colors";
-
-const variantClass: Record<PillLinkVariant, string> = {
-  muted: "landing-pill-link text-light-space hover:text-light-space light:text-zinc-950 light:hover:text-zinc-950",
-  primary: "landing-pill-link landing-pill-link--primary",
-};
-
 /**
- * Soft capsule link used across marketing pages. Defaults to the muted style
- * (the "View open roles" / "About Jokuh" / "Join us" treatment).
- * **Parity:** fill depth via `landing-controls.css` `--landing-control-*` tokens.
+ * Capsule link used across marketing pages. `muted` = Gooey glass secondary ("View open roles",
+ * "About Jokuh"); `primary` = solid inverted CTA. Both come from `JokuhButton` (`styles/jokuh-buttons.css`).
  */
 export function PillLink({
   href,
@@ -29,8 +19,8 @@ export function PillLink({
   className?: string;
 }) {
   return (
-    <SiteLink href={href} className={cn(baseClass, variantClass[variant], className)}>
+    <JokuhButton href={href} variant={variant === "primary" ? "primary" : "secondary"} className={className}>
       {children}
-    </SiteLink>
+    </JokuhButton>
   );
 }

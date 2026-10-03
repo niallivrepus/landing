@@ -5,6 +5,7 @@
 @source "../**/*.tsx";
 @import "@jokuh/gooey/styles/globals.css";
 @import "./landing-controls.css";
+@import "./jokuh-buttons.css";
 @import "./landing-onboarding.css";
 @import "./landing-spine-capsules.css";
 @import "./landing-spine-memory.css";

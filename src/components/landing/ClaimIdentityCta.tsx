@@ -1,12 +1,12 @@
 import type { MouseEvent, ReactNode } from "react";
-import { Button, cn } from "@jokuh/gooey";
 import { motion } from "motion/react";
 import { useGentleHoverSound } from "../../hooks/useGentleHoverSound";
 import { CtaLordIcon } from "../CtaLordIcon";
+import { jokuhButtonClass } from "../system/JokuhButton";
 import { CLAIM_IDENTITY_MORPH } from "./claim-identity-morph-ids";
 
 /**
- * **Purpose:** Primary claim-identity CTA using Gooey `primary-neutral` button chrome (app parity).
+ * **Purpose:** The sign-up CTA, drawn as the app's rainbow jelly bean (`JokuhButton` `create`).
  * **Connects to:** `ClaimIdentityFlowContext`, `/download`, morph overlay handoff.
  * Default label is “Get started” so the marketing CTA reads as signup, not jargon.
  */
@@ -47,14 +47,7 @@ export function ClaimIdentityCta({
         onClick={handleClick}
         layoutId={CLAIM_IDENTITY_MORPH.ctaShell}
         {...hoverSoundProps}
-        className={cn(
-          "inline-flex h-[50px] shrink-0 items-center justify-center gap-2 rounded-full border border-transparent px-8 font-sans text-sm font-bold",
-          "bg-[var(--color-light-space)] text-[var(--color-dark-space)] shadow-[var(--shadow-pill)]",
-          "[text-shadow:0px_-0.5px_1px_rgba(0,0,0,0.5),0px_0.5px_1px_white]",
-          "hover:border-[var(--color-light-glass-20)] active:bg-[var(--color-dark-space)] active:text-[var(--color-light-space)]",
-          "light:bg-zinc-900 light:text-white light:hover:bg-zinc-800",
-          className,
-        )}
+        className={jokuhButtonClass("create", "lg", className)}
       >
         {inner}
       </motion.a>
@@ -62,15 +55,8 @@ export function ClaimIdentityCta({
   }
 
   return (
-    <Button
-      variant="primary-neutral"
-      size="xl"
-      asChild
-      className={cn("gap-2", className)}
-    >
-      <a href={href} onClick={handleClick} {...hoverSoundProps}>
-        {inner}
-      </a>
-    </Button>
+    <a href={href} onClick={handleClick} {...hoverSoundProps} className={jokuhButtonClass("create", "lg", className)}>
+      {inner}
+    </a>
   );
 }

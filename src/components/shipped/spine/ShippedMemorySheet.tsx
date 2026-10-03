@@ -3,7 +3,7 @@ import { ArrowRight, Download, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { SiteLink } from "../../SiteLink";
+import { JokuhButton } from "../../system/JokuhButton";
 import { PlatformChips } from "../ShippedWeekEntry";
 import { shippedAreaVisual } from "./shipped-spine-tones";
 import {
@@ -170,28 +170,18 @@ export function ShippedMemorySheet({
               </ul>
 
               <div className="mt-6 flex flex-wrap gap-2">
-                <SiteLink
-                  href={getShippedHref(post)}
-                  className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-4 font-sans text-[13px] font-semibold text-zinc-950 transition-opacity hover:opacity-90 light:bg-zinc-950 light:text-white"
-                >
+                <JokuhButton href={getShippedHref(post)} variant="primary" size="md">
                   {month ? "Read the recap" : "See the full week"}
                   <ArrowRight className="size-4" strokeWidth={2} />
-                </SiteLink>
-                <SiteLink
-                  href="/download"
-                  className="inline-flex h-10 items-center gap-2 rounded-full bg-white/[0.08] px-4 font-sans text-[13px] font-semibold transition-colors hover:bg-white/[0.14] light:bg-black/[0.05] light:hover:bg-black/[0.09]"
-                >
+                </JokuhButton>
+                <JokuhButton href="/download" variant="secondary" size="md">
                   <Download className="size-4" strokeWidth={2} />
                   Get Jokuh
-                </SiteLink>
+                </JokuhButton>
                 {item ? (
-                  <button
-                    type="button"
-                    onClick={() => onSelectItem(null)}
-                    className="inline-flex h-10 items-center rounded-full px-3 font-sans text-[13px] font-semibold text-white/60 transition-colors hover:text-white light:text-zinc-500 light:hover:text-zinc-950"
-                  >
+                  <JokuhButton variant="ghost" size="md" onClick={() => onSelectItem(null)}>
                     {month ? "Whole month" : "Whole week"}
-                  </button>
+                  </JokuhButton>
                 ) : null}
               </div>
             </div>
