@@ -7,6 +7,7 @@ import {
   saveCookieConsent,
   type CookiePrefs,
 } from "../lib/cookie-consent";
+import { JokuhButton } from "./system/JokuhButton";
 
 export function CookieBanner() {
   const [open, setOpen] = useState(false);
@@ -104,29 +105,32 @@ export function CookieBanner() {
 
           <div className="mt-4 flex flex-wrap gap-2">
             {customizing ? (
-              <button
-                type="button"
+              <JokuhButton
+                variant="primary"
+                size="md"
                 onClick={savePrefs}
-                className="flex h-9 flex-1 items-center justify-center rounded-full bg-white/92 font-sans text-[13px] font-semibold text-black transition-colors hover:bg-white light:bg-zinc-950 light:text-white light:hover:bg-zinc-800"
+                className="flex-1"
               >
                 Save preferences
-              </button>
+              </JokuhButton>
             ) : (
               <>
-                <button
-                  type="button"
+                <JokuhButton
+                  variant="primary"
+                  size="md"
                   onClick={acceptAll}
-                  className="flex h-9 flex-1 items-center justify-center rounded-full bg-white/92 font-sans text-[13px] font-semibold text-black transition-colors hover:bg-white light:bg-zinc-950 light:text-white light:hover:bg-zinc-800"
+                  className="flex-1"
                 >
                   Accept all
-                </button>
-                <button
-                  type="button"
+                </JokuhButton>
+                <JokuhButton
+                  variant="secondary"
+                  size="md"
                   onClick={rejectOptional}
-                  className="flex h-9 flex-1 items-center justify-center rounded-full border border-white/15 font-sans text-[13px] font-semibold text-light-space/80 transition-colors hover:bg-white/5 light:border-zinc-200 light:text-zinc-700 light:hover:bg-zinc-50"
+                  className="flex-1"
                 >
                   Reject optional
-                </button>
+                </JokuhButton>
                 <button
                   type="button"
                   onClick={() => {

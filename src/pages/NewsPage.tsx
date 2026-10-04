@@ -15,6 +15,7 @@ import { cn, useTheme } from "@jokuh/gooey";
 import { NewsCardArt } from "../components/NewsCardArt";
 import { SiteLink } from "../components/SiteLink";
 import { MarketingPageFrame } from "../components/system";
+import { JokuhButton } from "../components/system/JokuhButton";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { preloadNewsArticleSlugs } from "../lib/article-audio";
@@ -211,13 +212,13 @@ function JournalFeedGrid({ items }: { items: NewsItem[] }) {
         </div>
         {hasMore ? (
           <div className="mt-8 flex justify-center">
-            <button
-              type="button"
+            <JokuhButton
+              variant="secondary"
+              size="lg"
               onClick={() => setVisibleCount((count) => Math.min(count + NEWSROOM_LAZY_BATCH, wallItems.length))}
-              className="inline-flex h-11 items-center rounded-full border border-light-space/[0.12] bg-white/[0.03] px-5 font-sans text-[13px] font-semibold text-light-space transition-colors hover:bg-white/[0.06] light:border-black/[0.1] light:bg-section-grey-light light:text-zinc-950 light:hover:bg-zinc-200"
             >
               Load more
-            </button>
+            </JokuhButton>
           </div>
         ) : null}
       </div>

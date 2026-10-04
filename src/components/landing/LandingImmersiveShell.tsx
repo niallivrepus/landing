@@ -1,5 +1,5 @@
 import { GooeyViewportProvider, useCurrentGooeyViewport } from "@jokuh/gooey";
-import { LayoutGroup, motion } from "motion/react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useCallback, useState } from "react";
 import type { LandingArcadeGameId } from "../../data/landing-arcade-games";
 import { LANDING_HERO_HEADLINE } from "../../data/landing-hero-copy";
@@ -8,11 +8,9 @@ import { MissionIntroOverlay } from "./MissionIntroOverlay";
 import { useDownloadIntercept } from "../../hooks/useDownloadIntercept";
 import { useClaimIdentityFlowContext } from "../../context/ClaimIdentityFlowContext";
 import { buildWebAppOnboardingHandoffUrl } from "../../lib/claim-identity-handoff";
-import {
-  LANDING_HERO_PREVIEW_PROMPT,
-  seedLandingDemo,
-  scrollLandingDemoIntoView,
-} from "../../lib/landing-demo-seed";
+import { LANDING_HERO_PREVIEW_PROMPT } from "../../lib/landing-demo-seed";
+import { LandingTempChatPanel } from "./temp-chat/LandingTempChatPanel";
+import { useLandingTempChat } from "./temp-chat/useLandingTempChat";
 import type { LandingDemoPowerId } from "../../data/landing-demo-powers";
 import { ClaimIdentityCta } from "./ClaimIdentityCta";
 import { ClaimIdentityLandingOverlay } from "./ClaimIdentityLandingOverlay";
@@ -20,6 +18,8 @@ import { LandingHomeBackdrop } from "./LandingHomeBackdrop";
 import { LandingHomeSuggestionPills } from "./LandingHomeSuggestionPills";
 import { LandingArcadeGameOverlay } from "./LandingArcadeGameOverlay";
 import { LandingBlurbsPill } from "./LandingBlurbsPill";
+import { HomeFooterRow } from "./HomeFooterRow";
+import { HomeShippedTicker } from "./HomeShippedTicker";
 import { LandingPromptBar } from "./LandingPromptBar";
 import { LandingPromptBorderBeam } from "./LandingPromptBorderBeam";
 import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
@@ -27,9 +27,11 @@ import { ImmersiveCenterColumn } from "../system/ImmersiveCenterColumn";
 import { SiteLink } from "../SiteLink";
 
 /**
- * **Purpose:** Full-viewport home hero — brand, Get-started CTAs, prompt that seeds the live OO demo.
+ * **Purpose:** The whole homepage — brand, prompt bar, chips, Get started. Sending from the prompt (or a chip) opens a
+ * real, temporary OO chat in place for signed-out visitors (`landing-oo-chat` edge function); nothing is saved.
  * Mission scramble intro plays once per session before the hero typewriter.
- * **Connects to:** `LandingHero`, `ProductDemoSection` (`#demo`), `MissionIntroOverlay`.
+ * **Connects to:** `LandingHero`, `useLandingTempChat` / `LandingTempChatPanel`, `HomeShippedTicker` (under Nexus),
+ * `HomeFooterRow` (bottom), `MissionIntroOverlay`, claim flow.
  */
 export function LandingImmersiveShell() {
   return (
@@ -46,11 +48,17 @@ function LandingImmersiveShellInner() {
   const [arcadeGame, setArcadeGame] = useState<LandingArcadeGameId | null>(null);
   const [introComplete, setIntroComplete] = useState(false);
 
-  /** Seeds the homepage OO demo with the prompt (or chip power) and scrolls to proof. */
-  const handleSend = useCallback((text: string, powerId?: LandingDemoPowerId) => {
-    seedLandingDemo({ query: text.trim() || LANDING_HERO_PREVIEW_PROMPT, powerId });
-    scrollLandingDemoIntoView();
-  }, []);
+  const chat = useLandingTempChat();
+  const sendToChat = chat.send;
+
+  /** Prompt bar + chips talk to OO for real; the idle "see OO work" preview becomes a starter question. */
+  const handleSend = useCallback(
+    (text: string, _powerId?: LandingDemoPowerId) => {
+      const trimmed = text.trim();
+      sendToChat(!trimmed || trimmed === LANDING_HERO_PREVIEW_PROMPT ? "What can you do, OO?" : trimmed);
+    },
+    [sendToChat],
+  );
 
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
@@ -67,13 +75,34 @@ function LandingImmersiveShellInner() {
       >
         <LandingHomeBackdrop />
 
-        <ImmersiveAppChrome showLibraryRail={false} bottomCenter={<LandingBlurbsPill />} />
+        <ImmersiveAppChrome
+          showLibraryRail={false}
+          topCenterBelow={chat.active ? null : <HomeShippedTicker />}
+          bottomCenter={
+            <div className="flex flex-col items-center gap-2">
+              <LandingBlurbsPill />
+              <HomeFooterRow />
+            </div>
+          }
+        />
 
         <ImmersiveCenterColumn
           maxWidthClass="max-w-[720px]"
-          className="flex-1 min-h-0 pb-[calc(env(safe-area-inset-bottom,0px)+88px)] pt-[calc(env(safe-area-inset-top,0px)+72px)]"
+          className="flex-1 min-h-0 pb-[calc(env(safe-area-inset-bottom,0px)+150px)] pt-[calc(env(safe-area-inset-top,0px)+96px)]"
         >
+          <AnimatePresence mode="wait" initial={false}>
+            {chat.active ? (
+              <motion.div key="chat" className="mb-4 flex w-full justify-center" exit={{ opacity: 0, y: 8 }}>
+                <LandingTempChatPanel
+                  chat={chat}
+                  onClose={chat.reset}
+                  onClaim={() => claimFlow.openFrom("hero")}
+                />
+              </motion.div>
+            ) : (
           <motion.div
+            key="headline"
+            exit={{ opacity: 0, y: -8 }}
             initial={{ opacity: 0, y: 12 }}
             animate={introComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -81,6 +110,8 @@ function LandingImmersiveShellInner() {
           >
             <LandingHeroTypewriter text={LANDING_HERO_HEADLINE} enabled={introComplete} />
           </motion.div>
+            )}
+          </AnimatePresence>
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -97,9 +128,10 @@ function LandingImmersiveShellInner() {
                 onPlus={() => intercept("prompt-plus")}
               />
             </LandingPromptBorderBeam>
-            <LandingHomeSuggestionPills onPrompt={handleSend} onOpenGame={setArcadeGame} />
+            {chat.active ? null : <LandingHomeSuggestionPills onPrompt={handleSend} onOpenGame={setArcadeGame} />}
           </motion.div>
 
+          {chat.active ? null : (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={introComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
@@ -128,6 +160,7 @@ function LandingImmersiveShellInner() {
               </a>
             </div>
           </motion.div>
+          )}
         </ImmersiveCenterColumn>
       </section>
 

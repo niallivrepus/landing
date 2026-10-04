@@ -1,4 +1,4 @@
-import { Button, ServerAvatar } from "@jokuh/gooey";
+import { ServerAvatar } from "@jokuh/gooey";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -9,7 +9,7 @@ import {
 } from "../../data/landing-bubbles-copy";
 import { LANDING_LIBRARY_SERVERS } from "../../data/landing-library-rail-data";
 import { useDownloadIntercept } from "../../hooks/useDownloadIntercept";
-import { SiteLink } from "../SiteLink";
+import { JokuhButton } from "../system/JokuhButton";
 import { LandingLibraryRail } from "./LandingLibraryRail";
 
 const OVERLAY_EASE = [0.22, 1, 0.36, 1] as const;
@@ -135,17 +135,12 @@ export function LandingBubblesOverlay({
       </div>
 
       <div className="landing-bubbles-overlay__cta">
-        <Button
-          variant="primary-neutral"
-          size="xl"
-          className="shrink-0"
-          onClick={() => intercept("bubbles")}
-        >
+        <JokuhButton variant="primary" size="lg" onClick={() => intercept("bubbles")}>
           Get Jokuh
-        </Button>
-        <Button variant="secondary-neutral" size="xl" asChild className="shrink-0">
-          <SiteLink href="/messages">See Texts demo</SiteLink>
-        </Button>
+        </JokuhButton>
+        <JokuhButton href="/messages" variant="secondary" size="lg">
+          See Texts demo
+        </JokuhButton>
       </div>
     </motion.div>
   ) : null;

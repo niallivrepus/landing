@@ -13,6 +13,7 @@ import { FaqSection } from "../components/FaqSection";
 import { preload } from "react-dom";
 import { Link } from "react-router-dom";
 import { MarketingPageFrame } from "../components/system";
+import { jokuhButtonClass } from "../components/system/JokuhButton";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { PRODUCT_DETAIL_BLUEPRINTS } from "../data/product-detail-blueprints";
 import { PRODUCTS, type ProductId } from "../data/products";
@@ -51,7 +52,7 @@ function ProductHeroCta({ productId }: { productId: ProductId }) {
       <span className="font-sans text-[14px] font-medium text-white/90">{cta.label}</span>
       <Link
         to={buildHref("product-hero", { product: productId })}
-        className="inline-flex h-12 items-center justify-center rounded-full bg-blue-500 px-8 font-sans text-[13px] font-semibold tracking-tight text-white transition-colors hover:bg-blue-600"
+        className={jokuhButtonClass("accent", "lg")}
       >
         {cta.action}
       </Link>

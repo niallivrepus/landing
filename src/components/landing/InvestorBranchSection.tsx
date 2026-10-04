@@ -1,4 +1,4 @@
-import { SiteLink } from "../SiteLink";
+import { JokuhButton } from "../system/JokuhButton";
 import { CONTENT_SHELL_WIDE } from "../system/shells";
 import { FundersStrip } from "./FundersStrip";
 
@@ -14,12 +14,9 @@ export function InvestorBranchSection() {
           <p className="max-w-[36ch] font-sans text-[14px] leading-relaxed text-light-space/55 light:text-zinc-600">
             Building the machine layer for human identity.
           </p>
-          <SiteLink
-            href="/invest"
-            className="inline-flex h-10 shrink-0 items-center justify-center rounded-full border border-light-space/15 px-5 font-sans text-[13px] font-semibold text-light-space no-underline transition-colors hover:bg-white/5 light:border-black/15 light:text-zinc-950 light:hover:bg-black/5"
-          >
+          <JokuhButton href="/invest" variant="secondary" size="md">
             For investors
-          </SiteLink>
+          </JokuhButton>
         </div>
       </div>
       <FundersStrip />

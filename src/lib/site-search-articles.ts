@@ -227,7 +227,7 @@ const CURATED: SiteArticleHit[] = [
     external: false,
   },
   {
-    href: "/#demo",
+    href: "/demo",
     title: "Product demo",
     snippet: "The command surface that ties memory, messages, and inference together.",
     meta: "Product",

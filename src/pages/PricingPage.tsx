@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CompanyPageLayout } from "../components/CompanyPageLayout";
 import { FaqSection } from "../components/FaqSection";
+import { jokuhButtonClass } from "../components/system/JokuhButton";
 import { CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { PRICING_CARDS, PRICING_FAQ, PRICING_HERO } from "../data/pricing";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
@@ -44,7 +45,7 @@ export function PricingPage() {
             </ul>
             <Link
               to={card.cta.href}
-              className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-light-space px-6 font-sans text-[13px] font-semibold text-dark-space light:bg-zinc-950 light:text-white"
+              className={jokuhButtonClass("primary", "lg", "mt-8")}
             >
               {card.cta.label}
             </Link>

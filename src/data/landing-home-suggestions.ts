@@ -11,7 +11,7 @@ export type LandingHomeSuggestion =
       id: string;
       label: string;
       kind: "prompt";
-      /** Submitted through the prompt bar → homepage demo seed. */
+      /** Sent to the homepage temporary OO chat (real answer, nothing saved). */
       query: string;
       /** Optional explicit power so chips run the matching OO proof. */
       powerId?: LandingDemoPowerId;
@@ -36,28 +36,28 @@ export const LANDING_HOME_SUGGESTIONS: LandingHomeSuggestion[] = [
     id: "oo-context",
     label: "What does OO know?",
     kind: "prompt",
-    query: "What does Maya prefer for decks?",
+    query: "What can you remember for me, OO?",
     powerId: "memory",
   },
   {
     id: "oo-spine",
     label: "Explain Spine",
     kind: "prompt",
-    query: "What did we decide on pricing last Tuesday?",
+    query: "What is Spine in Jokuh?",
     powerId: "spine",
   },
   {
     id: "privacy",
     label: "How private is this?",
     kind: "prompt",
-    query: "Who can read my messages with Sam?",
+    query: "How private is Jokuh?",
     powerId: "privacy",
   },
   {
     id: "summarize",
     label: "Summarize my week",
     kind: "prompt",
-    query: "Summarize what happened in my calls and chats this week",
+    query: "Can you summarize my week?",
   },
   {
     id: "chess",

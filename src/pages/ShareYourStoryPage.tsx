@@ -1,7 +1,8 @@
-import { Button, cn } from "@jokuh/gooey";
+import { cn } from "@jokuh/gooey";
 import { LoaderCircle } from "lucide-react";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { JokuhButton } from "../components/system/JokuhButton";
 import { TertiaryPageChrome } from "../components/system/TertiaryPageChrome";
 import { CONTENT_READING_MEASURE, CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { getStoryFormProductOptions, STORY_TEXT_MAX } from "../data/share-story-form";
@@ -423,11 +424,10 @@ export function ShareYourStoryPage() {
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <Button
+            <JokuhButton
               type="submit"
+              variant="primary"
               size="lg"
-              variant="primary-neutral"
-              className="rounded-full bg-zinc-100 px-6 font-sans text-[15px] font-medium text-zinc-900 hover:bg-white dark:bg-[#F5F5F7] dark:hover:bg-white"
               disabled={submitState.kind === "submitting"}
             >
               {submitState.kind === "submitting" ? (
@@ -438,7 +438,7 @@ export function ShareYourStoryPage() {
               ) : (
                 "Submit"
               )}
-            </Button>
+            </JokuhButton>
             <Link to="/stories" className="text-[14px] font-medium text-light-space/62 underline underline-offset-2 hover:text-light-space light:text-zinc-600 light:hover:text-zinc-900">
               Back to Stories
             </Link>

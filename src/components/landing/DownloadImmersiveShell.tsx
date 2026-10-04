@@ -11,6 +11,7 @@ import { buildWebAppOnboardingHandoffUrl } from "../../lib/claim-identity-handof
 import { useClaimIdentityFlowContext } from "../../context/ClaimIdentityFlowContext";
 import { ClaimIdentityCta } from "./ClaimIdentityCta";
 import { ClaimIdentityLandingOverlay } from "./ClaimIdentityLandingOverlay";
+import { JokuhButton } from "../system/JokuhButton";
 import { LandingBlueCta } from "./LandingBlueCta";
 
 const MOBILE_PREVIEW_IMAGE = "/download/mobile-preview.png";
@@ -122,9 +123,9 @@ export function DownloadImmersiveShell() {
               href="/download?intent=identity"
               onActivate={() => claimFlow.openFrom("hero")}
             />
-            <LandingBlueCta href="/">
+            <JokuhButton href="/" variant="secondary">
               Back to home
-            </LandingBlueCta>
+            </JokuhButton>
           </motion.div>
 
           <div className="mt-14 w-full sm:mt-16">

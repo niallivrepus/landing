@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { CompanyPageLayout } from "../components/CompanyPageLayout";
+import { jokuhButtonClass } from "../components/system/JokuhButton";
 import { CONTENT_READING_MEASURE, CONTENT_SHELL_WIDE } from "../components/system/shells";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
@@ -30,19 +31,19 @@ export function NotFoundPage() {
       <div className={`${CONTENT_SHELL_WIDE} flex flex-wrap justify-center gap-3 pb-28`}>
         <Link
           to="/"
-          className="inline-flex h-12 items-center justify-center rounded-full bg-light-space px-6 font-sans text-[13px] font-semibold text-dark-space light:bg-zinc-950 light:text-white"
+          className={jokuhButtonClass("primary", "lg")}
         >
           Go home
         </Link>
         <Link
           to="/support"
-          className="inline-flex h-12 items-center justify-center rounded-full border border-light-space/20 px-6 font-sans text-[13px] font-semibold text-light-space light:border-zinc-300 light:text-zinc-950"
+          className={jokuhButtonClass("secondary", "lg")}
         >
           Support
         </Link>
         <Link
           to="/download"
-          className="inline-flex h-12 items-center justify-center rounded-full border border-light-space/20 px-6 font-sans text-[13px] font-semibold text-light-space light:border-zinc-300 light:text-zinc-950"
+          className={jokuhButtonClass("secondary", "lg")}
         >
           Download
         </Link>

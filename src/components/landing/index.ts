@@ -32,3 +32,5 @@ export { ProductDemoSection } from "./ProductDemoSection";
 export { ProductShowcaseSection } from "./ProductShowcaseSection";
 export { WaitlistSection } from "./WaitlistSection";
 export { RecentNewsSection } from "./RecentNewsSection";
+export { HomeFooterRow } from "./HomeFooterRow";
+export { HomeShippedTicker } from "./HomeShippedTicker";

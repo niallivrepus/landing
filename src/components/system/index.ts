@@ -17,6 +17,7 @@ export {
 } from "./editorialMedia";
 export { SquircleMedia, SquircleShell } from "./squircle";
 export { PillLink, type PillLinkVariant } from "./PillLink";
+export { JokuhButton, jokuhButtonClass, type JokuhButtonSize, type JokuhButtonVariant } from "./JokuhButton";
 export {
   CONTENT_SHELL_COMPANY,
   CONTENT_SHELL_NARROW,

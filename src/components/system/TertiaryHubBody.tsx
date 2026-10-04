@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@jokuh/gooey";
 import { SiteLink } from "../SiteLink";
+import { JokuhButton } from "./JokuhButton";
 import { TERTIARY_PAGE_SHELL, TERTIARY_READING_MEASURE } from "./TertiaryPageChrome";
 
 export type TertiaryQuickLink = {
@@ -93,12 +94,9 @@ export function TertiaryClosingCta({
           {title}
         </h2>
         <div className="mt-8 flex justify-center">
-          <SiteLink
-            href={href}
-            className="inline-flex h-11 items-center justify-center rounded-full border border-light-space/[0.12] bg-white/[0.04] px-6 text-[14px] font-medium text-light-space transition-colors hover:border-light-space/[0.24] hover:bg-white/[0.06] light:border-black/[0.12] light:bg-section-grey-light light:text-zinc-950 light:hover:border-black/[0.18] light:hover:bg-zinc-200"
-          >
+          <JokuhButton href={href} variant="secondary" size="lg">
             {label}
-          </SiteLink>
+          </JokuhButton>
         </div>
       </div>
     </section>
