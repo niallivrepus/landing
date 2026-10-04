@@ -6,7 +6,7 @@
 
 import { Avatar as GooeyAvatar, cn } from "@jokuh/gooey";
 import { Sparkles } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   PROFILE_DEMO_HERO_AGENT,

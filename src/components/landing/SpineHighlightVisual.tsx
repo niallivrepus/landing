@@ -94,7 +94,7 @@ function MemoriesHighlight() {
 /** Planner via hour capsules on an expanded day — mirrors day planner tabs in-app. */
 function PlannerHighlight() {
   const [selectedDayId] = useState(LANDING_DEFAULT_DAY_ID);
-  const [expandedHourId, setExpandedHourId] = useState("h-2");
+  const [expandedHourId, setExpandedHourId] = useState<string | null>("h-2");
 
   return (
     <div className="spine-highlight-visual__stage">

@@ -157,7 +157,7 @@ export function ProfilePeopleSearchPanel({
         viewport={viewport}
         previewText={SEARCH_PLACEHOLDER}
         onTextChange={setQuery}
-        onSend={(text) => setQuery(text)}
+        onSend={(text: string) => setQuery(text)}
         onPlus={() => intercept("prompt-plus")}
       />
 
