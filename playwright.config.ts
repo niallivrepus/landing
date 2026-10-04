@@ -79,5 +79,7 @@ export default defineConfig({
     command: 'npm run preview:e2e',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: !process.env.CI,
+    /* `preview:e2e` runs a full `build:landing` first; a cold CI runner needs more than the 60s default. */
+    timeout: 180_000,
   },
 });

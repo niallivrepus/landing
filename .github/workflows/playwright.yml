@@ -10,27 +10,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/checkout@v4
-      with:
-        repository: niallivrepus/gooey
-        path: gooey
-    - name: Link gooey sibling path
+    # `@jokuh/gooey` is vendored at `vendor/gooey`; package.json resolves it as `file:../gooey/packages/gooey`
+    # and vite.config.ts aliases its source from the sibling `../gooey`. Mirror the production Dockerfile:
+    # expose the vendored copy at the sibling path and install gooey's own deps inside it.
+    - name: Link vendored gooey at sibling path
       run: |
         rm -rf ../gooey
-        ln -s "$GITHUB_WORKSPACE/gooey" ../gooey
+        ln -s "$GITHUB_WORKSPACE/vendor/gooey" ../gooey
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version: 22
     - name: Enable pnpm (corepack)
       run: |
         corepack enable
         corepack prepare pnpm@10.18.1 --activate
+    - name: Install gooey dependencies
+      run: |
+        cd "$GITHUB_WORKSPACE/vendor/gooey"
+        pnpm install --no-frozen-lockfile
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
+    # Chromium only: the suite checks journeys and layout, not engine quirks, and firefox + webkit
+    # would triple a single-worker CI run. Visual baselines are darwin-only and skip themselves on Linux.
     - name: Install Playwright Browsers
-      run: pnpm exec playwright install --with-deps
+      run: pnpm exec playwright install --with-deps chromium
     - name: Run Playwright tests
-      run: pnpm run test:e2e
+      run: pnpm exec playwright test --project=chromium
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
