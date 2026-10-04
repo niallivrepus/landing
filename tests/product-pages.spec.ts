@@ -33,5 +33,23 @@ test('security page is a real route', async ({ page }) => {
 
   await expect(page).toHaveURL(/\/security$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Security' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', /\/privacy/);
+  // First match is the in-body link; the mega footer carries its own "Privacy Policy" link too.
+  await expect(page.getByRole('link', { name: 'Privacy Policy' }).first()).toHaveAttribute('href', /\/privacy/);
 });
+
+for (const [path, title] of [
+  ['/blurbs', 'Blurbs'],
+  ['/spine', 'Spine'],
+  ['/calls', 'Calls'],
+  ['/messages', 'Texts'],
+  ['/profile', 'Profile'],
+] as const) {
+  test(`${path} immersive product page keeps one page heading`, async ({ page }) => {
+    await primeCookieConsent(page);
+    await page.goto(path);
+
+    await expect(page).toHaveURL(new RegExp(`${path}$`));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+    await expect(page.getByRole('heading', { level: 1, name: title, exact: true })).toBeAttached();
+  });
+}

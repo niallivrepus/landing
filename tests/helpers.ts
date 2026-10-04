@@ -24,13 +24,49 @@ export async function primeCookieConsent(page: Page) {
   });
 }
 
+/** The app-wide consent banner (`CookieBanner.tsx`); its accessible name is the banner copy. */
+export function cookieBanner(page: Page) {
+  return page.getByRole('dialog', { name: /We use cookies for essential site function/ });
+}
+
+/** Rejects optional cookies if the consent banner is up (it is not when `primeCookieConsent` ran). */
 export async function dismissCookieBanner(page: Page) {
-  const dialog = page.getByRole('dialog', { name: 'Cookie preferences center' });
+  const dialog = cookieBanner(page);
 
   if (await dialog.waitFor({ state: 'visible', timeout: 1500 }).then(() => true).catch(() => false)) {
-    await dialog.getByRole('button', { name: 'Done' }).click();
+    await dialog.getByRole('button', { name: 'Reject optional' }).click();
     await expect(dialog).toBeHidden();
   }
+}
+
+/**
+ * Stubs the homepage temporary OO chat (`landing-oo-chat` edge function) with an SSE reply in the
+ * OpenRouter delta shape `landing-oo-chat-client.ts` parses, so tests never reach the real function.
+ * Returns the request bodies the page sent.
+ */
+export async function mockLandingOoChat(page: Page, reply: string[]) {
+  const requests: Array<{ messages: Array<{ role: string; content: string }> }> = [];
+
+  await page.route('**/functions/v1/landing-oo-chat', async (route) => {
+    if (route.request().method() !== 'POST') {
+      await route.fulfill({ status: 204, headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*' } });
+      return;
+    }
+
+    requests.push(JSON.parse(route.request().postData() ?? '{}'));
+    const body =
+      ': OPENROUTER PROCESSING\n\n' +
+      reply.map((chunk) => `data: ${JSON.stringify({ choices: [{ delta: { content: chunk } }] })}\n\n`).join('') +
+      'data: [DONE]\n\n';
+
+    await route.fulfill({
+      status: 200,
+      headers: { 'content-type': 'text/event-stream', 'access-control-allow-origin': '*' },
+      body,
+    });
+  });
+
+  return requests;
 }
 
 export async function stabilizeForScreenshot(page: Page) {

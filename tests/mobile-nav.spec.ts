@@ -16,18 +16,24 @@ async function expectBlurredBackdrop(locator: Locator) {
   expect(style.backdropFilter).toContain('blur');
 }
 
+/**
+ * The one-screen homepage has no top bar; the mobile menu and search live in `SiteTopBar` on every
+ * other page. Start from Pricing, which the homepage footer row links to.
+ */
 test.beforeEach(async ({ page }) => {
   await primeCookieConsent(page);
-  await page.goto('/');
+  await page.goto('/pricing');
   await page.waitForLoadState('networkidle');
   await dismissCookieBanner(page);
 });
 
 test('opens the mobile menu and navigates to the About page', async ({ page }) => {
-  await page.locator('button[aria-label="Open menu"]:visible').click();
+  await page.getByRole('banner').getByRole('button', { name: 'Open menu' }).click();
 
   const menu = page.getByRole('dialog', { name: 'Primary menu' });
-  await expect(menu.getByRole('button', { name: 'Close menu' })).toBeVisible();
+  await expect(menu).toBeVisible();
+  // The menu toggle stays in the top bar (above the portaled overlay) and flips to "Close menu".
+  await expect(page.getByRole('banner').getByRole('button', { name: 'Close menu' })).toHaveAttribute('aria-expanded', 'true');
   await expectBlurredBackdrop(menu);
 
   await menu.getByRole('button', { name: 'Company' }).click();
@@ -42,7 +48,7 @@ test('opens the mobile menu and navigates to the About page', async ({ page }) =
 });
 
 test('opens search with a blurred backdrop', async ({ page }) => {
-  await page.locator('button[aria-label="Open search"]:visible').first().click();
+  await page.getByRole('banner').getByRole('button', { name: 'Open search' }).click();
 
   const search = page.getByRole('dialog', { name: 'Site search' });
   await expect(search.getByRole('button', { name: 'Close search' })).toBeVisible();

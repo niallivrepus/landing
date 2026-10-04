@@ -3,13 +3,14 @@ import { dismissCookieBanner, primeCookieConsent } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await primeCookieConsent(page);
-  await page.goto('/');
-  await page.waitForLoadState('networkidle');
-  await dismissCookieBanner(page);
 });
 
 test('opens site search and returns source matches for an about query', async ({ page }) => {
-  await page.locator('button[aria-label="Open search"]:visible').click();
+  // Site search lives in the `SiteTopBar` on every page except the one-screen homepage.
+  await page.goto('/pricing');
+  await page.waitForLoadState('networkidle');
+  await dismissCookieBanner(page);
+  await page.getByRole('banner').getByRole('button', { name: 'Open search' }).click();
 
   const searchInput = page.getByRole('textbox', { name: 'Search Jokuh' });
 
@@ -26,8 +27,14 @@ test('opens site search and returns source matches for an about query', async ({
   await expect(page.getByRole('heading', { level: 1, name: 'About' })).toBeVisible();
 });
 
-test('reaches contact sales from the footer', async ({ page }) => {
-  const contactSalesLink = page.getByRole('contentinfo').getByRole('link', { name: 'Contact sales' });
+test('reaches contact sales from the homepage via pricing', async ({ page }) => {
+  await page.goto('/');
+  await dismissCookieBanner(page);
+
+  await page.getByRole('navigation', { name: 'Site links' }).getByRole('link', { name: 'Pricing', exact: true }).click();
+  await expect(page).toHaveURL(/\/pricing$/);
+
+  const contactSalesLink = page.getByRole('link', { name: 'Contact sales', exact: true });
   await contactSalesLink.scrollIntoViewIfNeeded();
   await contactSalesLink.click();
 
