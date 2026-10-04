@@ -1,81 +1,169 @@
-import { cn, createSquirclePath, useTheme } from "@jokuh/gooey";
-import { CalendarCheck, Image as ImageIcon, Link2, MapPin, MessageCircle, Music2, type LucideIcon } from "lucide-react";
-import { LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ProfilePodPanel } from "./ProfilePodPanel";
+import { cn } from "@jokuh/gooey";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import { PodFace, PodTile, ProfileHero, ProfileMeta, type PodId, type PodSize } from "./ProfilePodsDemoPods";
 
 /**
- * **Purpose:** `/profile` demo of the profile pod system — the real demo ID pod in the center and six companion pods
- * that fly in, snap around it and keep re-arranging like Lego, so visitors see the bento before they claim a handle.
- * Wide: 3 columns (pods | ID pod | pods), 4 rows, one tall pod per side. Narrow: ID pod on top, pods in a 3×2 grid.
- * **Connects to:** `ProfileImmersiveShell`, `profile-demo-identity.ts`, `/public/pods-bento/*` art,
- * `styles/landing-profile-pods-demo.css`. App equivalent: profile pod bento (`ProfilePodBentoGrid`).
- * Pauses while hovered/focused or the tab is hidden; static under reduced motion.
+ * **Purpose:** `/profile` demo of the profile pod bento, built to the app's real geometry: the fixed 9-slot board
+ * (150 unit, 6 gap, 618×462) with the profile hero in the 2×2 center, three slots left, three right, two below, and
+ * companions sized small / h2 / vtall exactly as the app allows. Pods fly in scattered and tilted, snap into their slots,
+ * then every few seconds the board re-arranges into another legal app layout (bricks move, resize, swap in and out).
+ * Phone / narrow column: the app's stack fallback — hero on top, companions in a 2-column grid — reshuffled now and then.
+ * Pauses while hovered, off screen or in a hidden tab; static under reduced motion.
+ * **Connects to:** `ProfileImmersiveShell`, `ProfilePodsDemoPods.tsx` (hero + pod faces), `landing-profile-pods-demo.css`.
+ * **Parity (web app):** `frontend/src/components/pods/ProfilePodBentoGrid.tsx` + `utils/profile-pod-bento-layout.ts`
+ * (`ProfilePodBentoMetrics`, `ProfilePodBentoSlots`); Swift `Sources/pods/profile-pod-bento-grid.swift`.
  */
 
-type PodId = "gallery" | "music" | "blurbs" | "links" | "location" | "book";
-type Cell = { c: number; r: number; w: number; h: number };
-type Layout = Record<PodId, Cell>;
+// ─── App bento geometry (`ProfilePodBentoMetrics` / `ProfilePodBentoSlots`) ──────────────────────
 
-/** Wide: columns 1 and 3 around the ID pod (column 2, rows 1–4); each side = one 2-row pod + two 1-row pods. */
-const WIDE_LAYOUTS: Layout[] = [
+const UNIT = 150;
+const GAP = 6;
+const BOARD_W = UNIT * 4 + GAP * 3; // 618
+/** Smallest tile before the app falls back to the phone stack (`sideTileMinWidth`). */
+const SIDE_TILE_MIN = 116;
+const MIN_BOARD_W = SIDE_TILE_MIN * 4 + GAP * 3; // 482
+/** App `wideMinWidth` media gate. */
+const WIDE_QUERY = "(min-width: 640px)";
+
+type Rect = { x: number; y: number; w: number; h: number };
+type Geometry = { unit: number; gap: number; totalW: number; totalH: number };
+
+/** App `computeGeometry`: exact 150² tiles when the column allows, scaled down to the 116 floor, else null (stack). */
+function computeGeometry(width: number): Geometry | null {
+  if (width < MIN_BOARD_W) return null;
+  const scale = Math.min(1, width / BOARD_W);
+  const unit = UNIT * scale;
+  const gap = GAP * scale;
+  return { unit, gap, totalW: unit * 4 + gap * 3, totalH: unit * 3 + gap * 2 };
+}
+
+/** (col, row) of slots 0–7: L0 L1 L2 · B0 B1 · R0 R1 R2 (bottom band = 2, 3, 4, 7). */
+const SLOT_POS: Array<{ col: number; row: number }> = [
+  { col: 0, row: 0 },
+  { col: 0, row: 1 },
+  { col: 0, row: 2 },
+  { col: 1, row: 2 },
+  { col: 2, row: 2 },
+  { col: 3, row: 0 },
+  { col: 3, row: 1 },
+  { col: 3, row: 2 },
+];
+
+/** Slot group for a (size, anchor) pair — only the app's legal combinations (`ProfilePodBentoSlots.slots`). */
+function slotGroup(size: PodSize, anchor: number): number[] {
+  switch (size) {
+    case "small":
+      return [anchor];
+    case "h2":
+      return anchor === 2 ? [2, 3] : anchor === 3 ? [3, 4] : [4, 7];
+    case "h4":
+      return [2, 3, 4, 7];
+    case "v2":
+      return anchor === 0 ? [0, 1] : anchor === 1 ? [1, 2] : anchor === 5 ? [5, 6] : [6, 7];
+    case "vtall":
+      return anchor === 0 ? [0, 1, 2] : [5, 6, 7];
+  }
+}
+
+function slotRect(geo: Geometry, slot: number): Rect {
+  const { col, row } = SLOT_POS[slot];
+  const step = geo.unit + geo.gap;
+  return { x: col * step, y: row * step, w: geo.unit, h: geo.unit };
+}
+
+function groupRect(geo: Geometry, size: PodSize, anchor: number): Rect {
+  const rects = slotGroup(size, anchor).map((s) => slotRect(geo, s));
+  const x = Math.min(...rects.map((r) => r.x));
+  const y = Math.min(...rects.map((r) => r.y));
+  return {
+    x,
+    y,
+    w: Math.max(...rects.map((r) => r.x + r.w)) - x,
+    h: Math.max(...rects.map((r) => r.y + r.h)) - y,
+  };
+}
+
+// ─── Layouts ───────────────────────────────────────────────────────────────
+
+type Placement = { size: PodSize; anchor: number };
+type WideLayout = Partial<Record<PodId, Placement>>;
+
+/**
+ * Three legal app boards (valid anchors, no overlaps, 8 slots). Spine moves between the left and right column at its
+ * default `vtall` or shrinks to the small Book tile, Page sits in the bottom band as an `h2`, smalls swap places, and
+ * pods without room leave the board until the next layout — like pulling a brick and clicking in another.
+ */
+const WIDE_LAYOUTS: WideLayout[] = [
   {
-    gallery: { c: 1, r: 1, w: 1, h: 2 },
-    music: { c: 1, r: 3, w: 1, h: 1 },
-    blurbs: { c: 1, r: 4, w: 1, h: 1 },
-    book: { c: 3, r: 1, w: 1, h: 1 },
-    location: { c: 3, r: 2, w: 1, h: 2 },
-    links: { c: 3, r: 4, w: 1, h: 1 },
+    music: { size: "small", anchor: 0 },
+    location: { size: "small", anchor: 1 },
+    page: { size: "h2", anchor: 2 },
+    bubble: { size: "small", anchor: 4 },
+    gallery: { size: "small", anchor: 5 },
+    blurbs: { size: "small", anchor: 6 },
+    spine: { size: "small", anchor: 7 },
   },
   {
-    music: { c: 1, r: 1, w: 1, h: 1 },
-    links: { c: 1, r: 2, w: 1, h: 1 },
-    gallery: { c: 1, r: 3, w: 1, h: 2 },
-    location: { c: 3, r: 1, w: 1, h: 2 },
-    blurbs: { c: 3, r: 3, w: 1, h: 1 },
-    book: { c: 3, r: 4, w: 1, h: 1 },
+    spine: { size: "vtall", anchor: 0 },
+    page: { size: "h2", anchor: 3 },
+    music: { size: "small", anchor: 5 },
+    gallery: { size: "small", anchor: 6 },
+    location: { size: "small", anchor: 7 },
   },
   {
-    blurbs: { c: 1, r: 1, w: 1, h: 1 },
-    location: { c: 1, r: 2, w: 1, h: 2 },
-    book: { c: 1, r: 4, w: 1, h: 1 },
-    gallery: { c: 3, r: 1, w: 1, h: 2 },
-    music: { c: 3, r: 3, w: 1, h: 1 },
-    links: { c: 3, r: 4, w: 1, h: 1 },
+    gallery: { size: "small", anchor: 0 },
+    blurbs: { size: "small", anchor: 1 },
+    music: { size: "small", anchor: 2 },
+    location: { size: "small", anchor: 3 },
+    bubble: { size: "small", anchor: 4 },
+    spine: { size: "vtall", anchor: 5 },
   },
 ];
 
-/** Narrow: ID pod spans row 1; pods swap places in a 3×2 grid on rows 2–3. */
-const NARROW_LAYOUTS: Layout[] = [
-  {
-    gallery: { c: 1, r: 2, w: 1, h: 1 },
-    music: { c: 2, r: 2, w: 1, h: 1 },
-    blurbs: { c: 3, r: 2, w: 1, h: 1 },
-    links: { c: 1, r: 3, w: 1, h: 1 },
-    location: { c: 2, r: 3, w: 1, h: 1 },
-    book: { c: 3, r: 3, w: 1, h: 1 },
-  },
-  {
-    location: { c: 1, r: 2, w: 1, h: 1 },
-    gallery: { c: 2, r: 2, w: 1, h: 1 },
-    book: { c: 3, r: 2, w: 1, h: 1 },
-    music: { c: 1, r: 3, w: 1, h: 1 },
-    links: { c: 2, r: 3, w: 1, h: 1 },
-    blurbs: { c: 3, r: 3, w: 1, h: 1 },
-  },
-  {
-    blurbs: { c: 1, r: 2, w: 1, h: 1 },
-    links: { c: 2, r: 2, w: 1, h: 1 },
-    music: { c: 3, r: 2, w: 1, h: 1 },
-    book: { c: 1, r: 3, w: 1, h: 1 },
-    gallery: { c: 2, r: 3, w: 1, h: 1 },
-    location: { c: 3, r: 3, w: 1, h: 1 },
-  },
+/** Phone stack orders (Page spans both columns; smalls pair up). Page always starts a row so the grid never has holes. */
+const NARROW_ORDERS: PodId[][] = [
+  ["music", "gallery", "page", "location", "spine", "blurbs", "bubble"],
+  ["page", "gallery", "location", "spine", "music", "bubble", "blurbs"],
+  ["blurbs", "bubble", "location", "music", "page", "gallery", "spine"],
 ];
 
-const WIDE_QUERY = "(min-width: 760px)";
+const NARROW_SIZE: Record<PodId, PodSize> = {
+  music: "small",
+  gallery: "small",
+  location: "small",
+  spine: "small",
+  blurbs: "small",
+  bubble: "small",
+  page: "h2",
+};
 
-function useIsWide() {
+/** App narrow-stack fixed cell heights (148 / 200 / 260). */
+function narrowHeight(size: PodSize): number {
+  return size === "vtall" ? 260 : size === "v2" ? 200 : 148;
+}
+
+const POD_ORDER: PodId[] = ["music", "location", "page", "bubble", "gallery", "blurbs", "spine"];
+const SHUFFLE_MS = 3200;
+const NARROW_SHUFFLE_MS = 4800;
+
+/** Where each pod starts before it snaps in — scattered and tilted, like loose bricks. */
+const SCATTER: Record<PodId, { x: number; y: number; rotate: number }> = {
+  music: { x: -70, y: -50, rotate: -11 },
+  location: { x: -110, y: 20, rotate: 9 },
+  page: { x: -40, y: 90, rotate: -6 },
+  bubble: { x: 60, y: 110, rotate: 12 },
+  gallery: { x: 100, y: -60, rotate: 10 },
+  blurbs: { x: 130, y: 10, rotate: -12 },
+  spine: { x: 90, y: 80, rotate: 7 },
+};
+
+const SNAP_SPRING = { type: "spring" as const, stiffness: 320, damping: 30, mass: 0.9 };
+const HERO_EASE = [0.22, 1, 0.36, 1] as const;
+
+// ─── Hooks ─────────────────────────────────────────────────────────────────
+
+function useWideViewport() {
   const [wide, setWide] = useState(() => (typeof window === "undefined" ? true : window.matchMedia(WIDE_QUERY).matches));
   useEffect(() => {
     const mq = window.matchMedia(WIDE_QUERY);
@@ -87,224 +175,219 @@ function useIsWide() {
   return wide;
 }
 
-const POD_ORDER: PodId[] = ["gallery", "music", "blurbs", "links", "location", "book"];
-const SHUFFLE_MS = 3200;
-
-const POD_META: Record<PodId, { label: string; icon: LucideIcon }> = {
-  gallery: { label: "Gallery", icon: ImageIcon },
-  music: { label: "Music", icon: Music2 },
-  blurbs: { label: "Blurbs", icon: MessageCircle },
-  links: { label: "Links", icon: Link2 },
-  location: { label: "Location", icon: MapPin },
-  book: { label: "Book", icon: CalendarCheck },
-};
-
-/** Where each pod starts before it snaps in — scattered and tilted, like loose bricks. */
-const SCATTER: Record<PodId, { x: number; y: number; rotate: number }> = {
-  gallery: { x: -90, y: -40, rotate: -10 },
-  music: { x: 110, y: -60, rotate: 9 },
-  blurbs: { x: 60, y: 30, rotate: -14 },
-  links: { x: 140, y: 50, rotate: 12 },
-  location: { x: -120, y: 80, rotate: 8 },
-  book: { x: 90, y: 110, rotate: -7 },
-};
-
-const POD_CORNER_RADIUS = 26;
-
-/**
- * True superellipse for each pod (same `createSquirclePath` the ID pod's `SquircleShell` uses): the path clips the
- * pod's content and a matching SVG stroke draws the rim, so photos and fills get real squircle corners in every
- * browser (CSS `corner-shape` only works in very new Chrome). Re-measures when the shuffle resizes the pod.
- */
-function SquirclePod({ children, radius = POD_CORNER_RADIUS }: { children: ReactNode; radius?: number }) {
+/** Container width, measured before first paint so desktop mounts the board directly (app `measureBoardWidth`). */
+function useContainerWidth() {
   const ref = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ w: 0, h: 0 });
-
+  const [width, setWidth] = useState(0);
   useLayoutEffect(() => {
     const node = ref.current;
     if (!node) return undefined;
-    const measure = () => setSize({ w: node.offsetWidth, h: node.offsetHeight });
+    const measure = () => setWidth(node.clientWidth);
     measure();
     if (typeof ResizeObserver === "undefined") return undefined;
     const observer = new ResizeObserver(measure);
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
-
-  const path = useMemo(
-    () =>
-      size.w > 0 && size.h > 0
-        ? createSquirclePath({ width: size.w, height: size.h, cornerRadius: Math.min(radius, size.w / 2, size.h / 2), cornerSmoothing: 1 })
-        : "",
-    [radius, size.h, size.w],
-  );
-
-  return (
-    <div ref={ref} className="profile-pods-demo__squircle">
-      <div className="profile-pods-demo__fill" style={path ? { clipPath: `path('${path}')` } : { borderRadius: radius }}>
-        {children}
-      </div>
-      {path ? (
-        <svg className="profile-pods-demo__rim" viewBox={`0 0 ${size.w} ${size.h}`} aria-hidden focusable="false">
-          <path d={path} />
-        </svg>
-      ) : null}
-    </div>
-  );
+  return { ref, width };
 }
 
-function PodLabel({ id }: { id: PodId }) {
-  const { label, icon: Icon } = POD_META[id];
-  return (
-    <span className="profile-pods-demo__label">
-      <Icon className="size-3" strokeWidth={2.2} aria-hidden />
-      {label}
-    </span>
-  );
+/** True while the demo is on screen — no point shuffling a board nobody sees. */
+function useOnScreen(ref: RefObject<HTMLElement | null>) {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || typeof IntersectionObserver === "undefined") return undefined;
+    const observer = new IntersectionObserver(([entry]) => setVisible(Boolean(entry?.isIntersecting)), { threshold: 0.2 });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [ref]);
+  return visible;
 }
 
-function ArtPod({ src, id }: { src: string; id: PodId }) {
-  return (
-    <>
-      <img src={src} alt="" aria-hidden draggable={false} loading="lazy" className="profile-pods-demo__art" />
-      <PodLabel id={id} />
-    </>
-  );
-}
-
-function MusicPod({ wide }: { wide: boolean }) {
-  return (
-    <div className="profile-pods-demo__music">
-      <span className="profile-pods-demo__album" aria-hidden />
-      {wide ? (
-        <span className="profile-pods-demo__track">
-          <span className="profile-pods-demo__track-title">On repeat</span>
-          <span className="profile-pods-demo__track-sub">Your top song</span>
-        </span>
-      ) : null}
-      <span className="profile-pods-demo__eq" aria-hidden>
-        <i />
-        <i />
-        <i />
-        <i />
-      </span>
-      <PodLabel id="music" />
-    </div>
-  );
-}
-
-function BlurbsPod({ wide }: { wide: boolean }) {
-  return (
-    <div className="profile-pods-demo__blurbs">
-      <span className="profile-pods-demo__bubble">{wide ? "gm, who's around this weekend?" : "gm ☀️"}</span>
-      {wide ? <span className="profile-pods-demo__bubble profile-pods-demo__bubble--reply">I'm in 🙌</span> : null}
-      <PodLabel id="blurbs" />
-    </div>
-  );
-}
-
-function BookPod({ wide }: { wide: boolean }) {
-  return (
-    <div className="profile-pods-demo__book">
-      <span className="profile-pods-demo__book-title">{wide ? "Book a session" : "Book"}</span>
-      <span className="profile-pods-demo__slots" aria-hidden>
-        <span>Thu 3 pm</span>
-        {wide ? <span>Fri 10 am</span> : null}
-      </span>
-      <PodLabel id="book" />
-    </div>
-  );
-}
-
-function PodBody({ id, cell, theme }: { id: PodId; cell: Cell; theme: "light" | "dark" }) {
-  const wide = cell.w > 1;
-  switch (id) {
-    case "gallery":
-      return <ArtPod id="gallery" src="/pods-bento/bento-art.png" />;
-    case "location":
-      return <ArtPod id="location" src="/pods-bento/bento-maps.png" />;
-    case "links":
-      return (
-        <ArtPod
-          id="links"
-          src={theme === "light" ? "/pods-bento/bento-github.png" : "/pods-bento/bento-github-dark.png"}
-        />
-      );
-    case "music":
-      return <MusicPod wide={wide} />;
-    case "blurbs":
-      return <BlurbsPod wide={wide} />;
-    case "book":
-      return <BookPod wide={wide} />;
-  }
-}
-
-function useShuffle(enabled: boolean, paused: boolean, count: number) {
+function useCycle(count: number, intervalMs: number, running: boolean) {
   const [index, setIndex] = useState(0);
   useEffect(() => {
-    if (!enabled || paused) return;
+    if (!running) return undefined;
     const id = window.setInterval(() => {
       if (document.hidden) return;
       setIndex((i) => (i + 1) % count);
-    }, SHUFFLE_MS);
+    }, intervalMs);
     return () => window.clearInterval(id);
-  }, [enabled, paused, count]);
+  }, [count, intervalMs, running]);
   return index;
 }
 
-export function ProfilePodsDemo({ className, footer }: { className?: string; footer?: ReactNode }) {
-  const reduceMotion = useReducedMotion() ?? false;
-  const { resolvedTheme } = useTheme();
-  const theme = resolvedTheme === "light" ? "light" : "dark";
-  const wide = useIsWide();
-  const layouts = wide ? WIDE_LAYOUTS : NARROW_LAYOUTS;
-  const [paused, setPaused] = useState(false);
-  const layoutIndex = useShuffle(!reduceMotion, paused, layouts.length);
-  const layout = layouts[layoutIndex % layouts.length];
-  const spring = useMemo(() => ({ type: "spring" as const, stiffness: 340, damping: 30, mass: 0.9 }), []);
+/** True for the first ~1.2 s after mount: the staggered fly-in only plays once; later re-entries snap in quickly. */
+function useIntroWindow() {
+  const [intro, setIntro] = useState(true);
+  useEffect(() => {
+    const id = window.setTimeout(() => setIntro(false), 1200);
+    return () => window.clearTimeout(id);
+  }, []);
+  return intro;
+}
+
+// ─── Wide board ────────────────────────────────────────────────────────────
+
+function WideBoard({
+  geo,
+  layout,
+  animate,
+  reduceMotion,
+}: {
+  geo: Geometry;
+  layout: WideLayout;
+  animate: boolean;
+  reduceMotion: boolean;
+}) {
+  const intro = useIntroWindow();
+  const heroSize = geo.unit * 2 + geo.gap;
 
   return (
-    <div className={cn("profile-pods-demo", wide ? "profile-pods-demo--wide" : "profile-pods-demo--narrow", className)}>
-      <LayoutGroup>
-        <div
-          className="profile-pods-demo__stage"
-          role="group"
-          aria-label="Example profile: an ID pod with gallery, music, blurbs, links, location and booking pods rearranging around it"
-          onPointerEnter={() => setPaused(true)}
-          onPointerLeave={() => setPaused(false)}
-        >
-          <motion.div
-            className="profile-pods-demo__id"
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.94, y: 12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <ProfilePodPanel showActions={false} />
-          </motion.div>
+    <div className="profile-pods-demo__board" style={{ width: geo.totalW, height: geo.totalH }}>
+      {/* Profile hero — the fixed, untouched center anchor (2×2 units). */}
+      <motion.div
+        className="profile-pods-demo__hero-anchor"
+        style={{ left: geo.unit + geo.gap, top: 0, width: heroSize, height: heroSize }}
+        initial={reduceMotion ? false : { opacity: 0, scale: 0.94, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: HERO_EASE }}
+      >
+        <ProfileHero fill />
+      </motion.div>
 
-          <div className="profile-pods-demo__pods">
-            {POD_ORDER.map((id, i) => {
-              const cell = layout[id];
-              const scatter = SCATTER[id];
-              return (
-                <motion.div
-                  key={id}
-                  layout={!reduceMotion}
-                  className={cn("profile-pods-demo__pod", `profile-pods-demo__pod--${id}`)}
-                  style={{ gridColumn: `${cell.c} / span ${cell.w}`, gridRow: `${cell.r} / span ${cell.h}` }}
-                  initial={reduceMotion ? false : { opacity: 0, scale: 0.7, x: scatter.x, y: scatter.y, rotate: scatter.rotate }}
-                  animate={{ opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }}
-                  transition={{ ...spring, delay: reduceMotion ? 0 : 0.35 + i * 0.07, layout: spring }}
-                >
-                  <SquirclePod>
-                    <PodBody id={id} cell={cell} theme={theme} />
-                  </SquirclePod>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </LayoutGroup>
+      <AnimatePresence initial={!reduceMotion}>
+        {POD_ORDER.filter((id) => layout[id]).map((id, i) => {
+          const placement = layout[id]!;
+          const rect = groupRect(geo, placement.size, placement.anchor);
+          const scatter = SCATTER[id];
+          const delay = reduceMotion ? 0 : intro ? 0.35 + i * 0.07 : 0.16;
+          const enter = { ...SNAP_SPRING, delay };
+          return (
+            <motion.div
+              key={id}
+              className="profile-pods-demo__cell"
+              initial={
+                reduceMotion
+                  ? false
+                  : {
+                      opacity: 0,
+                      scale: 0.72,
+                      x: scatter.x,
+                      y: scatter.y,
+                      rotate: scatter.rotate,
+                      left: rect.x,
+                      top: rect.y,
+                      width: rect.w,
+                      height: rect.h,
+                    }
+              }
+              animate={{ opacity: 1, scale: 1, x: 0, y: 0, rotate: 0, left: rect.x, top: rect.y, width: rect.w, height: rect.h }}
+              exit={{
+                opacity: 0,
+                scale: 0.6,
+                rotate: scatter.rotate * 0.6,
+                y: 24,
+                transition: { duration: 0.26, ease: [0.4, 0, 1, 1] },
+              }}
+              transition={{
+                opacity: { duration: 0.24, delay },
+                scale: enter,
+                x: enter,
+                y: enter,
+                rotate: enter,
+                left: SNAP_SPRING,
+                top: SNAP_SPRING,
+                width: SNAP_SPRING,
+                height: SNAP_SPRING,
+              }}
+            >
+              <PodTile size={placement.size}>
+                <PodFace id={id} size={placement.size} animate={animate} />
+              </PodTile>
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ─── Narrow stack ──────────────────────────────────────────────────────────
+
+function NarrowStack({ order, animate, reduceMotion }: { order: PodId[]; animate: boolean; reduceMotion: boolean }) {
+  return (
+    <div className="profile-pods-demo__stack">
+      <motion.div
+        className="profile-pods-demo__stack-hero"
+        initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: HERO_EASE }}
+      >
+        <ProfileHero fill={false} />
+      </motion.div>
+      <div className="profile-pods-demo__grid">
+        {order.map((id) => {
+          const size = NARROW_SIZE[id];
+          const scatter = SCATTER[id];
+          const delay = reduceMotion ? 0 : 0.3 + POD_ORDER.indexOf(id) * 0.06;
+          return (
+            <motion.div
+              key={id}
+              layout={!reduceMotion}
+              className="profile-pods-demo__narrow-cell"
+              style={{ gridColumn: size === "h2" || size === "h4" ? "span 2" : "span 1", height: narrowHeight(size) }}
+              initial={
+                reduceMotion ? false : { opacity: 0, scale: 0.75, x: scatter.x * 0.5, y: scatter.y * 0.5 + 30, rotate: scatter.rotate }
+              }
+              animate={{ opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }}
+              transition={{ ...SNAP_SPRING, delay, layout: SNAP_SPRING }}
+            >
+              <PodTile size={size}>
+                <PodFace id={id} size={size} animate={animate} />
+              </PodTile>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Root ──────────────────────────────────────────────────────────────────
+
+export function ProfilePodsDemo({ className, footer }: { className?: string; footer?: ReactNode }) {
+  const reduceMotion = useReducedMotion() ?? false;
+  const wideViewport = useWideViewport();
+  const { ref, width } = useContainerWidth();
+  const onScreen = useOnScreen(ref);
+  const [hovered, setHovered] = useState(false);
+
+  const geo = useMemo(() => (wideViewport && width > 0 ? computeGeometry(width) : null), [wideViewport, width]);
+  const isWide = geo != null;
+  const running = !reduceMotion && !hovered && onScreen;
+
+  const wideIndex = useCycle(WIDE_LAYOUTS.length, SHUFFLE_MS, running && isWide);
+  const narrowIndex = useCycle(NARROW_ORDERS.length, NARROW_SHUFFLE_MS, running && !isWide);
+  const animate = !reduceMotion && onScreen;
+
+  return (
+    <div ref={ref} className={cn("profile-pods-demo", isWide ? "profile-pods-demo--wide" : "profile-pods-demo--narrow", className)}>
+      <div
+        className="profile-pods-demo__stage"
+        role="img"
+        aria-label="Example profile: a photo and network pod in the center, with music, gallery, location, Spine booking, Blurbs, Bubble and page pods snapping into place around it"
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
+        <ProfileMeta />
+        {geo ? (
+          <WideBoard geo={geo} layout={WIDE_LAYOUTS[wideIndex]} animate={animate} reduceMotion={reduceMotion} />
+        ) : width > 0 ? (
+          <NarrowStack order={NARROW_ORDERS[narrowIndex]} animate={animate} reduceMotion={reduceMotion} />
+        ) : null}
+      </div>
 
       {footer}
     </div>

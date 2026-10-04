@@ -1,310 +1,1455 @@
 /**
- * **Purpose:** `/profile` Lego-style pod demo (`ProfilePodsDemo.tsx`): app pod surfaces on a 4×3 grid.
- * Dark pods = near-black glass with a 1px rim + top lip; light pods = white with a hairline + soft lift.
+ * **Purpose:** `/profile` pod demo (`ProfilePodsDemo.tsx` + `ProfilePodsDemoPods.tsx`) — the app's profile bento with
+ * its real Gooey chrome: near-black OO 4D tiles (inner lip, 1.5px rim, stage elevation) on dark, soft white tiles on
+ * light, and the compact pod faces as they render inside a bento cell.
+ * **Parity (web app):** `frontend/src/styles/profile-pod-bento.css`, `pod-squircle.css`, `glass.css` (hero, photo frame,
+ * Network strip), `tokens.css` (`--pod-oo-4d-*`, `--pod-chrome-elevation`), `music-pod.css`, `gallery-pod.css`,
+ * `location-pod.css`, `pods/SpinePod.css`, `blurbs-profile-pod.css`, `blurbs-identity.css`, `bubble-pod.css`,
+ * `page-pod.css`, `embossed-name.css`.
  */
 
+/* ─── Tokens (Gooey Dark default, Gooey Light below) ─────────────────────── */
+
 .profile-pods-demo {
+  --ppd-fill: #050505;
+  --ppd-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.18), inset 0 -1px 3px rgba(0, 0, 0, 0.65), 0 1px 4px rgba(0, 0, 0, 0.35);
+  --ppd-lip: inset 0 2px 5px rgba(255, 255, 255, 0.18);
+  --ppd-stroke: rgba(255, 255, 255, 0.16);
+  --ppd-elevation: drop-shadow(0 0 1px rgba(255, 255, 255, 0.34)) drop-shadow(0 1px 0 rgba(255, 255, 255, 0.22))
+    drop-shadow(0 20px 36px rgba(0, 0, 0, 0.9)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+
+  --ppd-hero-fill: #050505;
+  --ppd-hero-lip: var(--ppd-shadow);
+  --ppd-hero-lip-top: var(--ppd-lip);
+  --ppd-photo-well: #000;
+  --ppd-photo-rim: rgba(255, 255, 255, 0.05);
+  --ppd-photo-lip: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -1px 2px rgba(0, 0, 0, 0.22);
+
+  --ppd-network-fade: #000;
+  --ppd-network-title: #fff;
+  --ppd-network-title-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --ppd-network-skin: rgba(255, 255, 255, 0.12);
+  --ppd-avatar-rim-a: #0a0a0b;
+  --ppd-avatar-rim-b: #202027;
+  --ppd-avatar-lift: 0 2px 7px rgba(0, 0, 0, 0.42);
+  --ppd-avatar-fill: rgba(255, 255, 255, 0.08);
+
+  --ppd-ink: rgba(255, 255, 255, 0.92);
+  --ppd-ink-2: rgba(255, 255, 255, 0.72);
+  --ppd-ink-3: rgba(255, 255, 255, 0.45);
+
+  --ppd-name-ink: #f2f2f2;
+  --ppd-name-edge: rgba(255, 255, 255, 0.32);
+  --ppd-name-side: rgba(0, 0, 0, 0.78);
+
+  --ppd-rainbow-1: #ff2d55;
+  --ppd-rainbow-2: #ff9f0a;
+  --ppd-rainbow-3: #ffd60a;
+  --ppd-rainbow-4: #32d74b;
+  --ppd-rainbow-5: #64d2ff;
+  --ppd-rainbow-6: #bf5af2;
+  --ppd-rainbow-7: #ff66c4;
+  --ppd-sparkle: rgba(255, 255, 255, 0.92);
+  --ppd-rim-glow: color-mix(in srgb, var(--ppd-rainbow-5) 42%, transparent);
+  --ppd-cosmic-bg: #05050a;
+  --ppd-cosmic-nebula: #12081f;
+
   display: flex;
   width: 100%;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
 }
 
-/* One grid holds the ID pod and the six pods (the pods wrapper is display: contents). */
+:is(.light, [data-theme="light"]) .profile-pods-demo {
+  --ppd-fill: rgba(255, 255, 255, 0.94);
+  --ppd-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  --ppd-lip: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  --ppd-stroke: rgba(0, 0, 0, 0.1);
+  --ppd-elevation: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.08));
+
+  --ppd-hero-fill: #fff;
+  --ppd-hero-lip: 0 18px 40px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  --ppd-hero-lip-top: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  --ppd-photo-well: #fff;
+  --ppd-photo-rim: rgba(0, 0, 0, 0.1);
+  --ppd-photo-lip: inset 0 1px 0 rgba(255, 255, 255, 0.42), inset 0 -1px 1px rgba(0, 0, 0, 0.06);
+
+  --ppd-network-fade: #fff;
+  --ppd-network-title: rgba(0, 0, 0, 0.88);
+  --ppd-network-title-shadow: none;
+  --ppd-network-skin: rgba(0, 0, 0, 0.04);
+  --ppd-avatar-rim-a: #ccd4e9;
+  --ppd-avatar-rim-b: #e7fcf6;
+  --ppd-avatar-lift: 0 2px 5px rgba(0, 0, 0, 0.14);
+  --ppd-avatar-fill: rgba(0, 0, 0, 0.06);
+
+  --ppd-ink: rgba(0, 0, 0, 0.88);
+  --ppd-ink-2: rgba(0, 0, 0, 0.62);
+  --ppd-ink-3: rgba(0, 0, 0, 0.45);
+
+  --ppd-name-ink: #1a1a1a;
+  --ppd-name-edge: rgba(255, 255, 255, 0.95);
+  --ppd-name-side: rgba(0, 0, 0, 0.2);
+
+  --ppd-rainbow-1: #e11d48;
+  --ppd-rainbow-2: #ea580c;
+  --ppd-rainbow-3: #ca8a04;
+  --ppd-rainbow-4: #16a34a;
+  --ppd-rainbow-5: #0284c7;
+  --ppd-rainbow-6: #7c3aed;
+  --ppd-rainbow-7: #db2777;
+  --ppd-sparkle: rgba(40, 30, 60, 0.55);
+  --ppd-rim-glow: color-mix(in srgb, var(--ppd-rainbow-6) 28%, transparent);
+  --ppd-cosmic-bg: #f4f2f8;
+  --ppd-cosmic-nebula: #ebe6f5;
+}
+
+/* ─── Stage, name, board, stack ──────────────────────────────────────────── */
+
 .profile-pods-demo__stage {
-  display: grid;
-  gap: 12px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
 }
 
-.profile-pods-demo__pods {
-  display: contents;
-}
-
-/* Wide: pods | ID pod | pods, four rows set by the ID pod's height. */
-.profile-pods-demo--wide .profile-pods-demo__stage {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 320px) minmax(0, 1fr);
-  grid-template-rows: repeat(4, minmax(0, 1fr));
-}
-
-.profile-pods-demo--wide .profile-pods-demo__id {
-  grid-column: 2;
-  grid-row: 1 / span 4;
-  min-width: 0;
-}
-
-/* Narrow: ID pod across the top, square pods in a 3×2 grid below. */
 .profile-pods-demo--narrow .profile-pods-demo__stage {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  max-width: 438px;
 }
 
-.profile-pods-demo--narrow .profile-pods-demo__id {
-  grid-column: 1 / span 3;
-  grid-row: 1;
+/* Display name above the board — app `id-pod-profile-meta` + embossed raised type (`embossed-name.css` --lg). */
+.ppd-meta {
+  width: 100%;
+  max-width: 438px;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.ppd-meta__name {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ppd-name-ink);
+  -webkit-text-fill-color: var(--ppd-name-ink);
+  text-shadow:
+    0 -0.03em 0 var(--ppd-name-edge),
+    0 0.05em 0 var(--ppd-name-side),
+    0 0.09em 0 var(--ppd-name-side);
+}
+
+.ppd-meta__handle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--ppd-ink-3);
+}
+
+@media (prefers-contrast: more) {
+  .ppd-meta__name {
+    text-shadow: none;
+  }
+}
+
+/* Wide: the absolute slot board (618×462 at full scale). */
+.profile-pods-demo__board {
+  position: relative;
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.profile-pods-demo__hero-anchor {
+  position: absolute;
+  z-index: 1;
+}
+
+.profile-pods-demo__cell {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  will-change: transform;
+}
+
+/* Narrow: hero on top, companions in a 2-column grid with fixed heights (148 / 200 / 260). */
+.profile-pods-demo__stack {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-pods-demo__stack-hero {
+  width: 100%;
+}
+
+.profile-pods-demo__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+}
+
+.profile-pods-demo__narrow-cell {
+  position: relative;
   min-width: 0;
 }
 
-.profile-pods-demo--narrow .profile-pods-demo__pod {
-  aspect-ratio: 1;
-}
+/* ─── Squircle + tile chrome (app `CellChrome` / `SquircleSurface`) ─────── */
 
-.profile-pods-demo--narrow .id-pod-profile-photo-frame {
-  max-height: min(28dvh, 230px);
-}
-
-/* Grid item: carries the lift shadow (filter, so it follows the squircle clip of its child). */
-.profile-pods-demo__pod {
+.ppd-squircle {
   position: relative;
-  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.32));
+  box-sizing: border-box;
 }
 
-:is(.light, [data-theme="light"]) .profile-pods-demo__pod {
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.09));
-}
-
-.profile-pods-demo__squircle {
-  position: absolute;
-  inset: 0;
-}
-
-.profile-pods-demo__fill {
-  position: absolute;
-  inset: 0;
+.ppd-squircle__fill {
+  position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  background: rgba(14, 14, 16, 0.92);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  transform: translateZ(0);
 }
 
-:is(.light, [data-theme="light"]) .profile-pods-demo__fill {
-  background: #ffffff;
-  box-shadow: inset 0 1px 0 #ffffff;
-}
-
-.profile-pods-demo__rim {
+.ppd-squircle__rim {
   position: absolute;
   inset: 0;
+  z-index: 21;
   width: 100%;
   height: 100%;
   overflow: visible;
   pointer-events: none;
 }
 
-.profile-pods-demo__rim path {
+.ppd-squircle__rim path {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.12);
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
+  stroke-width: 1.5;
+  shape-rendering: geometricPrecision;
 }
 
-:is(.light, [data-theme="light"]) .profile-pods-demo__rim path {
-  stroke: rgba(0, 0, 0, 0.08);
+.ppd-tile {
+  width: 100%;
+  height: 100%;
+  filter: var(--ppd-elevation);
 }
 
-.profile-pods-demo__art {
+.ppd-tile__fill {
+  background: var(--ppd-fill);
+  box-shadow: var(--ppd-shadow);
+}
+
+/* Lip above the pod content so photo / map tiles still read as embossed. */
+.ppd-tile__fill::after {
+  content: "";
   position: absolute;
   inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  box-shadow: var(--ppd-lip);
+}
+
+.ppd-tile__rim path {
+  stroke: var(--ppd-stroke);
+}
+
+.ppd-tile__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ppd-tile__body > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ─── Profile hero (`IdPodSquircleShell` profileHero + `IdPodProfilePhotoFrame`) ── */
+
+.ppd-hero {
+  width: 100%;
+  filter: var(--ppd-elevation);
+}
+
+.ppd-hero--fill {
+  height: 100%;
+}
+
+.ppd-hero__fill {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 4px 4px 12px;
+  background: var(--ppd-hero-fill);
+}
+
+.ppd-hero__rim path {
+  stroke: var(--ppd-stroke);
+}
+
+.ppd-hero__lip {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  box-shadow: var(--ppd-hero-lip);
+}
+
+.ppd-hero__lip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: var(--ppd-hero-lip-top);
+}
+
+.ppd-hero__photo {
+  position: relative;
+  width: 100%;
+  flex: 0 0 auto;
+  aspect-ratio: 3 / 4;
+  min-height: 132px;
+  max-height: min(68dvh, 584px);
+}
+
+/* Bento center slot: the photo flexes to fill the 2×2 square (app client-pitch hero rules). */
+.ppd-hero--fill .ppd-hero__photo {
+  flex: 1 1 auto;
+  aspect-ratio: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+.ppd-hero__photo-squircle {
+  position: absolute;
+  inset: 0;
+}
+
+.ppd-hero__well {
+  background: var(--ppd-photo-well);
+}
+
+.ppd-hero__photo-rim path {
+  stroke: var(--ppd-photo-rim);
+}
+
+.ppd-hero__img {
+  position: absolute;
+  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  pointer-events: none;
+  object-position: center center;
 }
 
-.profile-pods-demo__label {
+.ppd-hero--fill .ppd-hero__img {
+  object-position: center 30%;
+}
+
+.ppd-hero__photo-lip {
   position: absolute;
-  left: 8px;
-  bottom: 8px;
-  z-index: 1;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  box-shadow: var(--ppd-photo-lip);
+}
+
+/* Network strip (`ProfileNetworkStrip` embedded). */
+.ppd-network {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 64px;
+  padding: 2px 0 4px;
+  box-sizing: border-box;
+}
+
+.ppd-network::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 0;
+  width: min(100%, 476px);
+  height: 48px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--ppd-network-fade));
+}
+
+.ppd-network__avatars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ppd-network__row {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px;
-  border-radius: 9999px;
-  background: rgba(0, 0, 0, 0.55);
-  color: rgba(255, 255, 255, 0.92);
-  font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border-radius: 999px;
+  background: var(--ppd-network-skin);
 }
 
-:is(.light, [data-theme="light"]) .profile-pods-demo__label {
-  background: rgba(255, 255, 255, 0.85);
-  color: rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+.ppd-network__frame {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 41px;
+  padding: 2px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--ppd-avatar-rim-a) 0%, var(--ppd-avatar-rim-b) 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15), var(--ppd-avatar-lift);
 }
 
-/* Music */
-.profile-pods-demo__music {
+.ppd-network__photo {
+  display: block;
+  width: 26px;
+  height: 37px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--ppd-avatar-fill);
+  opacity: 0.5;
+}
+
+.ppd-network__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ppd-network__overlay {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 58px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.ppd-network__title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ppd-network-title);
+  text-shadow: var(--ppd-network-title-shadow);
+}
+
+.ppd-network__metric {
+  font-family: var(--font-mono, "Geist Mono", ui-monospace, monospace);
+  font-size: 8px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  background: linear-gradient(to top, #2fff00, #ebff00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+:is(.light, [data-theme="light"]) .ppd-network__metric {
+  background: linear-gradient(to top, #1f9e00, #6f8f00);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ─── Shared face base ───────────────────────────────────────────────────── */
+
+.ppd-music,
+.ppd-gallery,
+.ppd-location,
+.ppd-spine,
+.ppd-blurbs,
+.ppd-bubble,
+.ppd-page {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ─── Music (`MusicPlayerCard` bentoFill) ────────────────────────────────── */
+
+.ppd-music {
+  background: #050505;
+}
+
+.ppd-music__cover {
   position: absolute;
   inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ppd-music__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.55) 45%, rgba(0, 0, 0, 0.82) 100%);
+}
+
+.ppd-music__body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+}
+
+.ppd-music__title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+
+.ppd-music__artist {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ppd-music__play {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border: 1.5px solid #2fff00;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 18px rgba(47, 255, 0, 0.55), 0 0 4px rgba(47, 255, 0, 0.8);
+}
+
+.ppd-music__play img {
+  display: block;
+  width: 10px;
+  height: 12px;
+  margin-left: 2px;
+}
+
+/* ─── Gallery (`GalleryCard`) ────────────────────────────────────────────── */
+
+.ppd-gallery {
+  background: #050505;
+}
+
+.ppd-gallery__img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 700ms ease-in-out;
+}
+
+.ppd-gallery__img.is-active {
+  opacity: 1;
+}
+
+.ppd-gallery__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.78) 100%);
+}
+
+.ppd-gallery__dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 56px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.ppd-gallery__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.ppd-gallery__dot.is-active {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.ppd-gallery__stamp {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ─── Location (`LocationCard`) ──────────────────────────────────────────── */
+
+.ppd-location {
+  background: #050505;
+}
+
+.ppd-location__map {
+  position: absolute;
+  inset: 0;
+}
+
+.ppd-location__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.04);
+  /* Dark: quiet cool ink from light street tiles (app `LocationCardView.locationMapStyle`). */
+  filter: invert(0.92) hue-rotate(180deg) brightness(0.9) contrast(0.84) saturate(0.14);
+}
+
+.ppd-location__map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(8, 10, 14, 0.12) 0%, transparent 38%, rgba(8, 10, 14, 0.28) 100%),
+    radial-gradient(ellipse 70% 60% at 50% 48%, transparent 40%, rgba(8, 10, 14, 0.16) 100%);
+}
+
+.ppd-location__pin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  background: #0075ff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+}
+
+.ppd-location__pill {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% - 20px);
+  height: 28px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+:is(.light, [data-theme="light"]) .ppd-location__img {
+  filter: saturate(0.35) brightness(1.04) contrast(0.92);
+}
+
+:is(.light, [data-theme="light"]) .ppd-location__map::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 40%, rgba(20, 22, 28, 0.12) 100%),
+    radial-gradient(ellipse 70% 60% at 50% 48%, transparent 42%, rgba(20, 22, 28, 0.08) 100%);
+}
+
+:is(.light, [data-theme="light"]) .ppd-location__pill {
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 4px rgba(0, 0, 0, 0.08);
+  color: rgba(20, 22, 28, 0.88);
+}
+
+/* ─── Spine (`SpinePodCard` + `SpinePod.css`) ────────────────────────────── */
+
+.ppd-spine {
+  container-type: inline-size;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.62));
+  color: var(--ppd-ink);
+  text-align: left;
+}
+
+.ppd-spine__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.62));
+}
+
+.ppd-spine__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.ppd-spine__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.ppd-spine__composition {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ppd-spine__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  font-family: system-ui, ui-rounded, sans-serif;
+}
+
+.ppd-spine__pill--previous {
+  padding: 4px 8px;
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+  opacity: 0.72;
+  transform: scale(0.92);
+}
+
+.ppd-spine__pill--next {
+  padding: 4px 8px;
+  border-color: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
+  opacity: 0.45;
+  transform: scale(0.86);
+}
+
+.ppd-spine__pill.is-today {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.ppd-spine__weekday {
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.ppd-spine__pill--previous .ppd-spine__weekday,
+.ppd-spine__pill--next .ppd-spine__weekday {
+  font-size: 8px;
+}
+
+.ppd-spine__pill.is-today .ppd-spine__weekday {
+  font-weight: 600;
+  color: color-mix(in srgb, #0066ff 90%, transparent);
+}
+
+.ppd-spine__cord {
+  flex: 0 0 auto;
+  width: 1.5px;
+  height: 14px;
+  margin: 0 5px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.ppd-spine__pill--previous .ppd-spine__cord,
+.ppd-spine__pill--next .ppd-spine__cord {
+  height: 11px;
+}
+
+.ppd-spine__pill.is-today .ppd-spine__cord {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.ppd-spine__num {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.ppd-spine__pill--previous .ppd-spine__num,
+.ppd-spine__pill--next .ppd-spine__num {
+  font-size: 10px;
+}
+
+.ppd-spine__pill.is-today .ppd-spine__num {
+  font-weight: 700;
+  color: #0066ff;
+}
+
+.ppd-spine__count {
+  margin-left: 6px;
+  font-size: 8px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.ppd-spine__cluster {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ppd-spine__hours {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5px;
+  padding: 2px 0;
+}
+
+.ppd-spine__tick {
+  display: block;
+  flex: 0 0 auto;
+  height: 7px;
+  border-radius: 9999px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+.ppd-spine__tick--empty {
+  background: #232323;
+}
+
+.ppd-spine__tick--passive {
+  background: linear-gradient(to top, #3a3a3a, #4a4a4a);
+}
+
+.ppd-spine__tick--memory {
+  background: linear-gradient(to top, #7700ff, #b200ff);
+}
+
+.ppd-spine__tick.is-dense {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12), 0 0 6px rgba(119, 0, 255, 0.22);
+}
+
+.ppd-spine__tick.is-current {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12), 0 0 0 0.8px rgba(255, 255, 255, 0.55);
+}
+
+/* Big slime Book — scales with the card width (kept inside the 150 tall cell: app's 160px floor would overflow). */
+.ppd-spine__cta {
+  display: block;
+  width: min(100%, max(120px, 82cqw));
+  padding: clamp(10px, 3.2cqw, 14px) clamp(20px, 7cqw, 28px);
+  box-sizing: border-box;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #ebff00 0%, #2fff00 100%);
+  box-shadow: 0 4px 16px rgba(47, 255, 0, 0.4);
+  font-family: system-ui, ui-rounded, sans-serif;
+  font-size: clamp(14px, 4.2cqw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.92);
+}
+
+.ppd-spine__subtitle {
+  font-size: 12px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Small cell: Book-only miniature (app `profile-pod-bento__cell--small .spine-pod-card`). */
+.ppd-spine--compact {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 12px 30px;
+  justify-content: center;
+  padding: 10px;
 }
 
-.profile-pods-demo__album {
-  aspect-ratio: 1;
-  height: 100%;
-  max-height: 64px;
-  flex-shrink: 0;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ff4d00 0%, #ff0970 45%, #7700ff 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+.ppd-spine--compact .ppd-spine__cta {
+  position: relative;
+  z-index: 2;
+  width: min(100%, max(72px, 82%));
 }
 
-.profile-pods-demo__track {
+/* Light: the app ships a white face here; keep the type and capsules readable on it. */
+:is(.light, [data-theme="light"]) .ppd-spine {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__scrim {
+  display: none;
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__title {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__pill {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.04);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__pill.is-today {
+  border-color: rgba(0, 0, 0, 0.16);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__weekday {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__cord {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__num {
+  color: rgba(0, 0, 0, 0.78);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__count,
+:is(.light, [data-theme="light"]) .ppd-spine__subtitle {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__tick--empty {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__tick--passive {
+  background: linear-gradient(to top, #c7c7cc, #d8d8dd);
+}
+
+:is(.light, [data-theme="light"]) .ppd-spine__cta {
+  box-shadow: 0 4px 14px rgba(47, 200, 0, 0.28);
+}
+
+/* ─── Blurbs (`BlurbsProfilePodCard` + `blurbs-identity.css`) ────────────── */
+
+.ppd-blurbs {
   display: flex;
-  min-width: 0;
-  flex: 1;
   flex-direction: column;
-  gap: 2px;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px;
+  background: var(--ppd-fill);
+  color: var(--ppd-ink);
+  text-align: left;
 }
 
-.profile-pods-demo__track-title {
+.ppd-blurbs--compact {
+  gap: 6px;
+  padding: 10px;
+}
+
+/* Animated rainbow rim — border-only via mask. */
+.ppd-blurbs__rim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
   overflow: hidden;
-  font-size: 13px;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  padding: 1.5px;
+  box-sizing: border-box;
+  border-radius: inherit;
+  opacity: 0.78;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }
 
-.profile-pods-demo__track-sub {
-  font-size: 11px;
+.ppd-blurbs__rim::before {
+  content: "";
+  position: absolute;
+  inset: -55%;
+  background: conic-gradient(
+    from 0deg,
+    var(--ppd-rainbow-1),
+    var(--ppd-rainbow-2),
+    var(--ppd-rainbow-3),
+    var(--ppd-rainbow-4),
+    var(--ppd-rainbow-5),
+    var(--ppd-rainbow-6),
+    var(--ppd-rainbow-7),
+    var(--ppd-rainbow-1)
+  );
+  opacity: 0.95;
+}
+
+.ppd-blurbs__sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ppd-blurbs__starburst {
+  position: absolute;
+  top: 10%;
+  right: 8%;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--ppd-rainbow-3) 55%, transparent) 0%,
+    color-mix(in srgb, var(--ppd-rainbow-6) 25%, transparent) 40%,
+    transparent 70%
+  );
   opacity: 0.55;
 }
 
-.profile-pods-demo__eq {
+.ppd-blurbs__sparkle {
   position: absolute;
-  right: 12px;
-  bottom: 12px;
-  display: flex;
-  height: 16px;
-  align-items: flex-end;
-  gap: 2px;
+  width: 6px;
+  height: 6px;
+  background: var(--ppd-sparkle);
+  opacity: 0.35;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--ppd-rainbow-5) 60%, transparent));
 }
 
-.profile-pods-demo__eq i {
+.ppd-blurbs__sparkle--a {
+  top: 16%;
+  right: 12%;
+  width: 7px;
+  height: 7px;
+}
+
+.ppd-blurbs__sparkle--b {
+  top: 38%;
+  right: 5%;
+  width: 5px;
+  height: 5px;
+  background: var(--ppd-rainbow-3);
+  opacity: 0.45;
+}
+
+.ppd-blurbs__sparkle--c {
+  top: 58%;
+  right: 18%;
+  background: var(--ppd-rainbow-7);
+  opacity: 0.4;
+}
+
+.ppd-blurbs__sparkle--d {
+  top: 28%;
+  right: 28%;
+  width: 4px;
+  height: 4px;
+  background: var(--ppd-rainbow-4);
+  opacity: 0.38;
+}
+
+.ppd-blurbs__title-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.ppd-blurbs__mark {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--ppd-cosmic-nebula) 0%, transparent 55%), var(--ppd-cosmic-bg);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ppd-rainbow-5) 35%, transparent), 0 0 10px var(--ppd-rim-glow);
+}
+
+.ppd-blurbs__mark svg {
   display: block;
-  width: 3px;
+  width: 100%;
   height: 100%;
-  border-radius: 2px;
-  background: currentColor;
-  opacity: 0.85;
-  transform-origin: bottom;
-  animation: profile-pods-eq 1.1s ease-in-out infinite;
 }
 
-.profile-pods-demo__eq i:nth-child(2) {
-  animation-delay: -0.35s;
-}
-
-.profile-pods-demo__eq i:nth-child(3) {
-  animation-delay: -0.7s;
-}
-
-.profile-pods-demo__eq i:nth-child(4) {
-  animation-delay: -0.2s;
-}
-
-@keyframes profile-pods-eq {
-  0%,
-  100% {
-    transform: scaleY(0.3);
-  }
-  50% {
-    transform: scaleY(1);
-  }
-}
-
-/* Blurbs */
-.profile-pods-demo__blurbs {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-  padding: 12px 12px 30px;
-}
-
-.profile-pods-demo__bubble {
-  align-self: flex-start;
-  max-width: 100%;
-  padding: 7px 11px;
-  border-radius: 16px 16px 16px 6px;
-  background: linear-gradient(to bottom, rgba(44, 129, 255, 0.75), rgba(44, 129, 255, 0.95));
-  color: #fff;
-  font-size: 12px;
+.ppd-blurbs__title {
+  min-width: 0;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.25;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
 }
 
-.profile-pods-demo__bubble--reply {
-  align-self: flex-end;
-  border-radius: 16px 16px 6px 16px;
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-:is(.light, [data-theme="light"]) .profile-pods-demo__bubble--reply {
-  background: #f1f1f0;
-  color: #1a1a1a;
-}
-
-/* Book */
-.profile-pods-demo__book {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 12px 30px;
-}
-
-.profile-pods-demo__book-title {
+.ppd-blurbs--compact .ppd-blurbs__title {
   font-size: 13px;
-  font-weight: 700;
+  line-height: 1.2;
 }
 
-.profile-pods-demo__slots {
+.ppd-blurbs__bubbles {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
 }
 
-.profile-pods-demo__slots span {
-  padding: 4px 9px;
-  border-radius: 9999px;
-  background: rgba(33, 189, 69, 0.18);
-  color: rgb(90, 230, 120);
+.ppd-blurbs__bubble {
+  display: -webkit-box;
+  max-width: 100%;
+  padding: 7px 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: inherit;
+  -webkit-box-orient: vertical;
+}
+
+.ppd-blurbs__bubble--in {
+  align-self: flex-start;
+  border-radius: 4px 16px 16px 16px;
+}
+
+.ppd-blurbs__bubble--out {
+  align-self: flex-end;
+  width: 72%;
+  margin-left: 18px;
+  border-radius: 16px 4px 16px 16px;
+}
+
+.ppd-blurbs__bubble--ghost {
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  opacity: 0.5;
+  -webkit-line-clamp: 1;
+}
+
+.ppd-blurbs__bubble--ghost.ppd-blurbs__bubble--in {
+  width: 58%;
+  margin-right: 10px;
+  opacity: 0.58;
+}
+
+.ppd-blurbs__bubble--primary {
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-line-clamp: 2;
+}
+
+/* One line in compact cells (app clamps to 1; a plain ellipsis is steadier with emoji glyphs). */
+.ppd-blurbs--compact .ppd-blurbs__bubble--primary {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ppd-blurbs__footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
   font-size: 11px;
   font-weight: 600;
+  opacity: 0.82;
 }
 
-:is(.light, [data-theme="light"]) .profile-pods-demo__slots span {
-  background: rgba(33, 189, 69, 0.14);
-  color: rgb(20, 130, 50);
+.ppd-blurbs__trail {
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--ppd-rainbow-1),
+    var(--ppd-rainbow-2),
+    var(--ppd-rainbow-3),
+    var(--ppd-rainbow-4),
+    var(--ppd-rainbow-5),
+    var(--ppd-rainbow-6),
+    var(--ppd-rainbow-7)
+  );
+  box-shadow: 0 0 6px var(--ppd-rim-glow);
+  opacity: 0.85;
 }
 
-.profile-pods-demo__music,
-.profile-pods-demo__blurbs,
-.profile-pods-demo__book {
-  color: rgba(255, 255, 255, 0.92);
+:is(.light, [data-theme="light"]) .ppd-blurbs__bubble {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.07);
+  color: rgba(20, 20, 24, 0.88);
 }
 
-:is(.light, [data-theme="light"]) .profile-pods-demo__music,
-:is(.light, [data-theme="light"]) .profile-pods-demo__book {
-  color: rgba(0, 0, 0, 0.86);
+:is(.light, [data-theme="light"]) .ppd-blurbs__bubble--ghost {
+  background: rgba(0, 0, 0, 0.05);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .profile-pods-demo__eq i {
-    animation: none;
-    transform: scaleY(0.7);
+:is(.light, [data-theme="light"]) .ppd-blurbs__bubble--primary {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ppd-blurbs__rim::before {
+    animation: ppd-rainbow-spin 10s linear infinite;
+  }
+
+  .ppd-blurbs__starburst {
+    animation: ppd-starburst 3.6s ease-in-out infinite;
+  }
+
+  .ppd-blurbs__sparkle--a {
+    animation: ppd-sparkle 4.8s ease-in-out infinite;
+  }
+
+  .ppd-blurbs__sparkle--b {
+    animation: ppd-sparkle 5.6s ease-in-out 0.5s infinite;
+  }
+
+  .ppd-blurbs__sparkle--c {
+    animation: ppd-sparkle 4.2s ease-in-out 1s infinite;
+  }
+
+  .ppd-blurbs__sparkle--d {
+    animation: ppd-sparkle 6s ease-in-out 0.2s infinite;
   }
 }
 
+@keyframes ppd-rainbow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ppd-sparkle {
+  0%,
+  100% {
+    transform: translate3d(0, 2px, 0) scale(0.85);
+    opacity: 0.2;
+  }
+  45% {
+    transform: translate3d(-2px, -5px, 0) scale(1.15);
+    opacity: 0.75;
+  }
+  70% {
+    transform: translate3d(1px, -1px, 0) scale(0.95);
+    opacity: 0.4;
+  }
+}
+
+@keyframes ppd-starburst {
+  0%,
+  100% {
+    transform: scale(0.85);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+/* ─── Bubble (`BubblePodCard` bentoFill + bentoCompact) ──────────────────── */
+
+.ppd-bubble__backdrop,
+.ppd-bubble__scrim {
+  position: absolute;
+  inset: 0;
+}
+
+.ppd-bubble__backdrop {
+  background: linear-gradient(135deg, #00c2ff 0%, #0066ff 55%, #7700ff 100%);
+}
+
+.ppd-bubble__scrim {
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.5) 55%, rgba(0, 0, 0, 0.92) 100%);
+}
+
+.ppd-bubble__orb {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255, 255, 255, 0.88);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c2ff 0%, #0066ff 55%, #7700ff 100%);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
+  font-size: 36px;
+  line-height: 1;
+}
+
+.ppd-bubble__members {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+}
+
+.ppd-bubble__face {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+  height: 28px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1.5px solid rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ppd-bubble__face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ppd-bubble__more {
+  margin-inline-start: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ppd-bubble__body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.ppd-bubble__name {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ppd-bubble__meta {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ─── Page (`PagePodCard`, no cover) ─────────────────────────────────────── */
+
+.ppd-page {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px;
+  background: var(--ppd-fill);
+  color: var(--ppd-ink);
+  text-align: left;
+}
+
+.ppd-page__title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ppd-page__excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--ppd-ink-2);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.ppd-page__footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ppd-ink-2);
+}
