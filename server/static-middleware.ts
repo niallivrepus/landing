@@ -166,6 +166,8 @@ const KNOWN_SPA_PREFIXES = [
   "/careers",
   "/prompt",
   "/research",
+  /** Hidden design-lab routes (`/lab/home`); pages set noindex and are not in the sitemap. */
+  "/lab",
 ] as const;
 
 /**

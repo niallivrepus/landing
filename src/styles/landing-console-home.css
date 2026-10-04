@@ -1,0 +1,557 @@
+/**
+ * **Purpose:** "Console Home" lab homepage (`/lab/home`) — full-bleed billboard, bottom-left title block,
+ * PS5-style tile row. 8px rhythm throughout; Satoshi with tight tracking at display sizes.
+ * Dark is the default; light uses the site's `:is(.light, [data-theme="light"])` scope.
+ * **Connects to:** `ConsoleHomeShell`, `ConsoleStage` / `ConsoleShaderScene`, `ConsoleTileRow`, `ConsoleClock`.
+ * Imported by `LabConsoleHomePage` only, so it code-splits with the lab chunk.
+ */
+
+html.console-home-host,
+html.console-home-host body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.console-home {
+  --console-inset: clamp(24px, 6.25vw, 112px);
+  --console-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+  --console-gap: 40px;
+  --console-ink: #ffffff;
+  --console-ink-2: rgba(255, 255, 255, 0.74);
+  --console-ink-3: rgba(255, 255, 255, 0.52);
+  --console-ring: #ffffff;
+  --console-canvas: #000000;
+  --console-scrim: 0, 0, 0;
+  --console-tile-hairline: rgba(255, 255, 255, 0.14);
+  --console-fade: 600ms;
+  --console-ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
+
+  position: relative;
+  isolation: isolate;
+  height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--console-canvas);
+  color: var(--console-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:is(.light, [data-theme="light"]) .console-home {
+  --console-ink: #0a0a0b;
+  --console-ink-2: rgba(10, 10, 11, 0.7);
+  --console-ink-3: rgba(10, 10, 11, 0.5);
+  --console-ring: #0a0a0b;
+  --console-canvas: #f5f5f7;
+  --console-scrim: 245, 245, 247;
+  --console-tile-hairline: rgba(0, 0, 0, 0.1);
+}
+
+/* ── Stage: stacked scenes + parallax + scrim ─────────────────────────── */
+
+.console-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.console-stage__parallax {
+  position: absolute;
+  inset: -32px;
+  will-change: transform;
+}
+
+.console-scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--console-fade) var(--console-ease-fade);
+}
+
+.console-scene[data-active="true"] {
+  opacity: 1;
+}
+
+/* Ken Burns runs on every mounted layer but only plays while focused, so a fading-out layer
+   holds its frame instead of snapping back to the start. */
+.console-scene__media {
+  position: absolute;
+  inset: 0;
+  transform-origin: 62% 42%;
+  animation: console-ken-burns 28s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate both;
+  animation-play-state: paused;
+}
+
+.console-scene[data-active="true"] .console-scene__media {
+  animation-play-state: running;
+}
+
+.console-scene[data-product="spine"] .console-scene__media {
+  transform-origin: 50% 40%;
+}
+
+@keyframes console-ken-burns {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.25%, -0.75%, 0);
+  }
+}
+
+.console-scene__img,
+.console-scene__video,
+.console-shader {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.console-scene__video {
+  opacity: 0;
+  transition: opacity 480ms var(--console-ease-fade);
+}
+
+.console-scene__video[data-ready="true"] {
+  opacity: 1;
+}
+
+/* Shader fallback (no WebGL): the same palettes as static gradients. */
+.console-shader--fallback.console-shader--oo {
+  background:
+    radial-gradient(40% 50% at 66% 46%, rgba(140, 115, 255, 0.55), transparent 70%),
+    radial-gradient(60% 70% at 30% 30%, rgba(26, 77, 242, 0.35), transparent 70%),
+    radial-gradient(50% 60% at 80% 80%, rgba(219, 56, 158, 0.22), transparent 70%),
+    #030308;
+}
+
+.console-shader--fallback.console-shader--arcade {
+  background:
+    radial-gradient(18% 24% at 68% 52%, rgba(255, 140, 31, 0.85), transparent 70%),
+    linear-gradient(to bottom, #050201 0%, #6b1a03 54%, #0d0301 54.5%, #160502 100%);
+}
+
+/* Readability: deep vignette + bottom/left fall-off behind the title block + a top lip for the chrome. */
+.console-stage__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(var(--console-scrim), 0.94) 0%,
+      rgba(var(--console-scrim), 0.74) 22%,
+      rgba(var(--console-scrim), 0.22) 50%,
+      rgba(var(--console-scrim), 0) 68%
+    ),
+    linear-gradient(
+      to right,
+      rgba(var(--console-scrim), 0.72) 0%,
+      rgba(var(--console-scrim), 0.32) 36%,
+      rgba(var(--console-scrim), 0) 60%
+    ),
+    linear-gradient(to bottom, rgba(var(--console-scrim), 0.5) 0%, rgba(var(--console-scrim), 0) 18%),
+    radial-gradient(130% 110% at 62% 36%, rgba(var(--console-scrim), 0) 46%, rgba(var(--console-scrim), 0.6) 100%);
+}
+
+:is(.light, [data-theme="light"]) .console-stage__scrim {
+  background:
+    linear-gradient(
+      to top,
+      rgba(var(--console-scrim), 0.98) 0%,
+      rgba(var(--console-scrim), 0.88) 26%,
+      rgba(var(--console-scrim), 0.36) 54%,
+      rgba(var(--console-scrim), 0) 72%
+    ),
+    linear-gradient(
+      to right,
+      rgba(var(--console-scrim), 0.86) 0%,
+      rgba(var(--console-scrim), 0.42) 38%,
+      rgba(var(--console-scrim), 0) 62%
+    ),
+    linear-gradient(to bottom, rgba(var(--console-scrim), 0.62) 0%, rgba(var(--console-scrim), 0) 18%),
+    radial-gradient(130% 110% at 62% 36%, rgba(var(--console-scrim), 0) 52%, rgba(var(--console-scrim), 0.5) 100%);
+}
+
+.console-stage__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+}
+
+/* Touch swipe surface between the scene and the UI (vertical pans still pass through). */
+.console-home__swipe {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  touch-action: pan-y;
+}
+
+/* ── Content column (bottom-left) ─────────────────────────────────────── */
+
+.console-home__content {
+  position: absolute;
+  right: 0;
+  bottom: var(--console-bottom);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: var(--console-gap);
+  padding-inline: var(--console-inset);
+  pointer-events: none;
+}
+
+.console-home__content > * {
+  pointer-events: auto;
+}
+
+.console-title {
+  display: grid;
+  max-width: 600px;
+}
+
+.console-title__inner {
+  grid-area: 1 / 1;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.console-title__eyebrow {
+  margin: 0 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  color: var(--console-ink-2);
+}
+
+.console-title__name {
+  margin: 0 0 16px;
+  font-size: clamp(56px, 6.6vw, 104px);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  color: var(--console-ink);
+  text-wrap: balance;
+  /* Optical: big Satoshi caps sit slightly right of the column edge. */
+  margin-left: -0.04em;
+}
+
+.console-title__name--mark {
+  font-size: clamp(72px, 8.4vw, 136px);
+  letter-spacing: -0.06em;
+}
+
+.console-title__sentence {
+  max-width: 30em;
+  margin: 0 0 32px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: -0.005em;
+  color: var(--console-ink-2);
+  text-wrap: pretty;
+}
+
+:is(.dark, [data-theme="dark"]) .console-title__name,
+:is(.dark, [data-theme="dark"]) .console-title__sentence {
+  text-shadow: 0 1px 32px rgba(0, 0, 0, 0.32);
+}
+
+.console-title__oo {
+  display: flex;
+  width: 100%;
+  max-width: 450px;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Gooey centres its fixed-width prompt frame; the console column is left-aligned, and the border beam
+   must hug the frame (not the 450px column) so the travelling light traces the pill. */
+.console-title__prompt {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.console-title__prompt [data-slot="prompt-frame"] {
+  margin-inline: 0;
+}
+
+.console-home[data-chat="open"] .console-title__oo {
+  margin-bottom: 0;
+}
+
+.console-title__chat .landing-temp-chat {
+  max-width: none;
+}
+
+.console-title__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ── Tile row ─────────────────────────────────────────────────────────── */
+
+.console-tiles {
+  /* Bleed to the viewport edges so the row scrolls edge-to-edge on phones. */
+  margin-inline: calc(var(--console-inset) * -1);
+  overflow: hidden;
+}
+
+.console-tiles__scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px var(--console-inset) 32px;
+  scroll-padding-inline: var(--console-inset);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.console-tiles__scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.console-tiles__list {
+  display: flex;
+  height: 88px;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.console-tiles__item {
+  position: relative;
+  flex: none;
+}
+
+.console-tile {
+  position: relative;
+  display: block;
+  flex: none;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 24%;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  filter: brightness(0.82) saturate(0.92);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    outline-color 160ms cubic-bezier(0.25, 1, 0.32, 1),
+    outline-offset 220ms cubic-bezier(0.34, 1.45, 0.5, 1),
+    filter 200ms cubic-bezier(0.25, 1, 0.32, 1),
+    box-shadow 200ms cubic-bezier(0.25, 1, 0.32, 1);
+}
+
+/* Hairline keeps photo edges crisp against any scene. */
+.console-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--console-tile-hairline);
+  pointer-events: none;
+}
+
+.console-tile:hover {
+  filter: brightness(0.94) saturate(1);
+}
+
+.console-tile.is-active,
+.console-tile:focus-visible {
+  filter: none;
+  outline-color: var(--console-ring);
+  outline-offset: 4px;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.65);
+}
+
+:is(.light, [data-theme="light"]) .console-tile {
+  background: rgba(0, 0, 0, 0.04);
+  filter: none;
+}
+
+:is(.light, [data-theme="light"]) .console-tile.is-active {
+  box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.35);
+}
+
+.console-tile__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.console-tile__paint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.console-tile__paint--oo {
+  background:
+    radial-gradient(60% 60% at 68% 58%, rgba(170, 150, 255, 0.95), rgba(110, 70, 240, 0.45) 45%, transparent 75%),
+    radial-gradient(80% 80% at 20% 20%, rgba(30, 80, 240, 0.7), transparent 70%),
+    radial-gradient(70% 70% at 90% 100%, rgba(219, 56, 158, 0.5), transparent 70%),
+    #07061a;
+}
+
+.console-tile__paint--arcade {
+  background:
+    radial-gradient(34% 34% at 64% 54%, rgba(255, 170, 60, 0.95), rgba(255, 90, 20, 0.5) 50%, transparent 75%),
+    linear-gradient(to bottom, #120402 0%, #5e1603 56%, #1a0602 56.5%, #250803 100%);
+}
+
+.console-tile__wordmark {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: #ffffff;
+}
+
+.console-tile__glyph {
+  width: 40%;
+  height: 40%;
+  color: #ffffff;
+}
+
+.console-tile__label {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--console-ink);
+  pointer-events: none;
+}
+
+/* ── Clock (desktop only, beside the Spine corner pill) ───────────────── */
+
+.console-clock {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  right: 112px;
+  z-index: 31;
+  display: none;
+  height: 42px;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--console-ink-2);
+  user-select: none;
+}
+
+@media (min-width: 1024px) {
+  .console-clock {
+    display: flex;
+  }
+}
+
+/* ── Phone ────────────────────────────────────────────────────────────── */
+
+@media (max-width: 639px) {
+  .console-home {
+    --console-inset: 16px;
+    --console-bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+    --console-gap: 16px;
+  }
+
+  .console-title__eyebrow {
+    margin-bottom: 8px;
+  }
+
+  .console-title__name {
+    margin-bottom: 8px;
+    font-size: clamp(44px, 12.5vw, 56px);
+  }
+
+  .console-title__name--mark {
+    font-size: clamp(56px, 16vw, 72px);
+  }
+
+  .console-title__sentence {
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .console-title__oo {
+    margin-bottom: 16px;
+  }
+
+  .console-tiles__scroller {
+    scroll-snap-type: x mandatory;
+  }
+
+  .console-tiles__item {
+    scroll-snap-align: start;
+  }
+
+  .console-tiles__list {
+    height: 72px;
+    gap: 12px;
+  }
+}
+
+/* Short landscape / small laptops: tighten the stack so it never meets the top chrome. */
+@media (min-width: 640px) and (max-height: 760px) {
+  .console-home {
+    --console-gap: 24px;
+    --console-bottom: calc(env(safe-area-inset-bottom, 0px) + 64px);
+  }
+
+  .console-title__name {
+    font-size: clamp(48px, 5.4vw, 80px);
+  }
+
+  .console-title__name--mark {
+    font-size: clamp(64px, 6.8vw, 104px);
+  }
+
+  .console-title__sentence {
+    margin-bottom: 24px;
+  }
+}
+
+/* ── Reduced motion: crossfade only ───────────────────────────────────── */
+
+.console-stage[data-reduce-motion="true"] .console-scene__media {
+  animation: none;
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .console-scene__media {
+    animation: none;
+    transform: scale(1.04);
+  }
+
+  .console-tile {
+    transition:
+      outline-color 120ms linear,
+      filter 120ms linear;
+  }
+}
