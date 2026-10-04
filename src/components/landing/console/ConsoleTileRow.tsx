@@ -3,6 +3,10 @@ import { Gamepad2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import type { ConsoleProduct, ConsoleProductId } from "../../../data/console-home-products";
+import { SquircleBox } from "../../system/squircle";
+
+/** App-icon proportion: corner radius ≈ 30% of the tile edge, so the squircle reads the same at 56 and 88px. */
+const tileRadius = (width: number, height: number) => Math.min(width, height) * 0.3;
 
 /** Precise, never floaty: settles in ~280ms with a hair of overshoot. */
 export const CONSOLE_TILE_SPRING = { type: "spring", stiffness: 560, damping: 38, mass: 0.85 } as const;
@@ -13,8 +17,9 @@ const HOVER_FOCUS_DELAY_MS = 90;
 export type ConsoleFocusSource = "keyboard" | "pointer" | "touch" | "scroll" | "program";
 
 /**
- * **Purpose:** PS5-style product tile row. Squircle tiles with the product art; the focused tile grows
- * (sprung width/height so neighbours slide, nothing is scaled/blurred), gets a crisp focus ring and its label.
+ * **Purpose:** PS5-style product tile row. True-squircle tiles (`SquircleBox`) with the product art; the focused tile
+ * grows (sprung width/height so neighbours slide, nothing is scaled/blurred), gets an SVG focus ring traced on the
+ * same superellipse, and its label.
  * Input: ←/→/Home/End and Tab move focus (each tile is a real button), a moving mouse focuses after a short intent
  * delay (a parked cursor never steals focus from the keyboard), a click opens; on touch the row scrolls with snap — the first tap focuses, the second opens.
  * **Connects to:** `ConsoleHomeShell` (owns `activeId` + open actions), `landing-console-home.css` (`.console-tiles*`).
@@ -175,7 +180,15 @@ export function ConsoleTileRow({
                     onOpenProduct(product.id);
                   }}
                 >
-                  <TileArt product={product} />
+                  <SquircleBox
+                    radius={tileRadius}
+                    className="console-tile__shape"
+                    fillClassName="console-tile__fill"
+                    rimClassName="console-tile__rim"
+                    ring={{ offset: 5, className: "console-tile__ring" }}
+                  >
+                    <TileArt product={product} />
+                  </SquircleBox>
                 </motion.button>
                 <AnimatePresence initial={false}>
                   {isActive ? (

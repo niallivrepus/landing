@@ -15,7 +15,8 @@ export {
   SQUIRCLE_MEDIA_CORNER_RADIUS,
   SQUIRCLE_MEDIA_MATTE_CLASS,
 } from "./editorialMedia";
-export { SquircleMedia, SquircleShell } from "./squircle";
+export { SquircleBox, SquircleMedia, SquircleShell } from "./squircle";
+export type { SquircleBoxProps, SquircleBoxRadius } from "./squircle";
 export { PillLink, type PillLinkVariant } from "./PillLink";
 export { JokuhButton, jokuhButtonClass, type JokuhButtonSize, type JokuhButtonVariant } from "./JokuhButton";
 export {

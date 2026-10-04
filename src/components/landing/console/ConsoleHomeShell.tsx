@@ -32,6 +32,17 @@ import { ConsoleTileRow, type ConsoleFocusSource } from "./ConsoleTileRow";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 
+/** Product energy colour for the eyebrow dot — the same hues its corner glows in (app `ActionButtons.tsx`). */
+const ENERGY_FOR_PRODUCT: Record<ConsoleProductId, string> = {
+  oo: "#8c73ff",
+  spine: "var(--color-yellow-4, #ffb800)",
+  calls: "var(--color-green-4, #21dc11)",
+  messages: "var(--color-red-4, #ff0700)",
+  profile: "var(--color-purple-4, #9327ff)",
+  blurbs: "var(--color-pink-4, #ff00ee)",
+  arcade: "var(--color-orange-4, #ff4d00)",
+};
+
 /** Where each product lives in the app shell: its corner lights up in that corner's energy colour on focus. */
 const CORNER_FOR_PRODUCT: Partial<Record<ConsoleProductId, LandingCornerAction>> = {
   spine: "spine",
@@ -252,7 +263,14 @@ function ConsoleHomeShellInner() {
               >
                 {chatOpen ? null : (
                   <>
-                    <p className="console-title__eyebrow">{active.eyebrow}</p>
+                    <p className="console-title__eyebrow">
+                      <span
+                        aria-hidden
+                        className="console-title__energy"
+                        style={{ color: ENERGY_FOR_PRODUCT[active.id] }}
+                      />
+                      {active.eyebrow}
+                    </p>
                     <h2 className={active.id === "oo" ? "console-title__name console-title__name--mark" : "console-title__name"}>
                       {active.title}
                     </h2>

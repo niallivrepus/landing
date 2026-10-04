@@ -2,28 +2,31 @@ import { Avatar, cn } from "@jokuh/gooey";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { LANDING_DEMO_POWERS } from "../../../../data/landing-demo-powers";
-import type { LandingDemoMessage } from "../../../../data/landing-demo-chat";
-import { SquircleShell } from "../../../system/squircle";
-import { LandingDemoChat } from "../../LandingDemoChat";
+import { useOoSpeak } from "../../../../hooks/useOoSpeak";
+import { SquircleBox } from "../../../system/squircle";
 
 /** Beat timings for one power: prompt → thinking → typed reply → proof card → next. */
 const BEAT_THINK_MS = 700;
 const BEAT_REPLY_MS = 1800;
 const BEAT_ARTIFACT_MS = 4600;
-const BEAT_NEXT_MS = 8200;
+const BEAT_NEXT_MS = 8400;
+
+const ROW_SPRING = { type: "spring", stiffness: 380, damping: 32, mass: 0.85 } as const;
 
 /**
- * **Purpose:** OO's chat surface for the console home scene — the site's "See it work" powers
- * (`LANDING_DEMO_POWERS`: remembers, private, Spine, moves time, Bubbles) playing out in an app-style OO thread:
- * the prompt lands, OO thinks, the reply types out, and the proof card (saved preference, calendar move…) appears.
- * Same demo copy as the homepage chips / `ProductDemoSection`; nothing is sent. The real, temporary OO chat
- * stays in the title block's prompt bar.
- * **Connects to:** `ConsoleStage` (`console/surfaces`), `LandingDemoChat`, `landing-demo-powers.ts`.
+ * **Purpose:** OO's chat surface for the console home scene, in the app's Cortex chat look (same classes as the
+ * homepage temporary chat): the site's "See it work" powers (`LANDING_DEMO_POWERS`) play out — the prompt lands as a
+ * trailing squircle row, OO thinks, the reply types out as bubble-less text, then the squircle proof card (saved
+ * preference, calendar move…) appears. Demo copy only; nothing is sent. The real temporary chat lives in the title
+ * block's prompt bar.
+ * **Connects to:** `console/surfaces/ConsoleSurfaces.tsx`, `landing-demo-powers.ts`, `landing-temp-chat.css`.
  */
 export function OoDemoSurface({ playing }: { playing: boolean }) {
   const [powerIndex, setPowerIndex] = useState(0);
   const [beat, setBeat] = useState(playing ? 0 : 3);
-  const power = LANDING_DEMO_POWERS[powerIndex % LANDING_DEMO_POWERS.length]!;
+  const count = LANDING_DEMO_POWERS.length;
+  const power = LANDING_DEMO_POWERS[powerIndex % count]!;
+  const previous = powerIndex > 0 ? LANDING_DEMO_POWERS[(powerIndex - 1) % count] : undefined;
 
   useEffect(() => {
     if (!playing) {
@@ -37,78 +40,101 @@ export function OoDemoSurface({ playing }: { playing: boolean }) {
     at(BEAT_REPLY_MS, () => setBeat(2));
     at(BEAT_ARTIFACT_MS, () => setBeat(3));
     at(BEAT_NEXT_MS, () => {
-      if (document.hidden) return;
-      setPowerIndex((index) => index + 1);
+      if (!document.hidden) setPowerIndex((index) => index + 1);
     });
     return () => timers.forEach((id) => window.clearTimeout(id));
   }, [playing, powerIndex]);
 
-  // The previous exchange stays above (already typed), so the thread reads like a running conversation.
-  const previous = powerIndex > 0 ? LANDING_DEMO_POWERS[(powerIndex - 1) % LANDING_DEMO_POWERS.length] : undefined;
-  const messages: LandingDemoMessage[] = previous
-    ? [
-        { id: `${powerIndex - 1}-${previous.id}-q`, author: "user", body: previous.prompt },
-        { id: `${powerIndex - 1}-${previous.id}-a`, author: "oo", body: previous.reply },
-      ]
-    : [];
-  messages.push({ id: `${powerIndex}-${power.id}-q`, author: "user", body: power.prompt });
-  if (beat === 1) messages.push({ id: `${powerIndex}-${power.id}-t`, author: "oo", body: "", thinking: true });
-  if (beat >= 2) messages.push({ id: `${powerIndex}-${power.id}-a`, author: "oo", body: power.reply });
-
   return (
-    <SquircleShell
-      cornerRadius={44}
-      cornerSmoothing={1}
-      borderWidth={1}
-      strokeClassName="stroke-[var(--color-light-glass-10)]"
-      fillClassName="bg-[#0a0a0c]/86 light:bg-white/94"
-      className="w-full"
-      contentClassName="flex h-[520px] flex-col p-5"
-    >
-      <div className="mb-4 flex items-center gap-3 border-b border-light-space/[0.08] pb-4 light:border-black/[0.08]">
+    <div className="console-oo-thread">
+      <header className="console-oo-thread__head">
         <Avatar showOO originColor="aether" size={36} className="shrink-0" />
         <div className="min-w-0">
-          <p className="font-sans text-[15px] font-bold text-light-space light:text-zinc-900">OO</p>
-          <p className="font-sans text-[11px] text-light-space/50 light:text-zinc-500">Your private agent · always here</p>
+          <p className="console-oo-thread__name">OO</p>
+          <p className="console-oo-thread__meta">Your private agent · always here</p>
         </div>
-        <div className="ml-auto flex gap-1.5">
+        <div className="ml-auto flex gap-1.5" aria-hidden>
           {LANDING_DEMO_POWERS.map((item, index) => (
-            <span
-              key={item.id}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
-                index === powerIndex % LANDING_DEMO_POWERS.length
-                  ? "w-4 bg-light-space/80 light:bg-zinc-800"
-                  : "w-1.5 bg-light-space/20 light:bg-black/15",
-              )}
-            />
+            <span key={item.id} className={cn("console-oo-thread__dot", index === powerIndex % count && "is-current")} />
           ))}
         </div>
-      </div>
+      </header>
 
-      <div className="flex min-h-0 flex-1 flex-col justify-end gap-4 overflow-hidden">
-        <LandingDemoChat messages={messages} />
-        <AnimatePresence initial={false}>
-          {beat >= 3 ? (
-            <motion.div
-              key={`${powerIndex}-artifact`}
-              className="ml-10 rounded-[20px] border border-white/10 bg-white/[0.05] p-4 light:border-black/[0.08] light:bg-black/[0.03]"
-              initial={{ opacity: 0, y: 10, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.15 } }}
-              transition={{ type: "spring", stiffness: 380, damping: 32 }}
-            >
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-light-space/45 light:text-zinc-500">
-                {power.artifact.eyebrow}
-              </p>
-              <p className="mt-1 font-sans text-[14px] font-bold text-light-space light:text-zinc-900">
-                {power.artifact.title}
-              </p>
-              <p className="mt-0.5 font-sans text-[12px] text-light-space/60 light:text-zinc-600">{power.artifact.detail}</p>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+      <div className="console-oo-thread__list">
+        {previous ? (
+          <div key={`${powerIndex - 1}-prev`} className="console-oo-thread__group console-oo-thread__group--past">
+            <UserRow text={previous.prompt} />
+            <p className="landing-temp-chat__bubble landing-temp-chat__bubble--oo">{previous.reply}</p>
+          </div>
+        ) : null}
+        <motion.div
+          key={`${powerIndex}-q`}
+          className="console-oo-thread__group"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={ROW_SPRING}
+        >
+          <UserRow text={power.prompt} />
+          {beat === 1 ? <ThinkingRow /> : null}
+          {beat >= 2 ? <OoReply key={`${powerIndex}-a`} text={power.reply} speak={playing} /> : null}
+          <AnimatePresence initial={false}>
+            {beat >= 3 ? (
+              <motion.div
+                key={`${powerIndex}-artifact`}
+                initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={ROW_SPRING}
+              >
+                <SquircleBox
+                  radius={22}
+                  className="console-oo-proof"
+                  fillClassName="console-oo-proof__fill"
+                  rimClassName="console-oo-proof__rim"
+                >
+                  <p className="console-oo-proof__eyebrow">{power.artifact.eyebrow}</p>
+                  <p className="console-oo-proof__title">{power.artifact.title}</p>
+                  <p className="console-oo-proof__detail">{power.artifact.detail}</p>
+                </SquircleBox>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </motion.div>
       </div>
-    </SquircleShell>
+    </div>
+  );
+}
+
+function UserRow({ text }: { text: string }) {
+  return (
+    <SquircleBox
+      radius={18}
+      className="landing-temp-chat__bubble landing-temp-chat__bubble--user"
+      fillClassName="landing-temp-chat__bubble-fill"
+    >
+      <p className="landing-temp-chat__bubble-text">{text}</p>
+    </SquircleBox>
+  );
+}
+
+function OoReply({ text, speak }: { text: string; speak: boolean }) {
+  const { displayText, phase } = useOoSpeak(text, { speak });
+  return (
+    <p className={cn("landing-temp-chat__bubble landing-temp-chat__bubble--oo", phase === "speaking" && "is-streaming")}>
+      {displayText}
+    </p>
+  );
+}
+
+function ThinkingRow() {
+  return (
+    <div className="console-oo-thread__thinking" aria-hidden>
+      {[0, 1, 2].map((dot) => (
+        <motion.span
+          key={dot}
+          animate={{ opacity: [0.3, 0.9, 0.3], y: [0, -3, 0] }}
+          transition={{ duration: 1.1, repeat: Infinity, delay: dot * 0.18, ease: "easeInOut" }}
+        />
+      ))}
+    </div>
   );
 }

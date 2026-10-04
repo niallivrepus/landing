@@ -181,6 +181,47 @@ function MessagesImmersiveShellInner({ scene = false, autoplay = false }: { scen
     [gated, intercept, openThread, selectedThread, view],
   );
 
+  const panel = (
+    <>
+    {view === "inbox" ? (
+      <>
+        <div className="mb-3 border-b border-light-space/[0.08] pb-3 light:border-black/[0.08]">
+          <p className="font-sans text-[15px] font-bold text-light-space light:text-zinc-900">Inbox</p>
+          <p className="font-sans text-[11px] text-light-space/50 light:text-zinc-500">
+            People, stories, and OO — tap to open
+          </p>
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <LandingMessagesInbox
+            threads={inboxThreads}
+            activeId={selectedThreadId}
+            onSelect={openThread}
+          />
+        </div>
+      </>
+    ) : (
+      <ThreadPanel
+        thread={selectedThread}
+        storyDetail={storyDetail}
+        dmThread={dmThread}
+        ooMessages={ooMessages}
+        gated={gated}
+        shouldAnimate={shouldAnimate}
+        progressive={scene && autoplay}
+        onBack={backToInbox}
+        onSendSuggestion={handleSend}
+        onClaim={() => intercept("identity")}
+        onReadStory={() =>
+          intercept("send-message", { ref: selectedThread?.storySlug ?? "story" })
+        }
+      />
+    )}
+    </>
+  );
+
+  // Console home scene: the window around it is the app column, so no second shell here.
+  if (scene) return <div className="flex h-[540px] flex-col overflow-hidden">{panel}</div>;
+
   const surface = (
     <SquircleShell
       cornerRadius={44}
@@ -189,45 +230,11 @@ function MessagesImmersiveShellInner({ scene = false, autoplay = false }: { scen
       strokeClassName="stroke-[var(--color-light-glass-10)]"
       fillClassName="bg-[#0a0a0c]/88 light:bg-white/96"
       className="w-full"
-      contentClassName={cn("flex flex-col p-4 sm:p-5", scene ? "h-[560px] overflow-hidden" : "min-h-[min(62vh,560px)]")}
+      contentClassName="flex min-h-[min(62vh,560px)] flex-col p-4 sm:p-5"
     >
-      {view === "inbox" ? (
-        <>
-          <div className="mb-3 border-b border-light-space/[0.08] pb-3 light:border-black/[0.08]">
-            <p className="font-sans text-[15px] font-bold text-light-space light:text-zinc-900">Inbox</p>
-            <p className="font-sans text-[11px] text-light-space/50 light:text-zinc-500">
-              People, stories, and OO — tap to open
-            </p>
-          </div>
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            <LandingMessagesInbox
-              threads={inboxThreads}
-              activeId={selectedThreadId}
-              onSelect={openThread}
-            />
-          </div>
-        </>
-      ) : (
-        <ThreadPanel
-          thread={selectedThread}
-          storyDetail={storyDetail}
-          dmThread={dmThread}
-          ooMessages={ooMessages}
-          gated={gated}
-          shouldAnimate={shouldAnimate}
-          progressive={scene && autoplay}
-          onBack={backToInbox}
-          onSendSuggestion={handleSend}
-          onClaim={() => intercept("identity")}
-          onReadStory={() =>
-            intercept("send-message", { ref: selectedThread?.storySlug ?? "story" })
-          }
-        />
-      )}
+      {panel}
     </SquircleShell>
   );
-
-  if (scene) return surface;
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden" aria-label="Texts preview">

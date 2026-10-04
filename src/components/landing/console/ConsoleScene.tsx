@@ -2,18 +2,20 @@ import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { ConsoleProduct, ConsoleProductId } from "../../../data/console-home-products";
 import { ConsoleShaderScene } from "./ConsoleShaderScene";
-import { ConsoleSurface } from "./surfaces/ConsoleSurfaces";
+import { ConsoleSurface, preloadConsoleSurfaces } from "./surfaces/ConsoleSurfaces";
 
 /** Matches `--console-fade` in CSS: how long a leaving surface stays mounted while it fades. */
 const SURFACE_FADE_MS = 700;
 
 /**
  * **Purpose:** The full-bleed "billboard" behind the console home, in two depths:
- * 1. Atmosphere: one layer per product (hero art, or a WebGL shader for OO / Arcade), stacked, only the focused one
+ * 1. Background: one full-bleed layer per product (hero art; OO = the homepage background + shader orb; Arcade = a
+ *    shader scene), stacked, only the focused one
  *    opaque. Mounted on first focus and kept so focus-back crossfades without a reload; neighbours' stills are
  *    prefetched on idle. Slow Ken Burns on the focused layer (CSS) + sprung pointer parallax.
- * 2. The live app surface (`ConsoleSurface`): the product's real landing demo, autoplaying, framed like the app's
- *    center column. Only the focused surface, the next neighbour (paused) and the one fading out are mounted.
+ * 2. The live app surface (`ConsoleSurface`): the product's real landing demo, autoplaying, floating over the
+ *    background in a squircle window like the app's center column (counter-parallax for depth). Only the focused
+ *    surface, the next neighbour (paused) and the one fading out are mounted; all chunks are warmed on idle.
  * Reduced motion: crossfades only — no drift, no parallax, surfaces render their static first frame.
  * **Connects to:** `ConsoleHomeShell`, `ConsoleShaderScene`, `surfaces/ConsoleSurfaces.tsx`,
  * `landing-console-home.css` (`.console-stage*`, `.console-surface*`).
@@ -51,6 +53,14 @@ export function ConsoleStage({
     .map((p) => p.id)
     .filter((id) => id === activeId || id === nextId || id === leaving);
 
+  // After first paint, warm every surface chunk on idle so a focus change never waits on a network round trip.
+  useEffect(() => {
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1200));
+    const cancel = window.cancelIdleCallback ?? window.clearTimeout;
+    const handle = idle(() => preloadConsoleSurfaces());
+    return () => cancel(handle as number);
+  }, []);
+
   // Prefetch the neighbours' stills so arrowing feels instant without mounting every layer up front.
   useEffect(() => {
     const neighbours = [products[activeIndex + 1], products[activeIndex - 1]].filter(Boolean) as ConsoleProduct[];
@@ -67,13 +77,14 @@ export function ConsoleStage({
     return () => cancel(handle as number);
   }, [activeIndex, products]);
 
-  // Pointer parallax: ±14px on the atmosphere, a third of that on the surface so the app stays steady to read.
+  // Pointer parallax: ±14px on the background; the surface window counter-drifts (below).
   const px = useMotionValue(0);
   const py = useMotionValue(0);
   const x = useSpring(px, { stiffness: 60, damping: 20, mass: 0.8 });
   const y = useSpring(py, { stiffness: 60, damping: 20, mass: 0.8 });
-  const sx = useTransform(x, (v) => v * 0.35);
-  const sy = useTransform(y, (v) => v * 0.35);
+  // The floating app window drifts the other way, a little: depth without making it hard to read.
+  const sx = useTransform(x, (v) => v * -0.3);
+  const sy = useTransform(y, (v) => v * -0.3);
 
   useEffect(() => {
     if (reduceMotion) {
@@ -127,7 +138,7 @@ export function ConsoleStage({
       >
         {surfaceIds.map((id) => (
           <div key={id} className="console-surface" data-active={id === activeId ? "true" : "false"} data-product={id}>
-            <ConsoleSurface id={id} playing={id === activeId && !reduceMotion && !surfacesHidden} />
+            <ConsoleSurface id={id} playing={id === activeId && !reduceMotion && !surfacesHidden} light={light} />
           </div>
         ))}
       </motion.div>
@@ -155,14 +166,21 @@ function SceneLayer({
         {scene.kind === "shader" ? (
           <ConsoleShaderScene palette={scene.palette} active={active} reduceMotion={reduceMotion} light={light} />
         ) : (
-          <img
-            src={scene.src}
-            alt=""
-            decoding="async"
-            fetchPriority={active ? "high" : "low"}
-            className="console-scene__img"
-            style={{ objectPosition: scene.position }}
-          />
+          <>
+            <img
+              src={scene.src}
+              alt=""
+              decoding="async"
+              fetchPriority={active ? "high" : "low"}
+              className="console-scene__img"
+              style={{ objectPosition: scene.position }}
+            />
+            {scene.overlay ? (
+              <div className="console-scene__overlay">
+                <ConsoleShaderScene palette={scene.overlay} active={active} reduceMotion={reduceMotion} light={light} />
+              </div>
+            ) : null}
+          </>
         )}
       </div>
     </div>

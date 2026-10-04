@@ -3,9 +3,11 @@
  * Copy is lifted from shipped site sources only — `products.ts` summaries, `SITE_PRODUCT_SENTENCE`
  * (OO) and the homepage arcade pill (chess). No new claims.
  * Each product's scene is its hero art (atmosphere) with the product's live app surface mounted on top
- * (`console/surfaces/ConsoleSurfaces.tsx`); OO and Arcade use a generative shader instead of art.
+ * (`console/surfaces/ConsoleSurfaces.tsx`). OO uses the live homepage background with its shader orb layered on;
+ * Arcade, which has no art, is a generative shader scene.
  * **Connects to:** `ConsoleHomeShell`, `ConsoleScene`, `ConsoleTileRow`, `product-hero-images.ts`.
  */
+import { LANDING_HOME_HERO_IMAGE } from "./landing-hero-copy";
 import { PRODUCT_HERO_IMAGES } from "./product-hero-images";
 import { PRODUCTS } from "./products";
 
@@ -15,7 +17,8 @@ export type ConsoleProductId = "oo" | "spine" | "calls" | "messages" | "profile"
 export type ConsoleShaderPalette = "oo" | "arcade";
 
 export type ConsoleScene =
-  | { kind: "image"; src: string; position?: string }
+  /** Full-bleed art; `overlay` layers a generative shader over it (screen-blended in dark, multiplied in light). */
+  | { kind: "image"; src: string; position?: string; overlay?: ConsoleShaderPalette }
   | { kind: "shader"; palette: ConsoleShaderPalette };
 
 export type ConsolePrimaryAction =
@@ -50,7 +53,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     sentence:
       "Your own AI that remembers your calls, chats, and files — without giving that context to anyone else.",
     tile: null,
-    scene: { kind: "shader", palette: "oo" },
+    // The live homepage's own background, with OO's orb glowing through it.
+    scene: { kind: "image", src: LANDING_HOME_HERO_IMAGE, position: "50% 42%", overlay: "oo" },
     primary: { kind: "prompt", label: "Talk to OO" },
     pageHref: "/demo",
     pageLabel: "See it work",

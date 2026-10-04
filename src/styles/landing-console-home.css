@@ -176,7 +176,7 @@ html.console-home-host body {
       rgba(var(--console-scrim), 0) 62%
     ),
     linear-gradient(to bottom, rgba(var(--console-scrim), 0.62) 0%, rgba(var(--console-scrim), 0) 18%),
-    radial-gradient(130% 110% at 62% 36%, rgba(var(--console-scrim), 0) 52%, rgba(var(--console-scrim), 0.5) 100%);
+    radial-gradient(130% 110% at 66% 40%, rgba(var(--console-scrim), 0) 56%, rgba(var(--console-scrim), 0.36) 100%);
 }
 
 .console-stage__grain {
@@ -185,47 +185,54 @@ html.console-home-host body {
   opacity: 0.05;
 }
 
-/* Atmosphere sits back a step now that a live app surface stands in front of it. */
-.console-scene__media::after {
-  content: "";
+/* Shader overlay on art (OO): screen-blend the orb onto the photo in dark, multiply its ink in light. */
+.console-scene__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(var(--console-scrim), 0.34);
-  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.9;
 }
 
-/* ── Live app surfaces (right half on desktop, top band on phones) ────── */
+:is(.light, [data-theme="light"]) .console-scene__overlay {
+  mix-blend-mode: multiply;
+  opacity: 0.38;
+}
+
+/* ── Live app surface: a squircle window floating over the background ─── */
 
 .console-surfaces {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  transition: opacity 320ms var(--console-ease-fade);
 }
 
 .console-surfaces[data-hidden="true"] {
   opacity: 0;
 }
 
-.console-surfaces {
-  transition: opacity 320ms var(--console-ease-fade);
-}
-
+/* Desktop: the right of the stage, clear of the title column, the Nexus and the footer row. */
 .console-surface {
   position: absolute;
-  top: calc(env(safe-area-inset-top, 0px) + 96px);
-  right: max(48px, 4vw);
-  bottom: 96px;
-  left: 46%;
+  top: calc(env(safe-area-inset-top, 0px) + 112px);
+  right: max(72px, 5.5vw);
+  bottom: 120px;
+  left: 52%;
   opacity: 0;
-  transform: translate3d(0, 16px, 0) scale(0.97);
+  transform: translate3d(0, 18px, 0) scale(0.97);
+  /* Leaving: quick fade so it never fights the incoming background. */
   transition:
-    opacity var(--console-fade) var(--console-ease-fade),
-    transform 720ms cubic-bezier(0.34, 1.25, 0.5, 1);
+    opacity 260ms var(--console-ease-fade),
+    transform 320ms var(--console-ease-fade);
 }
 
+/* Arriving: the background crossfade leads, the window follows 140ms later on a soft spring. */
 .console-surface[data-active="true"] {
   opacity: 1;
   transform: none;
+  transition:
+    opacity 520ms var(--console-ease-fade) 140ms,
+    transform 760ms cubic-bezier(0.34, 1.2, 0.5, 1) 140ms;
 }
 
 .console-surface__box {
@@ -237,27 +244,203 @@ html.console-home-host body {
   position: absolute;
   top: 50%;
   left: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   transform-origin: center;
 }
 
-.console-blurbs-drift {
-  /* Fixed to the surface's natural height so the feed scrolls inside it instead of growing the frame. */
-  height: 640px;
+/* The window: the app's center column — near-opaque ink, Gooey rim, deep soft shadow (no backdrop blur: the
+   fading ancestors would make it pop in late). */
+.console-window {
+  width: 100%;
+}
+
+.console-window__fill {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 120px),
+    rgba(10, 10, 12, 0.88);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.console-window__rim path {
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1.5;
+}
+
+.console-window__shadow {
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    0 40px 90px -20px rgba(0, 0, 0, 0.7);
+}
+
+:is(.light, [data-theme="light"]) .console-window__fill {
+  background: rgba(255, 255, 255, 0.985);
+  box-shadow: none;
+}
+
+:is(.light, [data-theme="light"]) .console-window__rim path {
+  stroke: rgba(0, 0, 0, 0.08);
+}
+
+:is(.light, [data-theme="light"]) .console-window__shadow {
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 36px 80px -24px rgba(0, 0, 0, 0.28);
+}
+
+.console-window__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: console-window-content-in 360ms var(--console-ease-fade) both;
+}
+
+@keyframes console-window-content-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* OO thread inside the window — Cortex look (rows reuse `.landing-temp-chat__bubble*`). */
+.console-oo-thread {
+  display: flex;
+  height: 500px;
+  flex-direction: column;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+:is(.light, [data-theme="light"]) .console-oo-thread {
+  color: rgba(0, 0, 0, 0.86);
+}
+
+.console-oo-thread__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 4px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:is(.light, [data-theme="light"]) .console-oo-thread__head {
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+}
+
+.console-oo-thread__name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.console-oo-thread__meta {
+  margin: 0;
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+.console-oo-thread__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.2;
+  transition:
+    width 300ms var(--console-ease-fade),
+    opacity 300ms var(--console-ease-fade);
+}
+
+.console-oo-thread__dot.is-current {
+  width: 16px;
+  opacity: 0.8;
+}
+
+.console-oo-thread__list {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 16px;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 88%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 88%, transparent 100%);
+  padding: 16px 4px 4px;
+}
+
+.console-oo-thread__group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.console-oo-thread__group--past {
+  opacity: 0.55;
+}
+
+.console-oo-thread__thinking {
+  display: flex;
+  gap: 5px;
+  padding: 6px 2px;
+}
+
+.console-oo-thread__thinking span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.console-oo-proof__fill {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.console-oo-proof__rim path {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+:is(.light, [data-theme="light"]) .console-oo-proof__fill {
+  background: rgba(0, 0, 0, 0.035);
+}
+
+:is(.light, [data-theme="light"]) .console-oo-proof__rim path {
+  stroke: rgba(0, 0, 0, 0.07);
+}
+
+.console-oo-proof__eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.console-oo-proof__title {
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.console-oo-proof__detail {
+  margin: 2px 0 0;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.console-blurbs-drift {
+  /* Fixed to the surface's natural height so the feed scrolls inside it instead of growing the window. */
+  height: 600px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 90%, transparent 100%);
 }
 
 .console-arcade-window {
   width: 100%;
-  height: 600px;
+  height: 580px;
   overflow: hidden;
-  border-radius: 40px;
+  border-radius: 28px;
   background: #ffffff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+:is(.dark, [data-theme="dark"]) .console-arcade-window {
+  background: #0b0b0d;
 }
 
 .console-arcade-window__frame {
@@ -266,17 +449,22 @@ html.console-home-host body {
   height: 100%;
   border: 0;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 240ms var(--console-ease-fade);
 }
 
+.console-arcade-window[data-ready="true"] .console-arcade-window__frame {
+  opacity: 1;
+}
+
+/* Phones / tablets: the window sits in the band between the top chrome and the title block
+   (`--console-content-top` is published by the shell), fading out at its foot. */
 @media (max-width: 899px) {
-  /* The band between the top chrome and the title block (`--console-content-top` is published by the shell). */
   .console-surface {
-    right: 16px;
-    bottom: calc(100% - var(--console-content-top, 50%) + 8px);
-    left: 16px;
-    top: calc(env(safe-area-inset-top, 0px) + 100px);
-    -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+    top: calc(env(safe-area-inset-top, 0px) + 104px);
+    right: 24px;
+    bottom: calc(100% - var(--console-content-top, 50%) + 16px);
+    left: 24px;
   }
 }
 
@@ -309,7 +497,7 @@ html.console-home-host body {
 
 .console-title {
   display: grid;
-  max-width: 600px;
+  max-width: 560px;
 }
 
 .console-title__inner {
@@ -321,6 +509,9 @@ html.console-home-host body {
 }
 
 .console-title__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin: 0 0 16px;
   font-size: 13px;
   font-weight: 500;
@@ -329,32 +520,42 @@ html.console-home-host body {
   color: var(--console-ink-2);
 }
 
+.console-title__energy {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 10px 1px currentColor;
+}
+
 .console-title__name {
   margin: 0 0 16px;
-  font-size: clamp(56px, 6.6vw, 104px);
+  /* Optical: big Satoshi caps sit slightly right of the column edge. */
+  margin-left: -0.045em;
+  font-size: clamp(56px, 6.4vw, 104px);
   font-weight: 700;
-  line-height: 0.92;
-  letter-spacing: -0.045em;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
   color: var(--console-ink);
   text-wrap: balance;
-  /* Optical: big Satoshi caps sit slightly right of the column edge. */
-  margin-left: -0.04em;
+  font-feature-settings: "ss01" 1, "kern" 1;
 }
 
 .console-title__name--mark {
-  font-size: clamp(72px, 8.4vw, 136px);
-  letter-spacing: -0.06em;
+  font-size: clamp(72px, 8.2vw, 136px);
+  letter-spacing: -0.065em;
 }
 
 .console-title__sentence {
-  max-width: 30em;
+  max-width: 28em;
   margin: 0 0 32px;
   font-size: 18px;
   font-weight: 500;
   line-height: 28px;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.008em;
   color: var(--console-ink-2);
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 
 :is(.dark, [data-theme="dark"]) .console-title__name,
@@ -437,52 +638,71 @@ html.console-home-host body {
   position: relative;
   display: block;
   flex: none;
-  overflow: hidden;
   padding: 0;
   border: 0;
-  border-radius: 24%;
-  background: rgba(255, 255, 255, 0.06);
+  background: none;
   cursor: pointer;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  filter: brightness(0.82) saturate(0.92);
+  outline: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+.console-tile__shape {
+  width: 100%;
+  height: 100%;
+}
+
+.console-tile__fill {
+  background: rgba(255, 255, 255, 0.06);
+  filter: brightness(0.8) saturate(0.9);
+  transition: filter 200ms cubic-bezier(0.25, 1, 0.32, 1);
+}
+
+/* Hairline on the same superellipse keeps photo edges crisp against any scene. */
+.console-tile__rim path {
+  stroke: var(--console-tile-hairline);
+}
+
+/* Focus ring traced 5px outside the squircle (SVG, so it hugs the shape — no CSS outline). */
+.console-tile__ring {
+  opacity: 0;
+  transform: scale(0.97);
+  transform-origin: center;
   transition:
-    outline-color 160ms cubic-bezier(0.25, 1, 0.32, 1),
-    outline-offset 220ms cubic-bezier(0.34, 1.45, 0.5, 1),
-    filter 200ms cubic-bezier(0.25, 1, 0.32, 1),
-    box-shadow 200ms cubic-bezier(0.25, 1, 0.32, 1);
+    opacity 160ms cubic-bezier(0.25, 1, 0.32, 1),
+    transform 240ms cubic-bezier(0.34, 1.45, 0.5, 1);
 }
 
-/* Hairline keeps photo edges crisp against any scene. */
-.console-tile::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px var(--console-tile-hairline);
-  pointer-events: none;
+.console-tile__ring path {
+  stroke: var(--console-ring);
+  stroke-width: 2;
 }
 
-.console-tile:hover {
+.console-tile:hover .console-tile__fill {
   filter: brightness(0.94) saturate(1);
 }
 
-.console-tile.is-active,
-.console-tile:focus-visible {
+.console-tile.is-active .console-tile__fill,
+.console-tile:focus-visible .console-tile__fill {
   filter: none;
-  outline-color: var(--console-ring);
-  outline-offset: 4px;
-  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.65);
 }
 
-:is(.light, [data-theme="light"]) .console-tile {
+.console-tile.is-active .console-tile__ring,
+.console-tile:focus-visible .console-tile__ring {
+  opacity: 1;
+  transform: none;
+}
+
+.console-tile.is-active .console-tile__shape {
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.5));
+}
+
+:is(.light, [data-theme="light"]) .console-tile__fill {
   background: rgba(0, 0, 0, 0.04);
   filter: none;
 }
 
-:is(.light, [data-theme="light"]) .console-tile.is-active {
-  box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.35);
+:is(.light, [data-theme="light"]) .console-tile.is-active .console-tile__shape {
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.18));
 }
 
 .console-tile__img {
@@ -650,9 +870,8 @@ html.console-home-host body {
     transform: scale(1.04);
   }
 
-  .console-tile {
-    transition:
-      outline-color 120ms linear,
-      filter 120ms linear;
+  .console-tile__ring {
+    transform: none;
+    transition: opacity 120ms linear;
   }
 }
