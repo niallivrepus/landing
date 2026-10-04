@@ -1,7 +1,7 @@
-import { cn, useTheme } from "@jokuh/gooey";
+import { cn, createSquirclePath, useTheme } from "@jokuh/gooey";
 import { CalendarCheck, Image as ImageIcon, Link2, MapPin, MessageCircle, Music2, type LucideIcon } from "lucide-react";
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { PROFILE_DEMO_HERO_AGENT, PROFILE_DEMO_PLACEHOLDER } from "../../lib/profile-demo-identity";
 import { IdPodSquircleShell } from "./IdPodSquircleShell";
 
@@ -66,6 +66,50 @@ const SCATTER: Record<PodId, { x: number; y: number; rotate: number }> = {
   location: { x: -120, y: 80, rotate: 8 },
   book: { x: 90, y: 110, rotate: -7 },
 };
+
+const POD_CORNER_RADIUS = 26;
+
+/**
+ * True superellipse for each pod (same `createSquirclePath` the ID pod's `SquircleShell` uses): the path clips the
+ * pod's content and a matching SVG stroke draws the rim, so photos and fills get real squircle corners in every
+ * browser (CSS `corner-shape` only works in very new Chrome). Re-measures when the shuffle resizes the pod.
+ */
+function SquirclePod({ children, radius = POD_CORNER_RADIUS }: { children: ReactNode; radius?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+
+  useLayoutEffect(() => {
+    const node = ref.current;
+    if (!node) return undefined;
+    const measure = () => setSize({ w: node.offsetWidth, h: node.offsetHeight });
+    measure();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const path = useMemo(
+    () =>
+      size.w > 0 && size.h > 0
+        ? createSquirclePath({ width: size.w, height: size.h, cornerRadius: Math.min(radius, size.w / 2, size.h / 2), cornerSmoothing: 1 })
+        : "",
+    [radius, size.h, size.w],
+  );
+
+  return (
+    <div ref={ref} className="profile-pods-demo__squircle">
+      <div className="profile-pods-demo__fill" style={path ? { clipPath: `path('${path}')` } : { borderRadius: radius }}>
+        {children}
+      </div>
+      {path ? (
+        <svg className="profile-pods-demo__rim" viewBox={`0 0 ${size.w} ${size.h}`} aria-hidden focusable="false">
+          <path d={path} />
+        </svg>
+      ) : null}
+    </div>
+  );
+}
 
 function PodLabel({ id }: { id: PodId }) {
   const { label, icon: Icon } = POD_META[id];
@@ -210,7 +254,9 @@ export function ProfilePodsDemo({ className, footer }: { className?: string; foo
                 animate={{ opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }}
                 transition={{ ...spring, delay: reduceMotion ? 0 : 0.15 + i * 0.07, layout: spring }}
               >
-                <PodBody id={id} cell={cell} theme={theme} />
+                <SquirclePod>
+                  <PodBody id={id} cell={cell} theme={theme} />
+                </SquirclePod>
               </motion.div>
             );
           })}

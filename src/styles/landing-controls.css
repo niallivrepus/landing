@@ -71,6 +71,11 @@
 .landing-cinema [data-slot="prompt-frame"],
 .light [data-slot="prompt-frame"],
 [data-theme="light"] [data-slot="prompt-frame"] {
+  /* Gooey's prompt bar caps itself (phone layout = fixed/max 366px) but never centers itself, so inside any
+     wider column it hugged the left edge, and on phones it overflowed narrow slots. Center it and never let
+     it exceed its column; 450px is the app's desktop prompt width. */
+  margin-inline: auto;
+  max-width: min(100%, 450px) !important;
   background-color: var(--landing-control-fill) !important;
   border: 1px solid var(--landing-control-border) !important;
   box-shadow: var(--landing-control-inner-highlight), var(--landing-control-shadow) !important;
