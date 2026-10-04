@@ -3,6 +3,12 @@ import { useCallback, useEffect, useRef, useState, type ComponentProps } from "r
 import { LANDING_HERO_PREVIEW_PROMPT } from "../../lib/landing-demo-seed";
 import { LandingBubblesOverlay } from "./LandingBubblesOverlay";
 
+/**
+ * The typed-text field. Gooey renders `sr-only` file inputs (attachments) before the textarea, so a bare
+ * `"input, textarea"` matched an always-empty file input and every typed prompt was swapped for the preview prompt.
+ */
+const PROMPT_FIELD_SELECTOR = "textarea, input:not([type='file']):not([type='hidden'])";
+
 type LandingPromptBarProps = Omit<ComponentProps<typeof InteractivePromptBar>, "libraryAffordance" | "onLibrary"> & {
   /** Optional override — default opens the Bubbles explainer overlay. */
   onBubbleOpen?: () => void;
@@ -38,7 +44,7 @@ export function LandingPromptBar({ onBubbleOpen, onSend, previewText, ...props }
     if (!root || !onSend) return;
 
     const activateIfEmpty = () => {
-      const field = root.querySelector("input, textarea") as HTMLInputElement | HTMLTextAreaElement | null;
+      const field = root.querySelector(PROMPT_FIELD_SELECTOR) as HTMLInputElement | HTMLTextAreaElement | null;
       if (field && field.value.trim()) return;
       onSend(fallbackPrompt);
     };
@@ -47,7 +53,7 @@ export function LandingPromptBar({ onBubbleOpen, onSend, previewText, ...props }
       const target = event.target as HTMLElement | null;
       const sendButton = target?.closest("button[aria-label='Send message']");
       if (!sendButton) return;
-      const field = root.querySelector("input, textarea") as HTMLInputElement | HTMLTextAreaElement | null;
+      const field = root.querySelector(PROMPT_FIELD_SELECTOR) as HTMLInputElement | HTMLTextAreaElement | null;
       if (field && field.value.trim()) return;
       event.preventDefault();
       event.stopPropagation();
@@ -56,7 +62,7 @@ export function LandingPromptBar({ onBubbleOpen, onSend, previewText, ...props }
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Enter" || event.shiftKey) return;
-      const field = root.querySelector("input, textarea") as HTMLInputElement | HTMLTextAreaElement | null;
+      const field = root.querySelector(PROMPT_FIELD_SELECTOR) as HTMLInputElement | HTMLTextAreaElement | null;
       if (field && field.value.trim()) return;
       event.preventDefault();
       event.stopPropagation();

@@ -71,6 +71,21 @@ test('a suggestion chip opens a temporary OO chat that streams a reply', async (
   await expect(page.getByRole('heading', { level: 1, name: 'Your mind. Your machine.' })).toBeVisible();
 });
 
+test('a typed prompt reaches OO as typed (not swapped for the preview prompt)', async ({ page }) => {
+  const requests = await mockLandingOoChat(page, ['Hello.']);
+
+  // The bar shows an animated preview until it is clicked; the textarea appears on focus.
+  await page.locator('[data-slot="prompt-frame"]').first().click();
+  const field = page.locator('[data-slot="prompt-frame"] textarea').first();
+  await field.fill('Can OO plan my trip to Tokyo?');
+  await field.press('Enter');
+
+  const chat = page.getByRole('region', { name: 'Temporary chat with OO' });
+  await expect(chat).toBeVisible();
+  await expect.poll(() => requests.length).toBe(1);
+  expect(requests[0]!.messages[0]).toEqual({ role: 'user', content: 'Can OO plan my trip to Tokyo?' });
+});
+
 test('shows a clean error when the temporary chat is unavailable', async ({ page }) => {
   await page.route('**/functions/v1/landing-oo-chat', (route) =>
     route.fulfill({
