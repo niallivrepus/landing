@@ -49,12 +49,12 @@ function FeatureDetailFallback() {
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const doc = getNewsDetail(slug);
+  // Hooks run before the early return so the hook order is stable when the slug changes.
+  useDocumentTitle(doc ? `${doc.title} Jokuh` : "Newsroom Jokuh");
 
   if (!doc) {
     return <Navigate to="/newsroom" replace />;
   }
-
-  useDocumentTitle(`${doc.title} Jokuh`);
 
   if (doc.kind === "brief") {
     const speechText = [
