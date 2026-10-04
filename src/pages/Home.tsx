@@ -1,56 +1,30 @@
-import { useEffect } from "react";
 import { SITE_DOCUMENT_TITLE } from "../data/landing-hero-copy";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { ClaimIdentityFlowProvider } from "../context/ClaimIdentityFlowContext";
-import {
-  GooeyBackdrop,
-  IdentityBlock,
-  InvestorBranchSection,
-  LandingHero,
-  ProductDemoSection,
-  ProductShowcaseSection,
-  RecentNewsSection,
-  WaitlistSection,
-} from "../components/landing";
-import { ShippedStrip } from "../components/shipped/ShippedStrip";
+import { GooeyBackdrop, LandingHero } from "../components/landing";
 import { MarketingPageFrame } from "../components/system";
-import { NEWS_ITEMS } from "../data/news";
-import { preloadNewsArticleSlugs } from "../lib/article-audio";
 import { useTheme } from "@jokuh/gooey";
 
 /**
- * **Purpose:** Homepage funnel — hero (Get started) → product strip → proof demo → identity close → waitlist.
- * Editorial and full Bubbles beats stay off the critical path; investors sit as a thin strip after Claim.
- * **Connects to:** claim-identity overlay, `ProductDemoSection` power proofs, MegaFooter,
+ * **Purpose:** Homepage is one screen: the immersive hero only. Products, demo, shipped log,
+ * newsroom, waitlist and investors live on their own routes and are reached by click
+ * (corner pills, Nexus, shipped ticker, slim footer row inside the hero shell).
+ * The big MegaFooter is dropped on home only (`footer={null}`).
+ * **Connects to:** `LandingHero` → `LandingImmersiveShell`, claim-identity overlay,
  * `SITE_DOCUMENT_TITLE` / `index.html` title.
  */
 export default function Home() {
   useDocumentTitle(SITE_DOCUMENT_TITLE);
   const { resolvedTheme } = useTheme();
 
-  useEffect(() => {
-    const slugs = NEWS_ITEMS
-      .filter((n) => n.slug && n.internalHref && !n.externalUrl)
-      .slice(0, 8)
-      .map((n) => n.slug as string);
-    preloadNewsArticleSlugs(slugs);
-  }, []);
-
   return (
     <ClaimIdentityFlowProvider>
       <MarketingPageFrame
         beforeChrome={<GooeyBackdrop />}
         theme={resolvedTheme === "light" ? "light" : "dark"}
+        footer={null}
       >
         <LandingHero />
-        <ProductShowcaseSection />
-        <ProductDemoSection />
-        <IdentityBlock />
-        {/* Latest weekly build log, then the Newsroom rail, so progress and releases are visible from the home page. */}
-        <ShippedStrip />
-        <RecentNewsSection />
-        <WaitlistSection />
-        <InvestorBranchSection />
       </MarketingPageFrame>
     </ClaimIdentityFlowProvider>
   );

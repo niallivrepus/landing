@@ -21,7 +21,7 @@ export const PRICING_CARDS = [
       "Texts, Calls, Spine, Blurbs, and OO on the devices we ship",
       "End-to-end encryption by default — we do not sell your data",
     ],
-    cta: { label: "Get started", href: "/#identity" },
+    cta: { label: "Get started", href: "/" },
   },
   {
     id: "teams",

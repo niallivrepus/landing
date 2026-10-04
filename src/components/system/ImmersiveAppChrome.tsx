@@ -30,6 +30,8 @@ export type ImmersiveAppChromeProps = {
   bottomCenter?: ReactNode;
   /** Replaces the default top-leading corner pill (e.g. back button on `/invest`). */
   topLeadingSlot?: ReactNode;
+  /** Optional node stacked under the Nexus pill in the top header (e.g. home shipped ticker). */
+  topCenterBelow?: ReactNode;
   className?: string;
   zIndex?: number;
 };
@@ -46,6 +48,7 @@ export function ImmersiveAppChrome({
   showLibraryRail = true,
   bottomCenter,
   topLeadingSlot,
+  topCenterBelow,
   className,
   zIndex = 30,
 }: ImmersiveAppChromeProps) {
@@ -83,7 +86,7 @@ export function ImmersiveAppChrome({
     >
       <header
         className={cn(
-          "pointer-events-none flex justify-center",
+          "pointer-events-none flex flex-col items-center gap-2",
           pinToOverlay
             ? "absolute inset-x-0 top-0 pt-[calc(env(safe-area-inset-top,0px)+14px)]"
             : "pt-[calc(env(safe-area-inset-top,0px)+14px)]",
@@ -92,6 +95,7 @@ export function ImmersiveAppChrome({
         <div className="pointer-events-auto">
           <LandingNexusPill />
         </div>
+        {topCenterBelow ? <div className="pointer-events-auto">{topCenterBelow}</div> : null}
       </header>
 
       {bottomCenter ? (
