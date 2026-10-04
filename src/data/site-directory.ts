@@ -4,7 +4,7 @@ import { SITE_PRODUCT_SENTENCE } from "./landing-hero-copy";
  * Data-room: bottom signature above the legal/meta row.
  * First line is the canonical product sentence; second line expands the Jokuh acronym.
  */
-export const FOOTER_SIGNATURE = `${SITE_PRODUCT_SENTENCE}\nJoining Our Knowledge Unifying Humanity.`;
+export const FOOTER_SIGNATURE = `${SITE_PRODUCT_SENTENCE}\nJoining Our Knowledge, Unifying Humanity.`;
 
 /** Multi-paragraph fine print (Apple-style) above mega footer link columns. */
 export const FOOTER_FINE_PRINT = {

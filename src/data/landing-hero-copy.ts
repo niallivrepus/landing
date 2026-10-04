@@ -12,7 +12,7 @@ export const LANDING_HERO_HEADLINE = "Your mind. Your machine.";
  * Browser tab / Open Graph title for the marketing homepage.
  * Default for `useDocumentTitle`; must match `<title>` and `og:title` in `index.html`.
  */
-export const SITE_DOCUMENT_TITLE = "Jokuh — a private workspace with your own AI";
+export const SITE_DOCUMENT_TITLE = "Jokuh — Private intelligence, identity, and community";
 
 /**
  * One-sentence product definition. Source of truth for meta description,

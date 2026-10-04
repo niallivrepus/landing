@@ -121,8 +121,20 @@ export default function AboutPage() {
             About
           </h1>
           <p className="mx-auto mt-7 max-w-[40rem] text-balance text-pretty font-sans text-[17px] leading-[1.65] text-light-space/64 light:text-zinc-600 md:max-w-[38rem] md:text-[18px] md:leading-[1.7]">
-            Jokuh builds private speech systems that turn conversations into structured memory without taking ownership
-            away from the people who spoke.
+            Private intelligence, identity, and community, built so the people who speak keep ownership of what they
+            say.
+          </p>
+          <p
+            className="mt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-light-space/40 light:text-zinc-500"
+            aria-label="Jokuh stands for Joining Our Knowledge, Unifying Humanity"
+          >
+            <span aria-hidden>
+              <span className="text-light-space/80 light:text-zinc-900">J</span>oining{" "}
+              <span className="text-light-space/80 light:text-zinc-900">O</span>ur{" "}
+              <span className="text-light-space/80 light:text-zinc-900">K</span>nowledge,{" "}
+              <span className="text-light-space/80 light:text-zinc-900">U</span>nifying{" "}
+              <span className="text-light-space/80 light:text-zinc-900">H</span>umanity
+            </span>
           </p>
         </section>
 
