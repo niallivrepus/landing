@@ -1,19 +1,89 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-15T13:55:46.631Z",
-  "totalCommits": 3831,
+  "generatedAt": "2026-09-28T22:45:13.940Z",
+  "totalCommits": 3943,
   "since": "2023-12-08",
   "url": "https://www.jokuh.com/shipped",
   "weeks": [
+    {
+      "slug": "2026-w39",
+      "week": 69,
+      "start": "2026-09-21",
+      "end": "2026-09-27",
+      "publishedAt": "2026-09-27",
+      "headline": "Batcoin, from day one",
+      "dek": "Every new account now starts with Batcoin, and posting each day keeps it coming. Plus a browser that skips the trackers and updates that take one tap.",
+      "commits": 41,
+      "url": "https://www.jokuh.com/shipped/2026-w39",
+      "items": [
+        {
+          "area": "Wallet",
+          "title": "Earn Batcoin from day one",
+          "body": "New accounts start with Batcoin. Invite a friend and you both get some. Post a blurb every day to build a streak, with bonuses along the way.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Wallet",
+          "title": "Batcoin tipping on Android",
+          "body": "Throw a coin to someone from their profile or on a blurb they posted.",
+          "platforms": [
+            "Android"
+          ]
+        },
+        {
+          "area": "Browser",
+          "title": "A browser that skips the trackers",
+          "body": "The built-in browser blocks ads and trackers by default, so busy sites load noticeably faster. Turn it off for any site you like.",
+          "platforms": [
+            "iOS",
+            "Mac"
+          ]
+        },
+        {
+          "area": "App",
+          "title": "Updates in one tap",
+          "body": "When a new version is ready, Jokuh tells you and takes you straight to it.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web"
+          ]
+        },
+        {
+          "area": "People",
+          "title": "Friend requests that make sense",
+          "body": "Adding, accepting and declining show you exactly what happened, and when something goes wrong you're told what to do next.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Onboarding",
+          "title": "Sign up on the web without a camera",
+          "body": "No webcam, or said no to the permission? Upload a photo instead and keep going.",
+          "platforms": [
+            "Web"
+          ]
+        }
+      ]
+    },
     {
       "slug": "2026-w38",
       "week": 68,
       "start": "2026-09-14",
       "end": "2026-09-20",
-      "publishedAt": "2026-09-15",
+      "publishedAt": "2026-09-20",
       "headline": "Messaging, remade",
       "dek": "Photos you can mark up, voice notes that look like a radio intercept, and stickers that finally feel like messages. On every platform at once.",
-      "commits": 72,
+      "commits": 97,
       "url": "https://www.jokuh.com/shipped/2026-w38",
       "items": [
         {
@@ -75,6 +145,17 @@
           "area": "People",
           "title": "Find anyone on Jokuh",
           "body": "New Call and Find people now search everyone, not just the people you already know.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Wallet",
+          "title": "Live price charts in the wallet",
+          "body": "Prices move as you watch, with a line that keeps up in real time.",
           "platforms": [
             "iOS",
             "Mac",
@@ -651,59 +732,6 @@
           "area": "Platform",
           "title": "Your devices stay in sync",
           "body": "Start on your phone, pick it up on your Mac.",
-          "platforms": [
-            "iOS",
-            "Mac",
-            "Web"
-          ]
-        }
-      ]
-    },
-    {
-      "slug": "2026-w24",
-      "week": 54,
-      "start": "2026-06-08",
-      "end": "2026-06-14",
-      "publishedAt": "2026-06-14",
-      "headline": "Share anything into Spine",
-      "dek": "Send a link, a photo or a note from any app and Jokuh asks where it belongs.",
-      "commits": 12,
-      "url": "https://www.jokuh.com/shipped/2026-w24",
-      "items": [
-        {
-          "area": "Spine",
-          "title": "Share to Spine",
-          "body": "Use the share sheet from any app. Save it to Spine, or turn it into a text or a blurb.",
-          "platforms": [
-            "iOS",
-            "Mac",
-            "Web",
-            "Android"
-          ]
-        },
-        {
-          "area": "Spine",
-          "title": "A daily brief and photo moments",
-          "body": "Open Jokuh to a short brief of your day, with your best photos pulled forward.",
-          "platforms": [
-            "iOS",
-            "Mac",
-            "Web"
-          ]
-        },
-        {
-          "area": "Calls",
-          "title": "A soundboard",
-          "body": "Drop a sound into the call.",
-          "platforms": [
-            "iOS",
-            "Mac"
-          ]
-        },
-        {
-          "area": "Design",
-          "title": "Dark paper",
-          "body": "Sheets get a dark paper texture, and Nexus learns timers and toasts.",
           "platforms": [
             "iOS",
             "Mac",

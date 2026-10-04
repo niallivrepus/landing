@@ -7,14 +7,22 @@
     <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Latest Jokuh newsroom articles and stories.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 15 Sep 2026 13:55:46 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2026 22:45:13 GMT</lastBuildDate>
+    <item>
+      <title>Week 69: Batcoin, from day one</title>
+      <link>https://www.jokuh.com/shipped/2026-w39</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w39</guid>
+      <description>Every new account now starts with Batcoin, and posting each day keeps it coming. Plus a browser that skips the trackers and updates that take one tap.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 27 Sep 2026 12:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Week 68: Messaging, remade</title>
       <link>https://www.jokuh.com/shipped/2026-w38</link>
       <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w38</guid>
       <description>Photos you can mark up, voice notes that look like a radio intercept, and stickers that finally feel like messages. On every platform at once.</description>
       <category>Shipped</category>
-      <pubDate>Tue, 15 Sep 2026 12:00:00 GMT</pubDate>
+      <pubDate>Sun, 20 Sep 2026 12:00:00 GMT</pubDate>
     </item>
     <item>
       <title>Week 67: Walkie-talkie, Fuel, and the week ahead</title>
