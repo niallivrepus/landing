@@ -2,6 +2,8 @@
  * **Purpose:** Product focus list for the `/lab/home` "Console Home" prototype (PS5 home × Netflix billboard).
  * Copy is lifted from shipped site sources only — `products.ts` summaries, `SITE_PRODUCT_SENTENCE`
  * (OO) and the homepage arcade pill (chess). No new claims.
+ * Each product's scene is its hero art (atmosphere) with the product's live app surface mounted on top
+ * (`console/surfaces/ConsoleSurfaces.tsx`); OO and Arcade use a generative shader instead of art.
  * **Connects to:** `ConsoleHomeShell`, `ConsoleScene`, `ConsoleTileRow`, `product-hero-images.ts`.
  */
 import { PRODUCT_HERO_IMAGES } from "./product-hero-images";
@@ -14,7 +16,6 @@ export type ConsoleShaderPalette = "oo" | "arcade";
 
 export type ConsoleScene =
   | { kind: "image"; src: string; position?: string }
-  | { kind: "video"; src: string; poster: string; position?: string }
   | { kind: "shader"; palette: ConsoleShaderPalette };
 
 export type ConsolePrimaryAction =
@@ -22,7 +23,7 @@ export type ConsolePrimaryAction =
   | { kind: "prompt"; label: string }
   /** Opens the bundled arcade game overlay. */
   | { kind: "game"; label: string }
-  /** Opens the web app onboarding with a product intent. */
+  /** Product with a full immersive page: primary "Open" goes there, secondary opens the web app with this intent. */
   | { kind: "web-app"; label: string; intent: string };
 
 export type ConsoleProduct = {
@@ -35,8 +36,10 @@ export type ConsoleProduct = {
   tile: string | null;
   scene: ConsoleScene;
   primary: ConsolePrimaryAction;
-  /** "Learn more" destination; Enter on a focused product tile opens it. */
-  learnMoreHref: string;
+  /** The product's full page (immersive shell for products). "Open" / Enter on a focused product tile goes here. */
+  pageHref: string;
+  /** Label for the secondary page link where the primary action is something else (OO, Arcade). */
+  pageLabel?: string;
 };
 
 export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
@@ -49,7 +52,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     tile: null,
     scene: { kind: "shader", palette: "oo" },
     primary: { kind: "prompt", label: "Talk to OO" },
-    learnMoreHref: "/demo",
+    pageHref: "/demo",
+    pageLabel: "See it work",
   },
   {
     id: "spine",
@@ -58,8 +62,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     sentence: PRODUCTS.spine.summary,
     tile: "/lab/console/spine.webp",
     scene: { kind: "image", src: PRODUCT_HERO_IMAGES.spine, position: "50% 40%" },
-    primary: { kind: "web-app", label: "Try it", intent: "corner-spine" },
-    learnMoreHref: "/spine",
+    primary: { kind: "web-app", label: "Try in browser", intent: "corner-spine" },
+    pageHref: "/spine",
   },
   {
     id: "calls",
@@ -67,14 +71,9 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     eyebrow: "Community",
     sentence: PRODUCTS.calls.summary,
     tile: "/lab/console/calls.webp",
-    scene: {
-      kind: "video",
-      src: "/product-hero/calls-header.mp4",
-      poster: PRODUCT_HERO_IMAGES.calls,
-      position: "62% 40%",
-    },
-    primary: { kind: "web-app", label: "Try it", intent: "corner-call" },
-    learnMoreHref: "/calls",
+    scene: { kind: "image", src: PRODUCT_HERO_IMAGES.calls, position: "62% 40%" },
+    primary: { kind: "web-app", label: "Try in browser", intent: "corner-call" },
+    pageHref: "/calls",
   },
   {
     id: "messages",
@@ -82,14 +81,9 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     eyebrow: "Community",
     sentence: PRODUCTS.messages.summary,
     tile: "/lab/console/texts.webp",
-    scene: {
-      kind: "video",
-      src: "/product-hero/texts-header.mp4",
-      poster: PRODUCT_HERO_IMAGES.messages,
-      position: "56% 35%",
-    },
-    primary: { kind: "web-app", label: "Try it", intent: "corner-text" },
-    learnMoreHref: "/messages",
+    scene: { kind: "image", src: PRODUCT_HERO_IMAGES.messages, position: "56% 35%" },
+    primary: { kind: "web-app", label: "Try in browser", intent: "corner-text" },
+    pageHref: "/messages",
   },
   {
     id: "profile",
@@ -98,8 +92,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     sentence: PRODUCTS.profile.summary,
     tile: "/lab/console/profile.webp",
     scene: { kind: "image", src: PRODUCT_HERO_IMAGES.profile, position: "60% 30%" },
-    primary: { kind: "web-app", label: "Try it", intent: "corner-id" },
-    learnMoreHref: "/profile",
+    primary: { kind: "web-app", label: "Try in browser", intent: "corner-id" },
+    pageHref: "/profile",
   },
   {
     id: "blurbs",
@@ -107,14 +101,9 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     eyebrow: "Community",
     sentence: PRODUCTS.blurbs.summary,
     tile: "/lab/console/blurbs.webp",
-    scene: {
-      kind: "video",
-      src: "/product-hero/blurbs-header.mp4",
-      poster: PRODUCT_HERO_IMAGES.blurbs,
-      position: "45% 45%",
-    },
-    primary: { kind: "web-app", label: "Try it", intent: "identity" },
-    learnMoreHref: "/blurbs",
+    scene: { kind: "image", src: PRODUCT_HERO_IMAGES.blurbs, position: "45% 45%" },
+    primary: { kind: "web-app", label: "Try in browser", intent: "identity" },
+    pageHref: "/blurbs",
   },
   {
     id: "arcade",
@@ -124,7 +113,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     tile: null,
     scene: { kind: "shader", palette: "arcade" },
     primary: { kind: "game", label: "Play chess" },
-    learnMoreHref: "/newsroom/fuel-arcade-token",
+    pageHref: "/newsroom/fuel-arcade-token",
+    pageLabel: "Learn more",
   },
 ] as const;
 

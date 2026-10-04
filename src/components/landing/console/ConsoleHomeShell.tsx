@@ -10,6 +10,7 @@ import {
   type ConsoleProductId,
 } from "../../../data/console-home-products";
 import type { LandingArcadeGameId } from "../../../data/landing-arcade-games";
+import type { LandingCornerAction } from "../../../data/landing-shell-preview";
 import { useClaimIdentityFlowContext } from "../../../context/ClaimIdentityFlowContext";
 import { useDownloadIntercept } from "../../../hooks/useDownloadIntercept";
 import { buildWebAppOnboardingHandoffUrl } from "../../../lib/claim-identity-handoff";
@@ -30,6 +31,14 @@ import { ConsoleStage } from "./ConsoleScene";
 import { ConsoleTileRow, type ConsoleFocusSource } from "./ConsoleTileRow";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
+
+/** Where each product lives in the app shell: its corner lights up in that corner's energy colour on focus. */
+const CORNER_FOR_PRODUCT: Partial<Record<ConsoleProductId, LandingCornerAction>> = {
+  spine: "spine",
+  calls: "call",
+  messages: "text",
+  profile: "id",
+};
 const SWIPE_MIN_PX = 48;
 
 /**
@@ -61,6 +70,21 @@ function ConsoleHomeShellInner() {
   const [arcadeGame, setArcadeGame] = useState<LandingArcadeGameId | null>(null);
   const [activeId, setActiveId] = useState<ConsoleProductId>("oo");
   const titleRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Phones: the live surface sits in the band above the title block; publish where that block starts.
+  useEffect(() => {
+    const section = sectionRef.current;
+    const content = contentRef.current;
+    if (!section || !content) return undefined;
+    const publish = () => section.style.setProperty("--console-content-top", `${content.offsetTop}px`);
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(content);
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   const chat = useLandingTempChat();
   const sendToChat = chat.send;
@@ -105,12 +129,12 @@ function ConsoleHomeShellInner() {
     [focusPrompt],
   );
 
-  /** Enter / click on a tile: OO → talk, Arcade → play, products → their page. */
+  /** Enter / click on a tile: OO → talk, Arcade → play, products → their full immersive page. */
   const openProduct = useCallback(
     (id: ConsoleProductId) => {
       const product = CONSOLE_PRODUCTS.find((p) => p.id === id);
       if (!product) return;
-      if (product.primary.kind === "web-app") navigate(product.learnMoreHref);
+      if (product.primary.kind === "web-app") navigate(product.pageHref);
       else runPrimary(product);
     },
     [navigate, runPrimary],
@@ -171,12 +195,19 @@ function ConsoleHomeShellInner() {
   return (
     <LayoutGroup id="claim-identity-home">
       <section
+        ref={sectionRef}
         className="console-home"
         data-chat={chatOpen ? "open" : undefined}
         aria-roledescription="Product home"
         aria-label="Jokuh home"
       >
-        <ConsoleStage products={CONSOLE_PRODUCTS} activeId={activeId} reduceMotion={reduceMotion} light={light} />
+        <ConsoleStage
+          products={CONSOLE_PRODUCTS}
+          activeId={activeId}
+          reduceMotion={reduceMotion}
+          light={light}
+          surfacesHidden={chatOpen}
+        />
 
         <div
           className="console-home__swipe"
@@ -190,13 +221,15 @@ function ConsoleHomeShellInner() {
 
         <ImmersiveAppChrome
           showLibraryRail={false}
+          highlightAction={CORNER_FOR_PRODUCT[activeId] ?? null}
+          highlightNexus={activeId === "oo"}
           topCenterBelow={chatOpen ? null : <HomeShippedTicker />}
           bottomCenter={<HomeFooterRow />}
         />
 
         <ConsoleClock />
 
-        <div className="console-home__content">
+        <div ref={contentRef} className="console-home__content">
           <h1 className="sr-only">
             Jokuh: {CONSOLE_BRAND_LINE} {CONSOLE_BRAND_EXPANSION}
           </h1>
@@ -263,26 +296,35 @@ function ConsoleHomeShellInner() {
 
                 {chatOpen ? null : (
                   <div className="console-title__actions">
-                    {active.primary.kind === "prompt" ? (
-                      <JokuhButton variant="primary" size="md" onClick={() => claimFlow.openFrom("hero")}>
-                        Get started
-                      </JokuhButton>
-                    ) : active.primary.kind === "web-app" ? (
-                      <JokuhButton
-                        variant="primary"
-                        size="md"
-                        href={buildWebAppOnboardingHandoffUrl({ source: "hero", intent: active.primary.intent })}
-                      >
-                        {active.primary.label}
-                      </JokuhButton>
+                    {active.primary.kind === "web-app" ? (
+                      <>
+                        <JokuhButton variant="primary" size="md" href={active.pageHref}>
+                          Open
+                        </JokuhButton>
+                        <JokuhButton
+                          variant="secondary"
+                          size="md"
+                          href={buildWebAppOnboardingHandoffUrl({ source: "hero", intent: active.primary.intent })}
+                        >
+                          {active.primary.label}
+                        </JokuhButton>
+                      </>
                     ) : (
-                      <JokuhButton variant="primary" size="md" onClick={() => runPrimary(active)}>
-                        {active.primary.label}
-                      </JokuhButton>
+                      <>
+                        {active.primary.kind === "prompt" ? (
+                          <JokuhButton variant="primary" size="md" onClick={() => claimFlow.openFrom("hero")}>
+                            Get started
+                          </JokuhButton>
+                        ) : (
+                          <JokuhButton variant="primary" size="md" onClick={() => runPrimary(active)}>
+                            {active.primary.label}
+                          </JokuhButton>
+                        )}
+                        <JokuhButton variant="secondary" size="md" href={active.pageHref}>
+                          {active.pageLabel ?? "Learn more"}
+                        </JokuhButton>
+                      </>
                     )}
-                    <JokuhButton variant="secondary" size="md" href={active.learnMoreHref}>
-                      Learn more
-                    </JokuhButton>
                   </div>
                 )}
               </motion.div>

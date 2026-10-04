@@ -52,20 +52,24 @@ export function ConsoleTileRow({
   };
   useEffect(() => clearHover, []);
 
-  // Keep the focused tile in view inside the (mobile) scroller.
+  // Keep the focused tile in view inside the (mobile) scroller — measured after its size spring settles.
   useEffect(() => {
-    const scroller = scrollerRef.current;
-    const tile = tileRefs.current.get(activeId);
-    if (!scroller || !tile || scroller.scrollWidth <= scroller.clientWidth + 1) return;
-    const tileLeft = tile.offsetLeft;
-    const tileRight = tileLeft + tile.offsetWidth;
-    const pad = 16;
-    if (tileLeft - pad < scroller.scrollLeft) {
-      scroller.scrollTo({ left: tileLeft - pad, behavior: "smooth" });
-    } else if (tileRight + pad > scroller.scrollLeft + scroller.clientWidth) {
-      scroller.scrollTo({ left: tileRight + pad - scroller.clientWidth, behavior: "smooth" });
-    }
-  }, [activeId]);
+    const id = window.setTimeout(() => {
+      const scroller = scrollerRef.current;
+      const tile = tileRefs.current.get(activeId);
+      if (!scroller || !tile || scroller.scrollWidth <= scroller.clientWidth + 1) return;
+      const item = tile.parentElement ?? tile;
+      const left = item.offsetLeft;
+      const right = left + Math.max(item.offsetWidth, sizes.active);
+      const pad = 16;
+      if (left - pad < scroller.scrollLeft) {
+        scroller.scrollTo({ left: left - pad, behavior: "smooth" });
+      } else if (right + pad > scroller.scrollLeft + scroller.clientWidth) {
+        scroller.scrollTo({ left: right + pad - scroller.clientWidth, behavior: "smooth" });
+      }
+    }, 60);
+    return () => window.clearTimeout(id);
+  }, [activeId, sizes.active]);
 
   const focusIndex = useCallback(
     (index: number) => {

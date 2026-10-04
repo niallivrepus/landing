@@ -1,59 +1,79 @@
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { ConsoleProduct, ConsoleProductId } from "../../../data/console-home-products";
 import { ConsoleShaderScene } from "./ConsoleShaderScene";
+import { ConsoleSurface } from "./surfaces/ConsoleSurfaces";
+
+/** Matches `--console-fade` in CSS: how long a leaving surface stays mounted while it fades. */
+const SURFACE_FADE_MS = 700;
 
 /**
- * **Purpose:** The full-bleed "billboard" behind the console home. One layer per product, stacked; only the
- * focused layer is opaque. Layers mount on first focus (and stay mounted so focus-back crossfades without a
- * reload), the next/previous product's still is prefetched on idle, and video only streams for the focused
- * layer on fine-pointer screens without Save-Data / reduced motion.
- * Motion: ~600ms opacity crossfade, a slow Ken Burns drift on the focused layer (CSS), and a sprung pointer
- * parallax on the whole stack. Reduced motion keeps the crossfade only.
- * **Connects to:** `ConsoleHomeShell`, `ConsoleShaderScene`, `landing-console-home.css` (`.console-stage*`).
+ * **Purpose:** The full-bleed "billboard" behind the console home, in two depths:
+ * 1. Atmosphere: one layer per product (hero art, or a WebGL shader for OO / Arcade), stacked, only the focused one
+ *    opaque. Mounted on first focus and kept so focus-back crossfades without a reload; neighbours' stills are
+ *    prefetched on idle. Slow Ken Burns on the focused layer (CSS) + sprung pointer parallax.
+ * 2. The live app surface (`ConsoleSurface`): the product's real landing demo, autoplaying, framed like the app's
+ *    center column. Only the focused surface, the next neighbour (paused) and the one fading out are mounted.
+ * Reduced motion: crossfades only — no drift, no parallax, surfaces render their static first frame.
+ * **Connects to:** `ConsoleHomeShell`, `ConsoleShaderScene`, `surfaces/ConsoleSurfaces.tsx`,
+ * `landing-console-home.css` (`.console-stage*`, `.console-surface*`).
  */
 export function ConsoleStage({
   products,
   activeId,
   reduceMotion,
   light,
+  surfacesHidden = false,
 }: {
   products: readonly ConsoleProduct[];
   activeId: ConsoleProductId;
   reduceMotion: boolean;
   light: boolean;
+  /** Fade + pause the live surfaces (the real OO temp chat owns the stage while it's open). */
+  surfacesHidden?: boolean;
 }) {
   const [mounted, setMounted] = useState<ReadonlySet<ConsoleProductId>>(() => new Set([activeId]));
-  const allowVideo = useAllowVideo(reduceMotion);
+  const [leaving, setLeaving] = useState<ConsoleProductId | null>(null);
+  const previousActive = useRef(activeId);
 
   useEffect(() => {
     setMounted((prev) => (prev.has(activeId) ? prev : new Set(prev).add(activeId)));
+    if (previousActive.current === activeId) return undefined;
+    setLeaving(previousActive.current);
+    previousActive.current = activeId;
+    const id = window.setTimeout(() => setLeaving(null), SURFACE_FADE_MS);
+    return () => window.clearTimeout(id);
   }, [activeId]);
+
+  const activeIndex = products.findIndex((p) => p.id === activeId);
+  const nextId = products[activeIndex + 1]?.id ?? null;
+  const surfaceIds = products
+    .map((p) => p.id)
+    .filter((id) => id === activeId || id === nextId || id === leaving);
 
   // Prefetch the neighbours' stills so arrowing feels instant without mounting every layer up front.
   useEffect(() => {
-    const index = products.findIndex((p) => p.id === activeId);
-    const neighbours = [products[index + 1], products[index - 1]].filter(Boolean) as ConsoleProduct[];
+    const neighbours = [products[activeIndex + 1], products[activeIndex - 1]].filter(Boolean) as ConsoleProduct[];
     const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 300));
     const cancel = window.cancelIdleCallback ?? window.clearTimeout;
     const handle = idle(() => {
       for (const p of neighbours) {
-        const src = p.scene.kind === "image" ? p.scene.src : p.scene.kind === "video" ? p.scene.poster : null;
-        if (src) {
-          const img = new Image();
-          img.decoding = "async";
-          img.src = src;
-        }
+        if (p.scene.kind !== "image") continue;
+        const img = new Image();
+        img.decoding = "async";
+        img.src = p.scene.src;
       }
     });
     return () => cancel(handle as number);
-  }, [activeId, products]);
+  }, [activeIndex, products]);
 
-  // Pointer parallax: ±14px on the scene, sprung so it trails the cursor like a camera on a gimbal.
+  // Pointer parallax: ±14px on the atmosphere, a third of that on the surface so the app stays steady to read.
   const px = useMotionValue(0);
   const py = useMotionValue(0);
   const x = useSpring(px, { stiffness: 60, damping: 20, mass: 0.8 });
   const y = useSpring(py, { stiffness: 60, damping: 20, mass: 0.8 });
+  const sx = useTransform(x, (v) => v * 0.35);
+  const sy = useTransform(y, (v) => v * 0.35);
 
   useEffect(() => {
     if (reduceMotion) {
@@ -92,12 +112,26 @@ export function ConsoleStage({
               active={product.id === activeId}
               reduceMotion={reduceMotion}
               light={light}
-              allowVideo={allowVideo}
             />
           ) : null,
         )}
       </motion.div>
       <div className="console-stage__scrim" />
+
+      {/* Live app surfaces: decorative here (inert) — "Open" / Enter goes to the real page. */}
+      <motion.div
+        className="console-surfaces"
+        data-hidden={surfacesHidden ? "true" : undefined}
+        style={{ x: sx, y: sy }}
+        inert
+      >
+        {surfaceIds.map((id) => (
+          <div key={id} className="console-surface" data-active={id === activeId ? "true" : "false"} data-product={id}>
+            <ConsoleSurface id={id} playing={id === activeId && !reduceMotion && !surfacesHidden} />
+          </div>
+        ))}
+      </motion.div>
+
       <div className="console-stage__grain landing-grain" />
     </div>
   );
@@ -108,13 +142,11 @@ function SceneLayer({
   active,
   reduceMotion,
   light,
-  allowVideo,
 }: {
   product: ConsoleProduct;
   active: boolean;
   reduceMotion: boolean;
   light: boolean;
-  allowVideo: boolean;
 }) {
   const { scene } = product;
   return (
@@ -122,11 +154,9 @@ function SceneLayer({
       <div className="console-scene__media">
         {scene.kind === "shader" ? (
           <ConsoleShaderScene palette={scene.palette} active={active} reduceMotion={reduceMotion} light={light} />
-        ) : scene.kind === "video" && allowVideo ? (
-          <SceneVideo src={scene.src} poster={scene.poster} position={scene.position} active={active} />
         ) : (
           <img
-            src={scene.kind === "video" ? scene.poster : scene.src}
+            src={scene.src}
             alt=""
             decoding="async"
             fetchPriority={active ? "high" : "low"}
@@ -137,73 +167,4 @@ function SceneLayer({
       </div>
     </div>
   );
-}
-
-function SceneVideo({
-  src,
-  poster,
-  position,
-  active,
-}: {
-  src: string;
-  poster: string;
-  position?: string;
-  active: boolean;
-}) {
-  const ref = useRef<HTMLVideoElement>(null);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    const video = ref.current;
-    if (!video) return;
-    if (active) {
-      const play = video.play();
-      if (play) play.catch(() => {});
-    } else {
-      video.pause();
-    }
-  }, [active]);
-
-  return (
-    <>
-      {/* The still paints first (and stays as the fallback); the video fades in over it once it can play. */}
-      <img src={poster} alt="" decoding="async" className="console-scene__img" style={{ objectPosition: position }} />
-      <video
-        ref={ref}
-        className="console-scene__video"
-        data-ready={ready ? "true" : "false"}
-        src={src}
-        poster={poster}
-        muted
-        loop
-        playsInline
-        autoPlay={active}
-        preload={active ? "auto" : "none"}
-        style={{ objectPosition: position }}
-        onCanPlay={() => setReady(true)}
-        disablePictureInPicture
-      />
-    </>
-  );
-}
-
-type NetworkInformationLike = { saveData?: boolean; effectiveType?: string };
-
-/** Video only on fine-pointer, ≥768px screens without Save-Data or reduced motion — phones get the still. */
-function useAllowVideo(reduceMotion: boolean) {
-  const [allow, setAllow] = useState(false);
-  useEffect(() => {
-    if (reduceMotion) {
-      setAllow(false);
-      return;
-    }
-    const query = window.matchMedia("(min-width: 768px) and (pointer: fine)");
-    const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection;
-    const slow = Boolean(connection?.saveData) || /(^|-)2g$/.test(connection?.effectiveType ?? "");
-    const update = () => setAllow(query.matches && !slow);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, [reduceMotion]);
-  return allow;
 }

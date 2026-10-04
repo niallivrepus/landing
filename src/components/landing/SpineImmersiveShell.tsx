@@ -3,7 +3,7 @@ import {
   SpineTimeline,
 } from "@jokuh/gooey";
 import { AnimatePresence, motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   LANDING_DEFAULT_DAY_ID,
   LANDING_SPINE_DAYS,
@@ -27,6 +27,62 @@ import { SpineJuly4Memory } from "./SpineJuly4Memory";
  * **Connects to:** `landing-spine-capsules.ts`, Gooey spine components, `news.ts`.
  */
 export function SpineImmersiveShell() {
+  return (
+    <section className="relative min-h-[100svh] overflow-hidden" aria-label="Spine preview">
+      <ImmersiveProductBackdrop productId="spine" />
+      <ImmersiveAppChrome activeAction="spine" />
+
+      <ImmersiveCenterColumn maxWidthClass="max-w-[420px]">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="flex w-full flex-col items-center gap-4"
+        >
+          <SpineAppSurface />
+
+          <div className="text-center">
+            <p className="font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
+              Spine
+            </p>
+            <p className="mt-1 font-sans text-[clamp(0.85rem,2.5vw,1rem)] font-medium text-light-space/72 light:text-zinc-600">
+              Your operating timeline — every day, every memory, one surface.
+            </p>
+            <p className="mx-auto mt-2 max-w-[22rem] font-sans text-[clamp(0.75rem,2vw,0.875rem)] leading-relaxed text-light-space/48 light:text-zinc-500">
+              Today Brief, planner tabs, mood rail, and thirty-plus memory kinds. Calls, captures, and calendar events land here automatically.
+            </p>
+          </div>
+        </motion.div>
+      </ImmersiveCenterColumn>
+    </section>
+  );
+}
+
+/** Autoplay beats for the console-home scene: walk today's hours, open the July 4 memory, glance at yesterday. */
+const SPINE_AUTOPLAY_BEATS: { dayId: string; hourId: string | null; memory: boolean }[] = [
+  ...(LANDING_SPINE_HOURS_BY_DAY[LANDING_DEFAULT_DAY_ID] ?? [])
+    .filter((hour) => hour.id !== SPINE_JULY4_MEMORY_HOUR_ID)
+    .map((hour) => ({ dayId: LANDING_DEFAULT_DAY_ID, hourId: hour.id, memory: false })),
+  { dayId: LANDING_DEFAULT_DAY_ID, hourId: SPINE_JULY4_MEMORY_HOUR_ID, memory: false },
+  { dayId: LANDING_DEFAULT_DAY_ID, hourId: SPINE_JULY4_MEMORY_HOUR_ID, memory: true },
+  { dayId: "jul-3", hourId: null, memory: false },
+];
+const SPINE_AUTOPLAY_BEAT_MS = 2600;
+
+/**
+ * **Purpose:** The Spine app surface — day/hour capsules above the squircle (July 4 memory, lifelog timeline,
+ * today's news). Shared by `/spine` and the console home scene; `autoplay` walks the day on a gentle loop
+ * (paused while the tab is hidden).
+ * **Connects to:** `SpineImmersiveShell`, `ConsoleHomeShell` scenes (`console/surfaces`).
+ */
+export function SpineAppSurface({
+  autoplay = false,
+  arrangement = "stack",
+}: {
+  autoplay?: boolean;
+  /** `stack`: capsules above the squircle (the `/spine` page). `split`: capsules beside it (console home scene). */
+  arrangement?: "stack" | "split";
+}) {
   const { intercept } = useDownloadIntercept("spine-immersive");
   const newsRows = NEWS_ITEMS.slice(0, 4);
   const [selectedDayId, setSelectedDayId] = useState(LANDING_DEFAULT_DAY_ID);
@@ -62,118 +118,113 @@ export function SpineImmersiveShell() {
     setExpandedHourId(expanded ? SPINE_JULY4_MEMORY_HOUR_ID : null);
   };
 
-  return (
-    <section className="relative min-h-[100svh] overflow-hidden" aria-label="Spine preview">
-      <ImmersiveProductBackdrop productId="spine" />
-      <ImmersiveAppChrome activeAction="spine" />
+  useEffect(() => {
+    if (!autoplay || SPINE_AUTOPLAY_BEATS.length === 0) return undefined;
+    let beat = 0;
+    const id = window.setInterval(() => {
+      if (document.hidden) return;
+      beat = (beat + 1) % SPINE_AUTOPLAY_BEATS.length;
+      const next = SPINE_AUTOPLAY_BEATS[beat]!;
+      setSelectedDayId(next.dayId);
+      setExpandedHourId(next.hourId);
+      setMemoryExpanded(next.memory);
+    }, SPINE_AUTOPLAY_BEAT_MS);
+    return () => window.clearInterval(id);
+  }, [autoplay]);
 
-      <ImmersiveCenterColumn maxWidthClass="max-w-[420px]">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="flex w-full flex-col items-center gap-4"
-        >
-          <LandingDayYearCapsules
-            layout="timeline"
-            days={LANDING_SPINE_DAYS}
-            hoursByDay={LANDING_SPINE_HOURS_BY_DAY}
-            selectedDayId={selectedDayId}
-            expandedHourId={expandedHourId}
-            onSelectDay={(dayId) => {
-              setSelectedDayId(dayId);
-              setExpandedHourId(null);
-              setMemoryExpanded(false);
-            }}
-            onToggleHour={toggleHour}
-          />
+  const content = (
+    <>
+      <LandingDayYearCapsules
+        layout="timeline"
+        days={LANDING_SPINE_DAYS}
+        hoursByDay={LANDING_SPINE_HOURS_BY_DAY}
+        selectedDayId={selectedDayId}
+        expandedHourId={expandedHourId}
+        onSelectDay={(dayId) => {
+          setSelectedDayId(dayId);
+          setExpandedHourId(null);
+          setMemoryExpanded(false);
+        }}
+        onToggleHour={toggleHour}
+      />
 
-          <SquircleShell
-            cornerRadius={44}
-            cornerSmoothing={1}
-            borderWidth={1}
-            strokeClassName="stroke-[var(--color-light-glass-10)]"
-            fillClassName="bg-[#0a0a0c]/90 light:bg-white/96"
-            className="w-full"
-            contentClassName="flex max-h-[min(52vh,520px)] flex-col gap-4 overflow-hidden p-4 sm:p-5"
-          >
-            <SpineJuly4Memory expanded={memoryExpanded} onExpandedChange={handleMemoryExpandedChange} />
+      <SquircleShell
+        cornerRadius={44}
+        cornerSmoothing={1}
+        borderWidth={1}
+        strokeClassName="stroke-[var(--color-light-glass-10)]"
+        fillClassName="bg-[#0a0a0c]/90 light:bg-white/96"
+        className="w-full"
+        contentClassName="flex max-h-[min(52vh,520px)] flex-col gap-4 overflow-hidden p-4 sm:p-5"
+      >
+        <SpineJuly4Memory expanded={memoryExpanded} onExpandedChange={handleMemoryExpandedChange} />
 
-            <AnimatePresence initial={false}>
-              {!memoryExpanded ? (
-                <motion.div
-                  key="spine-squircle-body"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden"
+        <AnimatePresence initial={false}>
+          {!memoryExpanded ? (
+            <motion.div
+              key="spine-squircle-body"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden"
+            >
+              <div className="min-h-0 flex-1 overflow-y-auto border-t border-light-space/[0.08] pt-3 light:border-black/[0.08]">
+                <SpineTimeline events={timelineEvents} />
+              </div>
+
+              <div className="shrink-0 border-t border-light-space/[0.08] pt-4 light:border-black/[0.08]">
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.12em] text-light-space/42 light:text-zinc-500">
+                  Today&apos;s news
+                </p>
+                <ul className="space-y-2">
+                  {newsRows.map((item) => {
+                    const art = getNewsCardArt(item);
+                    return (
+                      <li key={item.id}>
+                        <SiteLink
+                          href={getNewsHref(item)}
+                          className="premium-soft-fade flex items-start gap-3 rounded-xl p-2 hover:bg-white/[0.04] light:hover:bg-black/[0.03]"
+                        >
+                          <NewsCardArt
+                            gradient={art.gradient}
+                            image={art.image}
+                            lavaLamp={art.lavaLamp}
+                            overlayImage={art.overlayImage}
+                            overlayAlt={art.overlayAlt}
+                            className="size-10 shrink-0"
+                          />
+                          <span className="min-w-0">
+                            <span className="block font-sans text-[12px] font-semibold leading-snug text-light-space light:text-zinc-800">
+                              {item.title}
+                            </span>
+                            <span className="font-sans text-[10px] text-light-space/45 light:text-zinc-500">
+                              {formatNewsDate(item.publishedAt)} · {item.category}
+                            </span>
+                          </span>
+                        </SiteLink>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <JokuhButton
+                  variant="secondary"
+                  size="md"
+                  className="mt-3 w-full"
+                  onClick={() => intercept("save-memory")}
                 >
-                  <div className="min-h-0 flex-1 overflow-y-auto border-t border-light-space/[0.08] pt-3 light:border-black/[0.08]">
-                    <SpineTimeline events={timelineEvents} />
-                  </div>
-
-                  <div className="shrink-0 border-t border-light-space/[0.08] pt-4 light:border-black/[0.08]">
-                    <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.12em] text-light-space/42 light:text-zinc-500">
-                      Today&apos;s news
-                    </p>
-                    <ul className="space-y-2">
-                      {newsRows.map((item) => {
-                        const art = getNewsCardArt(item);
-                        return (
-                          <li key={item.id}>
-                            <SiteLink
-                              href={getNewsHref(item)}
-                              className="premium-soft-fade flex items-start gap-3 rounded-xl p-2 hover:bg-white/[0.04] light:hover:bg-black/[0.03]"
-                            >
-                              <NewsCardArt
-                                gradient={art.gradient}
-                                image={art.image}
-                                lavaLamp={art.lavaLamp}
-                                overlayImage={art.overlayImage}
-                                overlayAlt={art.overlayAlt}
-                                className="size-10 shrink-0"
-                              />
-                              <span className="min-w-0">
-                                <span className="block font-sans text-[12px] font-semibold leading-snug text-light-space light:text-zinc-800">
-                                  {item.title}
-                                </span>
-                                <span className="font-sans text-[10px] text-light-space/45 light:text-zinc-500">
-                                  {formatNewsDate(item.publishedAt)} · {item.category}
-                                </span>
-                              </span>
-                            </SiteLink>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                    <JokuhButton
-                      variant="secondary"
-                      size="md"
-                      className="mt-3 w-full"
-                      onClick={() => intercept("save-memory")}
-                    >
-                      Blurb to Spine → claim to unlock
-                    </JokuhButton>
-                  </div>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-          </SquircleShell>
-
-          <div className="text-center">
-            <p className="font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
-              Spine
-            </p>
-            <p className="mt-1 font-sans text-[clamp(0.85rem,2.5vw,1rem)] font-medium text-light-space/72 light:text-zinc-600">
-              Your operating timeline — every day, every memory, one surface.
-            </p>
-            <p className="mx-auto mt-2 max-w-[22rem] font-sans text-[clamp(0.75rem,2vw,0.875rem)] leading-relaxed text-light-space/48 light:text-zinc-500">
-              Today Brief, planner tabs, mood rail, and thirty-plus memory kinds. Calls, captures, and calendar events land here automatically.
-            </p>
-          </div>
-        </motion.div>
-      </ImmersiveCenterColumn>
-    </section>
+                  Blurb to Spine → claim to unlock
+                </JokuhButton>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </SquircleShell>
+    </>
   );
+
+  if (arrangement === "split") {
+    return <div className="flex w-full items-start justify-center gap-6 [&>*:first-child]:shrink-0 [&>*:last-child]:min-w-0 [&>*:last-child]:flex-1">{content}</div>;
+  }
+  return content;
 }

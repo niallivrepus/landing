@@ -14,6 +14,11 @@ export type LandingCornerConfig = {
   lordicon: ActionLordiconName;
   /** `ActionButton` pill tilt — leading corners right, trailing corners left. */
   orientation: "right" | "left";
+  /**
+   * App energy colour for this corner (highlight glow on the console home). Parity: web app `ActionButtons.tsx`
+   * unread dots — Call green-4, Text red-4, ID purple-4, Spine jelly (planner notes yellow-4).
+   */
+  energy: string;
 };
 
 /** Default signed-in slot map: ID / Spine on top, Call / Text on bottom. */
@@ -25,6 +30,7 @@ export const LANDING_CORNER_ACTIONS: readonly LandingCornerConfig[] = [
     href: "/profile",
     lordicon: "profile",
     orientation: "right",
+    energy: "var(--color-purple-4, #9327ff)",
   },
   {
     slot: "topTrailing",
@@ -33,6 +39,7 @@ export const LANDING_CORNER_ACTIONS: readonly LandingCornerConfig[] = [
     href: "/spine",
     lordicon: "spine",
     orientation: "left",
+    energy: "var(--color-yellow-4, #ffb800)",
   },
   {
     slot: "bottomLeading",
@@ -41,6 +48,7 @@ export const LANDING_CORNER_ACTIONS: readonly LandingCornerConfig[] = [
     href: "/calls",
     lordicon: "calls",
     orientation: "left",
+    energy: "var(--color-green-4, #21dc11)",
   },
   {
     slot: "bottomTrailing",
@@ -49,6 +57,7 @@ export const LANDING_CORNER_ACTIONS: readonly LandingCornerConfig[] = [
     href: "/messages",
     lordicon: "messages",
     orientation: "right",
+    energy: "var(--color-red-4, #ff0700)",
   },
 ] as const;
 

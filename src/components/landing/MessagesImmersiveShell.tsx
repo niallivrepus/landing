@@ -50,7 +50,26 @@ export function MessagesImmersiveShell() {
   );
 }
 
-function MessagesImmersiveShellInner() {
+const MESSAGES_AUTOPLAY_THREAD_IDS = Object.keys(MESSAGES_DM_THREADS);
+const MESSAGES_AUTOPLAY_INBOX_MS = 2400;
+const MESSAGES_AUTOPLAY_LINE_MS = 1300;
+const MESSAGES_AUTOPLAY_NOTE_MS = 4200;
+
+/**
+ * **Purpose:** The Texts app surface on its own (inbox ⇄ thread squircle) for the console home scene.
+ * `autoplay` loops: inbox → open a demo DM → lines arrive one by one with typing dots → OO's memory note types
+ * out → back to the inbox → next DM. Same demo data as `/messages`; nothing is sent anywhere.
+ * **Connects to:** `ConsoleHomeShell` scenes, `messages-demo-inbox.ts`.
+ */
+export function MessagesAppSurface({ autoplay = false }: { autoplay?: boolean }) {
+  return (
+    <GooeyViewportProvider>
+      <MessagesImmersiveShellInner scene autoplay={autoplay} />
+    </GooeyViewportProvider>
+  );
+}
+
+function MessagesImmersiveShellInner({ scene = false, autoplay = false }: { scene?: boolean; autoplay?: boolean } = {}) {
   const viewport = useCurrentGooeyViewport();
   const shouldAnimate = useShouldAnimate();
   const { intercept } = useDownloadIntercept("messages-immersive");
@@ -79,6 +98,39 @@ function MessagesImmersiveShellInner() {
   }, []);
 
   const gated = sendCount >= MESSAGES_OO_INTERCEPT_AFTER;
+
+  // Scene autoplay: alternate inbox and demo DM threads; the thread itself reveals line by line.
+  const [autoplayCycle, setAutoplayCycle] = useState(0);
+  useEffect(() => {
+    if (!scene || !autoplay) return undefined;
+    const threadId = MESSAGES_AUTOPLAY_THREAD_IDS[autoplayCycle % MESSAGES_AUTOPLAY_THREAD_IDS.length];
+    if (!threadId) return undefined;
+    const lines = MESSAGES_DM_THREADS[threadId]?.messages.length ?? 0;
+    let timer = 0;
+    const after = (ms: number, fn: () => void) => {
+      const tick = () => {
+        if (document.hidden) {
+          timer = window.setTimeout(tick, 500);
+          return;
+        }
+        fn();
+      };
+      timer = window.setTimeout(tick, ms);
+    };
+    if (view === "inbox") {
+      after(MESSAGES_AUTOPLAY_INBOX_MS, () => {
+        setSelectedThreadId(threadId);
+        setView("thread");
+      });
+    } else {
+      after(lines * MESSAGES_AUTOPLAY_LINE_MS + MESSAGES_AUTOPLAY_NOTE_MS, () => {
+        setView("inbox");
+        setSelectedThreadId(null);
+        setAutoplayCycle((cycle) => cycle + 1);
+      });
+    }
+    return () => window.clearTimeout(timer);
+  }, [autoplay, autoplayCycle, scene, view]);
 
   const openThread = useCallback((threadId: string) => {
     setSelectedThreadId(threadId);
@@ -129,54 +181,61 @@ function MessagesImmersiveShellInner() {
     [gated, intercept, openThread, selectedThread, view],
   );
 
+  const surface = (
+    <SquircleShell
+      cornerRadius={44}
+      cornerSmoothing={1}
+      borderWidth={1}
+      strokeClassName="stroke-[var(--color-light-glass-10)]"
+      fillClassName="bg-[#0a0a0c]/88 light:bg-white/96"
+      className="w-full"
+      contentClassName={cn("flex flex-col p-4 sm:p-5", scene ? "h-[560px] overflow-hidden" : "min-h-[min(62vh,560px)]")}
+    >
+      {view === "inbox" ? (
+        <>
+          <div className="mb-3 border-b border-light-space/[0.08] pb-3 light:border-black/[0.08]">
+            <p className="font-sans text-[15px] font-bold text-light-space light:text-zinc-900">Inbox</p>
+            <p className="font-sans text-[11px] text-light-space/50 light:text-zinc-500">
+              People, stories, and OO — tap to open
+            </p>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <LandingMessagesInbox
+              threads={inboxThreads}
+              activeId={selectedThreadId}
+              onSelect={openThread}
+            />
+          </div>
+        </>
+      ) : (
+        <ThreadPanel
+          thread={selectedThread}
+          storyDetail={storyDetail}
+          dmThread={dmThread}
+          ooMessages={ooMessages}
+          gated={gated}
+          shouldAnimate={shouldAnimate}
+          progressive={scene && autoplay}
+          onBack={backToInbox}
+          onSendSuggestion={handleSend}
+          onClaim={() => intercept("identity")}
+          onReadStory={() =>
+            intercept("send-message", { ref: selectedThread?.storySlug ?? "story" })
+          }
+        />
+      )}
+    </SquircleShell>
+  );
+
+  if (scene) return surface;
+
   return (
     <section className="relative min-h-[100svh] overflow-hidden" aria-label="Texts preview">
       <ImmersiveProductBackdrop productId="messages" />
       <ImmersiveAppChrome activeAction="text" />
 
       <ImmersiveCenterColumn maxWidthClass="max-w-[560px]">
-        <SquircleShell
-          cornerRadius={44}
-          cornerSmoothing={1}
-          borderWidth={1}
-          strokeClassName="stroke-[var(--color-light-glass-10)]"
-          fillClassName="bg-[#0a0a0c]/88 light:bg-white/96"
-          className="w-full"
-          contentClassName="flex min-h-[min(62vh,560px)] flex-col p-4 sm:p-5"
-        >
-          {view === "inbox" ? (
-            <>
-              <div className="mb-3 border-b border-light-space/[0.08] pb-3 light:border-black/[0.08]">
-                <p className="font-sans text-[15px] font-bold text-light-space light:text-zinc-900">Inbox</p>
-                <p className="font-sans text-[11px] text-light-space/50 light:text-zinc-500">
-                  People, stories, and OO — tap to open
-                </p>
-              </div>
-              <div className="min-h-0 flex-1 overflow-y-auto">
-                <LandingMessagesInbox
-                  threads={inboxThreads}
-                  activeId={selectedThreadId}
-                  onSelect={openThread}
-                />
-              </div>
-            </>
-          ) : (
-            <ThreadPanel
-              thread={selectedThread}
-              storyDetail={storyDetail}
-              dmThread={dmThread}
-              ooMessages={ooMessages}
-              gated={gated}
-              shouldAnimate={shouldAnimate}
-              onBack={backToInbox}
-              onSendSuggestion={handleSend}
-              onClaim={() => intercept("identity")}
-              onReadStory={() =>
-                intercept("send-message", { ref: selectedThread?.storySlug ?? "story" })
-              }
-            />
-          )}
-        </SquircleShell>
+        {surface}
 
         <div className="mt-4 w-full max-w-[450px]">
           <LandingPromptBar
@@ -219,6 +278,7 @@ function ThreadPanel({
   ooMessages,
   gated,
   shouldAnimate,
+  progressive = false,
   onBack,
   onSendSuggestion,
   onClaim,
@@ -230,11 +290,31 @@ function ThreadPanel({
   ooMessages: MessagesOoMessage[];
   gated: boolean;
   shouldAnimate: boolean;
+  /** Reveal DM lines one at a time with typing dots (console home autoplay). */
+  progressive?: boolean;
   onBack: () => void;
   onSendSuggestion: (text: string) => void;
   onClaim: () => void;
   onReadStory: () => void;
 }) {
+  const dmLineCount = dmThread?.messages.length ?? 0;
+  const [revealed, setRevealed] = useState(progressive ? 0 : Number.POSITIVE_INFINITY);
+  useEffect(() => {
+    if (!progressive) {
+      setRevealed(Number.POSITIVE_INFINITY);
+      return undefined;
+    }
+    setRevealed(0);
+    const id = window.setInterval(() => {
+      if (document.hidden) return;
+      setRevealed((count) => {
+        if (count >= dmLineCount) window.clearInterval(id);
+        return Math.min(count + 1, dmLineCount);
+      });
+    }, MESSAGES_AUTOPLAY_LINE_MS);
+    return () => window.clearInterval(id);
+  }, [dmLineCount, progressive, thread?.id]);
+
   if (!thread) return null;
 
   if (thread.kind === "story" && storyDetail) {
@@ -250,10 +330,21 @@ function ThreadPanel({
       <>
         <ThreadHeader thread={thread} onBack={onBack} />
         <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
-          {dmThread.messages.map((message, index) => (
-            <DmBubble key={`${thread.id}-${index}`} from={message.from} text={message.text} />
+          {dmThread.messages.slice(0, revealed).map((message, index) => (
+            <motion.div
+              key={`${thread.id}-${index}`}
+              initial={progressive && shouldAnimate ? { opacity: 0, y: 10, scale: 0.98 } : false}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: "spring", stiffness: 420, damping: 34 }}
+            >
+              <DmBubble from={message.from} text={message.text} />
+            </motion.div>
           ))}
+          {progressive && revealed < dmLineCount ? (
+            <TypingDots mine={dmThread.messages[revealed]?.from === "me"} />
+          ) : null}
           {/* Agent memory note after the DM — OO speaks it (not the human peer). */}
+          {revealed >= dmLineCount ? (
           <motion.div
             initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
             animate={{ opacity: 1, y: 0 }}
@@ -268,6 +359,7 @@ function ThreadPanel({
               className="flex-1"
             />
           </motion.div>
+          ) : null}
         </div>
       </>
     );
@@ -362,6 +454,29 @@ function ThreadHeader({
         <p className="truncate font-sans text-[11px] text-light-space/50 light:text-zinc-500">
           {thread.preview}
         </p>
+      </div>
+    </div>
+  );
+}
+
+/** Three-dot typing bubble shown before the next demo line lands (console home autoplay). */
+function TypingDots({ mine }: { mine: boolean }) {
+  return (
+    <div className={cn("flex", mine ? "justify-end" : "justify-start")} aria-hidden>
+      <div
+        className={cn(
+          "flex items-center gap-1 rounded-[18px] px-4 py-3",
+          mine ? "bg-light-space/80 light:bg-zinc-900/80" : "bg-white/[0.06] light:bg-black/[0.04]",
+        )}
+      >
+        {[0, 1, 2].map((dot) => (
+          <motion.span
+            key={dot}
+            className={cn("size-1.5 rounded-full", mine ? "bg-dark-space light:bg-white" : "bg-light-space light:bg-zinc-900")}
+            animate={{ opacity: [0.3, 0.9, 0.3], y: [0, -2, 0] }}
+            transition={{ duration: 1.1, repeat: Infinity, delay: dot * 0.18, ease: "easeInOut" }}
+          />
+        ))}
       </div>
     </div>
   );
