@@ -4,11 +4,12 @@ import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
 import { ImmersiveCenterColumn } from "../system/ImmersiveCenterColumn";
 import { ImmersiveProductBackdrop } from "./ImmersiveProductBackdrop";
 import { ProfilePeopleSearchPanel } from "./ProfilePeopleSearchPanel";
-import { ProfilePodPanel } from "./ProfilePodPanel";
+import { ClaimIdentityCta } from "./ClaimIdentityCta";
+import { ProfilePodsDemo } from "./ProfilePodsDemo";
 
 /**
- * **Purpose:** Full-viewport Profile product page — inspirational identity preview in center, live people search below.
- * **Connects to:** `ProfilePodPanel`, `ProfilePeopleSearchPanel`, `profile-demo-identity.ts`, `/download` intercept.
+ * **Purpose:** Full-viewport Profile product page — Lego-style pod demo (`ProfilePodsDemo`) + claim CTA in center, live people search below.
+ * **Connects to:** `ProfilePodsDemo`, `ClaimIdentityCta`, `ProfilePeopleSearchPanel`, `profile-demo-identity.ts`, `/download` intercept.
  * **Parity:** web `AddFriendSheet.tsx` frosted search chrome; `MessagesImmersiveShell` Gooey viewport + prompt bar.
  */
 export function ProfileImmersiveShell() {
@@ -34,21 +35,26 @@ function ProfileImmersiveShellInner() {
         }
       />
 
-      <ImmersiveCenterColumn maxWidthClass="max-w-[520px]">
+      {/* Extra bottom room: the people-search composer is taller than the standard corner-pill row. */}
+      <ImmersiveCenterColumn maxWidthClass="max-w-[520px]" className="pb-[calc(env(safe-area-inset-bottom,0px)+148px)]">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="w-full"
         >
-          <ProfilePodPanel />
+          <ProfilePodsDemo />
 
-          <p className="mt-6 text-center font-sans text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
-            Your identity, your network
+          <p className="mt-5 text-center font-sans text-[clamp(1.5rem,5vw,2.5rem)] md:mt-7 font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
+            Your identity, your keys
           </p>
-          <p className="mt-2 text-center font-sans text-[15px] leading-relaxed text-white/55 light:text-zinc-600">
-            Start with a name, a photo, and the people you want in your orbit.
+          <p className="mx-auto mt-2 max-w-[420px] text-center font-sans text-[15px] leading-relaxed text-white/55 light:text-zinc-600">
+            Snap together pods for your music, photos, links and bookings.
+            <span className="max-md:hidden"> You sign in with a passkey that never leaves your device.</span>
           </p>
+          <div className="mt-4 flex justify-center md:mt-6">
+            <ClaimIdentityCta href="/download?intent=identity">Claim your identity</ClaimIdentityCta>
+          </div>
         </motion.div>
       </ImmersiveCenterColumn>
     </section>
