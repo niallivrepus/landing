@@ -136,7 +136,11 @@ export function ProductPage({ productId }: { productId: ProductId }) {
     >
       <div id="overview" className="scroll-mt-24">
         {isImmersiveProduct(productId) ? (
-          <ImmersiveProductHero productId={productId} />
+          <>
+            {/* Immersive heroes are app previews with no visible title; keep one page heading for a11y + SEO. */}
+            <h1 className="sr-only">{product.title}</h1>
+            <ImmersiveProductHero productId={productId} />
+          </>
         ) : (
           <ProductHeroFullscreen
             title={product.title}

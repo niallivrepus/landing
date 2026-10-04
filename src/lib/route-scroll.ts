@@ -26,19 +26,32 @@ export function scrollDocumentToTopAfterPaint() {
   });
 }
 
-/** Scroll to an in-page hash target with fixed-header offset after layout settles. */
+/** How long a hash deep link waits for its lazy route to render the target (cold loads). */
+const HASH_TARGET_WAIT_MS = 3000;
+
+/**
+ * Scroll to an in-page hash target with fixed-header offset after layout settles.
+ * On a cold load (`/calls#showcase`, `/privacy#cookies`) the lazy route chunk has not rendered
+ * the target yet, so keep checking each frame for a bounded time instead of giving up after one.
+ */
 export function scrollToHashTargetAfterPaint(hash: string) {
   const id = decodeURIComponent(hash.replace(/^#/, ""));
   if (!id) return;
 
-  requestAnimationFrame(() => {
+  const deadline = performance.now() + HASH_TARGET_WAIT_MS;
+  const attempt = () => {
     const target = document.getElementById(id);
-    if (!target) return;
+    if (!target) {
+      if (performance.now() < deadline) requestAnimationFrame(attempt);
+      return;
+    }
 
     const top =
       target.getBoundingClientRect().top + window.scrollY - ROUTE_SCROLL_MARGIN_PX;
     window.scrollTo({ top: Math.max(0, top), left: 0, behavior: "auto" });
-  });
+  };
+
+  requestAnimationFrame(attempt);
 }
 
 /** Scroll to an in-page hash target immediately (product nav anchor clicks). */
