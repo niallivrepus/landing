@@ -152,6 +152,7 @@ const KNOWN_SPA_PREFIXES = [
   "/terms",
   "/support",
   "/security",
+  "/defense",
   "/help",
   "/legal",
   "/brand",
