@@ -10,50 +10,46 @@
   gap: 10px;
 }
 
-.profile-pods-demo__id {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.profile-pods-demo__avatar {
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0;
-  border-radius: 18px;
-  object-fit: cover;
-}
-
-.profile-pods-demo__name {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 700;
-  color: #f2f2f2;
-  text-shadow: 0 -0.03em 0 rgba(255, 255, 255, 0.32), 0 0.07em 0 rgba(0, 0, 0, 0.78);
-}
-
-.profile-pods-demo__handle {
-  margin: 2px 0 0;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-:is(.light, [data-theme="light"]) .profile-pods-demo__name {
-  color: #1a1a1a;
-  text-shadow: 0 -0.03em 0 rgba(255, 255, 255, 0.95), 0 0.07em 0 rgba(0, 0, 0, 0.2);
-}
-
-:is(.light, [data-theme="light"]) .profile-pods-demo__handle {
-  color: rgba(0, 0, 0, 0.5);
-}
-
-.profile-pods-demo__grid {
+/* One grid holds the ID pod and the six pods (the pods wrapper is display: contents). */
+.profile-pods-demo__stage {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(0, 1fr));
-  aspect-ratio: 4 / 3;
-  gap: 10px;
+  gap: 12px;
+}
+
+.profile-pods-demo__pods {
+  display: contents;
+}
+
+/* Wide: pods | ID pod | pods, four rows set by the ID pod's height. */
+.profile-pods-demo--wide .profile-pods-demo__stage {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px) minmax(0, 1fr);
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+
+.profile-pods-demo--wide .profile-pods-demo__id {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  min-width: 0;
+}
+
+/* Narrow: ID pod across the top, square pods in a 3×2 grid below. */
+.profile-pods-demo--narrow .profile-pods-demo__stage {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.profile-pods-demo--narrow .profile-pods-demo__id {
+  grid-column: 1 / span 3;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.profile-pods-demo--narrow .profile-pods-demo__pod {
+  aspect-ratio: 1;
+}
+
+.profile-pods-demo--narrow .id-pod-profile-photo-frame {
+  max-height: min(28dvh, 230px);
 }
 
 /* Grid item: carries the lift shadow (filter, so it follows the squircle clip of its child). */
@@ -312,11 +308,3 @@
   }
 }
 
-@media (max-width: 480px) {
-  .profile-pods-demo {
-    gap: 8px;
-  }
-  .profile-pods-demo__grid {
-    gap: 8px;
-  }
-}

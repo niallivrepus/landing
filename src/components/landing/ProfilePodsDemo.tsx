@@ -2,12 +2,12 @@ import { cn, createSquirclePath, useTheme } from "@jokuh/gooey";
 import { CalendarCheck, Image as ImageIcon, Link2, MapPin, MessageCircle, Music2, type LucideIcon } from "lucide-react";
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { PROFILE_DEMO_HERO_AGENT, PROFILE_DEMO_PLACEHOLDER } from "../../lib/profile-demo-identity";
-import { IdPodSquircleShell } from "./IdPodSquircleShell";
+import { ProfilePodPanel } from "./ProfilePodPanel";
 
 /**
- * **Purpose:** `/profile` demo of the profile pod system — your ID pod on top, six companion pods that fly in, snap
- * together and keep re-arranging like Lego, so visitors see the bento before they claim a handle.
+ * **Purpose:** `/profile` demo of the profile pod system — the real demo ID pod in the center and six companion pods
+ * that fly in, snap around it and keep re-arranging like Lego, so visitors see the bento before they claim a handle.
+ * Wide: 3 columns (pods | ID pod | pods), 4 rows, one tall pod per side. Narrow: ID pod on top, pods in a 3×2 grid.
  * **Connects to:** `ProfileImmersiveShell`, `profile-demo-identity.ts`, `/public/pods-bento/*` art,
  * `styles/landing-profile-pods-demo.css`. App equivalent: profile pod bento (`ProfilePodBentoGrid`).
  * Pauses while hovered/focused or the tab is hidden; static under reduced motion.
@@ -17,33 +17,75 @@ type PodId = "gallery" | "music" | "blurbs" | "links" | "location" | "book";
 type Cell = { c: number; r: number; w: number; h: number };
 type Layout = Record<PodId, Cell>;
 
-/** Three full 4×3 arrangements — every cell covered, so the grid never shows holes mid-shuffle. */
-const LAYOUTS: Layout[] = [
+/** Wide: columns 1 and 3 around the ID pod (column 2, rows 1–4); each side = one 2-row pod + two 1-row pods. */
+const WIDE_LAYOUTS: Layout[] = [
   {
-    gallery: { c: 1, r: 1, w: 2, h: 2 },
-    music: { c: 3, r: 1, w: 2, h: 1 },
-    blurbs: { c: 3, r: 2, w: 1, h: 1 },
-    links: { c: 4, r: 2, w: 1, h: 1 },
-    location: { c: 1, r: 3, w: 2, h: 1 },
-    book: { c: 3, r: 3, w: 2, h: 1 },
+    gallery: { c: 1, r: 1, w: 1, h: 2 },
+    music: { c: 1, r: 3, w: 1, h: 1 },
+    blurbs: { c: 1, r: 4, w: 1, h: 1 },
+    book: { c: 3, r: 1, w: 1, h: 1 },
+    location: { c: 3, r: 2, w: 1, h: 2 },
+    links: { c: 3, r: 4, w: 1, h: 1 },
   },
   {
-    music: { c: 1, r: 1, w: 2, h: 1 },
-    location: { c: 3, r: 1, w: 2, h: 2 },
-    book: { c: 1, r: 2, w: 2, h: 1 },
-    gallery: { c: 1, r: 3, w: 1, h: 1 },
-    blurbs: { c: 2, r: 3, w: 1, h: 1 },
-    links: { c: 3, r: 3, w: 2, h: 1 },
+    music: { c: 1, r: 1, w: 1, h: 1 },
+    links: { c: 1, r: 2, w: 1, h: 1 },
+    gallery: { c: 1, r: 3, w: 1, h: 2 },
+    location: { c: 3, r: 1, w: 1, h: 2 },
+    blurbs: { c: 3, r: 3, w: 1, h: 1 },
+    book: { c: 3, r: 4, w: 1, h: 1 },
   },
   {
-    blurbs: { c: 1, r: 1, w: 2, h: 1 },
-    links: { c: 3, r: 1, w: 1, h: 1 },
-    music: { c: 4, r: 1, w: 1, h: 1 },
-    book: { c: 1, r: 2, w: 2, h: 1 },
-    location: { c: 1, r: 3, w: 2, h: 1 },
-    gallery: { c: 3, r: 2, w: 2, h: 2 },
+    blurbs: { c: 1, r: 1, w: 1, h: 1 },
+    location: { c: 1, r: 2, w: 1, h: 2 },
+    book: { c: 1, r: 4, w: 1, h: 1 },
+    gallery: { c: 3, r: 1, w: 1, h: 2 },
+    music: { c: 3, r: 3, w: 1, h: 1 },
+    links: { c: 3, r: 4, w: 1, h: 1 },
   },
 ];
+
+/** Narrow: ID pod spans row 1; pods swap places in a 3×2 grid on rows 2–3. */
+const NARROW_LAYOUTS: Layout[] = [
+  {
+    gallery: { c: 1, r: 2, w: 1, h: 1 },
+    music: { c: 2, r: 2, w: 1, h: 1 },
+    blurbs: { c: 3, r: 2, w: 1, h: 1 },
+    links: { c: 1, r: 3, w: 1, h: 1 },
+    location: { c: 2, r: 3, w: 1, h: 1 },
+    book: { c: 3, r: 3, w: 1, h: 1 },
+  },
+  {
+    location: { c: 1, r: 2, w: 1, h: 1 },
+    gallery: { c: 2, r: 2, w: 1, h: 1 },
+    book: { c: 3, r: 2, w: 1, h: 1 },
+    music: { c: 1, r: 3, w: 1, h: 1 },
+    links: { c: 2, r: 3, w: 1, h: 1 },
+    blurbs: { c: 3, r: 3, w: 1, h: 1 },
+  },
+  {
+    blurbs: { c: 1, r: 2, w: 1, h: 1 },
+    links: { c: 2, r: 2, w: 1, h: 1 },
+    music: { c: 3, r: 2, w: 1, h: 1 },
+    book: { c: 1, r: 3, w: 1, h: 1 },
+    gallery: { c: 2, r: 3, w: 1, h: 1 },
+    location: { c: 3, r: 3, w: 1, h: 1 },
+  },
+];
+
+const WIDE_QUERY = "(min-width: 760px)";
+
+function useIsWide() {
+  const [wide, setWide] = useState(() => (typeof window === "undefined" ? true : window.matchMedia(WIDE_QUERY).matches));
+  useEffect(() => {
+    const mq = window.matchMedia(WIDE_QUERY);
+    const onChange = () => setWide(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return wide;
+}
 
 const POD_ORDER: PodId[] = ["gallery", "music", "blurbs", "links", "location", "book"];
 const SHUFFLE_MS = 3200;
@@ -197,16 +239,16 @@ function PodBody({ id, cell, theme }: { id: PodId; cell: Cell; theme: "light" | 
   }
 }
 
-function useShuffle(enabled: boolean, paused: boolean) {
+function useShuffle(enabled: boolean, paused: boolean, count: number) {
   const [index, setIndex] = useState(0);
   useEffect(() => {
     if (!enabled || paused) return;
     const id = window.setInterval(() => {
       if (document.hidden) return;
-      setIndex((i) => (i + 1) % LAYOUTS.length);
+      setIndex((i) => (i + 1) % count);
     }, SHUFFLE_MS);
     return () => window.clearInterval(id);
-  }, [enabled, paused]);
+  }, [enabled, paused, count]);
   return index;
 }
 
@@ -214,52 +256,53 @@ export function ProfilePodsDemo({ className, footer }: { className?: string; foo
   const reduceMotion = useReducedMotion() ?? false;
   const { resolvedTheme } = useTheme();
   const theme = resolvedTheme === "light" ? "light" : "dark";
+  const wide = useIsWide();
+  const layouts = wide ? WIDE_LAYOUTS : NARROW_LAYOUTS;
   const [paused, setPaused] = useState(false);
-  const layoutIndex = useShuffle(!reduceMotion, paused);
-  const layout = LAYOUTS[layoutIndex];
-  const gridRef = useRef<HTMLDivElement>(null);
+  const layoutIndex = useShuffle(!reduceMotion, paused, layouts.length);
+  const layout = layouts[layoutIndex % layouts.length];
   const spring = useMemo(() => ({ type: "spring" as const, stiffness: 340, damping: 30, mass: 0.9 }), []);
 
   return (
-    <div className={cn("profile-pods-demo", className)}>
-      <IdPodSquircleShell contentClassName="p-[16px]">
-        <div className="profile-pods-demo__id">
-          <img src={PROFILE_DEMO_HERO_AGENT.avatarPath} alt="Example profile portrait" className="profile-pods-demo__avatar" />
-          <div className="min-w-0">
-            <p className="profile-pods-demo__name">{PROFILE_DEMO_PLACEHOLDER.displayName}</p>
-            <p className="profile-pods-demo__handle">{PROFILE_DEMO_PLACEHOLDER.handle}</p>
-          </div>
-        </div>
-      </IdPodSquircleShell>
-
+    <div className={cn("profile-pods-demo", wide ? "profile-pods-demo--wide" : "profile-pods-demo--narrow", className)}>
       <LayoutGroup>
         <div
-          ref={gridRef}
-          className="profile-pods-demo__grid"
-          role="img"
-          aria-label="Profile pods for gallery, music, blurbs, links, location and bookings, rearranging on a grid"
+          className="profile-pods-demo__stage"
+          role="group"
+          aria-label="Example profile: an ID pod with gallery, music, blurbs, links, location and booking pods rearranging around it"
           onPointerEnter={() => setPaused(true)}
           onPointerLeave={() => setPaused(false)}
         >
-          {POD_ORDER.map((id, i) => {
-            const cell = layout[id];
-            const scatter = SCATTER[id];
-            return (
-              <motion.div
-                key={id}
-                layout={!reduceMotion}
-                className={cn("profile-pods-demo__pod", `profile-pods-demo__pod--${id}`)}
-                style={{ gridColumn: `${cell.c} / span ${cell.w}`, gridRow: `${cell.r} / span ${cell.h}` }}
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.7, x: scatter.x, y: scatter.y, rotate: scatter.rotate }}
-                animate={{ opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }}
-                transition={{ ...spring, delay: reduceMotion ? 0 : 0.15 + i * 0.07, layout: spring }}
-              >
-                <SquirclePod>
-                  <PodBody id={id} cell={cell} theme={theme} />
-                </SquirclePod>
-              </motion.div>
-            );
-          })}
+          <motion.div
+            className="profile-pods-demo__id"
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.94, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <ProfilePodPanel showActions={false} />
+          </motion.div>
+
+          <div className="profile-pods-demo__pods">
+            {POD_ORDER.map((id, i) => {
+              const cell = layout[id];
+              const scatter = SCATTER[id];
+              return (
+                <motion.div
+                  key={id}
+                  layout={!reduceMotion}
+                  className={cn("profile-pods-demo__pod", `profile-pods-demo__pod--${id}`)}
+                  style={{ gridColumn: `${cell.c} / span ${cell.w}`, gridRow: `${cell.r} / span ${cell.h}` }}
+                  initial={reduceMotion ? false : { opacity: 0, scale: 0.7, x: scatter.x, y: scatter.y, rotate: scatter.rotate }}
+                  animate={{ opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }}
+                  transition={{ ...spring, delay: reduceMotion ? 0 : 0.35 + i * 0.07, layout: spring }}
+                >
+                  <SquirclePod>
+                    <PodBody id={id} cell={cell} theme={theme} />
+                  </SquirclePod>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </LayoutGroup>
 

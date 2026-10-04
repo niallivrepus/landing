@@ -27,6 +27,7 @@ function ProfileImmersiveShellInner() {
 
       <ImmersiveAppChrome
         activeAction="id"
+        showLibraryRail={false}
         bottomCenter={
           <ProfilePeopleSearchPanel
             variant="bottomComposer"
@@ -36,7 +37,7 @@ function ProfileImmersiveShellInner() {
       />
 
       {/* Extra bottom room: the people-search composer is taller than the standard corner-pill row. */}
-      <ImmersiveCenterColumn maxWidthClass="max-w-[520px]" className="pb-[calc(env(safe-area-inset-bottom,0px)+148px)]">
+      <ImmersiveCenterColumn maxWidthClass="max-w-[880px]" className="pb-[calc(env(safe-area-inset-bottom,0px)+148px)]">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -48,7 +49,7 @@ function ProfileImmersiveShellInner() {
           <p className="mt-5 text-center font-sans text-[clamp(1.5rem,5vw,2.5rem)] md:mt-7 font-semibold tracking-[-0.02em] text-light-space light:text-zinc-950">
             Your identity, your keys
           </p>
-          <p className="mx-auto mt-2 max-w-[420px] text-center font-sans text-[15px] leading-relaxed text-white/55 light:text-zinc-600">
+          <p className="mx-auto mt-2 max-w-[460px] text-center font-sans text-[15px] leading-relaxed text-white/55 light:text-zinc-600">
             Snap together pods for your music, photos, links and bookings.
             <span className="max-md:hidden"> You sign in with a passkey that never leaves your device.</span>
           </p>

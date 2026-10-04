@@ -17,13 +17,15 @@ import { IdPodSquircleShell } from "./IdPodSquircleShell";
 
 type ProfilePodPanelProps = {
   className?: string;
+  /** `/profile` pods demo shows the pod alone; the Claim CTA sits below the stage instead. */
+  showActions?: boolean;
 };
 
 /**
  * **Renders** the ID profile pod stack: squircle (placeholder name, agent portrait, mock network strip).
  * **Side effects:** Connect / Message route unsigned visitors to `/download`.
  */
-export function ProfilePodPanel({ className }: ProfilePodPanelProps) {
+export function ProfilePodPanel({ className, showActions = true }: ProfilePodPanelProps) {
   const { intercept } = useDownloadIntercept("profile-demo");
   const handle = PROFILE_DEMO_PLACEHOLDER.handle;
   const networkPeers = profileDemoNetworkPeers();
@@ -53,6 +55,7 @@ export function ProfilePodPanel({ className }: ProfilePodPanelProps) {
         </div>
       </IdPodSquircleShell>
 
+      {showActions ? (
       <div className="landing-profile-pod__actions">
         <button
           type="button"
@@ -69,6 +72,7 @@ export function ProfilePodPanel({ className }: ProfilePodPanelProps) {
           Message
         </button>
       </div>
+      ) : null}
     </div>
   );
 }
