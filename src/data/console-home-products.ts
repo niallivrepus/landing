@@ -1,7 +1,7 @@
 /**
  * **Purpose:** Product focus list for the `/lab/home` "Console Home" prototype (PS5 home × Netflix billboard).
- * Copy is lifted from shipped site sources only — `products.ts` summaries, `SITE_PRODUCT_SENTENCE`
- * (OO) and the homepage arcade pill (chess). No new claims.
+ * Copy is lifted from shipped site sources only — `products.ts` summaries, `SITE_PRODUCT_SENTENCE` (OO), the
+ * homepage arcade pill (chess) and Jokuh Mail (username@jokuh.com, live in the Texts inbox). No new claims.
  * Each product's scene is its hero art (atmosphere) with the product's live app surface mounted on top
  * (`console/surfaces/ConsoleSurfaces.tsx`). OO uses the live homepage background with its shader orb layered on;
  * Arcade, which has no art, is a generative shader scene.
@@ -21,13 +21,8 @@ export type ConsoleScene =
   | { kind: "image"; src: string; position?: string; overlay?: ConsoleShaderPalette }
   | { kind: "shader"; palette: ConsoleShaderPalette };
 
-export type ConsolePrimaryAction =
-  /** Talk to OO: focuses the inline prompt bar. */
-  | { kind: "prompt"; label: string }
-  /** Opens the bundled arcade game overlay. */
-  | { kind: "game"; label: string }
-  /** Product with a full immersive page: primary "Open" goes there, secondary opens the web app with this intent. */
-  | { kind: "web-app"; label: string; intent: string };
+/** Surface ids accepted by the real web app's read-only demo (`{VITE_ORIGIN_APP}/demo?surface=…`). */
+export type ConsoleAppDemoSurface = "oo" | "spine" | "calls" | "texts" | "id" | "blurbs";
 
 export type ConsoleProduct = {
   id: ConsoleProductId;
@@ -38,11 +33,10 @@ export type ConsoleProduct = {
   /** Tile art (square). `null` → CSS-painted tile for shader scenes. */
   tile: string | null;
   scene: ConsoleScene;
-  primary: ConsolePrimaryAction;
-  /** The product's full page (immersive shell for products). "Open" / Enter on a focused product tile goes here. */
-  pageHref: string;
-  /** Label for the secondary page link where the primary action is something else (OO, Arcade). */
-  pageLabel?: string;
+  /** "Open" (and Enter on the tile) opens this surface of the real app demo; `null` → no app surface (Arcade). */
+  appSurface: ConsoleAppDemoSurface | null;
+  /** "Learn more": the landing page for the product. */
+  learnMoreHref: string;
 };
 
 export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
@@ -55,9 +49,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     tile: null,
     // The live homepage's own background, with OO's orb glowing through it.
     scene: { kind: "image", src: LANDING_HOME_HERO_IMAGE, position: "50% 42%", overlay: "oo" },
-    primary: { kind: "prompt", label: "Talk to OO" },
-    pageHref: "/demo",
-    pageLabel: "See it work",
+    appSurface: "oo",
+    learnMoreHref: "/demo",
   },
   {
     id: "spine",
@@ -66,8 +59,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     sentence: PRODUCTS.spine.summary,
     tile: "/lab/console/spine.webp",
     scene: { kind: "image", src: PRODUCT_HERO_IMAGES.spine, position: "50% 40%" },
-    primary: { kind: "web-app", label: "Try in browser", intent: "corner-spine" },
-    pageHref: "/spine",
+    appSurface: "spine",
+    learnMoreHref: "/spine",
   },
   {
     id: "calls",
@@ -76,18 +69,19 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     sentence: PRODUCTS.calls.summary,
     tile: "/lab/console/calls.webp",
     scene: { kind: "image", src: PRODUCT_HERO_IMAGES.calls, position: "62% 40%" },
-    primary: { kind: "web-app", label: "Try in browser", intent: "corner-call" },
-    pageHref: "/calls",
+    appSurface: "calls",
+    learnMoreHref: "/calls",
   },
   {
     id: "messages",
     title: PRODUCTS.messages.title,
     eyebrow: "Community",
-    sentence: PRODUCTS.messages.summary,
+    // Texts carries Jokuh Mail too: every account gets username@jokuh.com in the same inbox.
+    sentence: "Messages and your own @jokuh.com email, in one inbox.",
     tile: "/lab/console/texts.webp",
     scene: { kind: "image", src: PRODUCT_HERO_IMAGES.messages, position: "56% 35%" },
-    primary: { kind: "web-app", label: "Try in browser", intent: "corner-text" },
-    pageHref: "/messages",
+    appSurface: "texts",
+    learnMoreHref: "/messages",
   },
   {
     id: "profile",
@@ -96,8 +90,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     sentence: PRODUCTS.profile.summary,
     tile: "/lab/console/profile.webp",
     scene: { kind: "image", src: PRODUCT_HERO_IMAGES.profile, position: "60% 30%" },
-    primary: { kind: "web-app", label: "Try in browser", intent: "corner-id" },
-    pageHref: "/profile",
+    appSurface: "id",
+    learnMoreHref: "/profile",
   },
   {
     id: "blurbs",
@@ -106,8 +100,8 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     sentence: PRODUCTS.blurbs.summary,
     tile: "/lab/console/blurbs.webp",
     scene: { kind: "image", src: PRODUCT_HERO_IMAGES.blurbs, position: "45% 45%" },
-    primary: { kind: "web-app", label: "Try in browser", intent: "identity" },
-    pageHref: "/blurbs",
+    appSurface: "blurbs",
+    learnMoreHref: "/blurbs",
   },
   {
     id: "arcade",
@@ -116,12 +110,16 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     sentence: "Games inside Jokuh. Start with a round of chess.",
     tile: null,
     scene: { kind: "shader", palette: "arcade" },
-    primary: { kind: "game", label: "Play chess" },
-    pageHref: "/newsroom/fuel-arcade-token",
-    pageLabel: "Learn more",
+    appSurface: null,
+    learnMoreHref: "/newsroom/fuel-arcade-token",
   },
 ] as const;
 
 /** Visually hidden page H1 — the brand line. */
 export const CONSOLE_BRAND_LINE = "Private intelligence, identity, and community.";
 export const CONSOLE_BRAND_EXPANSION = "Joining Our Knowledge, Unifying Humanity.";
+
+/** The real web app's read-only demo for a product surface (origin from `VITE_ORIGIN_APP`). */
+export function consoleAppDemoHref(origin: string, surface: ConsoleAppDemoSurface): string {
+  return `${origin.replace(/\/$/, "")}/demo?surface=${encodeURIComponent(surface)}`;
+}

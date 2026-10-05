@@ -8,7 +8,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import type { CSSProperties, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGentleHoverSound } from "../../hooks/useGentleHoverSound";
-import { LandingLibraryRail } from "../landing/LandingLibraryRail";
+import { LandingLibraryRail, type LandingLibraryRailProps } from "../landing/LandingLibraryRail";
 import { LandingNexusPill } from "../landing/LandingNexusPill";
 import {
   LANDING_CORNER_ACTIONS,
@@ -33,6 +33,8 @@ export type ImmersiveAppChromeProps = {
   mode?: "fixed" | "relative" | "contained";
   /** Show the animated left library rail on desktop (default true). */
   showLibraryRail?: boolean;
+  /** Extra behaviour for the library rail (console home's live Bubbles preview). */
+  libraryRailProps?: Omit<LandingLibraryRailProps, "className">;
   /** Optional bottom-center chrome (e.g. Blurbs 🌈 pill). */
   bottomCenter?: ReactNode;
   /** Replaces the default top-leading corner pill (e.g. back button on `/invest`). */
@@ -55,6 +57,7 @@ export function ImmersiveAppChrome({
   highlightNexus = false,
   mode = "contained",
   showLibraryRail = true,
+  libraryRailProps,
   bottomCenter,
   topLeadingSlot,
   topCenterBelow,
@@ -147,7 +150,7 @@ export function ImmersiveAppChrome({
                 : "calc(100% - 96px)",
           }}
         >
-          <LandingLibraryRail className="h-full" />
+          <LandingLibraryRail className="h-full" {...libraryRailProps} />
         </motion.div>
       ) : null}
 

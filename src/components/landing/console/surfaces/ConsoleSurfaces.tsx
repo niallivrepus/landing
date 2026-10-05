@@ -1,136 +1,282 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
-import type { ConsoleProductId } from "../../../../data/console-home-products";
-import { SquircleBox } from "../../../system/squircle";
+import { resolveWebAppOrigin } from "../../../../config/download-links";
+import type { ConsoleAppDemoSurface, ConsoleProductId } from "../../../../data/console-home-products";
 
 /**
- * **Purpose:** Live app surfaces for the console home — the product's real landing demo (the same components
- * `/spine`, `/messages`, `/calls`, `/profile`, `/blurbs` render) floating over the scene background in a squircle
- * window like the app's center column (Gooey rim, soft shadow), scaled to fit the scene box.
- * Each surface is its own lazy chunk; `ConsoleStage` mounts only the focused one, the next neighbour (paused) and
- * the one fading out, and warms every chunk on idle (`preloadConsoleSurfaces`) so the window never shows empty.
- * `playing` drives each surface's autoplay loop; it is false off-focus and under reduced motion (static first frame).
- * **Connects to:** `ConsoleScene.tsx` (`ConsoleStage`), `SpineAppSurface`, `CallsAppSurface`, `MessagesAppSurface`,
- * `ProfilePodsDemo`, `BlurbsDriftSurface`, `OoDemoSurface`, the bundled arcade chess, `SquircleBox`.
+ * **Purpose:** What the console home's centred app column shows for each non-OO product. Only the REAL app is ever
+ * shown — never a landing re-drawing:
+ * - **Capture (default):** a looping, muted recording of the real web app's `/demo?surface=…&chrome=0`, made by
+ *   `scripts/capture-app-demo.mjs` into `/console/captures/` and listed in `/console/captures/manifest.json`.
+ *   The poster shows first, the loop fades in over it; under reduced motion only the poster shows.
+ * - **Fallback (temporary):** if a surface has no capture (or it fails to load), the column shows that product's
+ *   landing demo (`SpineAppSurface`, `CallsAppSurface`, `MessagesAppSurface`, `ProfilePodsDemo`, the public Blurbs
+ *   feed) so the column is never empty. Each fallback disappears as soon as its capture lands in the manifest.
+ * - **Live (flag, off by default):** `VITE_CONSOLE_LIVE_DEMO=1` swaps captures for a non-interactive iframe of the
+ *   app's `/demo` (origin from `VITE_ORIGIN_APP`).
+ * - **Arcade:** the real bundled chess game (the same files the app ships), non-interactive here.
+ * OO's column is the live homepage UI (prompt bar + temporary chat), rendered by `ConsoleHomeShell`.
+ * **Connects to:** `ConsoleColumn`, `scripts/capture-app-demo.mjs`, `console-home-products.ts` (`appSurface`).
  */
 
-/** Every scene surface gets: whether it should be playing its loop right now, and the resolved theme. */
 export type ConsoleSurfaceProps = { playing: boolean; light: boolean };
 
+/** Products whose column shows a scene surface. OO's column is the real homepage UI (`ConsoleHomeShell`). */
+export type ConsoleSurfaceId = Exclude<ConsoleProductId, "oo">;
+
 /**
- * One pluggable scene per product. To swap a surface (a live web-app embed, a recorded real-app video, …) replace
- * that entry's `load` and natural size — `ConsoleStage`, mounting, crossfades, the window and scaling don't change.
- * A component must render inside its `width × height` box (the window adds its own padding), stay non-interactive
- * (the stage marks it `inert`) and honour `playing` (false off-focus, in a hidden tab and under reduced motion).
+ * One pluggable scene per product: swap `component` (capture, live embed, …) and the column follows. `width` is
+ * the column width this scene wants (the capture viewport width) and `height` its aspect; the column clamps both
+ * to the screen.
+ * A component fills the column, stays non-interactive (the column marks it `inert`) and honours `playing`
+ * (false off-focus, in a hidden tab and under reduced motion).
  */
 export type ConsoleSurfaceDefinition = {
+  component: ComponentType<ConsoleSurfaceProps>;
+  width: number;
+  /** With `width`, the scene's aspect — the column keeps it so the scene fills the frame uncropped. */
+  height: number;
+};
+
+/** Capture viewport (CSS px) — keep in sync with `scripts/capture-app-demo.mjs` (`CAPTURE_VIEWPORT`). */
+export const CONSOLE_CAPTURE_VIEWPORT = { width: 560, height: 640 } as const;
+
+const LIVE_DEMO = (import.meta.env.VITE_CONSOLE_LIVE_DEMO as string | undefined) === "1";
+
+/** Temporary landing-demo fallback for a surface with no capture yet (natural size, scaled into the column). */
+type FallbackDefinition = {
   load: () => Promise<{ default: ComponentType<ConsoleSurfaceProps> }>;
-  /** Natural (unscaled) content size in CSS px. */
   width: number;
   height: number;
 };
 
-/** Window chrome around the content: padding inside the squircle, and its corner radius (app column = 44). */
-const WINDOW_PAD = 20;
-const WINDOW_RADIUS = 48;
-
-function once<T>(fn: () => Promise<T>): () => Promise<T> {
-  let promise: Promise<T> | null = null;
-  return () => (promise ??= fn());
+function appSurfaceScene(surface: ConsoleAppDemoSurface, fallback: FallbackDefinition): ConsoleSurfaceDefinition {
+  const Fallback = lazy(fallback.load);
+  return {
+    width: CONSOLE_CAPTURE_VIEWPORT.width,
+    height: CONSOLE_CAPTURE_VIEWPORT.height,
+    component: ({ playing, light }) =>
+      LIVE_DEMO ? (
+        <LiveDemoSurface surface={surface} light={light} />
+      ) : (
+        <CaptureSurface
+          surface={surface}
+          playing={playing}
+          light={light}
+          fallback={
+            <SurfaceFrame width={fallback.width} height={fallback.height}>
+              <Suspense fallback={null}>
+                <div className="console-surface-content" style={{ minHeight: fallback.height }}>
+                  <Fallback playing={playing} light={light} />
+                </div>
+              </Suspense>
+            </SurfaceFrame>
+          }
+        />
+      ),
+  };
 }
 
-export const CONSOLE_SURFACES: Record<ConsoleProductId, ConsoleSurfaceDefinition> = {
-  oo: {
-    width: 420,
-    height: 500,
-    load: once(() => import("./OoDemoSurface").then((m) => ({ default: m.OoDemoSurface }))),
-  },
-  spine: {
+export const CONSOLE_SURFACES: Record<ConsoleSurfaceId, ConsoleSurfaceDefinition> = {
+  spine: appSurfaceScene("spine", {
     width: 740,
     height: 600,
-    load: once(() =>
+    load: () =>
       import("../../SpineImmersiveShell").then((m) => ({
         default: ({ playing }: ConsoleSurfaceProps) => <m.SpineAppSurface autoplay={playing} arrangement="split" />,
       })),
-    ),
-  },
-  calls: {
+  }),
+  calls: appSurfaceScene("calls", {
     width: 760,
     height: 540,
-    load: once(() =>
+    load: () =>
       import("../../CallsImmersiveShell").then((m) => ({
         default: ({ playing }: ConsoleSurfaceProps) => (
           <m.CallsAppSurface autoplay={playing} paused={!playing} arrangement="split" />
         ),
       })),
-    ),
-  },
-  messages: {
+  }),
+  messages: appSurfaceScene("texts", {
     width: 460,
     height: 540,
-    load: once(() =>
+    load: () =>
       import("../../MessagesImmersiveShell").then((m) => ({
         default: ({ playing }: ConsoleSurfaceProps) => <m.MessagesAppSurface autoplay={playing} />,
       })),
-    ),
-  },
-  profile: {
+  }),
+  profile: appSurfaceScene("id", {
     width: 640,
     height: 540,
-    load: once(() =>
+    load: () =>
       import("../../ProfilePodsDemo").then((m) => ({
         default: ({ playing }: ConsoleSurfaceProps) => <m.ProfilePodsDemo paused={!playing} />,
       })),
-    ),
-  },
-  blurbs: {
+  }),
+  blurbs: appSurfaceScene("blurbs", {
     width: 460,
     height: 600,
-    load: once(() => import("./BlurbsDriftSurface").then((m) => ({ default: m.BlurbsDriftSurface }))),
-  },
-  arcade: {
-    width: 420,
-    height: 580,
-    load: once(async () => ({ default: ArcadeChessSurface })),
-  },
+    load: () => import("./BlurbsDriftSurface").then((m) => ({ default: m.BlurbsDriftSurface })),
+  }),
+  arcade: { width: 480, height: 600, component: ArcadeChessSurface },
 };
 
-const LAZY_SURFACES = Object.fromEntries(
-  (Object.keys(CONSOLE_SURFACES) as ConsoleProductId[]).map((id) => [id, lazy(CONSOLE_SURFACES[id].load)]),
-) as unknown as Record<ConsoleProductId, ComponentType<ConsoleSurfaceProps>>;
-
-/** Warms every surface chunk (call on idle after first paint). */
-export function preloadConsoleSurfaces() {
-  for (const definition of Object.values(CONSOLE_SURFACES)) void definition.load().catch(() => {});
+export function ConsoleSurface({ id, playing, light }: { id: ConsoleSurfaceId; playing: boolean; light: boolean }) {
+  const Surface = CONSOLE_SURFACES[id].component;
+  return <Surface playing={playing} light={light} />;
 }
 
-export function ConsoleSurface({ id, playing, light }: { id: ConsoleProductId; playing: boolean; light: boolean }) {
-  const { width, height } = CONSOLE_SURFACES[id];
-  const Surface = LAZY_SURFACES[id];
+// ─── Captures ────────────────────────────────────────────────────────────────
+
+type CaptureFiles = { webm?: string; mp4?: string; poster?: string };
+type CaptureManifest = {
+  capturedAt?: string;
+  surfaces: Partial<Record<ConsoleAppDemoSurface, { dark?: CaptureFiles; light?: CaptureFiles }>>;
+};
+
+const CAPTURE_MANIFEST_URL = "/console/captures/manifest.json";
+let manifestPromise: Promise<CaptureManifest | null> | null = null;
+
+/** Loads the capture manifest once; `null` when no captures have been made yet. */
+function loadCaptureManifest(): Promise<CaptureManifest | null> {
+  manifestPromise ??= fetch(CAPTURE_MANIFEST_URL, { headers: { Accept: "application/json" } })
+    .then((response) => (response.ok ? (response.json() as Promise<CaptureManifest>) : null))
+    .catch(() => null);
+  return manifestPromise;
+}
+
+/** Warms the capture manifest (also kicked off as soon as this module loads, so posters can paint first). */
+export function preloadConsoleSurfaces() {
+  void loadCaptureManifest();
+}
+
+if (typeof window !== "undefined") void loadCaptureManifest();
+
+/** `undefined` while the manifest loads, `null` when this surface has no capture. */
+function useCaptureFiles(surface: ConsoleAppDemoSurface, light: boolean): CaptureFiles | null | undefined {
+  const [files, setFiles] = useState<CaptureFiles | null | undefined>(undefined);
+  useEffect(() => {
+    let cancelled = false;
+    void loadCaptureManifest().then((manifest) => {
+      if (cancelled) return;
+      const entry = manifest?.surfaces[surface];
+      // Theme-matched capture first, the other theme as a fallback.
+      setFiles((light ? entry?.light ?? entry?.dark : entry?.dark ?? entry?.light) ?? null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [light, surface]);
+  return files;
+}
+
+function useReducedMotionPreference() {
+  const [reduce, setReduce] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduce(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return reduce;
+}
+
+/** A real-app recording: poster first, then the muted loop while focused; the landing fallback if not captured. */
+function CaptureSurface({
+  surface,
+  playing,
+  light,
+  fallback,
+}: { surface: ConsoleAppDemoSurface; fallback: ReactNode } & ConsoleSurfaceProps) {
+  const files = useCaptureFiles(surface, light);
+  const [failed, setFailed] = useState(false);
+  const reduceMotion = useReducedMotionPreference();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoReady, setVideoReady] = useState(false);
+  const hasVideo = Boolean(files?.webm || files?.mp4) && !reduceMotion;
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (playing) void video.play().catch(() => {});
+    else video.pause();
+  }, [playing, hasVideo]);
+
+  // No capture yet (or it failed): the temporary landing demo, never an empty column.
+  if (files === undefined) return null;
+  if (!files || failed) return <>{fallback}</>;
+
   return (
-    <SurfaceFrame width={width + WINDOW_PAD * 2} height={height + WINDOW_PAD * 2}>
-      <SquircleBox
-        radius={WINDOW_RADIUS}
-        className="console-window"
-        fillClassName="console-window__fill"
-        rimClassName="console-window__rim"
-        shadowClassName="console-window__shadow"
-        fillStyle={{ padding: WINDOW_PAD }}
-      >
-        {/* The window paints immediately; content fades in when its (pre-warmed) chunk resolves. */}
-        <Suspense fallback={null}>
-          <div className="console-window__content" style={{ minHeight: height }}>
-            <Surface playing={playing} light={light} />
-          </div>
-        </Suspense>
-      </SquircleBox>
-    </SurfaceFrame>
+    <div className="console-capture">
+      {files.poster ? (
+        <img
+          className="console-capture__poster"
+          src={files.poster}
+          alt=""
+          decoding="async"
+          fetchPriority={playing ? "high" : "low"}
+          onError={() => setFailed(true)}
+        />
+      ) : null}
+      {hasVideo ? (
+        <video
+          ref={videoRef}
+          className="console-capture__video"
+          data-ready={videoReady ? "true" : "false"}
+          poster={files.poster}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          autoPlay={playing}
+          disablePictureInPicture
+          onCanPlay={() => setVideoReady(true)}
+        >
+          {files.webm ? <source src={files.webm} type="video/webm" /> : null}
+          {files.mp4 ? <source src={files.mp4} type="video/mp4" /> : null}
+        </video>
+      ) : null}
+    </div>
   );
 }
 
+/** Flagged path: the real app's `/demo`, live and non-interactive (`VITE_CONSOLE_LIVE_DEMO=1`). */
+function LiveDemoSurface({ surface, light }: { surface: ConsoleAppDemoSurface; light: boolean }) {
+  const src = `${resolveWebAppOrigin()}/demo?surface=${encodeURIComponent(surface)}&chrome=0&theme=${light ? "light" : "dark"}`;
+  return (
+    <iframe
+      className="console-capture__frame"
+      src={src}
+      title={`Jokuh app demo: ${surface}`}
+      tabIndex={-1}
+      loading="lazy"
+      referrerPolicy="strict-origin-when-cross-origin"
+    />
+  );
+}
+
+// ─── Arcade ──────────────────────────────────────────────────────────────────
+
+/** The real bundled Arcade chess (same files the app ships), unmodified. "Play chess" opens the playable overlay. */
+function ArcadeChessSurface() {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="console-arcade-window" data-ready={loaded ? "true" : "false"}>
+      <iframe
+        src="/arcade/games/chess/index.html"
+        title="Jokuh Arcade chess"
+        className="console-arcade-window__frame"
+        tabIndex={-1}
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
+  );
+}
+
+// ─── Fallback scaling ────────────────────────────────────────────────────────
+
 /**
- * Scales the window to fit its scene box (never above 1×), centred. The natural height is the larger of the
- * declared height and the tallest measured so far, so autoplay beats that grow the content shrink the scale once
- * instead of making it pump. Measures with `client*` sizes, which ignore the entrance transform.
+ * Scales a fallback surface to fit the column (never above 1×), centred. The natural height is the larger of the
+ * declared height and the tallest measured so far, so autoplay beats that grow the content shrink the scale once.
  */
 function SurfaceFrame({ width, height, children }: { width: number; height: number; children: ReactNode }) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -163,52 +309,6 @@ function SurfaceFrame({ width, height, children }: { width: number; height: numb
       >
         {children}
       </div>
-    </div>
-  );
-}
-
-/** Dark chrome for the bundled chess page (its board canvas keeps its own light wood palette). */
-const CHESS_DARK_CSS = `
-html.jk-dark, html.jk-dark body { background: #0b0b0d !important; color: rgba(255,255,255,.9) !important; }
-html.jk-dark .player-row { border-color: rgba(255,255,255,.1) !important; }
-html.jk-dark .player-row.active { background: rgba(255,255,255,.06) !important; border-color: rgba(255,255,255,.22) !important; }
-html.jk-dark .player-row .avatar.you { background: rgba(255,255,255,.12) !important; }
-html.jk-dark #oo-quip { color: rgba(255,255,255,.55) !important; }
-html.jk-dark .thinking i { background: #fff !important; }
-html.jk-dark canvas { box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 12px 32px rgba(0,0,0,.5) !important; }
-`;
-
-/**
- * The real bundled Arcade chess (same files the app ships), shown in the window. Same-origin, so the console
- * injects a small dark stylesheet into its chrome when the site is dark. Not interactive here — "Play chess" opens
- * the playable overlay.
- */
-function ArcadeChessSurface({ light }: ConsoleSurfaceProps) {
-  const frameRef = useRef<HTMLIFrameElement>(null);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const doc = frameRef.current?.contentDocument;
-    if (!loaded || !doc?.head) return;
-    if (!doc.getElementById("jk-console-theme")) {
-      const style = doc.createElement("style");
-      style.id = "jk-console-theme";
-      style.textContent = CHESS_DARK_CSS;
-      doc.head.appendChild(style);
-    }
-    doc.documentElement.classList.toggle("jk-dark", !light);
-  }, [light, loaded]);
-
-  return (
-    <div className="console-arcade-window" data-ready={loaded ? "true" : "false"}>
-      <iframe
-        ref={frameRef}
-        src="/arcade/games/chess/index.html"
-        title="Jokuh Arcade chess"
-        className="console-arcade-window__frame"
-        tabIndex={-1}
-        onLoad={() => setLoaded(true)}
-      />
     </div>
   );
 }

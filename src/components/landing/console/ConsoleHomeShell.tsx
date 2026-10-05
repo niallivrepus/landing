@@ -1,33 +1,41 @@
 import { GooeyViewportProvider, useCurrentGooeyViewport, useTheme } from "@jokuh/gooey";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { resolveWebAppOrigin } from "../../../config/download-links";
+import { useClaimIdentityFlowContext } from "../../../context/ClaimIdentityFlowContext";
 import {
   CONSOLE_BRAND_EXPANSION,
   CONSOLE_BRAND_LINE,
   CONSOLE_PRODUCTS,
+  consoleAppDemoHref,
   type ConsoleProduct,
   type ConsoleProductId,
 } from "../../../data/console-home-products";
 import type { LandingArcadeGameId } from "../../../data/landing-arcade-games";
+import { LANDING_HERO_HEADLINE } from "../../../data/landing-hero-copy";
 import type { LandingCornerAction } from "../../../data/landing-shell-preview";
-import { useClaimIdentityFlowContext } from "../../../context/ClaimIdentityFlowContext";
 import { useDownloadIntercept } from "../../../hooks/useDownloadIntercept";
-import { buildWebAppOnboardingHandoffUrl } from "../../../lib/claim-identity-handoff";
 import { playGentleHoverSfx } from "../../../lib/gentle-hover-sfx";
 import { LANDING_HERO_PREVIEW_PROMPT } from "../../../lib/landing-demo-seed";
 import { ImmersiveAppChrome } from "../../system/ImmersiveAppChrome";
 import { JokuhButton } from "../../system/JokuhButton";
+import { ClaimIdentityCta } from "../ClaimIdentityCta";
 import { ClaimIdentityLandingOverlay } from "../ClaimIdentityLandingOverlay";
 import { HomeFooterRow } from "../HomeFooterRow";
 import { HomeShippedTicker } from "../HomeShippedTicker";
 import { LandingArcadeGameOverlay } from "../LandingArcadeGameOverlay";
+import { LandingHeroTypewriter } from "../LandingHeroTypewriter";
+import { LandingHomeSuggestionPills } from "../LandingHomeSuggestionPills";
 import { LandingPromptBar } from "../LandingPromptBar";
 import { LandingPromptBorderBeam } from "../LandingPromptBorderBeam";
 import { LandingTempChatPanel } from "../temp-chat/LandingTempChatPanel";
 import { useLandingTempChat } from "../temp-chat/useLandingTempChat";
+import type { LandingLibraryServer } from "../../../data/landing-library-rail-data";
+import { HomeLogoGlobGlass } from "../HomeLogoGlobGlass";
+import { ConsoleBubblesPanel, type ConsoleBubblesPanelState } from "./ConsoleBubblesPanel";
 import { ConsoleClock } from "./ConsoleClock";
-import { ConsoleStage } from "./ConsoleScene";
+import { ConsoleColumn } from "./ConsoleColumn";
+import { ConsoleStage, useConsoleParallax } from "./ConsoleScene";
 import { ConsoleTileRow, type ConsoleFocusSource } from "./ConsoleTileRow";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
@@ -53,13 +61,20 @@ const CORNER_FOR_PRODUCT: Partial<Record<ConsoleProductId, LandingCornerAction>>
 const SWIPE_MIN_PX = 48;
 
 /**
- * **Purpose:** "Console Home" homepage prototype (`/lab/home`): a PS5 home screen × Netflix billboard.
- * One full-bleed scene per product, a bottom-left title block (eyebrow, title, one sentence, Try it / Learn more),
- * and a tile row that moves focus with arrows, Tab, hover and swipe. OO's title block carries the real prompt bar,
- * which opens the temporary OO chat in place (`useLandingTempChat` → `landing-oo-chat` edge function).
- * Keeps the live home's chrome: corner pills + Nexus (`ImmersiveAppChrome`), shipped ticker, slim footer row,
- * claim-identity overlay and the arcade (chess) overlay.
- * **Connects to:** `LabConsoleHomePage`, `ConsoleStage`, `ConsoleTileRow`, `console-home-products.ts`,
+ * **Purpose:** "Console Home" homepage prototype (`/lab/home`): the real app shell × a PS5 home screen.
+ * - Centre: the app's squircle center column (`ConsoleColumn`), framed by the four corner pills + Nexus like the real
+ *   app. OO shows the live homepage UI (headline, prompt bar, chips, the temporary OO chat opening in place —
+ *   `useLandingTempChat` → `landing-oo-chat`); other products show their live demo surface.
+ * - Behind: a full-bleed background per product (`ConsoleStage`) with slow drift + parallax.
+ * - Bottom: a compact context line (dot · eyebrow, name, one sentence, Open / Learn more — lower-left gutter on wide
+ *   screens, centred above the tiles otherwise) and the PS5-style tile row (arrows, Tab, hover, swipe, Enter).
+ * - Left: the landing library rail; its Bubbles open a live preview (`ConsoleBubblesPanel`: lobby card, Huddles,
+ *   members) and "+" runs a local create-your-own Bubble flow that ends at Claim your identity.
+ * - OO's slide is frameless, with the app's logo glob behind the prompt capsule (`HomeLogoGlobGlass`).
+ * - The focused product's corner lights in its energy colour; "Open" goes to the real app demo
+ *   (`{VITE_ORIGIN_APP}/demo?surface=…`), "Learn more" to the landing product page.
+ * Keeps the live home's chrome: shipped ticker, slim footer row, claim-identity overlay, arcade (chess) overlay.
+ * **Connects to:** `LabConsoleHomePage`, `ConsoleColumn`, `ConsoleStage`, `ConsoleTileRow`, `console-home-products.ts`,
  * `landing-console-home.css`. The live `/` (`LandingImmersiveShell`) is untouched.
  */
 export function ConsoleHomeShell() {
@@ -72,27 +87,31 @@ export function ConsoleHomeShell() {
 
 function ConsoleHomeShellInner() {
   const viewport = useCurrentGooeyViewport();
-  const navigate = useNavigate();
   const reduceMotion = useReducedMotion() ?? false;
+  const parallax = useConsoleParallax(reduceMotion);
   const { resolvedTheme } = useTheme();
   const light = resolvedTheme === "light";
   const claimFlow = useClaimIdentityFlowContext();
   const { intercept } = useDownloadIntercept("home-immersive");
   const [arcadeGame, setArcadeGame] = useState<LandingArcadeGameId | null>(null);
   const [activeId, setActiveId] = useState<ConsoleProductId>("oo");
-  const titleRef = useRef<HTMLDivElement>(null);
+  const [bubblesPanel, setBubblesPanel] = useState<ConsoleBubblesPanelState | null>(null);
+  /** Bubbles made in the create-your-own preview: local only, gone on reload. */
+  const [previewBubbles, setPreviewBubbles] = useState<LandingLibraryServer[]>([]);
+  const [promptFocused, setPromptFocused] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
+  const ooRef = useRef<HTMLDivElement>(null);
 
-  // Phones: the live surface sits in the band above the title block; publish where that block starts.
+  // The column fills the space between the top chrome and the dock; publish where the dock starts.
   useEffect(() => {
     const section = sectionRef.current;
-    const content = contentRef.current;
-    if (!section || !content) return undefined;
-    const publish = () => section.style.setProperty("--console-content-top", `${content.offsetTop}px`);
+    const dock = dockRef.current;
+    if (!section || !dock) return undefined;
+    const publish = () => section.style.setProperty("--console-dock-top", `${dock.offsetTop}px`);
     publish();
     const observer = new ResizeObserver(publish);
-    observer.observe(content);
+    observer.observe(dock);
     observer.observe(section);
     return () => observer.disconnect();
   }, []);
@@ -100,7 +119,10 @@ function ConsoleHomeShellInner() {
   const chat = useLandingTempChat();
   const sendToChat = chat.send;
   const chatOpen = chat.active && activeId === "oo";
-  const overlayOpen = arcadeGame !== null || claimFlow.isOpen;
+  const overlayOpen = arcadeGame !== null || claimFlow.isOpen || bubblesPanel !== null;
+  const openClaim = useCallback(() => claimFlow.openFrom("hero"), [claimFlow]);
+  const closeBubbles = useCallback(() => setBubblesPanel(null), []);
+  const appOrigin = resolveWebAppOrigin();
 
   const active = CONSOLE_PRODUCTS.find((p) => p.id === activeId) ?? CONSOLE_PRODUCTS[0]!;
 
@@ -117,38 +139,20 @@ function ConsoleHomeShellInner() {
 
   const focusPrompt = useCallback(() => {
     window.requestAnimationFrame(() => {
-      const field = titleRef.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>(
-        ".console-title__prompt input, .console-title__prompt textarea",
-      );
-      field?.focus();
+      ooRef.current?.querySelector<HTMLTextAreaElement | HTMLInputElement>("textarea, input:not([type='file'])")?.focus();
     });
   }, []);
 
-  const runPrimary = useCallback(
-    (product: ConsoleProduct) => {
-      switch (product.primary.kind) {
-        case "prompt":
-          focusPrompt();
-          return;
-        case "game":
-          setArcadeGame("chess");
-          return;
-        case "web-app":
-          window.location.assign(buildWebAppOnboardingHandoffUrl({ source: "hero", intent: product.primary.intent }));
-      }
-    },
-    [focusPrompt],
-  );
-
-  /** Enter / click on a tile: OO → talk, Arcade → play, products → their full immersive page. */
+  /** Enter / click on a tile: OO → its prompt, Arcade → play, products → the real app demo of that surface. */
   const openProduct = useCallback(
     (id: ConsoleProductId) => {
       const product = CONSOLE_PRODUCTS.find((p) => p.id === id);
       if (!product) return;
-      if (product.primary.kind === "web-app") navigate(product.pageHref);
-      else runPrimary(product);
+      if (product.id === "oo") focusPrompt();
+      else if (product.appSurface) window.open(consoleAppDemoHref(appOrigin, product.appSurface), "_blank", "noopener");
+      else setArcadeGame("chess");
     },
-    [navigate, runPrimary],
+    [appOrigin, focusPrompt],
   );
 
   const step = useCallback(
@@ -203,6 +207,73 @@ function ConsoleHomeShellInner() {
     [sendToChat],
   );
 
+  // OO's column: what the live `/` shows — headline, prompt bar, chips, Get started; the chat opens in place.
+  const ooContent = (
+    <div ref={ooRef} className="console-oo">
+      <AnimatePresence mode="wait" initial={false}>
+        {chat.active ? (
+          <motion.div
+            key="chat"
+            className="console-oo__chat"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.24, ease: EASE_PREMIUM }}
+          >
+            <LandingTempChatPanel chat={chat} onClose={chat.reset} onClaim={() => claimFlow.openFrom("hero")} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="headline"
+            className="console-oo__headline"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.4, ease: EASE_PREMIUM }}
+          >
+            <span aria-hidden className="console-oo__headline-sizer landing-hero-headline">
+              {LANDING_HERO_HEADLINE}
+            </span>
+            <LandingHeroTypewriter text={LANDING_HERO_HEADLINE} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="console-oo__prompt landing-home-prompt-stack">
+        {/* App home parity: the Jokuh logo glob sits behind the search capsule (`SearchBar.tsx` row). */}
+        <div
+          className="console-oo__search-row"
+          onFocusCapture={() => setPromptFocused(true)}
+          onBlurCapture={() => setPromptFocused(false)}
+        >
+          <div className="home-logo-glob-glass-wrap" aria-hidden>
+            <HomeLogoGlobGlass light={light} emphasized={promptFocused || chat.active} />
+          </div>
+          <div className="console-oo__search-bar">
+            <LandingPromptBorderBeam>
+              <LandingPromptBar
+                variant={viewport === "phone" ? "phone" : "desktop"}
+                viewport={viewport}
+                previewText={LANDING_HERO_PREVIEW_PROMPT}
+                onSend={handleSend}
+                onPlus={() => intercept("prompt-plus")}
+              />
+            </LandingPromptBorderBeam>
+          </div>
+        </div>
+        {chat.active ? null : <LandingHomeSuggestionPills onPrompt={handleSend} onOpenGame={setArcadeGame} />}
+      </div>
+
+      {chat.active ? null : (
+        <div className="console-oo__cta">
+          <ClaimIdentityCta href="/download?intent=identity" morphLayout onActivate={() => claimFlow.openFrom("hero")}>
+            Get started
+          </ClaimIdentityCta>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <LayoutGroup id="claim-identity-home">
       <section
@@ -212,12 +283,16 @@ function ConsoleHomeShellInner() {
         aria-roledescription="Product home"
         aria-label="Jokuh home"
       >
+        <p className="sr-only">
+          Jokuh: {CONSOLE_BRAND_LINE} {CONSOLE_BRAND_EXPANSION}
+        </p>
+
         <ConsoleStage
           products={CONSOLE_PRODUCTS}
           activeId={activeId}
           reduceMotion={reduceMotion}
           light={light}
-          surfacesHidden={chatOpen}
+          parallax={parallax}
         />
 
         <div
@@ -230,8 +305,25 @@ function ConsoleHomeShellInner() {
           }}
         />
 
+        <ConsoleColumn
+          products={CONSOLE_PRODUCTS}
+          activeId={activeId}
+          reduceMotion={reduceMotion}
+          light={light}
+          parallax={parallax}
+          ooContent={ooContent}
+        />
+
+        {/* The landing's library rail (bubble pills, + and grid), exactly as on the other landing pages. */}
         <ImmersiveAppChrome
-          showLibraryRail={false}
+          showLibraryRail
+          libraryRailProps={{
+            extraServers: previewBubbles,
+            selectedServerId: bubblesPanel && bubblesPanel.kind !== "create" ? bubblesPanel.server.id : null,
+            onSelectServer: (server) =>
+              setBubblesPanel(server.emoji ? { kind: "room", server } : { kind: "bubble", server }),
+            onCreate: () => setBubblesPanel({ kind: "create" }),
+          }}
           highlightAction={CORNER_FOR_PRODUCT[activeId] ?? null}
           highlightNexus={activeId === "oo"}
           topCenterBelow={chatOpen ? null : <HomeShippedTicker />}
@@ -240,124 +332,27 @@ function ConsoleHomeShellInner() {
 
         <ConsoleClock />
 
-        <div ref={contentRef} className="console-home__content">
-          <h1 className="sr-only">
-            Jokuh: {CONSOLE_BRAND_LINE} {CONSOLE_BRAND_EXPANSION}
-          </h1>
-
-          <div ref={titleRef} className="console-title">
-            {/* Sync crossfade on one grid cell (no `mode="wait"`): rapid arrowing can't strand a stale title,
-                and the outgoing block overlaps the incoming one instead of pushing layout. */}
-            <AnimatePresence initial={false}>
-              <motion.div
-                key={active.id}
-                className="console-title__inner"
-                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, filter: "blur(6px)" }}
-                animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={
-                  reduceMotion
-                    ? { opacity: 0, transition: { duration: 0.12 } }
-                    : { opacity: 0, y: -6, filter: "blur(4px)", transition: { duration: 0.12, ease: [0.4, 0, 1, 1] } }
-                }
-                transition={{ duration: 0.26, ease: EASE_PREMIUM }}
-              >
-                {chatOpen ? null : (
-                  <>
-                    <p className="console-title__eyebrow">
-                      <span
-                        aria-hidden
-                        className="console-title__energy"
-                        style={{ color: ENERGY_FOR_PRODUCT[active.id] }}
-                      />
-                      {active.eyebrow}
-                    </p>
-                    <h2 className={active.id === "oo" ? "console-title__name console-title__name--mark" : "console-title__name"}>
-                      {active.title}
-                    </h2>
-                    <p className="console-title__sentence">{active.sentence}</p>
-                  </>
-                )}
-
-                {active.id === "oo" ? (
-                  <div className="console-title__oo">
-                    <AnimatePresence initial={false}>
-                      {chatOpen ? (
-                        <motion.div
-                          key="chat"
-                          className="console-title__chat"
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 8 }}
-                          transition={{ duration: 0.24, ease: EASE_PREMIUM }}
-                        >
-                          <LandingTempChatPanel
-                            chat={chat}
-                            onClose={chat.reset}
-                            onClaim={() => claimFlow.openFrom("hero")}
-                          />
-                        </motion.div>
-                      ) : null}
-                    </AnimatePresence>
-                    <div className="console-title__prompt landing-home-prompt-stack">
-                      <LandingPromptBorderBeam>
-                        <LandingPromptBar
-                          variant={viewport === "phone" ? "phone" : "desktop"}
-                          viewport={viewport}
-                          previewText={LANDING_HERO_PREVIEW_PROMPT}
-                          onSend={handleSend}
-                          onPlus={() => intercept("prompt-plus")}
-                        />
-                      </LandingPromptBorderBeam>
-                    </div>
-                  </div>
-                ) : null}
-
-                {chatOpen ? null : (
-                  <div className="console-title__actions">
-                    {active.primary.kind === "web-app" ? (
-                      <>
-                        <JokuhButton variant="primary" size="md" href={active.pageHref}>
-                          Open
-                        </JokuhButton>
-                        <JokuhButton
-                          variant="secondary"
-                          size="md"
-                          href={buildWebAppOnboardingHandoffUrl({ source: "hero", intent: active.primary.intent })}
-                        >
-                          {active.primary.label}
-                        </JokuhButton>
-                      </>
-                    ) : (
-                      <>
-                        {active.primary.kind === "prompt" ? (
-                          <JokuhButton variant="primary" size="md" onClick={() => claimFlow.openFrom("hero")}>
-                            Get started
-                          </JokuhButton>
-                        ) : (
-                          <JokuhButton variant="primary" size="md" onClick={() => runPrimary(active)}>
-                            {active.primary.label}
-                          </JokuhButton>
-                        )}
-                        <JokuhButton variant="secondary" size="md" href={active.pageHref}>
-                          {active.pageLabel ?? "Learn more"}
-                        </JokuhButton>
-                      </>
-                    )}
-                  </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
+        <div ref={dockRef} className="console-dock" aria-hidden={chatOpen || undefined} inert={chatOpen || undefined}>
+          <ConsoleContext product={active} appOrigin={appOrigin} reduceMotion={reduceMotion} onPlay={() => setArcadeGame("chess")} />
           <ConsoleTileRow
             products={CONSOLE_PRODUCTS}
             activeId={activeId}
             onFocusProduct={focusProduct}
             onOpenProduct={openProduct}
-            hidden={chatOpen}
           />
         </div>
       </section>
+
+      <ConsoleBubblesPanel
+        state={bubblesPanel}
+        reduceMotion={reduceMotion}
+        onClose={closeBubbles}
+        onClaim={openClaim}
+        onCreated={(server) => {
+          setPreviewBubbles((current) => [server, ...current]);
+          setBubblesPanel({ kind: "room", server });
+        }}
+      />
 
       <ClaimIdentityLandingOverlay
         open={claimFlow.isOpen}
@@ -368,5 +363,62 @@ function ConsoleHomeShellInner() {
 
       <LandingArcadeGameOverlay open={arcadeGame !== null} gameId={arcadeGame} onClose={() => setArcadeGame(null)} />
     </LayoutGroup>
+  );
+}
+
+/**
+ * Compact context for the focused product — dot · eyebrow, name, one sentence, Open / Learn more. Small on purpose:
+ * the column is the hero. Crossfades on one grid cell so rapid arrowing can't strand a stale line.
+ */
+function ConsoleContext({
+  product,
+  appOrigin,
+  reduceMotion,
+  onPlay,
+}: {
+  product: ConsoleProduct;
+  appOrigin: string;
+  reduceMotion: boolean;
+  onPlay: () => void;
+}) {
+  return (
+    <div className="console-context">
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={product.id}
+          className="console-context__inner"
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 6, filter: "blur(4px)" }}
+          animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, pointerEvents: "none", transition: { duration: 0.12, ease: [0.4, 0, 1, 1] } }}
+          transition={{ duration: 0.24, delay: 0.04, ease: EASE_PREMIUM }}
+        >
+          <p className="console-context__eyebrow">
+            <span aria-hidden className="console-title__energy" style={{ color: ENERGY_FOR_PRODUCT[product.id] }} />
+            {product.eyebrow}
+          </p>
+          <h2 className="console-context__name">{product.title}</h2>
+          <p className="console-context__sentence">{product.sentence}</p>
+          <div className="console-context__actions">
+            {product.appSurface ? (
+              <JokuhButton
+                variant="primary"
+                size="sm"
+                href={consoleAppDemoHref(appOrigin, product.appSurface)}
+                aria-label={`Open ${product.title} in the Jokuh app demo`}
+              >
+                Open
+              </JokuhButton>
+            ) : (
+              <JokuhButton variant="primary" size="sm" onClick={onPlay}>
+                Play chess
+              </JokuhButton>
+            )}
+            <JokuhButton variant="secondary" size="sm" href={product.learnMoreHref}>
+              Learn more
+            </JokuhButton>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 }

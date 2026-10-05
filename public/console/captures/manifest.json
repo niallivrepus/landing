@@ -1,0 +1,82 @@
+{
+  "capturedAt": "2026-10-05T00:19:35.097Z",
+  "origin": "https://app.jokuh.com",
+  "viewport": {
+    "width": 560,
+    "height": 640
+  },
+  "surfaces": {
+    "spine": {
+      "dark": {
+        "poster": "/console/captures/spine.jpg",
+        "webm": "/console/captures/spine.webm",
+        "mp4": "/console/captures/spine.mp4"
+      },
+      "light": {
+        "poster": "/console/captures/spine-light.jpg",
+        "webm": "/console/captures/spine-light.webm",
+        "mp4": "/console/captures/spine-light.mp4"
+      }
+    },
+    "calls": {
+      "dark": {
+        "poster": "/console/captures/calls.jpg",
+        "webm": "/console/captures/calls.webm",
+        "mp4": "/console/captures/calls.mp4"
+      },
+      "light": {
+        "poster": "/console/captures/calls-light.jpg",
+        "webm": "/console/captures/calls-light.webm",
+        "mp4": "/console/captures/calls-light.mp4"
+      }
+    },
+    "texts": {
+      "dark": {
+        "poster": "/console/captures/texts.jpg",
+        "webm": "/console/captures/texts.webm",
+        "mp4": "/console/captures/texts.mp4"
+      },
+      "light": {
+        "poster": "/console/captures/texts-light.jpg",
+        "webm": "/console/captures/texts-light.webm",
+        "mp4": "/console/captures/texts-light.mp4"
+      }
+    },
+    "id": {
+      "dark": {
+        "poster": "/console/captures/id.jpg",
+        "webm": "/console/captures/id.webm",
+        "mp4": "/console/captures/id.mp4"
+      },
+      "light": {
+        "poster": "/console/captures/id-light.jpg",
+        "webm": "/console/captures/id-light.webm",
+        "mp4": "/console/captures/id-light.mp4"
+      }
+    },
+    "blurbs": {
+      "dark": {
+        "poster": "/console/captures/blurbs.jpg",
+        "webm": "/console/captures/blurbs.webm",
+        "mp4": "/console/captures/blurbs.mp4"
+      },
+      "light": {
+        "poster": "/console/captures/blurbs-light.jpg",
+        "webm": "/console/captures/blurbs-light.webm",
+        "mp4": "/console/captures/blurbs-light.mp4"
+      }
+    },
+    "oo": {
+      "dark": {
+        "poster": "/console/captures/oo.jpg",
+        "webm": "/console/captures/oo.webm",
+        "mp4": "/console/captures/oo.mp4"
+      },
+      "light": {
+        "poster": "/console/captures/oo-light.jpg",
+        "webm": "/console/captures/oo-light.webm",
+        "mp4": "/console/captures/oo-light.mp4"
+      }
+    }
+  }
+}
