@@ -7,8 +7,10 @@
  *
  * Per surface (spine, calls, texts, id, blurbs, oo) and theme (dark, light) it makes two captures:
  *
- *   Column — `${APP_ORIGIN}/demo?surface=<s>&chrome=0&theme=<t>` at the column viewport (COLUMN_VIEWPORT, CSS px),
- *            device scale 2: the center column's content, edge to edge.
+ *   Column — `${APP_ORIGIN}/demo?surface=<s>&chrome=0&theme=<t>` at the app's desktop layout
+ *            (SURFACE_PAGE_VIEWPORT, device scale 2), cropped to the surface's composition measured from the DOM
+ *            (`measureSurface`: the ID pod stack, else the centred column). The crop size goes in the manifest; the
+ *            console scales it to fit (never crops).
  *   Rail   — (opt-in: `--rail auto`) `${APP_ORIGIN}/demo?surface=<s>&chrome=rail&theme=<t>` at a desktop viewport (RAIL_PAGE_VIEWPORT): the
  *            real left rail + column. The rail's bounding box is measured from the DOM (RAIL_SELECTOR, else the
  *            leftmost tall narrow fixed element) — never hard-coded — and the recording is cropped to it. If the rail
@@ -32,7 +34,7 @@
  *   RAIL_SELECTOR='[data-demo-rail]' APP_ORIGIN=… node scripts/capture-app-demo.mjs
  *
  * Needs: `@playwright/test` (devDependency) with Chromium (`npx playwright install chromium`); ffmpeg recommended.
- * Connects to: `src/components/landing/console/surfaces/ConsoleSurfaces.tsx` (`CONSOLE_CAPTURE_VIEWPORT`, manifest),
+ * Connects to: `src/components/landing/console/surfaces/ConsoleSurfaces.tsx` (manifest, `size` → column aspect),
  * `src/components/landing/console/ConsoleRail.tsx` (rail slot).
  */
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -47,8 +49,14 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = process.env.CAPTURE_OUT_DIR ? resolve(process.env.CAPTURE_OUT_DIR) : join(ROOT, "public", "console", "captures");
 const PUBLIC_PREFIX = "/console/captures";
 
-/** Keep in sync with `CONSOLE_CAPTURE_VIEWPORT` in `ConsoleSurfaces.tsx`. */
-const COLUMN_VIEWPORT = { width: 560, height: 640 };
+/**
+ * Surfaces are captured at the app's DESKTOP layout (so e.g. the ID page renders its wide pod bento, not the phone
+ * stack), then cropped to the surface's composition measured from the DOM (`measureSurface`). The console scales
+ * the crop to fit its column (object-fit: contain) — nothing is cropped there.
+ */
+const SURFACE_PAGE_VIEWPORT = { width: 1280, height: 900 };
+/** Breathing room around a measured crop (CSS px), clamped to the viewport. */
+const SURFACE_CROP_PAD = 16;
 /** Desktop page the rail is measured on (the app's rail is sized against the full viewport). */
 const RAIL_PAGE_VIEWPORT = { width: 1440, height: 900 };
 const RAIL_SELECTOR =
@@ -95,10 +103,13 @@ function ffmpeg(args) {
  * Trims [start, start+duration] out of the raw recording (optionally cropping it, in device px) and crossfades its
  * last F seconds into its first F, so the output (duration − F) ends on the frame it starts on. Writes webm + mp4.
  */
-function encodeLoop(inputArgs, { start, duration, crop }, outBase) {
+function encodeLoop(inputArgs, { start, duration, crop, cssWidth }, outBase) {
   const f = LOOP_FADE_SECONDS;
-  const cropFilter = crop ? `,crop=${crop.w}:${crop.h}:${crop.x}:${crop.y}` : "";
-  const scaleFilter = `,scale=trunc(iw*${OUTPUT_SCALE / DEVICE_SCALE}/2)*2:-2:flags=lanczos`;
+  // Screencast frames can change size mid-capture; normalise every frame to the first frame's size before cropping.
+  const normalise = crop?.frame ? `,scale=${crop.frame.w}:${crop.frame.h}` : "";
+  const cropFilter = crop ? `${normalise},crop=${crop.w}:${crop.h}:${crop.x}:${crop.y}` : "";
+  const target = cssWidth ? Math.round((cssWidth * OUTPUT_SCALE) / 2) * 2 : null;
+  const scaleFilter = target ? `,scale='min(${target},iw)':-2:flags=lanczos` : "";
   const filter = [
     `[0:v]trim=start=${start}:duration=${duration},setpts=PTS-STARTPTS,fps=30${cropFilter}${scaleFilter},split[a][b]`,
     `[a]trim=start=${f},setpts=PTS-STARTPTS[body]`,
@@ -107,6 +118,44 @@ function encodeLoop(inputArgs, { start, duration, crop }, outBase) {
   ].join(";");
   ffmpeg([...inputArgs, "-filter_complex", filter, "-map", "[v]", "-an", "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "40", "-row-mt", "1", `${outBase}.webm`]);
   ffmpeg([...inputArgs, "-filter_complex", filter, "-map", "[v]", "-an", "-c:v", "libx264", "-preset", "slow", "-crf", "29", "-movflags", "+faststart", `${outBase}.mp4`]);
+}
+
+/**
+ * Measures a surface's composition (CSS px, clamped to the viewport):
+ *   id → the ID page's pod stack (the name row + `.profile-pod-bento` board: hero ID pod + every companion pod);
+ *   everything else → the app's centred column (the largest element ≤ 720px wide centred on the viewport), which
+ *   holds the paper-card sheet / transcript / feed.
+ */
+async function measureSurface(page, surface) {
+  return page.evaluate(
+    ({ surface, pad }) => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const clamp = (r) => {
+        const left = Math.max(0, Math.floor(r.left - pad));
+        const top = Math.max(0, Math.floor(r.top - pad));
+        const right = Math.min(vw, Math.ceil(r.right + pad));
+        const bottom = Math.min(vh, Math.ceil(r.bottom + pad));
+        return { left, top, width: right - left, height: bottom - top };
+      };
+      if (surface === "id") {
+        const bento = document.querySelector(".profile-pod-bento");
+        const stack = document.querySelector(".id-page-profile-stack") ?? bento?.parentElement;
+        const el = stack ?? bento;
+        if (el) return { ...clamp(el.getBoundingClientRect()), via: stack ? "id-stack" : "bento" };
+      }
+      let best = null;
+      for (const el of document.querySelectorAll("body *")) {
+        const r = el.getBoundingClientRect();
+        if (r.width < 300 || r.width > 720 || r.height < 300) continue;
+        if (Math.abs(r.left + r.width / 2 - vw / 2) > 40) continue;
+        const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0)) * r.width;
+        if (!best || visible > best.visible) best = { r, visible };
+      }
+      return best ? { ...clamp(best.r), via: "column" } : null;
+    },
+    { surface, pad: SURFACE_CROP_PAD },
+  );
 }
 
 /** Measures the rail's box (CSS px): RAIL_SELECTOR first, else the leftmost tall, narrow, pinned element. */
@@ -134,7 +183,7 @@ async function measureRail(page) {
  * is measured for the rail and everything is cropped to it. Returns `{ files, box, still }` (`still` = PNG of the
  * cropped region, used to decide whether the rail is shared across surfaces).
  */
-async function capture(browser, { url, theme, seconds, viewport, rail, outBase, useFfmpeg }) {
+async function capture(browser, { url, theme, seconds, viewport, rail, surface, outBase, useFfmpeg }) {
   const workDir = mkdtempSync(join(tmpdir(), "jokuh-capture-"));
   const context = await browser.newContext({
     viewport,
@@ -159,6 +208,13 @@ async function capture(browser, { url, theme, seconds, viewport, rail, outBase, 
       await context.close();
       rmSync(workDir, { recursive: true, force: true });
       throw new Error(`Rail not found on ${url} (set RAIL_SELECTOR)`);
+    }
+  } else if (surface) {
+    box = await measureSurface(page, surface);
+    if (!box) {
+      await context.close();
+      rmSync(workDir, { recursive: true, force: true });
+      throw new Error(`Surface composition not found on ${url}`);
     }
   }
   const clip = box ? { x: box.left, y: box.top, width: box.width, height: box.height } : undefined;
@@ -189,6 +245,7 @@ async function capture(browser, { url, theme, seconds, viewport, rail, outBase, 
 
   const name = outBase.slice(outBase.lastIndexOf("/") + 1);
   const files = { poster: `${PUBLIC_PREFIX}/${name}.jpg` };
+  if (box) files.size = { width: box.width, height: box.height };
   if (useFfmpeg && frames.length > 0) {
     // Concat list with real per-frame durations (static stretches produce no frames, so durations carry them).
     const list = [];
@@ -202,10 +259,21 @@ async function capture(browser, { url, theme, seconds, viewport, rail, outBase, 
     const listPath = join(workDir, "frames.txt");
     writeFileSync(listPath, `${list.join("\n")}\n`);
     const duration = Math.min(seconds, endedAt - Math.max(startedAt, frames[0].t) + 0.001);
+    // Screencast frames can come back smaller than viewport × DPR (the compositor caps them); crop in frame pixels.
+    const probe = spawnSync("ffprobe", ["-v", "error", "-show_entries", "stream=width", "-of", "csv=p=0", join(workDir, "f00000.jpg")]);
+    const frameWidth = Number(String(probe.stdout).trim()) || viewport.width * DEVICE_SCALE;
+    const k = frameWidth / viewport.width;
+    const even = (n) => Math.max(2, Math.floor(n / 2) * 2);
     const crop = box
-      ? { x: box.left * DEVICE_SCALE, y: box.top * DEVICE_SCALE, w: box.width * DEVICE_SCALE, h: box.height * DEVICE_SCALE }
+      ? {
+          x: Math.round(box.left * k),
+          y: Math.round(box.top * k),
+          w: even(box.width * k),
+          h: even(box.height * k),
+          frame: { w: even(viewport.width * k), h: even(viewport.height * k) },
+        }
       : undefined;
-    encodeLoop(["-f", "concat", "-safe", "0", "-i", listPath], { start: 0, duration, crop }, outBase);
+    encodeLoop(["-f", "concat", "-safe", "0", "-i", listPath], { start: 0, duration, crop, cssWidth: box ? box.width : viewport.width }, outBase);
     files.webm = `${PUBLIC_PREFIX}/${name}.webm`;
     files.mp4 = `${PUBLIC_PREFIX}/${name}.mp4`;
   }
@@ -236,7 +304,7 @@ async function main() {
   const manifest = {
     capturedAt: new Date().toISOString(),
     origin,
-    viewport: COLUMN_VIEWPORT,
+    viewport: SURFACE_PAGE_VIEWPORT,
     surfaces: { ...(previous.surfaces ?? {}) },
     ...(previous.rail ? { rail: previous.rail } : {}),
   };
@@ -253,8 +321,9 @@ async function main() {
           url: `${origin}/demo?surface=${encodeURIComponent(surface)}&chrome=0&theme=${theme}`,
           theme,
           seconds,
-          viewport: COLUMN_VIEWPORT,
+          viewport: SURFACE_PAGE_VIEWPORT,
           rail: false,
+          surface,
           outBase: join(OUT_DIR, `${surface}${suffix(theme)}`),
           useFfmpeg,
         });

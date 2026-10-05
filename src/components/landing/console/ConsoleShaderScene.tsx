@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import type { ConsoleShaderPalette } from "../../../data/console-home-products";
 
 /**
- * **Purpose:** Generative full-bleed scene for console products without strong photography (OO, Arcade).
+ * **Purpose:** Generative full-bleed scenes: OO's drifting violet smoke (layered over the homepage background; no
+ * orb, nothing round) and Arcade's ember horizon.
  * One tiny WebGL fragment shader, rendered at half resolution (the field is soft, so it upscales cleanly),
  * paused whenever the scene is not focused or the tab is hidden. Reduced motion renders one still frame.
  * Falls back to a CSS gradient (`.console-shader--fallback`) when WebGL is unavailable.
@@ -35,39 +36,23 @@ float fbm(vec2 p) {
 }
 
 vec3 ooScene(vec2 uv, vec2 p, float t) {
-  float aspect = uRes.x / uRes.y;
-  // Quiet aurora field behind everything.
-  vec2 q = vec2(fbm(p * 1.2 + vec2(0.0, t * 0.04)), fbm(p * 1.2 + vec2(5.2, -t * 0.03)));
-  float f = fbm(p * 0.9 + 1.8 * q + vec2(t * 0.02, 0.0));
-  vec3 col = vec3(0.006, 0.006, 0.016);
-  col += vec3(0.08, 0.14, 0.52) * 0.42 * smoothstep(0.45, 0.95, f);
-  col += vec3(0.38, 0.10, 0.72) * 0.30 * smoothstep(0.55, 1.0, q.x * f * 1.7);
-
-  // OO's presence: a glass sphere with living colour inside, rim light and a soft bloom.
-  vec2 c = aspect >= 1.0 ? vec2(aspect * 0.68, 0.54) : vec2(aspect * 0.5, 0.7);
-  float R = (aspect >= 1.0 ? 0.24 : min(0.2, aspect * 0.32)) * (1.0 + 0.012 * sin(t * 0.8));
-  vec2 d = (p - c) / R;
-  float dist = length(d);
-  col += vec3(0.42, 0.34, 1.0) * 0.32 * exp(-max(dist - 1.0, 0.0) * 2.6);
-  col += vec3(0.85, 0.3, 0.75) * 0.06 * exp(-max(dist - 1.0, 0.0) * 1.2);
-  if (dist < 1.02) {
-    float z = sqrt(max(1.0 - dist * dist, 0.0));
-    vec3 n = vec3(d, z);
-    vec2 s = d / (1.0 + z) * 1.3;
-    float m = fbm(s * 1.5 + vec2(t * 0.05, -t * 0.035) + 1.6 * fbm(s * 2.2 - t * 0.04));
-    vec3 inner = mix(vec3(0.07, 0.03, 0.22), vec3(0.30, 0.30, 0.95), smoothstep(0.32, 0.78, m));
-    inner = mix(inner, vec3(0.86, 0.40, 0.92), smoothstep(0.6, 0.88, m) * 0.55);
-    inner *= 0.30 + 0.70 * z;
-    // Glass: bright rim, a caustic pooling opposite the key light, one tight specular.
-    float rim = pow(1.0 - z, 2.6);
-    inner += vec3(0.72, 0.66, 1.0) * rim * 1.05;
-    float caustic = pow(max(dot(n, normalize(vec3(0.38, -0.55, 0.62))), 0.0), 7.0);
-    inner += vec3(0.95, 0.45, 0.85) * caustic * 0.32;
-    float spec = pow(max(dot(n, normalize(vec3(-0.42, 0.55, 0.72))), 0.0), 140.0);
-    inner += vec3(1.0) * spec * 0.85;
-    float edge = 1.0 - smoothstep(1.0 - 2.0 / (uRes.y * R), 1.0, dist);
-    col = mix(col, inner, edge);
-  }
+  // Full-bleed violet smoke, nothing round: two passes of domain-warped fbm drift and curl at different speeds,
+  // and a slow, large-scale "fog bank" field makes the density uneven — thick in places, clear in others.
+  vec2 q = vec2(fbm(p * 0.9 + vec2(t * 0.035, -t * 0.02)), fbm(p * 0.9 + vec2(4.7 - t * 0.03, 1.3 + t * 0.025)));
+  vec2 r = vec2(
+    fbm(p * 1.3 + 2.4 * q + vec2(1.7, 9.2) + t * 0.04),
+    fbm(p * 1.3 + 2.4 * q + vec2(8.3, 2.8) - t * 0.03)
+  );
+  float smoke = fbm(p * 1.1 + 3.0 * r);
+  float density = smoothstep(0.3, 0.82, smoke);
+  float banks = smoothstep(0.22, 0.78, fbm(p * 0.42 + vec2(t * 0.012, -t * 0.006)));
+  density *= 0.3 + 0.7 * banks;
+  vec3 violet = vec3(0.36, 0.13, 0.82);
+  vec3 lilac = vec3(0.62, 0.44, 1.0);
+  vec3 col = vec3(0.004, 0.003, 0.012);
+  col += mix(violet, lilac, smoothstep(0.55, 0.95, r.x)) * density * 0.95;
+  // Faint magenta threads riding the thicker banks.
+  col += vec3(0.85, 0.3, 0.75) * 0.08 * smoothstep(0.68, 1.0, q.y) * banks;
   return col;
 }
 

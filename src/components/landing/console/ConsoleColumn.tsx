@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactNode, type RefObject } from "rea
 import type { ConsoleProduct, ConsoleProductId } from "../../../data/console-home-products";
 import { SquircleBox } from "../../system/squircle";
 import type { ConsoleParallax } from "./ConsoleScene";
-import { CONSOLE_SURFACES, ConsoleSurface, type ConsoleSurfaceId } from "./surfaces/ConsoleSurfaces";
+import { ConsoleSurface, useConsoleSurfaceAspect, type ConsoleSurfaceId } from "./surfaces/ConsoleSurfaces";
 
 /** App center-column geometry: corner radius (`SquircleShell` 44 in the app). */
 const COLUMN_RADIUS = 44;
@@ -58,8 +58,8 @@ export function ConsoleColumn({
 
   const maxWidth = viewportWidth < 640 ? viewportWidth - 32 : Math.min(viewportWidth - 208, 960);
   // Framed scenes keep the capture's aspect, so the real-app recording fills the column without cropping.
-  const sceneWidth = activeId === "oo" ? OO_COLUMN_WIDTH : CONSOLE_SURFACES[activeId].width;
-  const aspect = activeId === "oo" ? null : CONSOLE_SURFACES[activeId].width / CONSOLE_SURFACES[activeId].height;
+  const sceneWidth = activeId === "oo" ? OO_COLUMN_WIDTH : 760;
+  const aspect = useConsoleSurfaceAspect(activeId === "oo" ? null : activeId, light);
   const naturalWidth = aspect && wrapHeight > 0 ? Math.min(sceneWidth, wrapHeight * aspect) : sceneWidth;
   const width = Math.max(260, Math.min(naturalWidth, maxWidth));
 

@@ -1,8 +1,8 @@
 /**
  * **Purpose:** Preview data for the console home's live Bubbles rail: what each rail Bubble shows when it's opened,
  * in the app's real hierarchy (`docs/bubbles-huddles-architecture.md`): a Bubble holds Huddles (kinds: text,
- * announcement, voice; every Bubble has an `oo` Huddle for @oo), members with roles (Owner, Admin, Moderator, Member),
- * and a live voice Beam. Members are the Agents of Chaos demo agents (same roster as the app's `/demo`).
+ * announcement, voice; the first is the Bubble's Lobby, as the app's `/demo?chrome=rail` lobby shows), members with
+ * roles (Owner, Admin, Moderator, Member, shown in Bubble details), and a live voice Beam. Members are the Agents of Chaos demo agents (same roster as the app's `/demo`).
  * Illustrative only — the panel is labelled a preview, and every real action opens Claim your identity.
  * **Connects to:** `ConsoleBubblesPanel`, `landing-library-rail-data.ts` (rail ids), `landing-bubbles-copy.ts`.
  * **Parity (web app):** `bubbles/BubblesDrawer.tsx` lobby card, `bubbles/HuddleLobbyForest.tsx` huddle rows.
@@ -29,6 +29,8 @@ export type ConsoleBubbleRole = "Owner" | "Admin" | "Moderator" | "Member";
 export type ConsoleDemoHuddle = {
   name: string;
   kind: ConsoleHuddleKind;
+  /** Lobby row dot colour (the app gives each Huddle its own dot). */
+  dot?: string;
   unread?: number;
   /** Voice Huddle with a live Beam: agent ids in the room. */
   live?: string[];
@@ -48,7 +50,7 @@ export const CONSOLE_DEMO_BUBBLES: Record<string, ConsoleDemoBubble> = {
   ambush: {
     memberCount: 9,
     huddles: [
-      { name: "oo", kind: "text" },
+      { name: "Lobby", kind: "text" },
       { name: "general", kind: "text", unread: 3 },
       { name: "launch-plan", kind: "announcement" },
       { name: "standup", kind: "voice", live: agents("kenji", "elara", "rowan") },
@@ -70,7 +72,7 @@ export const CONSOLE_DEMO_BUBBLES: Record<string, ConsoleDemoBubble> = {
   travage: {
     memberCount: 123,
     huddles: [
-      { name: "oo", kind: "text" },
+      { name: "Lobby", kind: "text" },
       { name: "general", kind: "text", unread: 12 },
       { name: "routes", kind: "text" },
       { name: "lounge", kind: "voice", live: agents("lyra", "malik", "sloane") },
@@ -92,7 +94,7 @@ export const CONSOLE_DEMO_BUBBLES: Record<string, ConsoleDemoBubble> = {
   atlas: {
     memberCount: 48,
     huddles: [
-      { name: "oo", kind: "text" },
+      { name: "Lobby", kind: "text" },
       { name: "announcements", kind: "announcement", unread: 1 },
       { name: "research", kind: "text", unread: 5 },
       { name: "office-hours", kind: "voice" },
@@ -114,7 +116,7 @@ export const CONSOLE_DEMO_BUBBLES: Record<string, ConsoleDemoBubble> = {
   jokuh: {
     memberCount: 64,
     huddles: [
-      { name: "oo", kind: "text" },
+      { name: "Lobby", kind: "text" },
       { name: "design", kind: "text", unread: 2 },
       { name: "marketing", kind: "text" },
       { name: "development", kind: "text", unread: 7 },
@@ -137,7 +139,7 @@ export const CONSOLE_DEMO_BUBBLES: Record<string, ConsoleDemoBubble> = {
   volt: {
     memberCount: 17,
     huddles: [
-      { name: "oo", kind: "text" },
+      { name: "Lobby", kind: "text" },
       { name: "builds", kind: "text", unread: 4 },
       { name: "parts", kind: "text" },
       { name: "garage", kind: "voice" },
@@ -158,7 +160,7 @@ export const CONSOLE_DEMO_BUBBLES: Record<string, ConsoleDemoBubble> = {
   aether: {
     memberCount: 31,
     huddles: [
-      { name: "oo", kind: "text" },
+      { name: "Lobby", kind: "text" },
       { name: "general", kind: "text" },
       { name: "playlists", kind: "text", unread: 1 },
       { name: "listening-room", kind: "voice", live: agents("elara", "lyra", "kenji") },
@@ -180,7 +182,7 @@ export const CONSOLE_DEMO_BUBBLES: Record<string, ConsoleDemoBubble> = {
   helix: {
     memberCount: 22,
     huddles: [
-      { name: "oo", kind: "text" },
+      { name: "Lobby", kind: "text" },
       { name: "lab-notes", kind: "text", unread: 2 },
       { name: "reviews", kind: "announcement" },
       { name: "bench", kind: "voice" },
@@ -201,7 +203,7 @@ export const CONSOLE_DEMO_BUBBLES: Record<string, ConsoleDemoBubble> = {
   orbital: {
     memberCount: 56,
     huddles: [
-      { name: "oo", kind: "text" },
+      { name: "Lobby", kind: "text" },
       { name: "proposals", kind: "announcement", unread: 2 },
       { name: "general", kind: "text", unread: 9 },
       { name: "town-hall", kind: "voice" },
@@ -239,3 +241,13 @@ export const CONSOLE_CREATE_COLORS = [
 export function consoleAgent(id: string): ConsoleDemoAgent {
   return CONSOLE_DEMO_AGENTS.find((agent) => agent.id === id) ?? CONSOLE_DEMO_AGENTS[0]!;
 }
+
+/** Huddle dot colours, cycled per row (app lobby: red, green, orange, …). */
+export const CONSOLE_HUDDLE_DOTS = ["#ff3b30", "#21dc11", "#ff7a1a", "#2f7bff", "#b14bff"] as const;
+
+/** OO chats in the lobby — the same demo titles the app's `/demo` Workspaces lobby lists. */
+export const CONSOLE_OO_CHATS = [
+  "Weekend plan from my Spine",
+  "Grocery spend this week",
+  "Film camera tips for golden hour",
+] as const;

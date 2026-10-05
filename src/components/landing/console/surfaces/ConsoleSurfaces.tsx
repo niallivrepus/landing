@@ -76,6 +76,27 @@ function appSurfaceScene(surface: ConsoleAppDemoSurface, fallback: FallbackDefin
   };
 }
 
+const APP_SURFACE_FOR: Partial<Record<ConsoleSurfaceId, ConsoleAppDemoSurface>> = {
+  spine: "spine",
+  calls: "calls",
+  messages: "texts",
+  profile: "id",
+  blurbs: "blurbs",
+};
+
+/**
+ * Width ÷ height the column should take for a scene: a capture's measured crop when one exists (so the whole
+ * composition fits, uncropped), else the scene's declared size.
+ */
+export function useConsoleSurfaceAspect(id: ConsoleSurfaceId | null, light: boolean): number | null {
+  const surface = id ? APP_SURFACE_FOR[id] : undefined;
+  const files = useCaptureFiles(surface ?? "oo", light);
+  if (!id) return null;
+  const size = surface ? files?.size : undefined;
+  if (size && size.width > 0 && size.height > 0) return size.width / size.height;
+  return CONSOLE_SURFACES[id].width / CONSOLE_SURFACES[id].height;
+}
+
 export const CONSOLE_SURFACES: Record<ConsoleSurfaceId, ConsoleSurfaceDefinition> = {
   spine: appSurfaceScene("spine", {
     width: 740,
@@ -126,7 +147,8 @@ export function ConsoleSurface({ id, playing, light }: { id: ConsoleSurfaceId; p
 
 // ─── Captures ────────────────────────────────────────────────────────────────
 
-type CaptureFiles = { webm?: string; mp4?: string; poster?: string };
+/** `size`: the crop in CSS px (the app's desktop layout, measured from its DOM) — the column keeps its aspect. */
+type CaptureFiles = { webm?: string; mp4?: string; poster?: string; size?: { width: number; height: number } };
 type CaptureManifest = {
   capturedAt?: string;
   surfaces: Partial<Record<ConsoleAppDemoSurface, { dark?: CaptureFiles; light?: CaptureFiles }>>;

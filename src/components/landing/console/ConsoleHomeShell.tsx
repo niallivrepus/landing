@@ -30,7 +30,7 @@ import { LandingPromptBar } from "../LandingPromptBar";
 import { LandingPromptBorderBeam } from "../LandingPromptBorderBeam";
 import { LandingTempChatPanel } from "../temp-chat/LandingTempChatPanel";
 import { useLandingTempChat } from "../temp-chat/useLandingTempChat";
-import type { LandingLibraryServer } from "../../../data/landing-library-rail-data";
+import { LANDING_LIBRARY_SERVERS, type LandingLibraryServer } from "../../../data/landing-library-rail-data";
 import { HomeLogoGlobGlass } from "../HomeLogoGlobGlass";
 import { ConsoleBubblesPanel, type ConsoleBubblesPanelState } from "./ConsoleBubblesPanel";
 import { ConsoleClock } from "./ConsoleClock";
@@ -321,7 +321,7 @@ function ConsoleHomeShellInner() {
             extraServers: previewBubbles,
             selectedServerId: bubblesPanel && bubblesPanel.kind !== "create" ? bubblesPanel.server.id : null,
             onSelectServer: (server) =>
-              setBubblesPanel(server.emoji ? { kind: "room", server } : { kind: "bubble", server }),
+              setBubblesPanel(server.emoji ? { kind: "room", server } : { kind: "lobby", server }),
             onCreate: () => setBubblesPanel({ kind: "create" }),
           }}
           highlightAction={CORNER_FOR_PRODUCT[activeId] ?? null}
@@ -345,9 +345,11 @@ function ConsoleHomeShellInner() {
 
       <ConsoleBubblesPanel
         state={bubblesPanel}
+        servers={[...previewBubbles, ...LANDING_LIBRARY_SERVERS]}
         reduceMotion={reduceMotion}
         onClose={closeBubbles}
         onClaim={openClaim}
+        onCreate={() => setBubblesPanel({ kind: "create" })}
         onCreated={(server) => {
           setPreviewBubbles((current) => [server, ...current]);
           setBubblesPanel({ kind: "room", server });

@@ -1,19 +1,27 @@
 {
-  "capturedAt": "2026-10-05T00:19:35.097Z",
+  "capturedAt": "2026-10-05T01:14:37.600Z",
   "origin": "https://app.jokuh.com",
   "viewport": {
-    "width": 560,
-    "height": 640
+    "width": 1280,
+    "height": 900
   },
   "surfaces": {
     "spine": {
       "dark": {
         "poster": "/console/captures/spine.jpg",
+        "size": {
+          "width": 372,
+          "height": 900
+        },
         "webm": "/console/captures/spine.webm",
         "mp4": "/console/captures/spine.mp4"
       },
       "light": {
         "poster": "/console/captures/spine-light.jpg",
+        "size": {
+          "width": 372,
+          "height": 900
+        },
         "webm": "/console/captures/spine-light.webm",
         "mp4": "/console/captures/spine-light.mp4"
       }
@@ -21,11 +29,19 @@
     "calls": {
       "dark": {
         "poster": "/console/captures/calls.jpg",
+        "size": {
+          "width": 574,
+          "height": 900
+        },
         "webm": "/console/captures/calls.webm",
         "mp4": "/console/captures/calls.mp4"
       },
       "light": {
         "poster": "/console/captures/calls-light.jpg",
+        "size": {
+          "width": 574,
+          "height": 900
+        },
         "webm": "/console/captures/calls-light.webm",
         "mp4": "/console/captures/calls-light.mp4"
       }
@@ -33,11 +49,19 @@
     "texts": {
       "dark": {
         "poster": "/console/captures/texts.jpg",
+        "size": {
+          "width": 574,
+          "height": 900
+        },
         "webm": "/console/captures/texts.webm",
         "mp4": "/console/captures/texts.mp4"
       },
       "light": {
         "poster": "/console/captures/texts-light.jpg",
+        "size": {
+          "width": 574,
+          "height": 900
+        },
         "webm": "/console/captures/texts-light.webm",
         "mp4": "/console/captures/texts-light.mp4"
       }
@@ -45,11 +69,19 @@
     "id": {
       "dark": {
         "poster": "/console/captures/id.jpg",
+        "size": {
+          "width": 650,
+          "height": 542
+        },
         "webm": "/console/captures/id.webm",
         "mp4": "/console/captures/id.mp4"
       },
       "light": {
         "poster": "/console/captures/id-light.jpg",
+        "size": {
+          "width": 650,
+          "height": 542
+        },
         "webm": "/console/captures/id-light.webm",
         "mp4": "/console/captures/id-light.mp4"
       }
@@ -57,11 +89,19 @@
     "blurbs": {
       "dark": {
         "poster": "/console/captures/blurbs.jpg",
+        "size": {
+          "width": 672,
+          "height": 656
+        },
         "webm": "/console/captures/blurbs.webm",
         "mp4": "/console/captures/blurbs.mp4"
       },
       "light": {
         "poster": "/console/captures/blurbs-light.jpg",
+        "size": {
+          "width": 672,
+          "height": 656
+        },
         "webm": "/console/captures/blurbs-light.webm",
         "mp4": "/console/captures/blurbs-light.mp4"
       }
@@ -69,11 +109,19 @@
     "oo": {
       "dark": {
         "poster": "/console/captures/oo.jpg",
+        "size": {
+          "width": 422,
+          "height": 792
+        },
         "webm": "/console/captures/oo.webm",
         "mp4": "/console/captures/oo.mp4"
       },
       "light": {
         "poster": "/console/captures/oo-light.jpg",
+        "size": {
+          "width": 422,
+          "height": 792
+        },
         "webm": "/console/captures/oo-light.webm",
         "mp4": "/console/captures/oo-light.mp4"
       }

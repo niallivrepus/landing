@@ -125,10 +125,11 @@ html.console-home-host body {
 
 /* Shader fallback (no WebGL): the same palettes as static gradients. */
 .console-shader--fallback.console-shader--oo {
+  /* No-WebGL stand-in for the smoke: soft diagonal bands, nothing round. */
   background:
-    radial-gradient(40% 50% at 66% 46%, rgba(140, 115, 255, 0.55), transparent 70%),
-    radial-gradient(60% 70% at 30% 30%, rgba(26, 77, 242, 0.35), transparent 70%),
-    radial-gradient(50% 60% at 80% 80%, rgba(219, 56, 158, 0.22), transparent 70%),
+    linear-gradient(115deg, transparent 10%, rgba(110, 60, 230, 0.32) 30%, transparent 48%),
+    linear-gradient(160deg, transparent 40%, rgba(150, 100, 255, 0.22) 62%, transparent 80%),
+    linear-gradient(80deg, rgba(90, 40, 200, 0.2), transparent 40%, rgba(180, 80, 220, 0.14) 90%),
     #030308;
 }
 
@@ -190,12 +191,12 @@ html.console-home-host body {
   position: absolute;
   inset: 0;
   mix-blend-mode: screen;
-  opacity: 0.9;
+  opacity: 1;
 }
 
 :is(.light, [data-theme="light"]) .console-scene__overlay {
   mix-blend-mode: multiply;
-  opacity: 0.38;
+  opacity: 0.85;
 }
 
 /* ── The app column: centred squircle, framed by the corner pills + Nexus ── */
@@ -348,8 +349,9 @@ html.console-home-host body {
   width: 100%;
   height: 100%;
   border: 0;
-  object-fit: cover;
-  object-position: top center;
+  /* Whole composition, scaled to fit — never cropped (the column already matches the capture's aspect). */
+  object-fit: contain;
+  object-position: center;
 }
 
 .console-capture__video {
@@ -735,10 +737,10 @@ html.console-home-host body {
 }
 
 .console-tile__paint--oo {
+  /* The OO scene in miniature: the homepage background under violet smoke. */
   background:
-    radial-gradient(60% 60% at 68% 58%, rgba(170, 150, 255, 0.95), rgba(110, 70, 240, 0.45) 45%, transparent 75%),
-    radial-gradient(80% 80% at 20% 20%, rgba(30, 80, 240, 0.7), transparent 70%),
-    radial-gradient(70% 70% at 90% 100%, rgba(219, 56, 158, 0.5), transparent 70%),
+    linear-gradient(125deg, rgba(60, 20, 150, 0.15) 0%, rgba(120, 70, 240, 0.55) 45%, rgba(40, 10, 110, 0.35) 100%),
+    url("/images/home/hero-office.png") 40% 45% / cover,
     #07061a;
 }
 
@@ -985,7 +987,7 @@ html.console-home-host body {
   top: 50%;
   left: 76px;
   z-index: 40;
-  width: min(360px, calc(100vw - 96px));
+  width: min(380px, calc(100vw - 96px));
   translate: 0 -50%;
   font-family: var(--font-sans);
 }
@@ -1031,38 +1033,51 @@ html.console-home-host body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .console-bubbles__preview {
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.08em;
   text-transform: lowercase;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
-.console-bubbles__close {
+/* Drawer corner buttons: "+" (create) and "×" (close), as in the app's Workspaces drawer. */
+.console-bubbles__round {
   display: inline-flex;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
+  flex: none;
   align-items: center;
   justify-content: center;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
   color: inherit;
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
 }
 
+.console-bubbles__round--close {
+  border-color: rgba(255, 80, 80, 0.45);
+  background: rgba(150, 20, 20, 0.35);
+}
+
 :is(.light, [data-theme="light"]) .console-bubbles__preview,
-:is(.light, [data-theme="light"]) .console-bubbles__close {
-  background: rgba(0, 0, 0, 0.05);
+:is(.light, [data-theme="light"]) .console-bubbles__round {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__round--close {
+  border-color: rgba(220, 40, 40, 0.35);
+  background: rgba(255, 70, 70, 0.1);
 }
 
 .console-bubbles__body {
@@ -1108,15 +1123,45 @@ html.console-home-host body {
 .console-bubble-pill {
   display: flex;
   height: 44px;
+  min-width: 0;
+  flex: 1;
   align-items: center;
   gap: 8px;
   padding: 2px 5px 2px 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.06);
+  background: #000000;
 }
 
+/* Light keeps the title pill light (the app's dark-on-black light bug is not copied). */
 :is(.light, [data-theme="light"]) .console-bubble-pill {
-  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+}
+
+.console-bubble-pill__open {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.console-bubble-pill__star {
+  width: 6px;
+  height: 6px;
+  align-self: flex-start;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: #ffd23f;
+  box-shadow: 0 0 6px rgba(255, 210, 63, 0.8);
 }
 
 .console-bubble-pill > span:first-child {
@@ -1167,15 +1212,37 @@ html.console-home-host body {
 }
 
 /* Huddle row — app `HuddleLobbyForest`: 40px capsule, 8px dot, 14px name, unread badge, Live chip. */
+.console-huddle-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.console-huddle-row__add {
+  display: inline-flex;
+  width: 18px;
+  flex: none;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 14px;
+  opacity: 0.45;
+  cursor: pointer;
+}
+
 .console-huddle {
   display: flex;
   height: 40px;
+  min-width: 0;
+  flex: 1;
   align-items: center;
   gap: 8px;
   padding: 0 8px 0 12px;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
+  background: #000000;
   color: inherit;
   font: inherit;
   text-align: left;
@@ -1189,7 +1256,8 @@ html.console-home-host body {
 }
 
 :is(.light, [data-theme="light"]) .console-huddle {
-  background: rgba(0, 0, 0, 0.035);
+  border-color: rgba(0, 0, 0, 0.08);
+  background: #ffffff;
 }
 
 .console-huddle__dot {
@@ -1242,13 +1310,23 @@ html.console-home-host body {
   font-weight: 800;
 }
 
+/* Green Live chip beside a voice Huddle with a Beam (app `#21dc11`, 40px). */
 .console-huddle__live {
-  padding: 3px 9px;
+  display: inline-flex;
+  height: 40px;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  padding: 0 14px;
+  border: 0;
   border-radius: 999px;
   background: #21dc11;
   color: #04260a;
-  font-size: 11px;
+  font: inherit;
+  font-size: 12px;
   font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(33, 220, 17, 0.35);
 }
 
 .console-faces {
@@ -1463,4 +1541,111 @@ html.console-home-host body {
 :is(.light, [data-theme="light"]) .console-oo__search-bar [data-slot="prompt-frame"] {
   background-color: rgba(255, 255, 255, 0.96) !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+}
+
+.console-bubble-card {
+  margin-bottom: 4px;
+}
+
+.console-bubble-card__fill {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.console-bubble-card__rim path {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+:is(.light, [data-theme="light"]) .console-bubble-card__fill {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+:is(.light, [data-theme="light"]) .console-bubble-card__rim path {
+  stroke: rgba(0, 0, 0, 0.07);
+}
+
+.console-recent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.console-bubbles__divider {
+  height: 1px;
+  margin: 16px 0 12px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__divider {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.console-bubbles__caps {
+  margin: 0 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.console-bubbles__caps-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.console-bubbles__caps-row .console-bubbles__caps {
+  margin-bottom: 0;
+}
+
+.console-oo-chat {
+  display: block;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+:is(.light, [data-theme="light"]) .console-oo-chat {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.console-bubbles__search {
+  margin-top: 16px;
+}
+
+.console-bubbles__back {
+  align-self: flex-start;
+  margin-bottom: 4px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__back {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.console-room {
+  display: flex;
+  flex-direction: column;
 }
