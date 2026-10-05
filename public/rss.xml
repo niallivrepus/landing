@@ -7,7 +7,15 @@
     <atom:link href="https://www.jokuh.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Latest Jokuh newsroom articles and stories.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 28 Sep 2026 22:45:13 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 05 Oct 2026 00:02:47 GMT</lastBuildDate>
+    <item>
+      <title>Week 70: Your space, your inbox, your docs</title>
+      <link>https://www.jokuh.com/shipped/2026-w40</link>
+      <guid isPermaLink="true">https://www.jokuh.com/shipped/2026-w40</guid>
+      <description>Swipe up from home and your blurbs float around you. Everyone gets a jokuh.com email address, documents live in your Spine, and meetings get links that last.</description>
+      <category>Shipped</category>
+      <pubDate>Sun, 04 Oct 2026 12:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>Week 69: Batcoin, from day one</title>
       <link>https://www.jokuh.com/shipped/2026-w39</link>

@@ -7,26 +7,14 @@
       "week": 70,
       "start": "2026-09-28",
       "end": "2026-10-04",
-      "publishedAt": "2026-09-28",
+      "publishedAt": "2026-10-04",
       "headline": "Your space, your inbox, your docs",
-      "dek": "Swipe up from home and your blurbs float around you. Everyone gets their own jokuh.com email address, and full documents now live in your Spine.",
-      "draft": true,
+      "dek": "Swipe up from home and your blurbs float around you. Everyone gets a jokuh.com email address, documents live in your Spine, and meetings get links that last.",
       "items": [
         {
           "area": "Blurbs",
           "title": "Swipe up into Your space",
-          "body": "Your blurbs float around you like a small galaxy. Replies orbit as moons, photos land as prints and voice blurbs as waveforms. Pinch out to see everything at once.",
-          "platforms": [
-            "iOS",
-            "Mac",
-            "Web",
-            "Android"
-          ]
-        },
-        {
-          "area": "Blurbs",
-          "title": "Find blurbs like this one",
-          "body": "Open any blurb and Similar shows others on the same idea, photo blurbs included.",
+          "body": "Your blurbs float around you like a small galaxy, with other people's drifting in between. Replies orbit as moons and voice blurbs show as waveforms. Tap Similar on any blurb, photos included, and blurb notifications open right on the one you were sent.",
           "platforms": [
             "iOS",
             "Mac",
@@ -37,7 +25,7 @@
         {
           "area": "Messaging",
           "title": "Your own @jokuh.com address",
-          "body": "Everyone gets username@jokuh.com. Email lands in the same inbox as your DMs, and you reply from the chat composer.",
+          "body": "Everyone gets username@jokuh.com. Email lands in the same inbox as your DMs, mail from one sender stacks together with a short summary, and you reply from the chat composer.",
           "platforms": [
             "iOS",
             "Mac",
@@ -48,18 +36,7 @@
         {
           "area": "Spine",
           "title": "Write full documents in your Spine",
-          "body": "Headings, checklists, tables and images, saved to the day you wrote them. Share a link and anyone can read it on the web.",
-          "platforms": [
-            "iOS",
-            "Mac",
-            "Web",
-            "Android"
-          ]
-        },
-        {
-          "area": "Blurbs",
-          "title": "Notifications open right on the blurb",
-          "body": "Tap a blurb notification and Your space opens with that blurb front and center.",
+          "body": "Start a doc from any hour or from Files. Headings, checklists, tables and images, saved to the day you wrote them. Share a link and anyone can read it on the web.",
           "platforms": [
             "iOS",
             "Mac",
@@ -69,11 +46,35 @@
         },
         {
           "area": "Messaging",
-          "title": "\"whats\" stays \"whats\"",
-          "body": "Typing \"whats\" no longer turns into \"WhatsApp\".",
+          "title": "Photos that disappear after one look",
+          "body": "Send a photo or video as view once. Stickers and GIFs now open where the keyboard sits, the corner button opens the camera inside a chat, and replying to a message shows a cleaner quote.",
           "platforms": [
             "iOS",
-            "Mac"
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "Calls",
+          "title": "Meetings with links that last",
+          "body": "Start a meeting and get a jokuh.com link you can share. Guests ask to join, and you let them in. Calls also connect with sound more reliably, and it's always clear how to leave.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
+          ]
+        },
+        {
+          "area": "App",
+          "title": "A light theme, and names with texture",
+          "body": "A bright Gooey Light look with a soft paper grain. Names now have a crisp, raised feel, in light or dark ink.",
+          "platforms": [
+            "iOS",
+            "Mac",
+            "Web",
+            "Android"
           ]
         }
       ]
