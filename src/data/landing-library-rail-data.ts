@@ -25,6 +25,8 @@ export type LandingLibraryServer = {
   symbolColor?: string;
   symbolScale?: number;
   hasStar?: boolean;
+  /** Bubbles created in the console preview show an emoji instead of a logo symbol. */
+  emoji?: string;
   hypeAvatars?: [string, string, string];
   hypeColors?: [OriginColor, OriginColor, OriginColor];
   memberCount?: number;

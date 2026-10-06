@@ -55,6 +55,8 @@ const PitchDeckPage = lazyNamed(() => import("./pages/PitchDeckPage"), "PitchDec
 const ShippedPage = lazyNamed(() => import("./pages/ShippedPage"), "ShippedPage");
 const ShippedWeekPage = lazyNamed(() => import("./pages/ShippedPage"), "ShippedWeekPage");
 const ShippedSpinePage = lazyNamed(() => import("./pages/ShippedSpinePage"), "ShippedSpinePage");
+/** Design lab — hidden, noindex, unlinked. */
+const LabConsoleHomePage = lazyNamed(() => import("./pages/LabConsoleHomePage"), "LabConsoleHomePage");
 
 const PRODUCT_ROUTES = [
   { path: "/blurbs", productId: "blurbs" },
@@ -148,6 +150,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/demo" element={<LandingDemoPage />} />
+          <Route path="/lab/home" element={<LabConsoleHomePage />} />
           <Route path="/download" element={<DownloadPage />} />
 
           <Route path="/newsroom" element={<NewsPage />} />

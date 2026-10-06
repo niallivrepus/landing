@@ -1,7 +1,7 @@
-import { createSquirclePath } from "@jokuh/gooey";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { formatConnectionCountLabel } from "../../lib/public-profile-demo";
 import { PROFILE_DEMO_PLACEHOLDER } from "../../lib/profile-demo-identity";
+import { SquircleBox } from "../system/squircle";
 
 /**
  * **Purpose:** The pieces of the `/profile` pod demo, copied from the app's real compact pod designs: the profile hero
@@ -28,9 +28,8 @@ const HERO_RADIUS = 40;
 const PHOTO_RADIUS = 36;
 
 /**
- * Measures its own box and clips the fill to a Figma-style squircle (100% corner smoothing, same as the app's
- * `SquircleSurface`), then strokes the same path as the rim. Re-measures every resize, so a tile that springs from
- * 150×150 to 150×462 keeps true squircle corners the whole way.
+ * Pod-demo squircle: the shared `SquircleBox` with the demo's `ppd-squircle*` class names (styles in
+ * `landing-profile-pods-demo.css`).
  */
 export function Squircle({
   radius,
@@ -47,51 +46,17 @@ export function Squircle({
   style?: CSSProperties;
   children: ReactNode;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ w: 0, h: 0 });
-
-  useLayoutEffect(() => {
-    const node = ref.current;
-    if (!node) return undefined;
-    const measure = () => {
-      const w = Math.round(node.offsetWidth);
-      const h = Math.round(node.offsetHeight);
-      setSize((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
-    };
-    measure();
-    if (typeof ResizeObserver === "undefined") return undefined;
-    const observer = new ResizeObserver(measure);
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  const path = useMemo(
-    () =>
-      size.w > 0 && size.h > 0
-        ? createSquirclePath({
-            width: size.w,
-            height: size.h,
-            cornerRadius: Math.min(radius, size.w / 2, size.h / 2),
-            cornerSmoothing: 1,
-          })
-        : "",
-    [radius, size.h, size.w],
-  );
-
   return (
-    <div ref={ref} className={className ? `ppd-squircle ${className}` : "ppd-squircle"} style={style}>
-      <div
-        className={fillClassName ? `ppd-squircle__fill ${fillClassName}` : "ppd-squircle__fill"}
-        style={path ? { clipPath: `path('${path}')` } : { borderRadius: radius }}
-      >
-        {children}
-      </div>
-      {path && rimClassName ? (
-        <svg className={`ppd-squircle__rim ${rimClassName}`} viewBox={`0 0 ${size.w} ${size.h}`} aria-hidden focusable="false">
-          <path d={path} />
-        </svg>
-      ) : null}
-    </div>
+    <SquircleBox
+      baseClassName="ppd-squircle"
+      radius={radius}
+      className={className}
+      fillClassName={fillClassName}
+      rimClassName={rimClassName}
+      style={style}
+    >
+      {children}
+    </SquircleBox>
   );
 }
 

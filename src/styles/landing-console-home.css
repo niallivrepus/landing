@@ -1,0 +1,1651 @@
+/**
+ * **Purpose:** "Console Home" lab homepage (`/lab/home`) — full-bleed billboard, bottom-left title block,
+ * PS5-style tile row. 8px rhythm throughout; Satoshi with tight tracking at display sizes.
+ * Dark is the default; light uses the site's `:is(.light, [data-theme="light"])` scope.
+ * **Connects to:** `ConsoleHomeShell`, `ConsoleStage` / `ConsoleShaderScene`, `ConsoleTileRow`, `ConsoleClock`.
+ * Imported by `LabConsoleHomePage` only, so it code-splits with the lab chunk.
+ */
+
+html.console-home-host,
+html.console-home-host body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.console-home {
+  --console-inset: clamp(24px, 6.25vw, 112px);
+  /* Clearance above the slim footer row for the dock. */
+  --console-dock-bottom: calc(env(safe-area-inset-bottom, 0px) + 44px);
+  --console-ink: #ffffff;
+  --console-ink-2: rgba(255, 255, 255, 0.74);
+  --console-ink-3: rgba(255, 255, 255, 0.52);
+  --console-ring: #ffffff;
+  --console-canvas: #000000;
+  --console-scrim: 0, 0, 0;
+  --console-tile-hairline: rgba(255, 255, 255, 0.14);
+  --console-fade: 600ms;
+  --console-ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
+
+  position: relative;
+  isolation: isolate;
+  height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--console-canvas);
+  color: var(--console-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:is(.light, [data-theme="light"]) .console-home {
+  --console-ink: #0a0a0b;
+  --console-ink-2: rgba(10, 10, 11, 0.7);
+  --console-ink-3: rgba(10, 10, 11, 0.5);
+  --console-ring: #0a0a0b;
+  --console-canvas: #f5f5f7;
+  --console-scrim: 245, 245, 247;
+  --console-tile-hairline: rgba(0, 0, 0, 0.1);
+}
+
+/* ── Stage: stacked scenes + parallax + scrim ─────────────────────────── */
+
+.console-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.console-stage__parallax {
+  position: absolute;
+  inset: -32px;
+  will-change: transform;
+}
+
+.console-scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--console-fade) var(--console-ease-fade);
+}
+
+.console-scene[data-active="true"] {
+  opacity: 1;
+}
+
+/* Ken Burns runs on every mounted layer but only plays while focused, so a fading-out layer
+   holds its frame instead of snapping back to the start. */
+.console-scene__media {
+  position: absolute;
+  inset: 0;
+  transform-origin: 62% 42%;
+  animation: console-ken-burns 28s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate both;
+  animation-play-state: paused;
+}
+
+.console-scene[data-active="true"] .console-scene__media {
+  animation-play-state: running;
+}
+
+.console-scene[data-product="spine"] .console-scene__media {
+  transform-origin: 50% 40%;
+}
+
+@keyframes console-ken-burns {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.25%, -0.75%, 0);
+  }
+}
+
+.console-scene__img,
+.console-scene__video,
+.console-shader {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.console-scene__video {
+  opacity: 0;
+  transition: opacity 480ms var(--console-ease-fade);
+}
+
+.console-scene__video[data-ready="true"] {
+  opacity: 1;
+}
+
+/* Shader fallback (no WebGL): the same palettes as static gradients. */
+.console-shader--fallback.console-shader--oo {
+  /* No-WebGL stand-in for the smoke: soft diagonal bands, nothing round. */
+  background:
+    linear-gradient(115deg, transparent 10%, rgba(110, 60, 230, 0.32) 30%, transparent 48%),
+    linear-gradient(160deg, transparent 40%, rgba(150, 100, 255, 0.22) 62%, transparent 80%),
+    linear-gradient(80deg, rgba(90, 40, 200, 0.2), transparent 40%, rgba(180, 80, 220, 0.14) 90%),
+    #030308;
+}
+
+.console-shader--fallback.console-shader--arcade {
+  background:
+    radial-gradient(18% 24% at 68% 52%, rgba(255, 140, 31, 0.85), transparent 70%),
+    linear-gradient(to bottom, #050201 0%, #6b1a03 54%, #0d0301 54.5%, #160502 100%);
+}
+
+/* Readability: deep vignette + bottom/left fall-off behind the title block + a top lip for the chrome. */
+.console-stage__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(var(--console-scrim), 0.94) 0%,
+      rgba(var(--console-scrim), 0.74) 22%,
+      rgba(var(--console-scrim), 0.22) 50%,
+      rgba(var(--console-scrim), 0) 68%
+    ),
+    linear-gradient(
+      to right,
+      rgba(var(--console-scrim), 0.72) 0%,
+      rgba(var(--console-scrim), 0.32) 36%,
+      rgba(var(--console-scrim), 0) 60%
+    ),
+    linear-gradient(to bottom, rgba(var(--console-scrim), 0.5) 0%, rgba(var(--console-scrim), 0) 18%),
+    radial-gradient(130% 110% at 62% 36%, rgba(var(--console-scrim), 0) 46%, rgba(var(--console-scrim), 0.6) 100%);
+}
+
+:is(.light, [data-theme="light"]) .console-stage__scrim {
+  background:
+    linear-gradient(
+      to top,
+      rgba(var(--console-scrim), 0.98) 0%,
+      rgba(var(--console-scrim), 0.88) 26%,
+      rgba(var(--console-scrim), 0.36) 54%,
+      rgba(var(--console-scrim), 0) 72%
+    ),
+    linear-gradient(
+      to right,
+      rgba(var(--console-scrim), 0.86) 0%,
+      rgba(var(--console-scrim), 0.42) 38%,
+      rgba(var(--console-scrim), 0) 62%
+    ),
+    linear-gradient(to bottom, rgba(var(--console-scrim), 0.62) 0%, rgba(var(--console-scrim), 0) 18%),
+    radial-gradient(130% 110% at 66% 40%, rgba(var(--console-scrim), 0) 56%, rgba(var(--console-scrim), 0.36) 100%);
+}
+
+.console-stage__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+}
+
+/* Shader overlay on art (OO): screen-blend the orb onto the photo in dark, multiply its ink in light. */
+.console-scene__overlay {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+  opacity: 1;
+}
+
+:is(.light, [data-theme="light"]) .console-scene__overlay {
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+/* ── The app column: centred squircle, framed by the corner pills + Nexus ── */
+
+.console-column-wrap {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 108px);
+  right: 0;
+  bottom: calc(100% - var(--console-dock-top, 75%) + 16px);
+  left: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: bottom 360ms var(--console-ease-fade);
+}
+
+/* The real OO chat takes the whole column; the dock steps aside. */
+.console-home[data-chat="open"] .console-column-wrap {
+  bottom: var(--console-dock-bottom);
+}
+
+.console-column {
+  height: 100%;
+  max-width: 100%;
+  pointer-events: auto;
+}
+
+.console-column__window {
+  width: 100%;
+  height: 100%;
+}
+
+/* App column glass on its own layer so the OO slide can fade the frame away entirely. */
+.console-column__fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 140px),
+    rgba(10, 10, 12, 0.72);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  transition: opacity 320ms var(--console-ease-fade);
+}
+
+.console-column__rim,
+.console-column__shadow {
+  transition: opacity 320ms var(--console-ease-fade);
+}
+
+/* OO: no container — headline, logo, prompt bar, chips and chat float over the background like `/`. */
+.console-column[data-frameless] .console-column__fill::before,
+.console-column[data-frameless] .console-column__rim,
+.console-column[data-frameless] .console-column__shadow {
+  opacity: 0;
+}
+
+.console-column[data-frameless] .console-column__fill {
+  clip-path: none !important;
+  overflow: visible;
+}
+
+.console-column__rim path {
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1.5;
+}
+
+.console-column__shadow {
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.22),
+    0 40px 90px -24px rgba(0, 0, 0, 0.65);
+}
+
+:is(.light, [data-theme="light"]) .console-column__fill::before {
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+:is(.light, [data-theme="light"]) .console-column__rim path {
+  stroke: rgba(0, 0, 0, 0.08);
+}
+
+:is(.light, [data-theme="light"]) .console-column__shadow {
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.05),
+    0 36px 80px -28px rgba(0, 0, 0, 0.26);
+}
+
+/* Content layers crossfade inside the column: leaving fades fast, arriving follows the width spring. */
+.console-column__layer {
+  position: absolute;
+  inset: 0;
+  padding: 20px;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity 200ms var(--console-ease-fade),
+    transform 260ms var(--console-ease-fade);
+}
+
+.console-column__layer[data-active="true"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 420ms var(--console-ease-fade) 120ms,
+    transform 560ms cubic-bezier(0.34, 1.2, 0.5, 1) 120ms;
+}
+
+.console-column__layer:not([data-active="true"]) {
+  pointer-events: none;
+}
+
+/* Scene layers fill the column edge to edge: the capture is the app column's own content. */
+.console-column__layer--scene {
+  padding: 0;
+}
+
+/* Temporary landing-demo fallback, scaled into the column with breathing room. */
+.console-surface__box {
+  position: absolute;
+  inset: 20px;
+}
+
+.console-surface__inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+}
+
+.console-surface-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.console-capture {
+  position: absolute;
+  inset: 0;
+}
+
+.console-capture__poster,
+.console-capture__video,
+.console-capture__frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  /* Whole composition, scaled to fit — never cropped (the column already matches the capture's aspect). */
+  object-fit: contain;
+  object-position: center;
+}
+
+.console-capture__video {
+  opacity: 0;
+  transition: opacity 360ms var(--console-ease-fade);
+}
+
+.console-capture__video[data-ready="true"] {
+  opacity: 1;
+}
+
+.console-capture__frame {
+  pointer-events: none;
+  background: transparent;
+}
+
+/* OO column: the live homepage, centred like `/`. */
+.console-oo {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Headline: a hidden full-text sizer fixes the box, the typed text grows left→right inside it, so the line is
+   centred on the column axis and never drifts while typing (the live page's optical nudge is dropped here). */
+.console-oo__headline {
+  display: grid;
+  justify-items: start;
+  max-width: 100%;
+}
+
+.console-oo__headline > * {
+  grid-area: 1 / 1;
+}
+
+.console-oo__headline .landing-hero-headline,
+.console-oo__headline-sizer {
+  margin: 0;
+  transform: none;
+  white-space: nowrap;
+  text-align: left;
+  font-size: clamp(32px, 3.4vw, 50px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.console-oo__headline-sizer {
+  visibility: hidden;
+}
+
+.console-oo__prompt {
+  width: 100%;
+  max-width: 450px;
+}
+
+.console-oo__chat {
+  display: flex;
+  width: 100%;
+  max-width: 480px;
+  min-height: 0;
+  justify-content: center;
+}
+
+/* Inside the column the chat is the column's content: no second panel, just the Cortex rows. */
+.console-oo__chat .landing-temp-chat {
+  max-width: none;
+}
+
+.console-oo__chat .landing-temp-chat__surface {
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+.console-oo__chat .landing-temp-chat__rim,
+.console-oo__chat .landing-temp-chat__shadow {
+  display: none;
+}
+
+.console-oo__chat .landing-temp-chat__header {
+  padding-inline: 4px;
+  text-align: left;
+}
+
+.console-oo__chat .landing-temp-chat__list {
+  max-height: none;
+  padding-inline: 4px;
+  text-align: left;
+}
+
+.console-home[data-chat="open"] .console-oo {
+  justify-content: flex-end;
+}
+
+.console-home[data-chat="open"] .console-oo__chat {
+  flex: 1;
+  align-items: flex-end;
+}
+
+.console-arcade-window {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.console-arcade-window__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 240ms var(--console-ease-fade);
+}
+
+.console-arcade-window[data-ready="true"] .console-arcade-window__frame {
+  opacity: 1;
+}
+
+/* Touch swipe surface between the scene and the UI (vertical pans still pass through). */
+.console-home__swipe {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  touch-action: pan-y;
+}
+
+/* ── Dock: compact context + tile row (bottom) ────────────────────────── */
+
+.console-dock {
+  position: absolute;
+  right: 0;
+  bottom: var(--console-dock-bottom);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-inline: var(--console-inset);
+  pointer-events: none;
+  transition: opacity 240ms var(--console-ease-fade);
+}
+
+.console-dock > * {
+  pointer-events: auto;
+}
+
+.console-home[data-chat="open"] .console-dock {
+  opacity: 0;
+}
+
+.console-context {
+  display: grid;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.console-context__inner {
+  grid-area: 1 / 1;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.console-context__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  color: var(--console-ink-2);
+}
+
+.console-title__energy {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 10px 1px currentColor;
+}
+
+.console-context__name {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 32px;
+  letter-spacing: -0.035em;
+  color: var(--console-ink);
+}
+
+.console-context__sentence {
+  max-width: 34ch;
+  margin: 4px 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--console-ink-2);
+  text-wrap: balance;
+}
+
+:is(.dark, [data-theme="dark"]) .console-context__name,
+:is(.dark, [data-theme="dark"]) .console-context__sentence {
+  text-shadow: 0 1px 24px rgba(0, 0, 0, 0.4);
+}
+
+.console-context__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Wide screens: the context sits in the lower-left gutter beside the centred tile row. */
+@media (min-width: 1200px) {
+  .console-dock {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+    gap: 24px;
+  }
+
+  .console-context {
+    grid-column: 1;
+    justify-self: start;
+    max-width: 340px;
+    padding-bottom: 32px;
+    /* Clear the library rail's pills and their member stacks. */
+    padding-left: 96px;
+    text-align: left;
+  }
+
+  .console-context__inner {
+    align-items: flex-start;
+  }
+
+  .console-context__actions {
+    justify-content: flex-start;
+  }
+
+  .console-tiles {
+    grid-column: 2;
+  }
+}
+
+/* ── Tile row ─────────────────────────────────────────────────────────── */
+
+.console-tiles {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.console-tiles__scroller {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px 16px 32px;
+  scroll-padding-inline: 16px;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.console-tiles__scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.console-tiles__list {
+  display: flex;
+  width: max-content;
+  height: 88px;
+  margin-inline: auto !important;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.console-tiles__item {
+  position: relative;
+  flex: none;
+}
+
+.console-tile {
+  position: relative;
+  display: block;
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.console-tile__shape {
+  width: 100%;
+  height: 100%;
+}
+
+.console-tile__fill {
+  background: rgba(255, 255, 255, 0.06);
+  filter: brightness(0.8) saturate(0.9);
+  transition: filter 200ms cubic-bezier(0.25, 1, 0.32, 1);
+}
+
+/* Hairline on the same superellipse keeps photo edges crisp against any scene. */
+.console-tile__rim path {
+  stroke: var(--console-tile-hairline);
+}
+
+/* Focus ring traced 5px outside the squircle (SVG, so it hugs the shape — no CSS outline). */
+.console-tile__ring {
+  opacity: 0;
+  transform: scale(0.97);
+  transform-origin: center;
+  transition:
+    opacity 160ms cubic-bezier(0.25, 1, 0.32, 1),
+    transform 240ms cubic-bezier(0.34, 1.45, 0.5, 1);
+}
+
+.console-tile__ring path {
+  stroke: var(--console-ring);
+  stroke-width: 2;
+}
+
+.console-tile:hover .console-tile__fill {
+  filter: brightness(0.94) saturate(1);
+}
+
+.console-tile.is-active .console-tile__fill,
+.console-tile:focus-visible .console-tile__fill {
+  filter: none;
+}
+
+.console-tile.is-active .console-tile__ring,
+.console-tile:focus-visible .console-tile__ring {
+  opacity: 1;
+  transform: none;
+}
+
+.console-tile.is-active .console-tile__shape {
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.5));
+}
+
+:is(.light, [data-theme="light"]) .console-tile__fill {
+  background: rgba(0, 0, 0, 0.04);
+  filter: none;
+}
+
+:is(.light, [data-theme="light"]) .console-tile.is-active .console-tile__shape {
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.18));
+}
+
+.console-tile__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.console-tile__paint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.console-tile__paint--oo {
+  /* The OO scene in miniature: the homepage background under violet smoke. */
+  background:
+    linear-gradient(125deg, rgba(60, 20, 150, 0.15) 0%, rgba(120, 70, 240, 0.55) 45%, rgba(40, 10, 110, 0.35) 100%),
+    url("/images/home/hero-office.png") 40% 45% / cover,
+    #07061a;
+}
+
+.console-tile__paint--arcade {
+  background:
+    radial-gradient(34% 34% at 64% 54%, rgba(255, 170, 60, 0.95), rgba(255, 90, 20, 0.5) 50%, transparent 75%),
+    linear-gradient(to bottom, #120402 0%, #5e1603 56%, #1a0602 56.5%, #250803 100%);
+}
+
+.console-tile__wordmark {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: #ffffff;
+}
+
+.console-tile__glyph {
+  width: 40%;
+  height: 40%;
+  color: #ffffff;
+}
+
+.console-tile__label {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  translate: -50% 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--console-ink);
+  pointer-events: none;
+}
+
+/* ── Clock (desktop only, beside the Spine corner pill) ───────────────── */
+
+.console-clock {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  right: 112px;
+  z-index: 31;
+  display: none;
+  height: 42px;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--console-ink-2);
+  user-select: none;
+}
+
+@media (min-width: 1024px) {
+  .console-clock {
+    display: flex;
+  }
+}
+
+/* ── Phone ────────────────────────────────────────────────────────────── */
+
+@media (max-width: 639px) {
+  .console-home {
+    --console-inset: 0px;
+    --console-dock-bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+  }
+
+  .console-column-wrap {
+    top: calc(env(safe-area-inset-top, 0px) + 100px);
+    bottom: calc(100% - var(--console-dock-top, 62%) + 12px);
+  }
+
+  .console-column__layer {
+    padding: 16px;
+  }
+
+  .console-oo {
+    gap: 16px;
+  }
+
+  .console-oo__headline .landing-hero-headline,
+  .console-oo__headline-sizer {
+    font-size: clamp(22px, 6.9vw, 30px);
+  }
+
+  .console-oo__cta {
+    display: none;
+  }
+
+  .console-context {
+    padding-inline: 16px;
+  }
+
+  .console-context__name {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .console-context__sentence {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .console-tiles {
+    width: 100%;
+  }
+
+  .console-tiles__scroller {
+    scroll-snap-type: x mandatory;
+    padding-bottom: 28px;
+  }
+
+  .console-tiles__item {
+    scroll-snap-align: center;
+  }
+
+  .console-tiles__list {
+    height: 72px;
+    gap: 12px;
+  }
+}
+
+/* Short desktop windows: tighten so the column keeps its height. */
+@media (min-width: 640px) and (max-height: 780px) {
+  .console-column-wrap {
+    top: calc(env(safe-area-inset-top, 0px) + 100px);
+  }
+
+  .console-oo {
+    gap: 16px;
+  }
+
+  .console-oo__headline .landing-hero-headline,
+  .console-oo__headline-sizer {
+    font-size: clamp(30px, 3.2vw, 44px);
+  }
+}
+
+/* ── Reduced motion: crossfade only ───────────────────────────────────── */
+
+.console-stage[data-reduce-motion="true"] .console-scene__media {
+  animation: none;
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .console-column__layer,
+  .console-column__layer[data-active="true"] {
+    transform: none;
+    transition: opacity 300ms linear;
+  }
+
+  .console-scene__media {
+    animation: none;
+    transform: scale(1.04);
+  }
+
+  .console-tile__ring {
+    transform: none;
+    transition: opacity 120ms linear;
+  }
+}
+
+/* ── OO: logo glob behind the prompt capsule (app home `SearchBar.tsx` row, `glass-core.css`) ──────── */
+
+.console-oo__search-row {
+  position: relative;
+  display: flex;
+  min-height: calc(240px * 77 / 172 * 1.42 + 8px);
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.console-oo__search-row .home-logo-glob-glass-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  pointer-events: none;
+  transform: translate(-50%, calc(-50% - 4.4px));
+}
+
+:is(.dark, [data-theme="dark"]) .console-oo__search-row .home-logo-glob-glass-wrap {
+  transform: translate(-50%, calc(-50% - 7px));
+}
+
+.console-oo__search-bar {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.home-logo-glob-glass--behind {
+  display: block;
+  width: 240px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+:is(.dark, [data-theme="dark"]) .home-logo-glob-glass--behind {
+  filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.14));
+}
+
+.home-logo-glob-glass__glass-stack {
+  backdrop-filter: blur(22px) saturate(1.45);
+  -webkit-backdrop-filter: blur(22px) saturate(1.45);
+}
+
+.home-logo-glob-glass__veil {
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.home-logo-glob-glass__specular {
+  mix-blend-mode: soft-light;
+  opacity: 0.38;
+}
+
+.home-logo-glob-glass__dark-base {
+  opacity: 0.88;
+}
+
+.home-logo-glob-glass--emphasized .home-logo-glob-glass__specular {
+  opacity: 0.52;
+}
+
+.home-logo-glob-glass--emphasized .home-logo-glob-glass__dark-base {
+  opacity: 0.96;
+}
+
+/* ── Bubbles preview panel (beside the library rail; app Workspaces lobby card) ─────────────────── */
+
+.console-bubbles {
+  position: fixed;
+  top: 50%;
+  left: 76px;
+  z-index: 40;
+  width: min(380px, calc(100vw - 96px));
+  translate: 0 -50%;
+  font-family: var(--font-sans);
+}
+
+.console-bubbles__box {
+  width: 100%;
+}
+
+.console-bubbles__fill {
+  display: flex;
+  max-height: calc(100svh - 176px);
+  flex-direction: column;
+  padding: 12px 16px 16px;
+  background: rgba(12, 12, 14, 0.86);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.console-bubbles__rim path {
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1.5;
+}
+
+.console-bubbles__shadow {
+  box-shadow: 0 30px 70px -18px rgba(0, 0, 0, 0.6);
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__fill {
+  background: rgba(255, 255, 255, 0.94);
+  color: rgba(0, 0, 0, 0.86);
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__rim path {
+  stroke: rgba(0, 0, 0, 0.08);
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__shadow {
+  box-shadow: 0 26px 60px -20px rgba(0, 0, 0, 0.22);
+}
+
+.console-bubbles__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.console-bubbles__preview {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: lowercase;
+  opacity: 0.7;
+}
+
+/* Drawer corner buttons: "+" (create) and "×" (close), as in the app's Workspaces drawer. */
+.console-bubbles__round {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.console-bubbles__round--close {
+  border-color: rgba(255, 80, 80, 0.45);
+  background: rgba(150, 20, 20, 0.35);
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__preview,
+:is(.light, [data-theme="light"]) .console-bubbles__round {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__round--close {
+  border-color: rgba(220, 40, 40, 0.35);
+  background: rgba(255, 70, 70, 0.1);
+}
+
+.console-bubbles__body {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.console-bubbles__title {
+  margin: 4px 0 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.console-bubbles__meta {
+  margin: 6px 4px 4px;
+  font-size: 12px;
+  line-height: 16px;
+  opacity: 0.55;
+}
+
+.console-bubbles__label {
+  align-self: flex-start;
+  margin: 12px 0 6px 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: lowercase;
+  opacity: 0.7;
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__label {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Bubble pill — app `.jokuh-bubble-chat-pill`: 44px, 36px avatar, 14/700 name, 34px round actions. */
+.console-bubble-pill {
+  display: flex;
+  height: 44px;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 5px 2px 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  background: #000000;
+}
+
+/* Light keeps the title pill light (the app's dark-on-black light bug is not copied). */
+:is(.light, [data-theme="light"]) .console-bubble-pill {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+}
+
+.console-bubble-pill__open {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.console-bubble-pill__star {
+  width: 6px;
+  height: 6px;
+  align-self: flex-start;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: #ffd23f;
+  box-shadow: 0 0 6px rgba(255, 210, 63, 0.8);
+}
+
+.console-bubble-pill > span:first-child {
+  width: 36px !important;
+  height: 36px !important;
+}
+
+.console-bubble-pill__name {
+  min-width: 0;
+  flex: 1;
+  margin: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-bubble-pill__btn {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 0.75px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+:is(.light, [data-theme="light"]) .console-bubble-pill__btn {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.console-bubble-pill--preview {
+  margin-top: 16px;
+}
+
+.console-bubbles__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Huddle row — app `HuddleLobbyForest`: 40px capsule, 8px dot, 14px name, unread badge, Live chip. */
+.console-huddle-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.console-huddle-row__add {
+  display: inline-flex;
+  width: 18px;
+  flex: none;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 14px;
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.console-huddle {
+  display: flex;
+  height: 40px;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: #000000;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.console-huddle:hover,
+.console-huddle:focus-visible {
+  background: rgba(255, 255, 255, 0.09);
+  outline: none;
+}
+
+:is(.light, [data-theme="light"]) .console-huddle {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+}
+
+.console-huddle__dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #8c73ff, #43fdff);
+}
+
+.console-huddle__name {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.65;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.console-huddle[data-unread] .console-huddle__name {
+  font-weight: 800;
+  opacity: 1;
+}
+
+.console-huddle__kind {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+.console-huddle__trail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.console-huddle__unread {
+  display: inline-flex;
+  min-width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(255, 59, 48, 0.85);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+/* Green Live chip beside a voice Huddle with a Beam (app `#21dc11`, 40px). */
+.console-huddle__live {
+  display: inline-flex;
+  height: 40px;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #21dc11;
+  color: #04260a;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(33, 220, 17, 0.35);
+}
+
+.console-faces {
+  display: flex;
+}
+
+.console-faces img {
+  width: 22px;
+  height: 22px;
+  margin-left: -6px;
+  border-radius: 999px;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px #0c0c0e;
+}
+
+:is(.light, [data-theme="light"]) .console-faces img {
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
+.console-bubbles__recent,
+.console-bubbles__members,
+.console-room__log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.console-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.console-line__avatar,
+.console-line__oo {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.console-line__oo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(0deg, #7700ff, #b200ff);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.console-line__text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.console-line__name {
+  font-weight: 700;
+}
+
+.console-member {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.console-member__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.console-member__name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.console-member__role {
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+.console-bubbles__note {
+  margin: 14px 4px 0;
+  font-size: 12px;
+  line-height: 17px;
+  opacity: 0.55;
+}
+
+.console-bubbles__actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.console-create {
+  display: flex;
+  flex-direction: column;
+}
+
+.console-create__label {
+  margin: 14px 4px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.console-create__input {
+  width: 100%;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+}
+
+.console-create__input:focus-visible {
+  border-color: rgba(255, 255, 255, 0.4);
+  outline: none;
+}
+
+:is(.light, [data-theme="light"]) .console-create__input {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.console-create__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.console-create__emoji,
+.console-create__swatch {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 18px;
+  cursor: pointer;
+  transition: box-shadow 140ms ease;
+}
+
+.console-create__emoji[aria-checked="true"],
+.console-create__swatch[aria-checked="true"] {
+  box-shadow: 0 0 0 2px var(--console-ring, #ffffff);
+}
+
+:is(.light, [data-theme="light"]) .console-create__emoji {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+:is(.light, [data-theme="light"]) .console-create__emoji[aria-checked="true"],
+:is(.light, [data-theme="light"]) .console-create__swatch[aria-checked="true"] {
+  box-shadow: 0 0 0 2px #0a0a0b;
+}
+
+.console-create__avatar {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 18px;
+}
+
+.console-room__system {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.console-room__system img {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.console-room__composer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* The app's search capsule is a near-opaque chrome well over the glob (`--chrome-fill-well`), so the mark frames
+   the capsule instead of showing through the text. */
+.console-oo__search-bar [data-slot="prompt-frame"] {
+  background-color: rgba(20, 20, 22, 0.92) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28) !important;
+}
+
+:is(.light, [data-theme="light"]) .console-oo__search-bar [data-slot="prompt-frame"] {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+}
+
+.console-bubble-card {
+  margin-bottom: 4px;
+}
+
+.console-bubble-card__fill {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.console-bubble-card__rim path {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+:is(.light, [data-theme="light"]) .console-bubble-card__fill {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+:is(.light, [data-theme="light"]) .console-bubble-card__rim path {
+  stroke: rgba(0, 0, 0, 0.07);
+}
+
+.console-recent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.console-bubbles__divider {
+  height: 1px;
+  margin: 16px 0 12px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__divider {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.console-bubbles__caps {
+  margin: 0 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.console-bubbles__caps-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.console-bubbles__caps-row .console-bubbles__caps {
+  margin-bottom: 0;
+}
+
+.console-oo-chat {
+  display: block;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+:is(.light, [data-theme="light"]) .console-oo-chat {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.console-bubbles__search {
+  margin-top: 16px;
+}
+
+.console-bubbles__back {
+  align-self: flex-start;
+  margin-bottom: 4px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+:is(.light, [data-theme="light"]) .console-bubbles__back {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.console-room {
+  display: flex;
+  flex-direction: column;
+}

@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { JokuhButton } from "../../system/JokuhButton";
+import { SquircleBox } from "../../system/squircle";
 import type { LandingTempChat } from "./useLandingTempChat";
 
 const ERROR_COPY = {
@@ -15,6 +16,7 @@ const ERROR_COPY = {
 /**
  * **Purpose:** The homepage's temporary OO chat — replaces the headline area once a visitor sends from the prompt bar.
  * Nothing is saved; the header says so. After a few turns it hands off to Claim your identity.
+ * Look: the app's Cortex chat — squircle panel, trailing squircle user rows, bubble-less OO text, squircle cards.
  * **Connects to:** `useLandingTempChat`, `LandingImmersiveShell`, claim flow (`onClaim`).
  */
 export function LandingTempChatPanel({
@@ -43,47 +45,66 @@ export function LandingTempChatPanel({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
     >
-      <header className="landing-temp-chat__header">
-        <span className="landing-temp-chat__oo" aria-hidden>
-          OO
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="landing-temp-chat__title">Temporary chat</p>
-          <p className="landing-temp-chat__subtitle">Not saved · closes when you leave</p>
-        </div>
-        <JokuhButton variant="ghost" size="sm" aria-label="Close chat" className="!px-2" onClick={onClose}>
-          <X className="size-4" strokeWidth={2} aria-hidden />
-        </JokuhButton>
-      </header>
+      <SquircleBox
+        radius={32}
+        className="landing-temp-chat__box"
+        fillClassName="landing-temp-chat__surface"
+        rimClassName="landing-temp-chat__rim"
+        shadowClassName="landing-temp-chat__shadow"
+      >
+        <header className="landing-temp-chat__header">
+          <span className="landing-temp-chat__oo" aria-hidden>
+            OO
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="landing-temp-chat__title">Temporary chat</p>
+            <p className="landing-temp-chat__subtitle">Not saved · closes when you leave</p>
+          </div>
+          <JokuhButton variant="ghost" size="sm" aria-label="Close chat" className="!px-2" onClick={onClose}>
+            <X className="size-4" strokeWidth={2} aria-hidden />
+          </JokuhButton>
+        </header>
 
-      <div ref={listRef} className="landing-temp-chat__list" aria-live="polite" aria-busy={chat.streaming}>
-        {chat.messages.map((message, index) => {
-          const isLast = index === chat.messages.length - 1;
-          if (message.role === "user") {
+        <div ref={listRef} className="landing-temp-chat__list" aria-live="polite" aria-busy={chat.streaming}>
+          {chat.messages.map((message, index) => {
+            const isLast = index === chat.messages.length - 1;
+            if (message.role === "user") {
+              // Cortex user row: trailing squircle, 8% ink fill, no tail.
+              return (
+                <SquircleBox
+                  key={index}
+                  radius={18}
+                  className="landing-temp-chat__bubble landing-temp-chat__bubble--user"
+                  fillClassName="landing-temp-chat__bubble-fill"
+                >
+                  <p className="landing-temp-chat__bubble-text">{message.content}</p>
+                </SquircleBox>
+              );
+            }
+            // Cortex assistant row: no bubble, reading text.
             return (
-              <p key={index} className="landing-temp-chat__bubble landing-temp-chat__bubble--user">
-                {message.content}
+              <p key={index} className={cn("landing-temp-chat__bubble landing-temp-chat__bubble--oo", isLast && chat.streaming && "is-streaming")}>
+                {message.content || <span className="landing-temp-chat__thinking">OO is thinking…</span>}
               </p>
             );
-          }
-          return (
-            <p key={index} className={cn("landing-temp-chat__bubble landing-temp-chat__bubble--oo", isLast && chat.streaming && "is-streaming")}>
-              {message.content || <span className="landing-temp-chat__thinking">OO is thinking…</span>}
-            </p>
-          );
-        })}
+          })}
 
-        {chat.error && chat.error !== "turn_limit" ? <p className="landing-temp-chat__error">{ERROR_COPY[chat.error]}</p> : null}
+          {chat.error && chat.error !== "turn_limit" ? (
+            <SquircleBox radius={18} className="landing-temp-chat__card" fillClassName="landing-temp-chat__card-fill landing-temp-chat__error">
+              <p>{ERROR_COPY[chat.error]}</p>
+            </SquircleBox>
+          ) : null}
 
-        {chat.atLimit || chat.error === "turn_limit" ? (
-          <div className="landing-temp-chat__limit">
-            <p>Keep going with an account. OO remembers what matters across your calls, chats and files.</p>
-            <JokuhButton variant="create" size="md" onClick={onClaim}>
-              Claim your identity
-            </JokuhButton>
-          </div>
-        ) : null}
-      </div>
+          {chat.atLimit || chat.error === "turn_limit" ? (
+            <SquircleBox radius={22} className="landing-temp-chat__card" fillClassName="landing-temp-chat__card-fill landing-temp-chat__limit">
+              <p>Keep going with an account. OO remembers what matters across your calls, chats and files.</p>
+              <JokuhButton variant="create" size="md" onClick={onClaim}>
+                Claim your identity
+              </JokuhButton>
+            </SquircleBox>
+          ) : null}
+        </div>
+      </SquircleBox>
     </motion.section>
   );
 }

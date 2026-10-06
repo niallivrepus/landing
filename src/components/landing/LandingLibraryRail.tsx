@@ -28,7 +28,7 @@ function getServerRevealWidth(name: string) {
   return Math.max(SERVER_ROW_MIN_WIDTH, 56 + name.length * 8.5);
 }
 
-function GoldStar() {
+export function GoldStar() {
   return (
     <svg
       width={16}
@@ -52,14 +52,28 @@ function GoldStar() {
  * **Parity:** `jokuh-app-main/src/shell/CollapsedLibraryRail.tsx` (trimmed for landing).
  * **Connects to:** `ImmersiveAppChrome`, `LandingBubblesOverlay`, `landing-library-rail-data.ts`.
  */
-export function LandingLibraryRail({
-  className,
-  forceExpanded = false,
-}: {
+export type LandingLibraryRailProps = {
   className?: string;
   /** When true, server names and extras stay revealed (Bubbles overlay entrance). */
   forceExpanded?: boolean;
-}) {
+  /** Console home: a pill opens that Bubble's preview instead of only pinning the rail open. */
+  onSelectServer?: (server: LandingLibraryServer) => void;
+  /** Console home: "+" starts the local create-your-own preview instead of the download intercept. */
+  onCreate?: () => void;
+  /** Bubbles created in the preview (local only), shown above the roster. */
+  extraServers?: LandingLibraryServer[];
+  /** Highlights the Bubble whose preview is open. */
+  selectedServerId?: string | null;
+};
+
+export function LandingLibraryRail({
+  className,
+  forceExpanded = false,
+  onSelectServer,
+  onCreate,
+  extraServers,
+  selectedServerId = null,
+}: LandingLibraryRailProps) {
   const shouldAnimate = useShouldAnimate();
   const { intercept } = useDownloadIntercept("library-rail");
   const [libraryHovered, setLibraryHovered] = useState(false);
@@ -81,11 +95,11 @@ export function LandingLibraryRail({
 
   const servers = useMemo(
     () =>
-      LANDING_LIBRARY_SERVERS.map((server) => ({
+      [...(extraServers ?? []), ...LANDING_LIBRARY_SERVERS].map((server) => ({
         ...server,
         activeCall: activeCallsByServer[server.id],
       })),
-    [activeCallsByServer],
+    [activeCallsByServer, extraServers],
   );
 
   const clearHoverLeaveTimeout = () => {
@@ -178,8 +192,8 @@ export function LandingLibraryRail({
       <div className="flex h-full flex-col justify-center gap-[4px] py-3">
         <ChatBubbleButton
           variant="plus"
-          aria-label="Add server"
-          onClick={() => intercept("prompt-plus")}
+          aria-label={onCreate ? "Create a Bubble" : "Add server"}
+          onClick={() => (onCreate ? onCreate() : intercept("prompt-plus"))}
         />
 
         {servers.map((server, index) => (
@@ -193,9 +207,14 @@ export function LandingLibraryRail({
               clearHoverLeaveTimeout();
               setHoveredServerId(server.id);
             }}
-            onTogglePin={() =>
-              setPinnedServerId((current) => (current === server.id ? null : server.id))
-            }
+            selected={selectedServerId === server.id}
+            onTogglePin={() => {
+              if (onSelectServer) {
+                onSelectServer(server);
+                return;
+              }
+              setPinnedServerId((current) => (current === server.id ? null : server.id));
+            }}
             onJoinCall={() => intercept("call", { ref: server.id })}
           />
         ))}
@@ -210,6 +229,30 @@ export function LandingLibraryRail({
   );
 }
 
+/** Server avatar — logo symbol, or an emoji on a colour for Bubbles made in the console preview. */
+export function RailServerAvatar({ server }: { server: LandingLibraryServer }) {
+  if (server.emoji) {
+    return (
+      <span
+        aria-hidden
+        className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-[17px] leading-none"
+        style={{ background: server.backgroundColor }}
+      >
+        {server.emoji}
+      </span>
+    );
+  }
+  return (
+    <ServerAvatar
+      size={32}
+      symbolSrc={server.symbolSrc}
+      symbolScale={server.symbolScale ?? 0.72}
+      symbolColor={server.symbolColor}
+      backgroundColor={server.backgroundColor}
+    />
+  );
+}
+
 function LandingLibraryServerRow({
   server,
   libraryOpen,
@@ -218,8 +261,10 @@ function LandingLibraryServerRow({
   onHover,
   onTogglePin,
   onJoinCall,
+  selected = false,
 }: {
   server: LandingLibraryServer & { activeCall?: LandingLibraryActiveCall };
+  selected?: boolean;
   libraryOpen: boolean;
   revealIndex: number;
   shouldAnimate: boolean;
@@ -259,6 +304,7 @@ function LandingLibraryServerRow({
         <motion.button
           type="button"
           aria-expanded={showExpanded}
+          aria-pressed={selected || undefined}
           aria-label={server.name}
           title={server.name}
           initial={false}
@@ -275,6 +321,7 @@ function LandingLibraryServerRow({
             "relative inline-flex shrink-0 items-center rounded-full border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/20",
             showExpanded ? "justify-start overflow-hidden pl-[3px] pr-4" : "justify-center",
             rainbowBurstActive && !showExpanded && "spectral-border-burst border-transparent",
+            selected && "ring-2 ring-white/80 light:ring-zinc-900/70",
           )}
           style={{
             boxShadow: "var(--landing-control-inner-highlight), var(--landing-control-shadow)",
@@ -283,25 +330,13 @@ function LandingLibraryServerRow({
         >
           {showExpanded ? (
             <span className="inline-flex items-center gap-2">
-              <ServerAvatar
-                size={32}
-                symbolSrc={server.symbolSrc}
-                symbolScale={server.symbolScale ?? 0.72}
-                symbolColor={server.symbolColor}
-                backgroundColor={server.backgroundColor}
-              />
+              <RailServerAvatar server={server} />
               <span className="whitespace-nowrap font-sans text-[14px] font-bold leading-[0.9] text-light-space light:text-zinc-900">
                 {server.name}
               </span>
             </span>
           ) : (
-            <ServerAvatar
-              size={32}
-              symbolSrc={server.symbolSrc}
-              symbolScale={server.symbolScale ?? 0.72}
-              symbolColor={server.symbolColor}
-              backgroundColor={server.backgroundColor}
-            />
+            <RailServerAvatar server={server} />
           )}
         </motion.button>
 

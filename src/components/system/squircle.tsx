@@ -1,5 +1,15 @@
 import { Squircle, cn, createSquirclePath } from "@jokuh/gooey";
-import { useEffect, useId, useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 
 import { SQUIRCLE_MEDIA_CORNER_RADIUS, SQUIRCLE_MEDIA_MATTE_CLASS } from "./editorialMedia";
 
@@ -119,6 +129,122 @@ export function SquircleMedia({
       ) : (
         <div className="size-full opacity-0">{children}</div>
       )}
+    </div>
+  );
+}
+
+export type SquircleBoxRadius = number | ((width: number, height: number) => number);
+
+export type SquircleBoxProps = {
+  /** Corner radius in px, or a function of the measured box (e.g. `(w, h) => Math.min(w, h) * 0.3`). */
+  radius: SquircleBoxRadius;
+  children?: ReactNode;
+  className?: string;
+  /** Class on the clipped fill layer (background, padding, overflow content). */
+  fillClassName?: string;
+  /** Adds an SVG rim stroked on the same superellipse (style `path` stroke via this class). */
+  rimClassName?: string;
+  /**
+   * An outer ring traced `offset` px outside the squircle — a focus ring that hugs the shape (style via
+   * `ring.className`; toggle with opacity). Drawn on its own SVG with visible overflow.
+   */
+  ring?: { offset: number; className?: string };
+  /** Soft shadow layer behind the shape (clip-path would cut a box-shadow; a filter would break backdrop blur). */
+  shadowClassName?: string;
+  /** Base class for the BEM parts (`__fill`, `__rim`, `__ring`, `__shadow`). Default `jk-squircle`. */
+  baseClassName?: string;
+  style?: CSSProperties;
+  fillStyle?: CSSProperties;
+};
+
+/**
+ * **Purpose:** The site's true-superellipse box (Figma 100% corner smoothing, the app's `SquircleSurface` look):
+ * measures itself, clips its fill with `createSquirclePath`, and can stroke a matching rim, an offset focus ring and
+ * a soft shadow. Re-measures on every resize, so springing tiles and streaming chat bubbles keep exact corners.
+ * Before the first measure it falls back to `border-radius` so nothing renders square.
+ * **Connects to:** `ProfilePodsDemoPods` (`Squircle`), console home tiles + surface window, `LandingTempChatPanel`,
+ * OO demo proof cards; base styles `.jk-squircle*` in `landing-controls.css`.
+ */
+export function SquircleBox({
+  radius,
+  children,
+  className,
+  fillClassName,
+  rimClassName,
+  ring,
+  shadowClassName,
+  baseClassName = "jk-squircle",
+  style,
+  fillStyle,
+}: SquircleBoxProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+
+  useLayoutEffect(() => {
+    const node = ref.current;
+    if (!node) return undefined;
+    const measure = () => {
+      const w = Math.round(node.offsetWidth);
+      const h = Math.round(node.offsetHeight);
+      setSize((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const r = size.w > 0 && size.h > 0
+    ? Math.min(typeof radius === "function" ? radius(size.w, size.h) : radius, size.w / 2, size.h / 2)
+    : typeof radius === "number" ? radius : 0;
+
+  const path = useMemo(
+    () =>
+      size.w > 0 && size.h > 0
+        ? createSquirclePath({ width: size.w, height: size.h, cornerRadius: r, cornerSmoothing: 1 })
+        : "",
+    [r, size.h, size.w],
+  );
+
+  const ringPath = useMemo(() => {
+    if (!ring || size.w <= 0 || size.h <= 0) return "";
+    const o = ring.offset;
+    return createSquirclePath({ width: size.w + o * 2, height: size.h + o * 2, cornerRadius: r + o, cornerSmoothing: 1 });
+  }, [r, ring, size.h, size.w]);
+
+  return (
+    <div ref={ref} className={cn(baseClassName, className)} style={style}>
+      {shadowClassName ? (
+        <span aria-hidden className={cn(`${baseClassName}__shadow`, shadowClassName)} style={{ borderRadius: r * 0.92 }} />
+      ) : null}
+      <div
+        className={cn(`${baseClassName}__fill`, fillClassName)}
+        style={{ ...fillStyle, ...(path ? { clipPath: `path('${path}')` } : { borderRadius: r }) }}
+      >
+        {children}
+      </div>
+      {path && rimClassName ? (
+        <svg
+          className={cn(`${baseClassName}__rim`, rimClassName)}
+          viewBox={`0 0 ${size.w} ${size.h}`}
+          aria-hidden
+          focusable="false"
+        >
+          <path d={path} />
+        </svg>
+      ) : null}
+      {ring && ringPath ? (
+        <svg
+          className={cn(`${baseClassName}__ring`, ring.className)}
+          style={{ inset: -ring.offset, width: size.w + ring.offset * 2, height: size.h + ring.offset * 2 }}
+          viewBox={`0 0 ${size.w + ring.offset * 2} ${size.h + ring.offset * 2}`}
+          aria-hidden
+          focusable="false"
+        >
+          <path d={ringPath} />
+        </svg>
+      ) : null}
     </div>
   );
 }

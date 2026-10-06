@@ -141,3 +141,108 @@
 [data-theme="light"] .landing-pill-link--primary:hover {
   background: rgb(39, 39, 42);
 }
+
+/**
+ * Corner / Nexus energy glow — `EnergyGlow` in `ImmersiveAppChrome` (console home tile focus).
+ * A tinted pill traced on the ActionButton's rotated inner pill (40×54, ±45°) or the Nexus pill, with a glowing
+ * rim and a one-shot pulse ring. `--energy` is the corner's app colour (`landing-shell-preview.ts`).
+ */
+.landing-energy-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.landing-energy-glow + [data-slot="action-button"],
+.landing-energy-glow ~ * {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-energy-glow__pill,
+.landing-energy-glow__pulse {
+  grid-area: 1 / 1;
+  width: 42px;
+  height: 56px;
+  border-radius: 999px;
+}
+
+.landing-energy-glow[data-shape="right"] .landing-energy-glow__pill,
+.landing-energy-glow[data-shape="right"] .landing-energy-glow__pulse {
+  transform: rotate(-45deg);
+}
+
+.landing-energy-glow[data-shape="left"] .landing-energy-glow__pill,
+.landing-energy-glow[data-shape="left"] .landing-energy-glow__pulse {
+  transform: rotate(45deg);
+}
+
+.landing-energy-glow[data-shape="nexus"] .landing-energy-glow__pill,
+.landing-energy-glow[data-shape="nexus"] .landing-energy-glow__pulse {
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+}
+
+.landing-energy-glow__pill {
+  background: color-mix(in srgb, var(--energy) 30%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--energy) 75%, transparent),
+    0 0 18px 2px color-mix(in srgb, var(--energy) 55%, transparent),
+    0 0 44px 6px color-mix(in srgb, var(--energy) 22%, transparent);
+}
+
+.landing-energy-glow__pulse {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--energy) 70%, transparent);
+}
+
+:is(.light, [data-theme="light"]) .landing-energy-glow__pill {
+  background: color-mix(in srgb, var(--energy) 22%, white);
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, var(--energy) 85%, transparent),
+    0 0 16px 1px color-mix(in srgb, var(--energy) 40%, transparent);
+}
+
+/* ─── SquircleBox (`components/system/squircle.tsx`) — true superellipse box ───────────────── */
+
+.jk-squircle {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+}
+
+.jk-squircle__fill {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.jk-squircle__rim,
+.jk-squircle__ring {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.jk-squircle__rim path,
+.jk-squircle__ring path {
+  fill: none;
+  stroke-width: 1;
+  shape-rendering: geometricPrecision;
+  vector-effect: non-scaling-stroke;
+}
+
+.jk-squircle__shadow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}

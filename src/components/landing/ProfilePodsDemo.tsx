@@ -9,7 +9,7 @@ import { PodFace, PodTile, ProfileHero, ProfileMeta, type PodId, type PodSize } 
  * companions sized small / h2 / vtall exactly as the app allows. Pods fly in scattered and tilted, snap into their slots,
  * then every few seconds the board re-arranges into another legal app layout (bricks move, resize, swap in and out).
  * Phone / narrow column: the app's stack fallback — hero on top, companions in a 2-column grid — reshuffled now and then.
- * Pauses while hovered, off screen or in a hidden tab; static under reduced motion.
+ * Pauses while hovered, off screen, in a hidden tab or when `paused`; static under reduced motion.
  * **Connects to:** `ProfileImmersiveShell`, `ProfilePodsDemoPods.tsx` (hero + pod faces), `landing-profile-pods-demo.css`.
  * **Parity (web app):** `frontend/src/components/pods/ProfilePodBentoGrid.tsx` + `utils/profile-pod-bento-layout.ts`
  * (`ProfilePodBentoMetrics`, `ProfilePodBentoSlots`); Swift `Sources/pods/profile-pod-bento-grid.swift`.
@@ -357,7 +357,16 @@ function NarrowStack({ order, animate, reduceMotion }: { order: PodId[]; animate
 
 // ─── Root ──────────────────────────────────────────────────────────────────
 
-export function ProfilePodsDemo({ className, footer }: { className?: string; footer?: ReactNode }) {
+export function ProfilePodsDemo({
+  className,
+  footer,
+  paused = false,
+}: {
+  className?: string;
+  footer?: ReactNode;
+  /** Freeze the shuffle (console home: scene not focused). */
+  paused?: boolean;
+}) {
   const reduceMotion = useReducedMotion() ?? false;
   const wideViewport = useWideViewport();
   const { ref, width } = useContainerWidth();
@@ -366,7 +375,7 @@ export function ProfilePodsDemo({ className, footer }: { className?: string; foo
 
   const geo = useMemo(() => (wideViewport && width > 0 ? computeGeometry(width) : null), [wideViewport, width]);
   const isWide = geo != null;
-  const running = !reduceMotion && !hovered && onScreen;
+  const running = !reduceMotion && !hovered && onScreen && !paused;
 
   const wideIndex = useCycle(WIDE_LAYOUTS.length, SHUFFLE_MS, running && isWide);
   const narrowIndex = useCycle(NARROW_ORDERS.length, NARROW_SHUFFLE_MS, running && !isWide);
