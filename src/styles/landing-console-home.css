@@ -1,9 +1,9 @@
 /**
- * **Purpose:** "Console Home" lab homepage (`/lab/home`) — full-bleed billboard, bottom-left title block,
+ * **Purpose:** "Console Home" homepage (`/`) — full-bleed billboard, bottom-left title block,
  * PS5-style tile row. 8px rhythm throughout; Satoshi with tight tracking at display sizes.
  * Dark is the default; light uses the site's `:is(.light, [data-theme="light"])` scope.
  * **Connects to:** `ConsoleHomeShell`, `ConsoleStage` / `ConsoleShaderScene`, `ConsoleTileRow`, `ConsoleClock`.
- * Imported by `LabConsoleHomePage` only, so it code-splits with the lab chunk.
+ * Imported by `pages/Home.tsx`, so it code-splits with the homepage chunk.
  */
 
 html.console-home-host,

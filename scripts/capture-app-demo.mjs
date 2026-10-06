@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Capture the REAL Jokuh web app's demo surfaces for the console home (`/lab/home`).
+ * Capture the REAL Jokuh web app's demo surfaces for the console homepage (`/`).
  *
  * The console home never re-draws the app: the centred column and the left rail play recordings of the real web
  * app's read-only `/demo` mode. This script makes those recordings. Re-run it whenever the app UI changes.

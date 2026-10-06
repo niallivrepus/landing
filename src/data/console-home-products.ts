@@ -1,5 +1,5 @@
 /**
- * **Purpose:** Product focus list for the `/lab/home` "Console Home" prototype (PS5 home × Netflix billboard).
+ * **Purpose:** Product focus list for the "Console Home" homepage (`/`) (PS5 home × Netflix billboard).
  * Copy is lifted from shipped site sources only — `products.ts` summaries, `SITE_PRODUCT_SENTENCE` (OO), the
  * homepage arcade pill (chess) and Jokuh Mail (username@jokuh.com, live in the Texts inbox). No new claims.
  * Each product's scene is its hero art (atmosphere) with the product's live app surface mounted on top

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { dismissCookieBanner, primeCookieConsent } from './helpers';
 
 /**
- * `/lab/home` (Console Home lab): the library rail's "Create a Bubble" preview stays entirely local — the new Bubble
+ * `/` (Console Home): the library rail's "Create a Bubble" preview stays entirely local — the new Bubble
  * appears in the rail and opens as a room with demo agents and OO's welcome — and any real action ends at the
  * Claim your identity prompt. Nothing may be sent anywhere (no non-GET requests).
  */
@@ -10,10 +10,11 @@ test.beforeEach(async ({ page }) => {
   await primeCookieConsent(page);
 });
 
-test('console home is noindex and shows the centred app column', async ({ page }) => {
-  await page.goto('/lab/home');
+test('console home is indexable and shows the centred app column', async ({ page }) => {
+  await page.goto('/');
   await dismissCookieBanner(page);
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
+  // The homepage must stay indexable (the old lab route set noindex).
+  await expect(page.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0);
   await expect(page.getByRole('heading', { level: 1, name: 'Your mind. Your machine.' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Jokuh products' })).toBeVisible();
 });
@@ -27,7 +28,7 @@ test('create your own Bubble stays local and ends at the claim prompt', async ({
     if (ours && request.method() !== 'GET' && request.method() !== 'HEAD') sent.push(`${request.method()} ${url}`);
   });
 
-  await page.goto('/lab/home');
+  await page.goto('/');
   await dismissCookieBanner(page);
 
   await page.getByRole('button', { name: 'Create a Bubble' }).click();

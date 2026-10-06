@@ -20,9 +20,15 @@ test.describe('visual snapshots', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Your mind. Your machine.' })).toBeVisible();
     await stabilizeForScreenshot(page);
 
-    // The shipped ticker shows the newest weekly post; mask it so a new post doesn't break the baseline.
+    // Mask what changes on its own: the shipped ticker (newest weekly post), the local clock, and the live
+    // scene layers (smoke shader canvas, real-app capture videos).
     await expect(page.getByRole('region', { name: 'Jokuh home' })).toHaveScreenshot('home-hero-desktop.png', {
-      mask: [page.getByRole('link', { name: /^New on Shipped:/ })],
+      mask: [
+        page.getByRole('link', { name: /^New on Shipped:/ }),
+        page.locator('.console-clock'),
+        page.locator('canvas, video'),
+      ],
+      maxDiffPixelRatio: 0.01,
     });
   });
 

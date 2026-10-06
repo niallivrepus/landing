@@ -61,7 +61,7 @@ const CORNER_FOR_PRODUCT: Partial<Record<ConsoleProductId, LandingCornerAction>>
 const SWIPE_MIN_PX = 48;
 
 /**
- * **Purpose:** "Console Home" homepage prototype (`/lab/home`): the real app shell × a PS5 home screen.
+ * **Purpose:** "Console Home" homepage (`/`): the real app shell × a PS5 home screen.
  * - Centre: the app's squircle center column (`ConsoleColumn`), framed by the four corner pills + Nexus like the real
  *   app. OO shows the live homepage UI (headline, prompt bar, chips, the temporary OO chat opening in place —
  *   `useLandingTempChat` → `landing-oo-chat`); other products show their live demo surface.
@@ -74,7 +74,7 @@ const SWIPE_MIN_PX = 48;
  * - The focused product's corner lights in its energy colour; "Open" goes to the real app demo
  *   (`{VITE_ORIGIN_APP}/demo?surface=…`), "Learn more" to the landing product page.
  * Keeps the live home's chrome: shipped ticker, slim footer row, claim-identity overlay, arcade (chess) overlay.
- * **Connects to:** `LabConsoleHomePage`, `ConsoleColumn`, `ConsoleStage`, `ConsoleTileRow`, `console-home-products.ts`,
+ * **Connects to:** `pages/Home.tsx`, `ConsoleColumn`, `ConsoleStage`, `ConsoleTileRow`, `console-home-products.ts`,
  * `landing-console-home.css`. The live `/` (`LandingImmersiveShell`) is untouched.
  */
 export function ConsoleHomeShell() {

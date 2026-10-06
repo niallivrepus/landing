@@ -27,15 +27,15 @@ test('renders the one-screen hero with prompt bar, chips and site links', async 
   await expect(home.locator('[data-slot="prompt-frame"]')).toBeVisible();
   await expect(home.getByRole('button', { name: /^Suggested prompt:/ }).first()).toBeVisible();
   await expect(home.getByRole('link', { name: 'Get started' })).toBeVisible();
-  await expect(home.getByRole('link', { name: 'Download Jokuh' })).toBeVisible();
 
-  // Chrome: Nexus home pill, shipped ticker, four corner pills, Blurbs pill.
+  // Chrome: Nexus home pill, shipped ticker, four corner pills, product tile row.
   await expect(home.getByRole('link', { name: 'Jokuh home' })).toHaveAttribute('href', '/');
   await expect(home.getByRole('link', { name: /^New on Shipped:/ })).toHaveAttribute('href', /^\/shipped\//);
   for (const corner of ['Profile — id', 'Spine — spine', 'Calls — call', 'Texts — text']) {
     await expect(home.getByRole('button', { name: corner })).toBeVisible();
   }
-  await expect(home.getByRole('link', { name: 'Blurbs' })).toHaveAttribute('href', '/blurbs');
+  // Console Home: products are a tile row (Blurbs moved from a pill into the row).
+  await expect(page.getByRole('navigation', { name: 'Jokuh products' })).toBeVisible();
 
   const siteLinks = page.getByRole('navigation', { name: 'Site links' });
   for (const [label, href] of SITE_LINKS) {
@@ -104,7 +104,7 @@ test('shows a clean error when the temporary chat is unavailable', async ({ page
 });
 
 test('takes visitors from download to the download page', async ({ page }) => {
-  await page.getByRole('link', { name: 'Download Jokuh' }).click();
+  await page.getByRole('navigation', { name: 'Site links' }).getByRole('link', { name: 'Download', exact: true }).click();
 
   await expect(page).toHaveURL(/\/download/);
   await expect(page.getByRole('heading', { level: 1, name: /Download Jokuh|Create your Jokuh account/i })).toBeVisible();
