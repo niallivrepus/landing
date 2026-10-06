@@ -89,6 +89,9 @@ const ALL_THEMES = ["dark", "light"];
 const SETTLE_MS = 1500;
 const READY_TIMEOUT_MS = 8000;
 const POSTER_AT_MS = 3000;
+/** Surfaces whose loop moves on (messages arrive and the thread scrolls): the poster is the settled first frame. */
+const POSTER_EARLY = new Set(["texts", "spine", "oo"]);
+const POSTER_EARLY_MS = 400;
 /** Tail→head crossfade used to make the loop seamless (seconds). */
 const LOOP_FADE_SECONDS = 0.6;
 
@@ -259,9 +262,21 @@ async function capture(browser, { url, theme, seconds, viewport, rail, surface, 
       if (event?.data?.type === "jokuh-embed-ready") window.__jokuhEmbedReady = true;
     });
   });
-  await page.goto(url, { waitUntil: "networkidle", timeout: 45_000 });
-  await page.waitForFunction(() => window.__jokuhEmbedReady === true, null, { timeout: READY_TIMEOUT_MS }).catch(() => {});
-  await page.waitForTimeout(SETTLE_MS);
+  const early = Boolean(surface && POSTER_EARLY.has(surface));
+  if (early) {
+    // These loops play from page load (messages arriving, the timeline scrolling): don't wait for network idle or the
+    // embed-ready message (the team scenario never sends it, so that wait is a dead 8 s) — start as soon as the
+    // surface has rendered, so the poster and the loop begin at the top.
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    await page.waitForFunction(() => (document.body.innerText ?? "").trim().length > 40, null, { timeout: 20_000 }).catch(() => {});
+    await page.waitForTimeout(250);
+  } else {
+    await page.goto(url, { waitUntil: "networkidle", timeout: 45_000 });
+    await page.waitForFunction(() => window.__jokuhEmbedReady === true, null, { timeout: READY_TIMEOUT_MS }).catch(() => {});
+  }
+  // Surfaces that play from their first frame (messages arriving, the thread scrolling) are recorded straight away,
+  // so the loop and its poster start at the top instead of mid-scroll.
+  if (!early) await page.waitForTimeout(SETTLE_MS);
   // The passkey sheet's contents appear a few seconds after the page settles: wait for them so it can be measured.
   if (surface === "signin") {
     await page
@@ -305,9 +320,10 @@ async function capture(browser, { url, theme, seconds, viewport, rail, surface, 
     everyNthFrame: 1,
   });
   const startedAt = Date.now() / 1000;
-  await page.waitForTimeout(POSTER_AT_MS);
+  const posterAt = surface && POSTER_EARLY.has(surface) ? POSTER_EARLY_MS : POSTER_AT_MS;
+  await page.waitForTimeout(posterAt);
   await page.screenshot({ path: `${outBase}.jpg`, type: "jpeg", quality: 82, clip });
-  await page.waitForTimeout(Math.max(0, seconds * 1000 - POSTER_AT_MS));
+  await page.waitForTimeout(Math.max(0, seconds * 1000 - posterAt));
   await cdp.send("Page.stopScreencast").catch(() => {});
   const endedAt = Date.now() / 1000;
   await context.close();

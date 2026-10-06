@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-10-06T17:18:04.558Z",
+  "capturedAt": "2026-10-06T17:50:19.451Z",
   "origin": "https://app.jokuh.com",
   "viewport": {
     "width": 1280,
@@ -86,7 +86,7 @@
       "light": {
         "poster": "/defense/captures/spine-light.jpg",
         "size": {
-          "width": 372,
+          "width": 374,
           "height": 900
         },
         "webm": "/defense/captures/spine-light.webm",
@@ -148,6 +148,16 @@
         "webm": "/defense/captures/drawer.webm",
         "mp4": "/defense/captures/drawer.mp4",
         "scenario": "team"
+      },
+      "light": {
+        "poster": "/defense/captures/drawer-light.jpg",
+        "size": {
+          "width": 406,
+          "height": 900
+        },
+        "webm": "/defense/captures/drawer-light.webm",
+        "mp4": "/defense/captures/drawer-light.mp4",
+        "scenario": "team"
       }
     },
     "signin": {
@@ -155,7 +165,7 @@
         "poster": "/defense/captures/signin.jpg",
         "size": {
           "width": 714,
-          "height": 630
+          "height": 631
         },
         "webm": "/defense/captures/signin.webm",
         "mp4": "/defense/captures/signin.mp4",
