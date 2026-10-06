@@ -44,6 +44,7 @@ const ProductPage = lazyNamed(() => import("./pages/ProductPage"), "ProductPage"
 const PrivacyPolicyPage = lazyNamed(() => import("./pages/PrivacyPolicyPage"), "PrivacyPolicyPage");
 const SupportPage = lazyNamed(() => import("./pages/SupportPage"), "SupportPage");
 const SecurityPage = lazyNamed(() => import("./pages/SecurityPage"), "SecurityPage");
+const DefensePage = lazyNamed(() => import("./pages/DefensePage"), "DefensePage");
 const TermsOfServicePage = lazyNamed(() => import("./pages/TermsOfServicePage"), "TermsOfServicePage");
 const PricingPage = lazyNamed(() => import("./pages/PricingPage"), "PricingPage");
 const NotFoundPage = lazyNamed(() => import("./pages/NotFoundPage"), "NotFoundPage");
@@ -189,6 +190,7 @@ export default function App() {
           <Route path="/legal/terms-of-service.html" element={<Navigate to="/terms" replace />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/security" element={<SecurityPage />} />
+          <Route path="/defense" element={<DefensePage />} />
           <Route path="/help" element={<Navigate to="/support" replace />} />
           <Route path="/legal/support.html" element={<Navigate to="/support" replace />} />
           <Route path="/brand" element={<BrandPage />} />

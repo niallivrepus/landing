@@ -213,6 +213,13 @@ const CURATED: SiteArticleHit[] = [
     external: false,
   },
   {
+    href: "/defense",
+    title: "Defense",
+    snippet: "Defense technology for free people. Encrypted messages, an identity you control, and a private workspace for you and your AI.",
+    meta: "Company",
+    external: false,
+  },
+  {
     href: "/invest",
     title: "Invest",
     snippet: "Capital partners, economy token release, vesting rules, and data room access.",
