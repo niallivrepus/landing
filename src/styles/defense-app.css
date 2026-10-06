@@ -288,26 +288,89 @@ html.defense-app-host body {
   stop-color: #323232;
 }
 
-/* Red dismiss glass on the Close pill: fill 14% / rim 44% of red-4 (30% / 62% in light), red inset wash on the top
-   edge (`GooeyGlassPalette.dismissCornerAction*`); hover steps up to 20% / 52% (38% / 72%). The pill's own inline
-   glass colours are overridden here, not re-implemented. */
-.defense-flank--dismiss [data-slot="action-button"] > :first-child {
-  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix), transparent) !important;
-  border-color: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-rim-mix), transparent) !important;
+/* Arc: the inner pills (Share, More) ride up 12 — `WalletLiquidPillMetrics.innerArcLift`, Swift `.offset(y: -12)` /
+   web `CallPeopleHeaderFlanks` `margin-top: -12px` — so the four pills form the Call sheet's alien arc. Back and
+   Close stay level. */
+.defense-flank:nth-child(2),
+.defense-flank:nth-last-child(2) {
+  transform: translateY(calc(-1 * var(--inner-arc-lift, 12px)));
+}
+
+/* Rim: the iOS header pill is `LiquidCapsuleChrome` with a 1.5pt rim (`liquidPodChromeRimLineWidth`) in a white
+   .28 → .10 gradient (`liquidTintedCapsuleStrokeBorder`, top-leading → bottom-trailing) on a ~10% white fill, not the
+   homepage lens' bright double edge. So the ActionButton's extra rim layer is dropped and its border redrawn thin;
+   the lens, spring hover/press and glyph counter-rotation stay as on the homepage corner pills. */
+.defense-flank [data-gooey-glass-rim] {
+  display: none !important;
+}
+
+.defense-flank [data-slot="action-button"] > [data-gooey-glass] {
+  border: 0 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+}
+
+/* The 1.5pt gradient rim: a masked ring so the fill stays translucent over the lens. */
+.defense-flank [data-slot="action-button"] > [data-gooey-glass]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.1));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.defense-flank [data-slot="action-button"]:hover > [data-gooey-glass] {
+  background: rgba(255, 255, 255, 0.16) !important;
+}
+
+.defense-flank [data-slot="action-button"]:hover > [data-gooey-glass]::after {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.16));
+}
+
+:is(.light, [data-theme="light"]) .defense-flank [data-slot="action-button"] > [data-gooey-glass] {
+  background: #fff !important;
   box-shadow:
-    0 1px 4px rgba(0, 0, 0, 0.1),
-    inset 0 2px 4px color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-inset-mix), transparent) !important;
+    0 1px 2px rgba(0, 0, 0, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04) !important;
 }
 
-.defense-flank--dismiss [data-slot="action-button"]:hover > :first-child {
-  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix-hover), transparent) !important;
+:is(.light, [data-theme="light"]) .defense-flank [data-slot="action-button"] > [data-gooey-glass]::after {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.07));
 }
 
-:is(.light, [data-theme="light"]) .defense-flank--dismiss [data-slot="action-button"] > :first-child {
+:is(.light, [data-theme="light"]) .defense-flank [data-slot="action-button"]:hover > [data-gooey-glass] {
+  background: #f4f4f5 !important;
+}
+
+/* Red dismiss glass on the Close pill: fill 14% / rim 44% of red-4 (30% / 62% in light), red inset wash on the top
+   edge (`GooeyGlassPalette.dismissCornerAction*`); hover steps up to 20% / 52% (38% / 72%). */
+.defense-flank--dismiss [data-slot="action-button"] > [data-gooey-glass] {
+  border: 1.5px solid color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-rim-mix), transparent) !important;
+  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix), rgba(255, 255, 255, 0.04)) !important;
+  box-shadow: inset 0 2px 4px color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-inset-mix), transparent) !important;
+}
+
+.defense-flank--dismiss [data-slot="action-button"] > [data-gooey-glass]::after {
+  display: none;
+}
+
+.defense-flank--dismiss [data-slot="action-button"]:hover > [data-gooey-glass] {
+  border-color: color-mix(in srgb, var(--color-red-4, #ff0700) 52%, transparent) !important;
+  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix-hover), rgba(255, 255, 255, 0.04)) !important;
+}
+
+:is(.light, [data-theme="light"]) .defense-flank--dismiss [data-slot="action-button"] > [data-gooey-glass] {
   background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix), #fff) !important;
 }
 
-:is(.light, [data-theme="light"]) .defense-flank--dismiss [data-slot="action-button"]:hover > :first-child {
+:is(.light, [data-theme="light"]) .defense-flank--dismiss [data-slot="action-button"]:hover > [data-gooey-glass] {
+  border-color: color-mix(in srgb, var(--color-red-4, #ff0700) 72%, transparent) !important;
   background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix-hover), #fff) !important;
 }
 
