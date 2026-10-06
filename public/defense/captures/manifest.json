@@ -1,0 +1,155 @@
+{
+  "capturedAt": "2026-10-06T15:38:16.020Z",
+  "origin": "https://app.jokuh.com",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "surfaces": {
+    "id": {
+      "dark": {
+        "poster": "/console/captures/id.jpg",
+        "size": {
+          "width": 650,
+          "height": 542
+        },
+        "webm": "/console/captures/id.webm",
+        "mp4": "/console/captures/id.mp4",
+        "scenario": "consumer"
+      },
+      "light": {
+        "poster": "/console/captures/id-light.jpg",
+        "size": {
+          "width": 650,
+          "height": 542
+        },
+        "webm": "/console/captures/id-light.webm",
+        "mp4": "/console/captures/id-light.mp4",
+        "scenario": "consumer"
+      }
+    },
+    "texts": {
+      "dark": {
+        "poster": "/console/captures/texts.jpg",
+        "size": {
+          "width": 574,
+          "height": 900
+        },
+        "webm": "/console/captures/texts.webm",
+        "mp4": "/console/captures/texts.mp4",
+        "scenario": "consumer"
+      },
+      "light": {
+        "poster": "/console/captures/texts-light.jpg",
+        "size": {
+          "width": 574,
+          "height": 900
+        },
+        "webm": "/console/captures/texts-light.webm",
+        "mp4": "/console/captures/texts-light.mp4",
+        "scenario": "consumer"
+      }
+    },
+    "calls": {
+      "dark": {
+        "poster": "/console/captures/calls.jpg",
+        "size": {
+          "width": 574,
+          "height": 900
+        },
+        "webm": "/console/captures/calls.webm",
+        "mp4": "/console/captures/calls.mp4",
+        "scenario": "consumer"
+      },
+      "light": {
+        "poster": "/console/captures/calls-light.jpg",
+        "size": {
+          "width": 574,
+          "height": 900
+        },
+        "webm": "/console/captures/calls-light.webm",
+        "mp4": "/console/captures/calls-light.mp4",
+        "scenario": "consumer"
+      }
+    },
+    "spine": {
+      "dark": {
+        "poster": "/console/captures/spine.jpg",
+        "size": {
+          "width": 372,
+          "height": 900
+        },
+        "webm": "/console/captures/spine.webm",
+        "mp4": "/console/captures/spine.mp4",
+        "scenario": "consumer"
+      },
+      "light": {
+        "poster": "/console/captures/spine-light.jpg",
+        "size": {
+          "width": 372,
+          "height": 900
+        },
+        "webm": "/console/captures/spine-light.webm",
+        "mp4": "/console/captures/spine-light.mp4",
+        "scenario": "consumer"
+      }
+    },
+    "oo": {
+      "dark": {
+        "poster": "/console/captures/oo.jpg",
+        "size": {
+          "width": 422,
+          "height": 792
+        },
+        "webm": "/console/captures/oo.webm",
+        "mp4": "/console/captures/oo.mp4",
+        "scenario": "consumer"
+      },
+      "light": {
+        "poster": "/console/captures/oo-light.jpg",
+        "size": {
+          "width": 422,
+          "height": 792
+        },
+        "webm": "/console/captures/oo-light.webm",
+        "mp4": "/console/captures/oo-light.mp4",
+        "scenario": "consumer"
+      }
+    },
+    "docs": {
+      "dark": {
+        "poster": "/defense/captures/docs.jpg",
+        "size": {
+          "width": 422,
+          "height": 792
+        },
+        "webm": "/defense/captures/docs.webm",
+        "mp4": "/defense/captures/docs.mp4",
+        "scenario": "consumer"
+      },
+      "light": {
+        "poster": "/defense/captures/docs-light.jpg",
+        "size": {
+          "width": 422,
+          "height": 792
+        },
+        "webm": "/defense/captures/docs-light.webm",
+        "mp4": "/defense/captures/docs-light.mp4",
+        "scenario": "consumer"
+      }
+    },
+    "drawer": {
+      "dark": {
+        "poster": "/defense/captures/drawer.jpg",
+        "size": {
+          "width": 406,
+          "height": 900
+        },
+        "webm": "/defense/captures/drawer.webm",
+        "mp4": "/defense/captures/drawer.mp4",
+        "scenario": "consumer",
+        "placeholderOf": "docs"
+      }
+    }
+  }
+}

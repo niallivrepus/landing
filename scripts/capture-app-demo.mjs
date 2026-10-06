@@ -26,9 +26,19 @@
  *
  * Output: `public/console/captures/` — `<surface>[-light].{webm,mp4,jpg}`, `rail[-<surface>][-light].{…}` and
  * `manifest.json` (what exists + the rail box in CSS px), which the console reads. Partial runs merge into it.
+ * `--out <dir>` writes elsewhere (manifest paths follow the folder under `public/`), e.g. `/defense` reads
+ * `public/defense/captures/`.
+ *
+ * Scenarios: `--scenario team` appends `&scenario=team` to every `/demo` URL (the civilian "Field Team North"
+ * response team the app builds from real components) and records it in the manifest. Extra surfaces for it:
+ * `drawer` (team Bubble + huddles), `docs`, `signin`. Without a scenario, `drawer` is a placeholder: the consumer
+ * demo has no drawer surface, so it records `surface=docs` with the app chrome on and crops the Bubbles drawer
+ * panel out of it (`measureSurface`).
  *
  * Usage (APP_ORIGIN is required on purpose — point it at a dev/staging app until the /demo fidelity fix ships):
  *   APP_ORIGIN=http://localhost:5173 node scripts/capture-app-demo.mjs
+ *   APP_ORIGIN=https://app.jokuh.com node scripts/capture-app-demo.mjs --scenario team --out public/defense/captures \
+ *     --surfaces signin,drawer,texts,calls,spine,docs,oo,id        (the /defense walkthrough)
  *   APP_ORIGIN=… node scripts/capture-app-demo.mjs --surfaces spine,texts --themes dark --seconds 12 --no-rail
  *   CAPTURE_OUT_DIR=/tmp/x APP_ORIGIN=… node scripts/capture-app-demo.mjs   (dry run elsewhere)
  *   RAIL_SELECTOR='[data-demo-rail]' APP_ORIGIN=… node scripts/capture-app-demo.mjs
@@ -46,8 +56,15 @@ import { chromium } from "@playwright/test";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 /** Output folder (override with CAPTURE_OUT_DIR for dry runs; manifest paths stay `/console/captures/…`). */
-const OUT_DIR = process.env.CAPTURE_OUT_DIR ? resolve(process.env.CAPTURE_OUT_DIR) : join(ROOT, "public", "console", "captures");
-const PUBLIC_PREFIX = "/console/captures";
+const DEFAULT_OUT_DIR = process.env.CAPTURE_OUT_DIR ? resolve(process.env.CAPTURE_OUT_DIR) : join(ROOT, "public", "console", "captures");
+/** Set by `--out` in `main()`; manifest paths are the folder's path under `public/`. */
+let OUT_DIR = DEFAULT_OUT_DIR;
+let PUBLIC_PREFIX = "/console/captures";
+
+function publicPrefixFor(dir) {
+  const publicRoot = join(ROOT, "public");
+  return dir.startsWith(`${publicRoot}/`) ? dir.slice(publicRoot.length).replace(/\\/g, "/") : "/console/captures";
+}
 
 /**
  * Surfaces are captured at the app's DESKTOP layout (so e.g. the ID page renders its wide pod bento, not the phone
@@ -65,7 +82,9 @@ const RAIL_SELECTOR =
 const DEVICE_SCALE = 2;
 /** Encoded loops are scaled to this multiple of the CSS viewport (≈720p-class for the column) to stay ≲1 MB. */
 const OUTPUT_SCALE = 1.5;
-const ALL_SURFACES = ["spine", "calls", "texts", "id", "blurbs", "oo"];
+const ALL_SURFACES = ["spine", "calls", "texts", "id", "blurbs", "oo", "docs", "drawer", "signin"];
+/** The console home's default set (the extra surfaces are opt-in via `--surfaces`). */
+const DEFAULT_SURFACES = ["spine", "calls", "texts", "id", "blurbs", "oo"];
 const ALL_THEMES = ["dark", "light"];
 const SETTLE_MS = 1500;
 const READY_TIMEOUT_MS = 8000;
@@ -75,7 +94,7 @@ const LOOP_FADE_SECONDS = 0.6;
 
 function parseArgs(argv) {
   // The rail is opt-in (`--rail auto|shared|per-surface`): the console uses the landing's own library rail today.
-  const args = { surfaces: ALL_SURFACES, themes: ALL_THEMES, seconds: 11, rail: "off" };
+  const args = { surfaces: DEFAULT_SURFACES, themes: ALL_THEMES, seconds: 11, rail: "off", scenario: null, out: null };
   for (let i = 0; i < argv.length; i += 1) {
     const flag = argv[i];
     const value = argv[i + 1];
@@ -84,7 +103,10 @@ function parseArgs(argv) {
     if (flag === "--seconds" && value) args.seconds = Math.max(4, Math.min(30, Number(value) || 11));
     if (flag === "--rail" && value) args.rail = value;
     if (flag === "--no-rail") args.rail = "off";
+    if (flag === "--scenario" && value) args.scenario = value.trim();
+    if (flag === "--out" && value) args.out = resolve(ROOT, value);
   }
+  if (args.scenario && !/^[a-z0-9-]+$/.test(args.scenario)) throw new Error(`Bad --scenario "${args.scenario}"`);
   for (const s of args.surfaces) if (!ALL_SURFACES.includes(s)) throw new Error(`Unknown surface "${s}"`);
   for (const t of args.themes) if (!ALL_THEMES.includes(t)) throw new Error(`Unknown theme "${t}"`);
   if (!["auto", "shared", "per-surface", "off"].includes(args.rail)) throw new Error(`Unknown --rail "${args.rail}"`);
@@ -138,6 +160,17 @@ async function measureSurface(page, surface) {
         const bottom = Math.min(vh, Math.ceil(r.bottom + pad));
         return { left, top, width: right - left, height: bottom - top };
       };
+      if (surface === "drawer") {
+        // Placeholder (chrome on): the Bubbles drawer is the tall panel pinned to the left edge. With a scenario and
+        // chrome=0 the drawer is the centred column, handled below.
+        let panel = null;
+        for (const el of document.querySelectorAll("body *")) {
+          const r = el.getBoundingClientRect();
+          if (r.left > 80 || r.width < 300 || r.width > 440 || r.height < 480) continue;
+          if (!panel || r.width * r.height > panel.width * panel.height) panel = r;
+        }
+        if (panel && panel.left + panel.width < vw / 2) return { ...clamp(panel), via: "drawer-panel" };
+      }
       if (surface === "id") {
         const bento = document.querySelector(".profile-pod-bento");
         const stack = document.querySelector(".id-page-profile-stack") ?? bento?.parentElement;
@@ -283,13 +316,31 @@ async function capture(browser, { url, theme, seconds, viewport, rail, surface, 
 
 const suffix = (theme) => (theme === "dark" ? "" : `-${theme}`);
 
+/** The `/demo` URL for one surface: the scenario's own surface, or (no scenario) the drawer placeholder's docs page. */
+function demoUrl(origin, surface, theme, scenario, chrome = "0") {
+  const params = new URLSearchParams();
+  if (!scenario && surface === "drawer") {
+    params.set("surface", "docs");
+  } else {
+    params.set("surface", surface);
+    params.set("chrome", chrome);
+  }
+  params.set("theme", theme);
+  if (scenario) params.set("scenario", scenario);
+  return `${origin}/demo?${params.toString()}`;
+}
+
 async function main() {
   const origin = process.env.APP_ORIGIN?.trim().replace(/\/$/, "");
   if (!origin) {
     console.error("APP_ORIGIN is required, e.g. APP_ORIGIN=http://localhost:5173 node scripts/capture-app-demo.mjs");
     process.exit(1);
   }
-  const { surfaces, themes, seconds, rail: railMode } = parseArgs(process.argv.slice(2));
+  const { surfaces, themes, seconds, rail: railMode, scenario, out } = parseArgs(process.argv.slice(2));
+  if (out) {
+    OUT_DIR = out;
+    PUBLIC_PREFIX = publicPrefixFor(out);
+  }
   const useFfmpeg = hasFfmpeg();
   if (!useFfmpeg) console.warn("ffmpeg not found: writing posters only (the console shows the still).");
   mkdirSync(OUT_DIR, { recursive: true });
@@ -305,6 +356,7 @@ async function main() {
     capturedAt: new Date().toISOString(),
     origin,
     viewport: SURFACE_PAGE_VIEWPORT,
+    // Per surface: `scenario` says which demo data it shows (`consumer` = the default demo, a placeholder on /defense).
     surfaces: { ...(previous.surfaces ?? {}) },
     ...(previous.rail ? { rail: previous.rail } : {}),
   };
@@ -318,7 +370,7 @@ async function main() {
       for (const surface of surfaces) {
         process.stdout.write(`column ${surface} (${theme})… `);
         const { files } = await capture(browser, {
-          url: `${origin}/demo?surface=${encodeURIComponent(surface)}&chrome=0&theme=${theme}`,
+          url: demoUrl(origin, surface, theme, scenario),
           theme,
           seconds,
           viewport: SURFACE_PAGE_VIEWPORT,
@@ -327,6 +379,8 @@ async function main() {
           outBase: join(OUT_DIR, `${surface}${suffix(theme)}`),
           useFfmpeg,
         });
+        files.scenario = scenario ?? "consumer";
+        if (!scenario && surface === "drawer") files.placeholderOf = "docs";
         manifest.surfaces[surface] = { ...manifest.surfaces[surface], [theme]: files };
         process.stdout.write("done\n");
       }
@@ -338,7 +392,7 @@ async function main() {
       for (const surface of surfaces) {
         process.stdout.write(`rail ${surface} (${theme})… `);
         const result = await capture(browser, {
-          url: `${origin}/demo?surface=${encodeURIComponent(surface)}&chrome=rail&theme=${theme}`,
+          url: demoUrl(origin, surface, theme, scenario, "rail"),
           theme,
           seconds: Math.min(seconds, 8),
           viewport: RAIL_PAGE_VIEWPORT,
