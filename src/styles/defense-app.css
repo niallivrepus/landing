@@ -205,7 +205,9 @@ html.defense-app-host body {
   margin-bottom: var(--paper-card-bottom-inset);
 }
 
-/* ── Docs header: TextSheetHeaderFlanks (34×46 capsules, 3px pair gap, 16 / 28 / 2 padding) ── */
+/* ── Docs header: iOS `TextSheetHeaderFlanks` ────────────────────────────────
+   One HStack(alignment: .top, spacing: 6): padding 28 horizontal / 16 top / 2 bottom (+6 for Docs); pills are
+   WalletLiquidPillMetrics 34×46; the centre slot is maxWidth ∞, minHeight 46, title `.subheadline.semibold` (15). */
 
 .docs-sheet__header {
   --docs-accent: #ff4d00;
@@ -219,132 +221,94 @@ html.defense-app-host body {
 .defense-flanks {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-  padding: var(--paper-card-top-gap) 28px 2px;
+  gap: 6px;
+  padding: var(--paper-card-top-gap) 28px 8px;
   box-sizing: border-box;
-}
-
-.call-sheet-header-flanks__pair {
-  display: flex;
-  align-items: flex-start;
-  gap: 3px;
 }
 
 .defense-flanks__center {
   display: flex;
   flex: 1 1 0%;
-  align-self: center;
+  align-items: center;
   justify-content: center;
   min-width: 0;
+  min-height: 46px;
 }
 
 .docs-sheet__header-title {
   overflow: hidden;
   color: var(--text-primary);
   font-family: var(--font-sans, "Satoshi", -apple-system, system-ui, sans-serif);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.defense-flank-pill {
+/* The Gooey corner-action pill (ActionButton, 50×50 around a rotated pill) centred in the header's 34×46 slot. */
+.defense-flank {
   position: relative;
-  display: grid;
-  place-items: center;
+  flex: none;
   width: 34px;
   height: 46px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--chrome-icon-secondary);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+  /* Glyph ink: primary at 94% (`accentCornerIconRest`); embossed glyphs use the gradient below. */
+  color: var(--text-primary);
 }
 
-.defense-flank-pill .liquid-capsule {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 46px;
-  box-sizing: border-box;
-  border: 1px solid var(--liquid-capsule-border-dark);
-  border-radius: 999px;
-  background: var(--liquid-capsule-bg-dark);
-  transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
+.defense-flank > [data-slot="action-button"] {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
 }
 
-:is(.light, [data-theme="light"]) .defense-flank-pill .liquid-capsule {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.06),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
-}
-
-.liquid-capsule__glyph {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .defense-flank-pill:hover .liquid-capsule:not(.liquid-capsule--dismiss-red-glass) {
-    background: var(--color-light-glass-20, rgba(255, 255, 255, 0.2));
-  }
-
-  :is(.light, [data-theme="light"]) .defense-flank-pill:hover .liquid-capsule:not(.liquid-capsule--dismiss-red-glass) {
-    background: #f4f4f5;
-  }
-}
-
-.defense-flank-pill:active .liquid-capsule {
-  transform: scale(0.94);
-}
-
-.defense-flank-pill:focus-visible {
-  outline: none;
-}
-
-.defense-flank-pill:focus-visible .liquid-capsule {
+.defense-flank > [data-slot="action-button"]:focus-visible {
   outline: 2px solid var(--docs-accent);
-  outline-offset: 2px;
+  outline-offset: -2px;
+  border-radius: 999px;
 }
 
-/* Red dismiss glass (`glass-core.css` `.liquid-capsule--dismiss-red-glass`). */
-.defense-flank-pill .liquid-capsule.liquid-capsule--dismiss-red-glass {
-  border-color: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-rim-mix), transparent);
-  background: color-mix(
-    in srgb,
-    var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix),
-    var(--liquid-capsule-bg-dark, rgba(255, 255, 255, 0.08))
-  );
-  color: rgba(255, 255, 255, 0.94);
+/* Embossed glyphs: dark E6 → 5A top to bottom, light #323232 (`jokuhEmbossedIcon`). */
+.defense-emboss-defs {
+  position: absolute;
+  pointer-events: none;
+}
+
+.defense-emboss__top {
+  stop-color: #e6e6e6;
+}
+
+.defense-emboss__bottom {
+  stop-color: #5a5a5a;
+}
+
+:is(.light, [data-theme="light"]) .defense-emboss__top,
+:is(.light, [data-theme="light"]) .defense-emboss__bottom {
+  stop-color: #323232;
+}
+
+/* Red dismiss glass on the Close pill: fill 14% / rim 44% of red-4 (30% / 62% in light), red inset wash on the top
+   edge (`GooeyGlassPalette.dismissCornerAction*`); hover steps up to 20% / 52% (38% / 72%). The pill's own inline
+   glass colours are overridden here, not re-implemented. */
+.defense-flank--dismiss [data-slot="action-button"] > :first-child {
+  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix), transparent) !important;
+  border-color: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-rim-mix), transparent) !important;
   box-shadow:
-    0 1px 4px rgba(0, 0, 0, 0.12),
-    inset 0 2px 4px color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-inset-mix), transparent);
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 2px 4px color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-inset-mix), transparent) !important;
 }
 
-:is(.light, [data-theme="light"]) .defense-flank-pill .liquid-capsule.liquid-capsule--dismiss-red-glass {
-  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix), transparent);
-  color: rgba(0, 0, 0, 0.78);
+.defense-flank--dismiss [data-slot="action-button"]:hover > :first-child {
+  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix-hover), transparent) !important;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .defense-flank-pill:hover .liquid-capsule.liquid-capsule--dismiss-red-glass {
-    background: color-mix(
-      in srgb,
-      var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix-hover),
-      var(--liquid-capsule-bg-dark, rgba(255, 255, 255, 0.08))
-    );
-  }
+:is(.light, [data-theme="light"]) .defense-flank--dismiss [data-slot="action-button"] > :first-child {
+  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix), #fff) !important;
+}
+
+:is(.light, [data-theme="light"]) .defense-flank--dismiss [data-slot="action-button"]:hover > :first-child {
+  background: color-mix(in srgb, var(--color-red-4, #ff0700) var(--corner-accent-glass-fill-mix-hover), #fff) !important;
 }
 
 /* ── docs-sheet.css (editor chrome: notice, menu, page) ───────────────────── */
@@ -1679,7 +1643,7 @@ html.defense-app-host body {
   align-items: center;
   height: 40px;
   padding: 0 14px 0 5px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--color-light-glass-20, rgba(255, 255, 255, 0.2));
   border-radius: 999px;
   background: rgba(20, 20, 22, 0.72);
   color: #fff;
@@ -1691,7 +1655,7 @@ html.defense-app-host body {
 }
 
 :is(.light, [data-theme="light"]) .defense-autoplay {
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.12);
   background: rgba(255, 255, 255, 0.86);
   color: #0a0a0b;
 }
