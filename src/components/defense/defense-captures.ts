@@ -3,9 +3,10 @@ import type { DefenseCaptureSurface } from "../../data/defense";
 
 /**
  * **Purpose:** Loads `/defense/captures/manifest.json` — the real-app recordings the `/defense` doc embeds — once,
- * and picks the theme-matched files per surface. Until the app's `/demo?scenario=team` ships, entries point at the
- * consumer demo recordings (placeholders, `scenario: "consumer"`); re-record with
- * `scripts/capture-app-demo.mjs --scenario team --out public/defense/captures` and the page follows.
+ * and picks the theme-matched files per surface. The recordings are the app's `/demo?scenario=team` (the civilian
+ * "Field Team North" demo team, real components); re-record with
+ * `scripts/capture-app-demo.mjs --scenario team --out public/defense/captures --surfaces signin,drawer,texts,calls,spine,docs,oo,id`
+ * (signin and drawer dark only) and the page follows.
  * **Connects to:** `DefenseCapture`, `DefenseCapabilities`, `scripts/capture-app-demo.mjs`.
  */
 

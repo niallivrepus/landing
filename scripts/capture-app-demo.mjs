@@ -171,6 +171,35 @@ async function measureSurface(page, surface) {
         }
         if (panel && panel.left + panel.width < vw / 2) return { ...clamp(panel), via: "drawer-panel" };
       }
+      if (surface === "signin") {
+        // The passkey sheet floats over the ID pod stack and rises above it: crop the union of both, so the sheet's
+        // header is never cut off.
+        const stack = document.querySelector(".id-page-profile-stack") ?? document.querySelector(".profile-pod-bento")?.parentElement;
+        let sheet = null;
+        for (const el of document.querySelectorAll("body *")) {
+          if (!el.textContent || !/Confirm it.s you/.test(el.textContent)) continue;
+          for (let node = el; node && node !== document.body; node = node.parentElement) {
+            const r = node.getBoundingClientRect();
+            if (r.width >= 280 && r.width <= 560 && r.height >= 300) {
+              sheet = r;
+              break;
+            }
+          }
+          if (sheet) break;
+        }
+        if (sheet) {
+          const r = stack ? stack.getBoundingClientRect() : sheet;
+          // The sheet drifts up a little as it settles (and its shadow spreads): give it 32px of extra air.
+          const air = 32;
+          const union = {
+            left: Math.min(r.left, sheet.left) - air,
+            top: Math.min(r.top, sheet.top) - air,
+            right: Math.max(r.right, sheet.right) + air,
+            bottom: Math.max(r.bottom, sheet.bottom) + air,
+          };
+          return { ...clamp(union), via: "signin-union" };
+        }
+      }
       if (surface === "id") {
         const bento = document.querySelector(".profile-pod-bento");
         const stack = document.querySelector(".id-page-profile-stack") ?? bento?.parentElement;
@@ -233,6 +262,13 @@ async function capture(browser, { url, theme, seconds, viewport, rail, surface, 
   await page.goto(url, { waitUntil: "networkidle", timeout: 45_000 });
   await page.waitForFunction(() => window.__jokuhEmbedReady === true, null, { timeout: READY_TIMEOUT_MS }).catch(() => {});
   await page.waitForTimeout(SETTLE_MS);
+  // The passkey sheet's contents appear a few seconds after the page settles: wait for them so it can be measured.
+  if (surface === "signin") {
+    await page
+      .waitForFunction(() => /Confirm it.s you/.test(document.body.textContent ?? ""), null, { timeout: 10_000 })
+      .catch(() => {});
+    await page.waitForTimeout(600);
+  }
 
   let box = null;
   if (rail) {
@@ -319,8 +355,10 @@ const suffix = (theme) => (theme === "dark" ? "" : `-${theme}`);
 /** The `/demo` URL for one surface: the scenario's own surface, or (no scenario) the drawer placeholder's docs page. */
 function demoUrl(origin, surface, theme, scenario, chrome = "0") {
   const params = new URLSearchParams();
-  if (!scenario && surface === "drawer") {
-    params.set("surface", "docs");
+  if (surface === "drawer") {
+    // The Bubbles drawer exists only with the app chrome on (`chrome=0` falls back to Spine): record it with the
+    // chrome and crop the drawer panel (`measureSurface`). No scenario = the consumer demo's drawer lives on `docs`.
+    params.set("surface", scenario ? "drawer" : "docs");
   } else {
     params.set("surface", surface);
     params.set("chrome", chrome);

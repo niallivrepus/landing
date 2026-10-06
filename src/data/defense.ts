@@ -218,7 +218,7 @@ export const DEFENSE_WALKTHROUGH = {
       title: "One identity",
       body: "Each person signs in with a passkey bound to their device, so there's no shared password to phish. The same identity carries through every part of the app.",
       mark: "a passkey bound to their device",
-      captures: ["id"],
+      captures: ["signin", "id"],
       path: ["identity"],
       node: "identity",
     },
@@ -357,12 +357,12 @@ export const DEFENSE_CAPABILITIES = {
   title: "At a glance",
   intro: "Crops of the same real-app recordings, one per capability.",
   items: [
-    { id: "thread", title: "Encrypted threads", body: "Direct and group messages, sealed end to end.", capture: "texts", focus: "72% 56%", node: "messages" },
-    { id: "live", title: "Live voice", body: "See who's live in a huddle and join in.", capture: "drawer", focus: "82% 33%", node: "bubbles" },
-    { id: "identity", title: "One identity", body: "Passkey sign-in. No password to phish.", capture: "id", focus: "55% 42%", node: "identity" },
-    { id: "calls", title: "Voice and video", body: "Calls from the same roster.", capture: "calls", focus: "45% 18%", node: "calls" },
-    { id: "doc", title: "Shared docs", body: "Briefings written in Docs, on the Spine day.", capture: "docs", focus: "35% 38%", node: "docs" },
-    { id: "summary", title: "AI summaries", body: "OO works from the context you choose.", capture: "oo", focus: "45% 62%", node: "oo" },
+    { id: "thread", title: "Encrypted threads", body: "Direct and group messages, sealed end to end.", capture: "texts", focus: "50% 66%", node: "messages" },
+    { id: "live", title: "Live voice", body: "See who's live in a huddle and join in.", capture: "drawer", focus: "50% 16%", node: "bubbles" },
+    { id: "identity", title: "One identity", body: "Passkey sign-in. No password to phish.", capture: "signin", focus: "50% 40%", node: "identity" },
+    { id: "calls", title: "Voice and video", body: "Calls from the same roster.", capture: "calls", focus: "50% 22%", node: "calls" },
+    { id: "doc", title: "Shared docs", body: "Briefings written in Docs, on the Spine day.", capture: "docs", focus: "50% 17%", node: "docs" },
+    { id: "summary", title: "AI summaries", body: "OO works from the context you choose.", capture: "oo", focus: "50% 24%", node: "oo" },
   ] satisfies DefenseCapability[],
 } as const;
 

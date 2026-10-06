@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-10-05T01:14:37.600Z",
+  "capturedAt": "2026-10-06T17:12:40.323Z",
   "origin": "https://app.jokuh.com",
   "viewport": {
     "width": 1280,
@@ -14,7 +14,8 @@
           "height": 900
         },
         "webm": "/console/captures/spine.webm",
-        "mp4": "/console/captures/spine.mp4"
+        "mp4": "/console/captures/spine.mp4",
+        "scenario": "consumer"
       },
       "light": {
         "poster": "/console/captures/spine-light.jpg",
@@ -23,7 +24,8 @@
           "height": 900
         },
         "webm": "/console/captures/spine-light.webm",
-        "mp4": "/console/captures/spine-light.mp4"
+        "mp4": "/console/captures/spine-light.mp4",
+        "scenario": "consumer"
       }
     },
     "calls": {
@@ -34,7 +36,8 @@
           "height": 900
         },
         "webm": "/console/captures/calls.webm",
-        "mp4": "/console/captures/calls.mp4"
+        "mp4": "/console/captures/calls.mp4",
+        "scenario": "consumer"
       },
       "light": {
         "poster": "/console/captures/calls-light.jpg",
@@ -43,7 +46,8 @@
           "height": 900
         },
         "webm": "/console/captures/calls-light.webm",
-        "mp4": "/console/captures/calls-light.mp4"
+        "mp4": "/console/captures/calls-light.mp4",
+        "scenario": "consumer"
       }
     },
     "texts": {
@@ -54,7 +58,8 @@
           "height": 900
         },
         "webm": "/console/captures/texts.webm",
-        "mp4": "/console/captures/texts.mp4"
+        "mp4": "/console/captures/texts.mp4",
+        "scenario": "consumer"
       },
       "light": {
         "poster": "/console/captures/texts-light.jpg",
@@ -63,7 +68,8 @@
           "height": 900
         },
         "webm": "/console/captures/texts-light.webm",
-        "mp4": "/console/captures/texts-light.mp4"
+        "mp4": "/console/captures/texts-light.mp4",
+        "scenario": "consumer"
       }
     },
     "id": {
@@ -74,7 +80,8 @@
           "height": 542
         },
         "webm": "/console/captures/id.webm",
-        "mp4": "/console/captures/id.mp4"
+        "mp4": "/console/captures/id.mp4",
+        "scenario": "consumer"
       },
       "light": {
         "poster": "/console/captures/id-light.jpg",
@@ -83,7 +90,8 @@
           "height": 542
         },
         "webm": "/console/captures/id-light.webm",
-        "mp4": "/console/captures/id-light.mp4"
+        "mp4": "/console/captures/id-light.mp4",
+        "scenario": "consumer"
       }
     },
     "blurbs": {
@@ -91,19 +99,21 @@
         "poster": "/console/captures/blurbs.jpg",
         "size": {
           "width": 672,
-          "height": 656
+          "height": 900
         },
         "webm": "/console/captures/blurbs.webm",
-        "mp4": "/console/captures/blurbs.mp4"
+        "mp4": "/console/captures/blurbs.mp4",
+        "scenario": "consumer"
       },
       "light": {
         "poster": "/console/captures/blurbs-light.jpg",
         "size": {
           "width": 672,
-          "height": 656
+          "height": 900
         },
         "webm": "/console/captures/blurbs-light.webm",
-        "mp4": "/console/captures/blurbs-light.mp4"
+        "mp4": "/console/captures/blurbs-light.mp4",
+        "scenario": "consumer"
       }
     },
     "oo": {
@@ -114,7 +124,8 @@
           "height": 792
         },
         "webm": "/console/captures/oo.webm",
-        "mp4": "/console/captures/oo.mp4"
+        "mp4": "/console/captures/oo.mp4",
+        "scenario": "consumer"
       },
       "light": {
         "poster": "/console/captures/oo-light.jpg",
@@ -123,7 +134,8 @@
           "height": 792
         },
         "webm": "/console/captures/oo-light.webm",
-        "mp4": "/console/captures/oo-light.mp4"
+        "mp4": "/console/captures/oo-light.mp4",
+        "scenario": "consumer"
       }
     }
   }
