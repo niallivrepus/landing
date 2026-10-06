@@ -4,7 +4,7 @@ import shippedPayload from "./shipped.json";
 /**
  * **Purpose:** The "Shipped" build log — weekly posts from March 2026, monthly recaps from June 2025,
  * and commit counts back to the first Jokuh commit (December 2023).
- * **Connects to:** `ShippedPage` (`/shipped`, `/shipped/:slug`), `ShippedStrip` on Home,
+ * **Connects to:** `ShippedPage` (`/shipped`, `/shipped/:slug`),
  * `scripts/generate-rss.mjs` (reads the JSON directly), `scripts/draft-shipped-week.mjs` (drafts new weeks),
  * `scripts/count-shipped-activity.mjs` (refreshes `shipped-activity.json`, the only source of commit counts).
  * Week numbers count from Week 1 = 2025-06-02 (the first week of the current Jokuh line).

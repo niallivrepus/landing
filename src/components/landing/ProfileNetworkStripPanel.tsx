@@ -1,6 +1,6 @@
 /**
  * **Purpose:** Profile **Network** row under the ID photo — parity `ProfileNetworkStrip.tsx` / `profile-network-strip.swift`.
- * **Connects to:** `ProfilePodPanel`, `landing-profile-pod.css`, `formatConnectionCountLabel`.
+ * **Connects to:** `ProfilePodsDemoPods`, `landing-profile-pod.css`, `formatConnectionCountLabel`.
  */
 
 import { cn } from "@jokuh/gooey";

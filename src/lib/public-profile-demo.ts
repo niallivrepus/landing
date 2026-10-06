@@ -1,7 +1,7 @@
 /**
  * **Purpose:** Client fetch for the marketing profile pod demo — real account via server proxy.
  * **Data path:** GET `/api/public-profile-demo` → `peek_public_profile` + network preview.
- * **Connects to:** `ProfilePodPanel`, `ProfileImmersiveShell`, `public-profile-service.ts`.
+ * **Connects to:** `ProfileImmersiveShell`, `public-profile-service.ts`.
  */
 
 export {

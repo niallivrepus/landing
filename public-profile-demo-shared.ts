@@ -1,6 +1,6 @@
 /**
  * **Purpose:** Shared types for the marketing `/profile` demo — real app profile pod data shape.
- * **Connects to:** `public-profile-service.ts`, `ProfilePodPanel.tsx`, `peek_public_profile` RPC.
+ * **Connects to:** `public-profile-service.ts`, `ProfileImmersiveShell.tsx`, `peek_public_profile` RPC.
  * **Backend parity:** `frontend/src/utils/jokuh-public-profile-api.ts`, `ProfileNetworkStrip.tsx`.
  */
 

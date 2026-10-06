@@ -1,6 +1,6 @@
 /**
  * **Purpose:** Inspirational identity preview for the marketing `/profile` pod — not a real user.
- * **Connects to:** `ProfilePodPanel`, `ProfileNetworkStripPanel`.
+ * **Connects to:** `ProfilePodsDemoPods`, `ProfileNetworkStripPanel`.
  * **Assets:** Agents of Chaos founding cohort portraits (`public/images/agents-of-chaos/`).
  */
 

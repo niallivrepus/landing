@@ -1,6 +1,6 @@
 /**
  * **Purpose:** True superellipse chrome for the marketing profile ID pod — matches app `IdPodSquircleShell` / `SquirclePodShape`.
- * **Connects to:** `ProfilePodPanel`, `ProfileHighlightVisual`, `SquircleShell` (`system/squircle.tsx`).
+ * **Connects to:** `ProfilePodsDemoPods`, `ProfileHighlightVisual`, `SquircleShell` (`system/squircle.tsx`).
  * **Parity:** `frontend/src/components/pods/IdPodSquircleShell.tsx`, `pod-squircle-chrome.swift`.
  */
 

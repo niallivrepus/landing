@@ -70,14 +70,11 @@ These are the homepage/landing-section building blocks.
 | Component | File | Purpose | Notes |
 | --- | --- | --- | --- |
 | `LandingHero` | `src/components/landing/LandingHero.tsx` | Homepage hero with large headline, interactive prompt, and quick links | Uses scroll fade and shared prompt chrome |
-| `HeroQuickPills` | `src/components/landing/HeroQuickPills.tsx` | Row/wrap of hero action pills | Keep actions lightweight and consistent with the prompt bar |
 | `GooeyBackdrop` | `src/components/landing/GooeyBackdrop.tsx` | Ambient hero/background effect | Visual atmosphere only |
 | `IdentityBlock` | `src/components/landing/IdentityBlock.tsx` | Signature identity/handle visual storytelling section | Theme-aware center glow already wired for dark mode |
-| `StoriesSection` | `src/components/landing/StoriesSection.tsx` | Homepage story/article discovery block | Use for story-driven landing discovery |
 | `RecentNewsSection` | `src/components/landing/RecentNewsSection.tsx` | Newsroom section with sticky featured article and compact stack | Current behavior: featured card stays sticky until the right column ends |
 | `FundersStrip` | `src/components/landing/FundersStrip.tsx` | Social proof / funders row | Small trust band |
 | `ClaimIdentityCta` | `src/components/landing/ClaimIdentityCta.tsx` | Identity-focused CTA block | Product/identity conversion section |
-| `PreFooterCta` | `src/components/landing/PreFooterCta.tsx` | CTA before the footer | Final marketing push before footer |
 | `WaitlistSection` | `src/components/landing/WaitlistSection.tsx` | Waitlist email capture block | Shares prompt chrome styling with the hero prompt |
 | `promptChrome` tokens | `src/components/landing/promptChrome.ts` | Shared classes for prompt and waitlist input chrome | Update this file when prompt-border/button dark-mode treatment changes |
 | `landing/index.ts` | `src/components/landing/index.ts` | Barrel exports for landing layer | Prefer importing from here when possible |
@@ -95,9 +92,6 @@ These are the reusable product-detail storytelling modules. They are the current
 | `ProductHighlightsCarousel` | `src/components/product/ProductHighlightsCarousel.tsx` | Desktop-first highlights carousel with progress nodes and play/pause | Shows active full-size panel plus next full-size panel extending to the right |
 | `ProductCloserLookExplorer` | `src/components/product/ProductCloserLookExplorer.tsx` | Full-surface closer-look explorer with image background, pill rail, accordion behavior, and contextual controls | Buttons animate in on view; accordion copy lives in the pills; top-right close button is present |
 | `ProductCenteredShowcase` | `src/components/product/ProductCenteredShowcase.tsx` | Single-surface centered message and CTA block | Intentionally flattened with no nested inner panel |
-| `ProductFullBleedReveal` | `src/components/product/ProductFullBleedReveal.tsx` | Scroll-driven narrow-to-full-bleed reveal block | Used for edge-to-edge storytelling transitions |
-| `ProductPurpleCta` | `src/components/product/ProductGlowCtas.tsx` | Stylized CTA link | Specialized accent CTA |
-| `ProductGreenGlowLink` | `src/components/product/ProductGlowCtas.tsx` | Alternate stylized CTA link | Specialized accent CTA |
 
 ## Product Configuration Files
 
@@ -119,9 +113,7 @@ These are reusable outside one single page family.
 | `TryJokuhCta` | `src/components/SiteTopBar.tsx` | Header CTA | Need the header CTA in isolation |
 | `MegaFooter` | `src/components/MegaFooter.tsx` | Global site footer | Standard footer |
 | `SiteLink` | `src/components/SiteLink.tsx` | Smart internal/external link primitive | Prefer this over ad-hoc anchor logic |
-| `SecondaryLink` | `src/components/SecondaryLink.tsx` | Secondary link treatment | Lightweight supporting link |
 | `TopNavAnchor` | `src/components/TopNavAnchor.tsx` | Anchor helper that cooperates with top-nav behavior | Same-page section links and controlled navigation |
-| `StoryRowLink` | `src/components/StoryRowLink.tsx` | Horizontal story/news row link | Story list rows |
 | `NewsCardArt` | `src/components/NewsCardArt.tsx` | Shared newsroom/story art renderer | News cards and editorial teasers |
 | `CookieBanner` | `src/components/CookieBanner.tsx` | Cookie consent banner | Site-level legal/compliance notice |
 | `LanguageSelectModal` | `src/components/LanguageSelectModal.tsx` | Language switch modal | Locale/language selection |
@@ -131,7 +123,6 @@ These are reusable outside one single page family.
 | `CompanyPageLayout` | `src/components/CompanyPageLayout.tsx` | Shared company/careers page shell | About, careers, company narrative pages |
 | `CompanyPageHero` | `src/components/CompanyPageLayout.tsx` | Company-page hero block | Company page top section |
 | `CompanyPageClosingCta` | `src/components/CompanyPageLayout.tsx` | Company-page closing CTA | End of company/careers pages |
-| `ExplainerTriad` | `src/components/ExplainerTriad.tsx` | Three-column explanatory module | Structured explainer content |
 | `EndorsementSeal` | `src/components/EndorsementSeal.tsx` | Trust/endorsement visual module | Social proof or award-style callouts |
 | `OffSiteGlyph` | `src/components/OffSiteGlyph.tsx` | External-link glyph | Off-site links |
 | `footer-social-icons` | `src/components/footer-social-icons.tsx` | Social icon primitives | Footer and social lists |
@@ -142,8 +133,6 @@ These are more unique than the standard layout system.
 
 | Component | File | Purpose | Notes |
 | --- | --- | --- | --- |
-| `VortexMindMap` | `src/components/VortexMindMap.tsx` | Heavy interactive visual/mind-map module | Keep isolated and lazy where possible |
-| `vortexMindMapData` | `src/components/vortexMindMapData.ts` | Data and palette for the vortex map | Paired with `VortexMindMap` |
 
 ## Legal Components
 
@@ -177,7 +166,6 @@ For product detail pages, the current preferred section set is:
 1. `ProductHighlightsCarousel`
 2. `ProductCloserLookExplorer`
 3. `ProductCenteredShowcase`
-4. `ProductFullBleedReveal`
 
 These are the primary reusable detail-page modules and should be extended before inventing a new one-off product section.
 
