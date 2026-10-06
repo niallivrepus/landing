@@ -8,6 +8,7 @@ const SITE_LINKS = [
   ['Shipped', '/shipped'],
   ['News', '/newsroom'],
   ['Invest', '/invest'],
+  ['Defense', '/defense'],
   ['Privacy', '/privacy'],
   ['Terms', '/terms'],
   ['Support', '/support'],

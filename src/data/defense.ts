@@ -1,5 +1,5 @@
 /**
- * **Purpose:** Copy for the `/defense` page (draft for owner review).
+ * **Purpose:** Copy for the `/defense` page (live; linked from the footer).
  * **Connects to:** `pages/DefensePage.tsx`, `lib/site-search-articles.ts` (search entry).
  *
  * Accuracy rules (public claim surface aimed at government buyers):
@@ -24,9 +24,55 @@ export const DEFENSE_HERO = {
   eyebrow: "Defense",
   title: "Defense technology for free people",
   subtitle:
-    "Encrypted messages, an identity you control, and a private workspace for you and your AI. Built to protect the people who use it.",
+    "Jokuh is a secure communications and identity platform with a private AI workspace: end-to-end encrypted messages, voice and video calls, and phishing-resistant passkey sign-in, in one app on the devices people already carry.",
   primary: { label: "Talk to our team", href: "/contact" },
   secondary: { label: "Read our security approach", href: "/security" },
+} as const;
+
+/** The plain answer to "what are you building, and what's your solution?" — first thing after the hero. */
+export const DEFENSE_SOLUTION = {
+  title: "What we're building",
+  problem: {
+    label: "The problem",
+    body: "People who protect others still coordinate on consumer apps that profile them, sign in with passwords that get phished, and paste sensitive context into AI tools that keep it.",
+  },
+  solution: {
+    label: "Our solution",
+    body: "One app that combines encrypted messaging and calling, an identity backed by keys on the user's device, and a private workspace with an AI assistant, all behind a single passkey sign-in. Direct and group messages are sealed end to end, so the platform in the middle can't read them.",
+  },
+} as const;
+
+export type DefenseUseCase = { id: string; title: string; body: string };
+
+/** Framed as what we're designing for — never as deployments (there are none yet). */
+export const DEFENSE_USE_CASES = {
+  title: "Where it fits",
+  intro: "Early use cases we're designing for. This is not a list of deployments.",
+  items: [
+    {
+      id: "team-coordination",
+      title: "Secure team coordination",
+      body: "Encrypted group messages and calls for distributed teams, on personal or issued phones and laptops.",
+    },
+    {
+      id: "phishing-resistant-identity",
+      title: "Phishing-resistant identity",
+      body: "Passkey sign-in bound to the device, so there's no shared password to steal, reuse, or phish.",
+    },
+    {
+      id: "private-ai-workspace",
+      title: "A private AI workspace",
+      body: "A timeline, docs, and an assistant that works only with what the user chooses to share. Not for classified or controlled information today.",
+    },
+  ] satisfies DefenseUseCase[],
+} as const;
+
+/** Honest status for government readers: no contracts, authorizations, or certifications yet. */
+export const DEFENSE_WORKING_WITH_US = {
+  title: "Working with government",
+  body: "We're at the start of the government process. We don't hold federal contracts, authorizations, or certifications yet, and Jokuh isn't approved for classified information or CUI. We're open to pilots, research partnerships, and early programs that need private communications and identity.",
+  buttonLabel: "Talk to our team",
+  buttonHref: "/contact",
 } as const;
 
 export const DEFENSE_PRINCIPLES_HEADING = {

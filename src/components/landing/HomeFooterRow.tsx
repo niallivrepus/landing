@@ -10,6 +10,7 @@ const HOME_FOOTER_LINKS = [
   { label: "Shipped", href: "/shipped" },
   { label: "News", href: "/newsroom" },
   { label: "Invest", href: "/invest" },
+  { label: "Defense", href: "/defense" },
   { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
   { label: "Support", href: "/support" },

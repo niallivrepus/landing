@@ -189,7 +189,7 @@ export const BRAND_ROUTES = [
   { path: "/contact", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Sales and business contact" },
   { path: "/support", status: "live", surfaces: ["footer", "search"], sitemap: true, note: "Lean support page" },
   { path: "/security", status: "live", surfaces: ["footer"], sitemap: true, note: "E2EE explainer backing the homepage privacy claim" },
-  { path: "/defense", status: "live", surfaces: ["search"], sitemap: true, note: "Defense positioning draft; nav/footer placement pending owner review" },
+  { path: "/defense", status: "live", surfaces: ["search", "footer"], sitemap: true, note: "Defense positioning; in the footer (Company) and the homepage footer row" },
   { path: "/privacy", status: "live", surfaces: ["footer"], sitemap: true, note: "Lean privacy page" },
   { path: "/terms", status: "live", surfaces: ["footer"], sitemap: true, note: "Lean terms page" },
   { path: "/newsroom", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Company updates" },

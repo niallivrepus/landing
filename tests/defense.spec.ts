@@ -7,6 +7,11 @@ test('defense page renders its heading and CTAs', async ({ page }) => {
 
   await expect(page).toHaveURL(/\/defense$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Defense technology for free people' })).toBeVisible();
+  // Government readers get the plain answer and the honest status.
+  await expect(page.getByRole('heading', { level: 2, name: "What we're building" })).toBeVisible();
+  await expect(page.getByText('Our solution', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Working with government' })).toBeVisible();
+  await expect(page.getByText(/isn't approved for classified information or CUI/)).toBeVisible();
 
   const main = page.getByRole('main');
   await expect(main.getByRole('link', { name: 'Talk to our team' }).first()).toHaveAttribute('href', /\/contact$/);

@@ -15,6 +15,9 @@ import {
   DEFENSE_PRINCIPLES_HEADING,
   DEFENSE_ROADMAP,
   DEFENSE_SIGNATURE_TEXT,
+  DEFENSE_SOLUTION,
+  DEFENSE_USE_CASES,
+  DEFENSE_WORKING_WITH_US,
   type DefensePrinciple,
   type DefensePrincipleIcon,
 } from "../data/defense";
@@ -111,6 +114,60 @@ export function DefensePage() {
           </div>
         </section>
 
+        {/* What we're building — the problem and the solution, stated plainly */}
+        <section aria-labelledby="defense-solution" className={cn(CONTENT_SHELL_WIDE, "pb-20 md:pb-28")}>
+          <h2 id="defense-solution" className={sectionTitleClass}>
+            {DEFENSE_SOLUTION.title}
+          </h2>
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {[DEFENSE_SOLUTION.problem, DEFENSE_SOLUTION.solution].map((block) => (
+              <SquircleShell
+                key={block.label}
+                cornerRadius={28}
+                borderWidth={1}
+                strokeClassName={cardStroke}
+                fillClassName={cardFill}
+                className="h-full"
+                contentClassName="flex h-full flex-col p-6 md:p-8"
+              >
+                <p className={pageHeroEyebrowUppercaseClass}>{block.label}</p>
+                <p className="mt-4 font-sans text-[17px] leading-[1.6] text-light-space/85 light:text-zinc-800 md:text-[18px]">
+                  {block.body}
+                </p>
+              </SquircleShell>
+            ))}
+          </div>
+        </section>
+
+        {/* Where it fits — design targets, not deployments */}
+        <section aria-labelledby="defense-use-cases" className={cn(CONTENT_SHELL_WIDE, "pb-20 md:pb-28")}>
+          <h2 id="defense-use-cases" className={sectionTitleClass}>
+            {DEFENSE_USE_CASES.title}
+          </h2>
+          <p className={sectionIntroClass}>{DEFENSE_USE_CASES.intro}</p>
+          <ul className="mt-10 grid gap-4 md:grid-cols-3">
+            {DEFENSE_USE_CASES.items.map((useCase) => (
+              <li key={useCase.id}>
+                <SquircleShell
+                  cornerRadius={28}
+                  borderWidth={1}
+                  strokeClassName={cardStroke}
+                  fillClassName={cardFill}
+                  className="h-full"
+                  contentClassName="flex h-full flex-col p-6 md:p-7"
+                >
+                  <h3 className="font-sans text-[17px] font-semibold leading-snug text-light-space light:text-zinc-950">
+                    {useCase.title}
+                  </h3>
+                  <p className="mt-2 font-sans text-[14.5px] leading-[1.6] text-light-space/60 light:text-zinc-600">
+                    {useCase.body}
+                  </p>
+                </SquircleShell>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         {/* Principles */}
         <section aria-labelledby="defense-principles" className={cn(CONTENT_SHELL_WIDE, "pb-20 md:pb-28")}>
           <h2 id="defense-principles" className={sectionTitleClass}>
@@ -187,6 +244,25 @@ export function DefensePage() {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        {/* Working with government — honest status */}
+        <section aria-labelledby="defense-working" className={cn(CONTENT_SHELL_WIDE, "pb-20 md:pb-28")}>
+          <div className="grid gap-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-16">
+            <h2 id="defense-working" className={sectionTitleClass}>
+              {DEFENSE_WORKING_WITH_US.title}
+            </h2>
+            <div>
+              <p className="font-sans text-[16px] leading-[1.65] text-light-space/75 light:text-zinc-700 md:text-[17px]">
+                {DEFENSE_WORKING_WITH_US.body}
+              </p>
+              <div className="mt-6">
+                <JokuhButton href={DEFENSE_WORKING_WITH_US.buttonHref} variant="secondary" size="md">
+                  {DEFENSE_WORKING_WITH_US.buttonLabel}
+                </JokuhButton>
+              </div>
+            </div>
           </div>
         </section>
 

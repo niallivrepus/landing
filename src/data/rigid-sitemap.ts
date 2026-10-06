@@ -100,6 +100,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
           { label: "Stories", href: "/stories", surfaces: ALL_SOURCES },
           { label: "News", href: "/newsroom", surfaces: ALL_SOURCES },
           { label: "Shipped", href: "/shipped", surfaces: ALL_SOURCES },
+          { label: "Defense", href: "/defense", surfaces: ["footer", "sitemap"] },
         ],
       },
       {
