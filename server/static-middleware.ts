@@ -104,6 +104,13 @@ function buildRedirectRules(appOrigin: string): RedirectRule[] {
       location: (path, search) => `${app}${path}${search}`,
       status: 308,
     })),
+    // White-labelled OAuth for agent/app connectors (jokuh-live `docs/connectors-white-label.md`): providers redirect
+    // to `https://www.jokuh.com/connect/callback` (our domain on the consent + URL bar), and the browser is bounced —
+    // never fetched server-side — to Composio's callback with every query param intact so the flow completes.
+    {
+      match: (path) => path === "/connect/callback" || path === "/connect/callback/",
+      location: (_path, search) => `https://backend.composio.dev/api/v3/toolkits/auth/callback${search}`,
+    },
     // Public profile links shared as `jokuh.com/@handle` (plus canonical `/id/<handle>`, legacy `/u/<handle>`,
     // and `/peer/<uuid>` universal links) render in the app, which serves the logged-out profile page.
     // 302 so the canonical share host can move later without browsers caching the hop.
