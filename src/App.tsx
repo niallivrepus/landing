@@ -52,6 +52,8 @@ const StoryDetailPage = lazyNamed(() => import("./pages/StoryDetailPage"), "Stor
 const ShareYourStoryPage = lazyNamed(() => import("./pages/ShareYourStoryPage"), "ShareYourStoryPage");
 const StoriesPage = lazyNamed(() => import("./pages/StoriesPage"), "StoriesPage");
 const PitchDeckPage = lazyNamed(() => import("./pages/PitchDeckPage"), "PitchDeckPage");
+/** Unlisted concept for the GenLayer team; noindex, not in nav/search/sitemap. */
+const AgentCourtConceptPage = lazyNamed(() => import("./pages/AgentCourtConceptPage"), "AgentCourtConceptPage");
 const ShippedPage = lazyNamed(() => import("./pages/ShippedPage"), "ShippedPage");
 const ShippedWeekPage = lazyNamed(() => import("./pages/ShippedPage"), "ShippedWeekPage");
 const ShippedSpinePage = lazyNamed(() => import("./pages/ShippedSpinePage"), "ShippedSpinePage");
@@ -200,6 +202,7 @@ export default function App() {
           <Route path="/business" element={<BusinessOverviewPage />} />
           <Route path="/invest" element={<InvestPage />} />
           <Route path="/pitchdeck" element={<PitchDeckPage />} />
+          <Route path="/concepts/agent-court" element={<AgentCourtConceptPage />} />
           <Route path="/pitch-deck" element={<Navigate to="/pitchdeck" replace />} />
           <Route path="/charter" element={<Navigate to="/manifesto" replace />} />
           <Route path="/careers" element={<CareersPage />} />

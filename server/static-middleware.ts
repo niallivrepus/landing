@@ -170,6 +170,7 @@ const KNOWN_SPA_PREFIXES = [
   "/invest",
   "/pitchdeck",
   "/pitch-deck",
+  "/concepts",
   "/charter",
   "/careers",
   "/prompt",
