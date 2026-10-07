@@ -189,6 +189,7 @@ export const BRAND_ROUTES = [
   { path: "/contact", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Sales and business contact" },
   { path: "/support", status: "live", surfaces: ["footer", "search"], sitemap: true, note: "Lean support page" },
   { path: "/security", status: "live", surfaces: ["footer"], sitemap: true, note: "E2EE explainer backing the homepage privacy claim" },
+  { path: "/agents", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Agents: inbox, OOpolis, connectors, safety; homepage Agents tile" },
   { path: "/defense", status: "live", surfaces: ["search", "footer"], sitemap: true, note: "Defense positioning; in the footer (Company) and the homepage footer row" },
   { path: "/privacy", status: "live", surfaces: ["footer"], sitemap: true, note: "Lean privacy page" },
   { path: "/terms", status: "live", surfaces: ["footer"], sitemap: true, note: "Lean terms page" },

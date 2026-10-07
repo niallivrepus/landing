@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { resolveWebAppOrigin } from "../../../../config/download-links";
+import { AGENTS_IMAGES } from "../../../../data/agents-page";
 import type { ConsoleAppDemoSurface, ConsoleProductId } from "../../../../data/console-home-products";
 
 /**
@@ -14,6 +15,7 @@ import type { ConsoleAppDemoSurface, ConsoleProductId } from "../../../../data/c
  * - **Live (flag, off by default):** `VITE_CONSOLE_LIVE_DEMO=1` swaps captures for a non-interactive iframe of the
  *   app's `/demo` (origin from `VITE_ORIGIN_APP`).
  * - **Arcade:** the real bundled chess game (the same files the app ships), non-interactive here.
+ * - **Agents:** a still of OOpolis rendered from the app (`public/agents/oopolis-city.webp`) — no demo surface yet.
  * OO's column is the live homepage UI (prompt bar + temporary chat), rendered by `ConsoleHomeShell`.
  * **Connects to:** `ConsoleColumn`, `scripts/capture-app-demo.mjs`, `console-home-products.ts` (`appSurface`).
  */
@@ -138,6 +140,7 @@ export const CONSOLE_SURFACES: Record<ConsoleSurfaceId, ConsoleSurfaceDefinition
     load: () => import("./BlurbsDriftSurface").then((m) => ({ default: m.BlurbsDriftSurface })),
   }),
   arcade: { width: 480, height: 600, component: ArcadeChessSurface },
+  agents: { width: 780, height: 1240, component: AgentsCitySurface },
 };
 
 export function ConsoleSurface({ id, playing, light }: { id: ConsoleSurfaceId; playing: boolean; light: boolean }) {
@@ -290,6 +293,17 @@ function ArcadeChessSurface() {
         tabIndex={-1}
         onLoad={() => setLoaded(true)}
       />
+    </div>
+  );
+}
+
+// ─── Agents ──────────────────────────────────────────────────────────────────
+
+/** OOpolis as rendered by the app (agents around Queen OO, connected apps, speech bubbles). A still, not a demo. */
+function AgentsCitySurface() {
+  return (
+    <div className="console-agents-still">
+      <img src={AGENTS_IMAGES.city} alt="" decoding="async" draggable={false} className="console-agents-still__img" />
     </div>
   );
 }

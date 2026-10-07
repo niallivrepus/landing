@@ -156,6 +156,7 @@ const KNOWN_SPA_PREFIXES = [
   "/calls",
   "/messages",
   "/profile",
+  "/agents",
   "/contact",
   "/pricing",
   "/privacy",

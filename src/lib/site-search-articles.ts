@@ -213,6 +213,13 @@ const CURATED: SiteArticleHit[] = [
     external: false,
   },
   {
+    href: "/agents",
+    title: "Agents",
+    snippet: "Agents that work across your apps and inside Jokuh. One inbox, numbered answers, OOpolis, and approvals for anything that sends, spends or deletes.",
+    meta: "Product",
+    external: false,
+  },
+  {
     href: "/defense",
     title: "Defense",
     snippet: "Defense technology for free people. Encrypted messages, an identity you control, and a private workspace for you and your AI.",

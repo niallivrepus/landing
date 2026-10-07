@@ -1,6 +1,7 @@
 import { GooeyViewportProvider, useCurrentGooeyViewport, useTheme } from "@jokuh/gooey";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { resolveWebAppOrigin } from "../../../config/download-links";
 import { useClaimIdentityFlowContext } from "../../../context/ClaimIdentityFlowContext";
 import {
@@ -43,6 +44,8 @@ const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 /** Product energy colour for the eyebrow dot — the same hues its corner glows in (app `ActionButtons.tsx`). */
 const ENERGY_FOR_PRODUCT: Record<ConsoleProductId, string> = {
   oo: "#8c73ff",
+  // OOpolis "working" blue (the robot pill's status dots).
+  agents: "var(--color-blue-4, #0a84ff)",
   spine: "var(--color-yellow-4, #ffb800)",
   calls: "var(--color-green-4, #21dc11)",
   messages: "var(--color-red-4, #ff0700)",
@@ -123,6 +126,7 @@ function ConsoleHomeShellInner() {
   const openClaim = useCallback(() => claimFlow.openFrom("hero"), [claimFlow]);
   const closeBubbles = useCallback(() => setBubblesPanel(null), []);
   const appOrigin = resolveWebAppOrigin();
+  const navigate = useNavigate();
 
   const active = CONSOLE_PRODUCTS.find((p) => p.id === activeId) ?? CONSOLE_PRODUCTS[0]!;
 
@@ -143,16 +147,20 @@ function ConsoleHomeShellInner() {
     });
   }, []);
 
-  /** Enter / click on a tile: OO → its prompt, Arcade → play, products → the real app demo of that surface. */
+  /**
+   * Enter / click on a tile: OO → its prompt, Arcade → play, Agents → its landing page (`/agents`), products → the
+   * real app demo of that surface.
+   */
   const openProduct = useCallback(
     (id: ConsoleProductId) => {
       const product = CONSOLE_PRODUCTS.find((p) => p.id === id);
       if (!product) return;
       if (product.id === "oo") focusPrompt();
       else if (product.appSurface) window.open(consoleAppDemoHref(appOrigin, product.appSurface), "_blank", "noopener");
-      else setArcadeGame("chess");
+      else if (product.id === "arcade") setArcadeGame("chess");
+      else navigate(product.learnMoreHref);
     },
-    [appOrigin, focusPrompt],
+    [appOrigin, focusPrompt, navigate],
   );
 
   const step = useCallback(
@@ -410,12 +418,17 @@ function ConsoleContext({
               >
                 Open
               </JokuhButton>
-            ) : (
+            ) : product.id === "arcade" ? (
               <JokuhButton variant="primary" size="sm" onClick={onPlay}>
                 Play chess
               </JokuhButton>
-            )}
-            <JokuhButton variant="secondary" size="sm" href={product.learnMoreHref}>
+            ) : null}
+            {/* No app surface and nothing to play (Agents): "Learn more" is the one action, so it leads. */}
+            <JokuhButton
+              variant={product.appSurface || product.id === "arcade" ? "secondary" : "primary"}
+              size="sm"
+              href={product.learnMoreHref}
+            >
               Learn more
             </JokuhButton>
           </div>

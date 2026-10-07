@@ -2,16 +2,18 @@
  * **Purpose:** Product focus list for the "Console Home" homepage (`/`) (PS5 home × Netflix billboard).
  * Copy is lifted from shipped site sources only — `products.ts` summaries, `SITE_PRODUCT_SENTENCE` (OO), the
  * homepage arcade pill (chess) and Jokuh Mail (username@jokuh.com, live in the Texts inbox). No new claims.
+ * Agents: copy from `agents-page.ts` (the `/agents` page); its column is a still of OOpolis, its scene the hive.
  * Each product's scene is its hero art (atmosphere) with the product's live app surface mounted on top
  * (`console/surfaces/ConsoleSurfaces.tsx`). OO uses the live homepage background with its shader orb layered on;
  * Arcade, which has no art, is a generative shader scene.
  * **Connects to:** `ConsoleHomeShell`, `ConsoleScene`, `ConsoleTileRow`, `product-hero-images.ts`.
  */
+import { AGENTS_CONSOLE_SENTENCE, AGENTS_IMAGES } from "./agents-page";
 import { LANDING_HOME_HERO_IMAGE } from "./landing-hero-copy";
 import { PRODUCT_HERO_IMAGES } from "./product-hero-images";
 import { PRODUCTS } from "./products";
 
-export type ConsoleProductId = "oo" | "spine" | "calls" | "messages" | "profile" | "blurbs" | "arcade";
+export type ConsoleProductId = "oo" | "agents" | "spine" | "calls" | "messages" | "profile" | "blurbs" | "arcade";
 
 /** Generative scene palettes for products without strong photography (rendered by `ConsoleShaderScene`). */
 export type ConsoleShaderPalette = "oo" | "arcade";
@@ -33,7 +35,7 @@ export type ConsoleProduct = {
   /** Tile art (square). `null` → CSS-painted tile for shader scenes. */
   tile: string | null;
   scene: ConsoleScene;
-  /** "Open" (and Enter on the tile) opens this surface of the real app demo; `null` → no app surface (Arcade). */
+  /** "Open" (and Enter on the tile) opens this surface of the real app demo; `null` → no app surface (Agents, Arcade). */
   appSurface: ConsoleAppDemoSurface | null;
   /** "Learn more": the landing page for the product. */
   learnMoreHref: string;
@@ -51,6 +53,17 @@ export const CONSOLE_PRODUCTS: readonly ConsoleProduct[] = [
     scene: { kind: "image", src: LANDING_HOME_HERO_IMAGE, position: "50% 42%", overlay: "oo" },
     appSurface: "oo",
     learnMoreHref: "/demo",
+  },
+  {
+    id: "agents",
+    title: "Agents",
+    eyebrow: "Private intelligence",
+    sentence: AGENTS_CONSOLE_SENTENCE,
+    tile: null,
+    // The OOpolis hive: every agent a person owns, in the colours of its state.
+    scene: { kind: "image", src: AGENTS_IMAGES.hive, position: "50% 50%" },
+    appSurface: null,
+    learnMoreHref: "/agents",
   },
   {
     id: "spine",

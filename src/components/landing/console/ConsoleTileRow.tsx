@@ -1,5 +1,5 @@
 import { cn } from "@jokuh/gooey";
-import { Gamepad2 } from "lucide-react";
+import { Bot, Gamepad2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import type { ConsoleProduct, ConsoleProductId } from "../../../data/console-home-products";
@@ -238,6 +238,14 @@ function TileArt({ product }: { product: ConsoleProduct }) {
     return (
       <span className="console-tile__paint console-tile__paint--oo" aria-hidden>
         <span className="console-tile__wordmark">OO</span>
+      </span>
+    );
+  }
+  if (product.id === "agents") {
+    // The robot button that opens Your agents in the app, over the OOpolis hive.
+    return (
+      <span className="console-tile__paint console-tile__paint--agents" aria-hidden>
+        <Bot className="console-tile__glyph" strokeWidth={1.75} />
       </span>
     );
   }

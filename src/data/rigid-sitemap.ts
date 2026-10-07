@@ -77,6 +77,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
           { label: "Spine", href: "/spine", summary: "See time more clearly.", surfaces: ALL_SOURCES },
           { label: "Blurbs", href: "/blurbs", summary: "Turn talk into clean copy.", surfaces: ALL_SOURCES },
           { label: "Profile", href: "/profile", summary: "Build a living identity people can actually use.", surfaces: ALL_SOURCES },
+          { label: "Agents", href: "/agents", summary: "Agents that ask, and you answer in a tap.", surfaces: ALL_SOURCES },
         ],
       },
       {
