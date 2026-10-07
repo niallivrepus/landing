@@ -1,5 +1,5 @@
-import { ActionButton, cn } from "@jokuh/gooey";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { ActionButton, cn, createSquirclePath } from "@jokuh/gooey";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { DEFENSE_DOC, DEFENSE_HERO } from "../../data/defense";
 import { SiteLink } from "../SiteLink";
@@ -128,6 +128,8 @@ export function DefenseDocSheet({
   sharePath = "/defense",
   shareTitle = DEFENSE_DOC.name,
   menuLinks = [DEFENSE_HERO.primary, DEFENSE_HERO.secondary],
+  title = "Docs",
+  bodySquircleRadius,
 }: {
   children: ReactNode;
   onReplay: () => void;
@@ -135,7 +137,34 @@ export function DefenseDocSheet({
   sharePath?: string;
   shareTitle?: string;
   menuLinks?: DocSheetMenuLink[];
+  /** Header centre. The app shows "Docs" on the library; an open doc can show its own title. */
+  title?: string;
+  /**
+   * When set, the body is the paper and is clipped with the same squircle generator as the outer card
+   * (`createSquirclePath`, smoothing 1) at this radius, so the inner corners match the outer ones.
+   */
+  bodySquircleRadius?: number;
 }) {
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [bodyClip, setBodyClip] = useState<string | undefined>(undefined);
+
+  useLayoutEffect(() => {
+    const node = bodyRef.current;
+    if (!node || !bodySquircleRadius) return undefined;
+    const measure = () => {
+      const width = Math.round(node.offsetWidth);
+      const height = Math.round(node.offsetHeight);
+      if (width <= 0 || height <= 0) return;
+      const cornerRadius = Math.min(bodySquircleRadius, width / 2, height / 2);
+      setBodyClip(`path('${createSquirclePath({ width, height, cornerRadius, cornerSmoothing: 1 })}')`);
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [bodySquircleRadius]);
+
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -184,7 +213,7 @@ export function DefenseDocSheet({
             <ShareIcon />
           </FlankPill>
           <div className="defense-flanks__center">
-            <span className="docs-sheet__header-title">Docs</span>
+            <span className="docs-sheet__header-title">{title}</span>
           </div>
           <FlankPill label="More" side="trailing" expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
             <MoreIcon />
@@ -195,7 +224,11 @@ export function DefenseDocSheet({
         </div>
       </div>
 
-      <div className="center-sheet-paper-card-host__body defense-sheet__body">
+      <div
+        ref={bodyRef}
+        className={cn("center-sheet-paper-card-host__body defense-sheet__body", bodySquircleRadius && "defense-sheet__body--squircle")}
+        style={bodyClip ? { clipPath: bodyClip } : undefined}
+      >
         <div
           className="docs-sheet"
           data-view="editor"

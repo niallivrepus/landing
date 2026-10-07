@@ -1,69 +1,222 @@
-/* /concepts/agent-court — the embedded OO thread (always a dark "screen", like the /defense recordings) plus the doc
-   step list and gutter text. Shell, doc paper, gutters and auto-play bar come from defense-app.css. */
+/* /concepts/agent-court — Docs sheet at paper width (floating paper host), and the embedded stage: a Text-sheet chat
+   with OO beside an OOpolis view. Shell, doc typography, gutters and the auto-play bar come from defense-app.css.
+   Look sources (jokuh-live web): center-sheet-paper-card.css, agents/oopolis/oopolis.css, OopolisHiveBackdrop.tsx. */
 
-/* ── Device (OO thread) ── */
+/* ── Docs sheet: paper width + floating paper host ──────────────────────────────────────────────────────────────
+   Docs width is paper width (920, `--docs`), not the 542 call card. The body IS the paper (62px top / 10px bottom
+   inset), clipped in JS with the outer card's own squircle generator (`DefenseDocSheet bodySquircleRadius`) so inner
+   and outer corners are the same curve; the header pills float over it. Scoped to this page. */
 
-.agent-court__device {
-  --ac-ink: #f5f5f7;
-  --ac-muted: rgba(245, 245, 247, 0.62);
-  --ac-faint: rgba(245, 245, 247, 0.38);
-  --ac-line: rgba(255, 255, 255, 0.1);
-  --ac-glass: rgba(255, 255, 255, 0.05);
-  --ac-accent: #7c9cff;
-  --ac-good: #4fd1a5;
-  --ac-warn: #f5b25c;
-  color: var(--ac-ink);
-  max-width: 380px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  height: 560px;
-  border: 1px solid var(--ac-line);
-  border-radius: 40px;
-  background: linear-gradient(180deg, #121216, #0b0b0e);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  overflow: hidden;
+.agent-court-app .defense-column {
+  width: min(920px, calc(100% - 24px));
 }
 
-.agent-court__head {
+@media (max-width: 639px) {
+  .agent-court-app .defense-column {
+    width: calc(100% - 16px);
+  }
+}
+
+/* The paper is painted on the clipped body, not the card's ::before / ::after (CSS radii can't match the outer path). */
+.agent-court-app .center-sheet-paper-card::before,
+.agent-court-app .center-sheet-paper-card::after {
+  display: none;
+}
+
+.agent-court-app .defense-sheet__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.agent-court-app .defense-sheet__header :is(button, a, [role="button"]) {
+  pointer-events: auto;
+}
+
+.agent-court-app .docs-sheet__header-title {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-court-app .defense-sheet__body {
+  position: absolute;
+  top: var(--paper-card-fill-top-inset, 62px);
+  bottom: var(--paper-card-bottom-inset, 10px);
+  left: 0;
+  right: 0;
+  z-index: 0;
+  margin: 0;
+  border-radius: 50px; /* until the JS clip measures */
+  overflow: hidden;
+  isolation: isolate;
+  background-color: #000;
+  background-image:
+    linear-gradient(to bottom, rgba(255, 255, 255, var(--paper-card-rim-glow-opacity, 0.07)) 0, rgba(255, 255, 255, 0) var(--paper-card-rim-glow-height, 28px)),
+    radial-gradient(ellipse 141.77% 141.77% at 0% 0%, #0a0a0a 0%, #000 100%);
+}
+
+/* House paper texture, colour-dodged at 10% (dark) — same recipe as the app's paper card. */
+.agent-court-app .defense-sheet__body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("/wallet/paper-texture.jpg") center / cover no-repeat;
+  mix-blend-mode: color-dodge;
+  opacity: var(--paper-card-grain-opacity, 0.1);
+}
+
+:is(.light, [data-theme="light"]) .agent-court-app .defense-sheet__body {
+  background-color: #fff;
+  background-image: radial-gradient(ellipse 141.77% 141.77% at 0% 0%, #fff 0%, #f4f2ee 100%);
+}
+
+:is(.light, [data-theme="light"]) .agent-court-app .defense-sheet__body::after {
+  mix-blend-mode: multiply;
+  opacity: 0.14;
+}
+
+/* Scroll runs under the floating pills, with the app's soft edge fade. */
+.agent-court-app .defense-doc__scroll {
+  padding-top: 28px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 26px, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 26px, #000 calc(100% - 28px), transparent 100%);
+}
+
+/* Gutters sit outside the wider sheet; only when there's room for both. */
+.agent-court-app .defense-gutter {
+  width: 220px;
+}
+
+.agent-court-app .defense-gutter--left {
+  left: calc(50% - 460px - 28px - 220px);
+}
+
+.agent-court-app .defense-gutter--right {
+  right: calc(50% - 460px - 28px - 220px);
+}
+
+@media (max-width: 1559px) {
+  .agent-court-app .defense-gutter {
+    display: none;
+  }
+}
+
+.agent-court-gutter__layer {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── Stage: chat + OOpolis, side by side when the page is wide ──────────────────────────────────────────────── */
+
+.agent-court-block {
+  padding: 8px 0 4px;
+}
+
+.agent-court__stage {
+  --ac-ink: #f5f5f7;
+  --ac-ink-2: rgba(245, 245, 247, 0.64);
+  --ac-ink-3: rgba(245, 245, 247, 0.4);
+  --ac-line: rgba(255, 255, 255, 0.09);
+  --ac-row: rgba(255, 255, 255, 0.05);
+  --ac-well: rgba(255, 255, 255, 0.07);
+  --ac-accent: #ff5a12;
+  --ac-needs: #ffb800;
+  --ac-resting: #21dc11;
+  --ac-asleep: rgba(245, 245, 247, 0.4);
+  --ac-validator: #4f8cff;
+  --ac-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 12px;
+  color: var(--ac-ink);
+}
+
+.agent-court__chat,
+.agent-court__city {
+  position: relative;
+  height: 500px;
+  border: 1px solid var(--ac-line);
+  border-radius: 34px;
+  corner-shape: squircle;
+  overflow: hidden;
+  background: radial-gradient(ellipse 141.77% 141.77% at 0% 0%, #0d0d0d 0%, #000 100%);
+}
+
+@media (max-width: 680px) {
+  .agent-court__chat {
+    height: 460px;
+  }
+
+  .agent-court__city {
+    height: 280px;
+  }
+}
+
+/* Chat (Text sheet) */
+
+.agent-court__chat {
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-court__chat-head {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 18px 20px 14px;
+  padding: 14px 16px 12px;
   border-bottom: 1px solid var(--ac-line);
 }
 
-.agent-court__oo {
+.agent-court__chat-avatar {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #ffffff, #b9c6ff 45%, #6d7bd8);
-  color: #101018;
-  font-size: 12px;
-  font-weight: 700;
+  background: #161616;
+  box-shadow: inset 0 0 0 1px var(--ac-line);
+  overflow: hidden;
 }
 
-.agent-court__head-name {
-  margin: 0;
+.agent-court__chat-who {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.agent-court__chat-name {
   font-size: 15px;
   font-weight: 600;
 }
 
-.agent-court__head-sub {
-  margin: 0;
+.agent-court__chat-sub {
   font-size: 12px;
-  color: var(--ac-faint);
+  color: var(--ac-ink-3);
+}
+
+.agent-court__oo {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  transform-origin: center;
 }
 
 .agent-court__thread {
   flex: 1;
-  min-height: 0; /* let the column flex child scroll instead of growing past the device */
+  min-height: 0; /* let the column flex child scroll instead of growing past the pane */
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 16px 14px 28px;
+  padding: 14px 12px 24px;
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -82,7 +235,7 @@
   overflow: hidden;
   transition:
     opacity 360ms ease,
-    transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 360ms var(--ac-ease),
     max-height 420ms ease;
 }
 
@@ -93,7 +246,7 @@
 }
 
 .agent-court__row > * {
-  max-width: 84%;
+  max-width: 86%;
 }
 
 .agent-court__row--out {
@@ -101,17 +254,20 @@
 }
 
 .agent-court__row--card > * {
-  max-width: 92%;
+  max-width: 94%;
   width: 100%;
 }
 
-/* ── Cards ── */
-
+/* Cards — OOpolis command-card look (row fill, subtle border, 20px). */
 .agent-court__card {
-  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
   border: 1px solid var(--ac-line);
   border-radius: 20px;
-  background: var(--ac-glass);
+  corner-shape: squircle;
+  background: var(--ac-row);
 }
 
 .agent-court__card-top {
@@ -119,27 +275,38 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 10px;
 }
 
-.agent-court__card-eyebrow {
-  margin: 0;
-  font-size: 11px;
+.agent-court__card-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.agent-court__card-title {
+  display: block;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ac-faint);
+}
+
+.agent-court__card-sub {
+  display: block;
+  font-size: 12px;
+  color: var(--ac-ink-3);
 }
 
 .agent-court__badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 3px 9px;
+  min-height: 24px;
+  padding: 2px 9px;
+  border: 1px solid var(--ac-line);
   border-radius: 999px;
-  background: rgba(124, 156, 255, 0.14);
-  color: #c9d5ff;
+  background: var(--ac-well);
+  color: var(--ac-ink-2);
   font-size: 11px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -147,30 +314,16 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--ac-accent);
+  background: var(--ac-validator);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--ac-validator) 70%, transparent);
 }
 
 .agent-court__terms {
-  margin: 0 0 12px;
+  margin: 0;
   padding-left: 18px;
   font-size: 13px;
   line-height: 1.5;
-  color: var(--ac-ink);
-}
-
-.agent-court__parties {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-  font-size: 12px;
-  color: var(--ac-muted);
-}
-
-.agent-court__parties-line {
-  flex: 1;
-  height: 1px;
-  background: var(--ac-line);
+  color: var(--ac-ink-2);
 }
 
 .agent-court__escrow {
@@ -179,23 +332,23 @@
   gap: 8px;
   padding: 8px 10px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--ac-well);
   font-size: 13px;
-  color: var(--ac-muted);
+  color: var(--ac-ink-2);
   transition: background 400ms ease, color 400ms ease;
 }
 
 .agent-court__escrow.is-locked {
-  background: rgba(79, 209, 165, 0.12);
-  color: #c7f3e3;
+  background: color-mix(in srgb, var(--ac-resting) 14%, transparent);
+  color: var(--ac-ink);
 }
 
 .agent-court__lock {
+  position: relative;
   width: 10px;
   height: 12px;
   border: 1.5px solid currentColor;
   border-radius: 3px;
-  position: relative;
 }
 
 .agent-court__lock::before {
@@ -218,13 +371,14 @@
   justify-content: center;
   gap: 6px;
   aspect-ratio: 1 / 1;
-  max-width: 180px !important;
+  max-width: 168px !important;
   border-radius: 18px;
+  corner-shape: squircle;
   background: radial-gradient(circle at 30% 20%, #ffb36b, #e2467c 55%, #4a1f7a);
 }
 
 .agent-court__poster-title {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: 0.08em;
   color: #fff;
@@ -232,51 +386,11 @@
 
 .agent-court__poster-size {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.agent-court__validators {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.agent-court__validator {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px solid var(--ac-line);
-  background: rgba(255, 255, 255, 0.06);
-  transition: background 300ms ease, border-color 300ms ease;
-}
-
-.agent-court__validators.is-reviewing .agent-court__validator {
-  animation: agent-court-pulse 1.1s ease-in-out infinite;
-}
-
-.agent-court__validators.is-done .agent-court__validator {
-  background: var(--ac-good);
-  border-color: transparent;
-}
-
-@keyframes agent-court-pulse {
-  0%,
-  100% {
-    background: rgba(255, 255, 255, 0.06);
-  }
-  50% {
-    background: rgba(124, 156, 255, 0.55);
-  }
-}
-
-.agent-court__muted {
-  margin: 0;
-  font-size: 12px;
-  color: var(--ac-muted);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .agent-court__verdict {
-  margin: 6px 0 12px;
+  margin: 0;
   font-size: 14px;
   line-height: 1.4;
 }
@@ -286,24 +400,23 @@
   height: 8px;
   overflow: hidden;
   border-radius: 999px;
-  margin-bottom: 8px;
 }
 
 .agent-court__split-agent {
   flex: 28;
-  background: var(--ac-warn);
+  background: var(--ac-needs);
 }
 
 .agent-court__split-you {
   flex: 12;
-  background: var(--ac-good);
+  background: var(--ac-resting);
 }
 
 .agent-court__split-legend {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: var(--ac-muted);
+  color: var(--ac-ink-2);
 }
 
 .agent-court__receipts {
@@ -312,36 +425,261 @@
   gap: 6px;
 }
 
-.agent-court__chip {
-  padding: 6px 10px;
+.agent-court__receipt {
+  padding: 6px 11px;
+  border: 1px solid var(--ac-line);
   border-radius: 999px;
-  background: rgba(79, 209, 165, 0.12);
-  color: #c7f3e3;
+  background: var(--ac-well);
   font-size: 12px;
+  font-weight: 600;
 }
 
-.agent-court__chip--spine {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--ac-ink);
+/* Villain avatar — OOpolis baby look: round, 2px origin-energy rim. */
+.agent-court__villain {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #111;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .agent-court__row,
-  .agent-court__escrow {
-    transition: none;
+.agent-court__villain img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.agent-court__villain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px #ff6fd8;
+}
+
+/* ── OOpolis view ── */
+
+.agent-court__hive {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.agent-court__cell polygon {
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 1;
+}
+
+.agent-court__cell.is-validator polygon {
+  stroke: rgba(79, 140, 255, 0.28);
+}
+
+.agent-court__cell circle {
+  fill: rgba(245, 245, 247, 0.28);
+  transition: fill 300ms ease;
+}
+
+.agent-court__cell.is-reviewing circle {
+  animation: agent-court-ping 1.1s ease-in-out infinite;
+}
+
+.agent-court__cell.is-agreed circle {
+  fill: var(--ac-resting);
+}
+
+@keyframes agent-court-ping {
+  0%,
+  100% {
+    fill: rgba(245, 245, 247, 0.28);
   }
-  .agent-court__validators.is-reviewing .agent-court__validator {
-    animation: none;
+  50% {
+    fill: var(--ac-validator);
   }
 }
 
-/* ── Doc: step list (inside the Docs sheet; inherits the doc's ink) ── */
-
-.agent-court-block {
-  padding: 18px 0 4px;
+.agent-court__city::after {
+  /* Night-sky vignette so the cells fade at the edges, as in the hive backdrop. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 70% 60% at 50% 45%, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
 }
+
+.agent-court__city-hud {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.agent-court__city-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.agent-court__chip {
+  --ac-dot: var(--ac-asleep);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 3px 11px 3px 9px;
+  border: 1px solid var(--ac-line);
+  border-radius: 999px;
+  background: rgba(18, 18, 18, 0.82);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.agent-court__chip[data-state="working"] {
+  --ac-dot: var(--ac-accent);
+}
+
+.agent-court__chip[data-state="needsYou"] {
+  --ac-dot: var(--ac-needs);
+}
+
+.agent-court__chip[data-state="resting"] {
+  --ac-dot: var(--ac-resting);
+}
+
+.agent-court__chip-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--ac-dot);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--ac-dot) 70%, transparent);
+}
+
+.agent-court__queen,
+.agent-court__baby {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.agent-court__queen {
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+}
+
+.agent-court__queen .agent-court__oo {
+  margin: 8px 0;
+  filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.22));
+}
+
+.agent-court__baby {
+  left: 76%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  transition: opacity 400ms ease, filter 400ms ease;
+  animation: agent-court-bob 3.2s ease-in-out infinite;
+}
+
+.agent-court__baby[data-state="working"] {
+  animation-duration: 1.4s;
+}
+
+.agent-court__baby.is-asleep {
+  opacity: 0.4;
+  filter: grayscale(0.7);
+  animation: none;
+}
+
+@keyframes agent-court-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -4px;
+  }
+}
+
+.agent-court__name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ac-ink-2);
+}
+
+/* Hive speech bubble: pops in on each change. */
+.agent-court__bubble {
+  position: relative;
+  padding: 5px 10px;
+  border-radius: 12px;
+  background: #fff;
+  color: #000;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  animation: agent-court-pop 280ms var(--ac-ease) both;
+}
+
+.agent-court__bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 1px;
+}
+
+.agent-court__bubble--small {
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+@keyframes agent-court-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.agent-court__validators-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ac-ink-3);
+}
+
+/* ── Doc: step list in two columns on a wide page (inherits the doc's ink) ── */
 
 .agent-court-doc-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2px 24px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -350,7 +688,8 @@
 .agent-court-doc-step {
   display: flex;
   gap: 12px;
-  width: 100%;
+  width: calc(100% + 24px);
+  height: 100%;
   padding: 10px 12px;
   margin: 0 -12px;
   border: 0;
@@ -390,88 +729,16 @@
   opacity: 0.7;
 }
 
-.agent-court-gutter__layer {
-  margin: 0 0 12px;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
 @media (prefers-reduced-motion: reduce) {
+  .agent-court__row,
+  .agent-court__escrow,
   .agent-court-doc-step {
     transition: none;
   }
-}
 
-/* ── Docs sheet as the app draws it (2026-10-07 floating paper host) ───────────────────────────────────────────
-   Port of jokuh-live `center-sheet-paper-card.css`: Docs width is paper width (920, `--docs`), not the 542 call card;
-   the body IS the inset paper fill (same box + 56/40 corners as ::before), and the header pills float over the fill
-   top. The old flow layout started the body under the header row, so its rounded corners sat ~35px below the
-   fill's — the "box inside a box". Scoped to this page; /defense still uses the flow layout. */
-
-.agent-court-app .defense-column {
-  width: min(920px, calc(100% - 24px));
-}
-
-@media (max-width: 639px) {
-  .agent-court-app .defense-column {
-    width: calc(100% - 16px);
-  }
-}
-
-.agent-court-app .center-sheet-paper-card::before,
-.agent-court-app .center-sheet-paper-card::after {
-  corner-shape: squircle;
-}
-
-.agent-court-app .defense-sheet__header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  pointer-events: none;
-}
-
-.agent-court-app .defense-sheet__header :is(button, a, [role="button"]) {
-  pointer-events: auto;
-}
-
-.agent-court-app .defense-sheet__body {
-  position: absolute;
-  top: var(--paper-card-fill-top-inset, 62px);
-  bottom: var(--paper-card-bottom-inset, 10px);
-  left: 0;
-  right: 0;
-  z-index: 0;
-  margin: 0;
-  border-radius: var(--paper-card-fill-radius-top, 56px) var(--paper-card-fill-radius-top, 56px)
-    var(--paper-card-fill-radius-bottom, 40px) var(--paper-card-fill-radius-bottom, 40px);
-  corner-shape: squircle;
-  overflow: hidden;
-}
-
-/* Scroll runs under the floating pills into the rounded corners, with the app's soft edge fade. */
-.agent-court-app .defense-doc__scroll {
-  padding-top: 28px;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 26px, #000 calc(100% - 28px), transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 26px, #000 calc(100% - 28px), transparent 100%);
-}
-
-/* Gutters sit outside the wider sheet; only when there's room for both. */
-.agent-court-app .defense-gutter {
-  width: 220px;
-}
-
-.agent-court-app .defense-gutter--left {
-  left: calc(50% - 460px - 28px - 220px);
-}
-
-.agent-court-app .defense-gutter--right {
-  right: calc(50% - 460px - 28px - 220px);
-}
-
-@media (max-width: 1559px) {
-  .agent-court-app .defense-gutter {
-    display: none;
+  .agent-court__cell.is-reviewing circle,
+  .agent-court__baby,
+  .agent-court__bubble {
+    animation: none;
   }
 }

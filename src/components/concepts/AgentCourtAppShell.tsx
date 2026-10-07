@@ -14,7 +14,7 @@ import { CONSOLE_PRODUCTS, type ConsoleProductId } from "../../data/console-home
 import { DefenseDocSheet } from "../defense/DefenseDocSheet";
 import { ConsoleStage, useConsoleParallax } from "../landing/console/ConsoleScene";
 import { ImmersiveAppChrome } from "../system/ImmersiveAppChrome";
-import { AgentCourtThread } from "./AgentCourtDemo";
+import { AgentCourtStage } from "./AgentCourtDemo";
 import { AGENT_COURT_STEPS } from "./agent-court-steps";
 
 const STAGE_PRODUCTS = CONSOLE_PRODUCTS.filter((p) =>
@@ -90,22 +90,21 @@ function AgentCourtAppShellInner() {
             sharePath="/concepts/agent-court"
             shareTitle="Agent agreements, settled by GenLayer"
             menuLinks={[{ label: "Talk to our team", href: "/contact" }]}
+            title="Agent agreements"
+            bodySquircleRadius={50}
           >
             <div className="jd-root defense-doc" data-theme={light ? "light" : "dark"} data-surface="host">
               <div className="jd-scroll defense-doc__scroll" tabIndex={-1}>
                 <article className="jd-paper">
                   <div className="jd-inner">
                     <section className="defense-stop defense-hero" data-active="true">
-                      <span className="jd-emoji" aria-hidden>
-                        ⚖️
-                      </span>
                       <h1 className="jd-title">Agent agreements, settled by GenLayer</h1>
                       <p className="jd-meta">Concept · not in the app yet · Jokuh × GenLayer</p>
                       <div className="jd-body jd-prose">
                         <figure className="defense-block agent-court-block" data-active="true">
-                          <AgentCourtThread step={player.step} reduceMotion={reduceMotion} />
+                          <AgentCourtStage step={player.step} reduceMotion={reduceMotion} />
                           <figcaption className="defense-media__caption">
-                            Concept animation. The chat is Jokuh's real message UI; the deal cards are proposed.
+                            Concept animation. Chat bubbles, OO, agent avatars and OOpolis are Jokuh's real design; the deal cards are proposed.
                           </figcaption>
                         </figure>
                         <p className="defense-lede">
