@@ -119,7 +119,23 @@ function FlankPill({
   );
 }
 
-export function DefenseDocSheet({ children, onReplay }: { children: ReactNode; onReplay: () => void }) {
+/** Header menu link. Defaults to the defense doc's two hero links. */
+export type DocSheetMenuLink = { label: string; href: string };
+
+export function DefenseDocSheet({
+  children,
+  onReplay,
+  sharePath = "/defense",
+  shareTitle = DEFENSE_DOC.name,
+  menuLinks = [DEFENSE_HERO.primary, DEFENSE_HERO.secondary],
+}: {
+  children: ReactNode;
+  onReplay: () => void;
+  /** Path the Share pill copies (other pages reuse this sheet, e.g. `/concepts/agent-court`). */
+  sharePath?: string;
+  shareTitle?: string;
+  menuLinks?: DocSheetMenuLink[];
+}) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -134,10 +150,10 @@ export function DefenseDocSheet({ children, onReplay }: { children: ReactNode; o
   };
 
   const share = async () => {
-    const url = `${window.location.origin}/defense`;
+    const url = `${window.location.origin}${sharePath}`;
     try {
       if (navigator.share && window.matchMedia("(pointer: coarse)").matches) {
-        await navigator.share({ title: DEFENSE_DOC.name, url });
+        await navigator.share({ title: shareTitle, url });
         return;
       }
       await navigator.clipboard.writeText(url);
@@ -196,12 +212,11 @@ export function DefenseDocSheet({ children, onReplay }: { children: ReactNode; o
             <div className="docs-sheet__menu-anchor">
               {menuOpen ? (
                 <div className="docs-sheet__menu" role="menu">
-                  <SiteLink className="docs-sheet__menu-item" role="menuitem" href={DEFENSE_HERO.primary.href}>
-                    {DEFENSE_HERO.primary.label}
-                  </SiteLink>
-                  <SiteLink className="docs-sheet__menu-item" role="menuitem" href={DEFENSE_HERO.secondary.href}>
-                    {DEFENSE_HERO.secondary.label}
-                  </SiteLink>
+                  {menuLinks.map((link) => (
+                    <SiteLink key={link.href} className="docs-sheet__menu-item" role="menuitem" href={link.href}>
+                      {link.label}
+                    </SiteLink>
+                  ))}
                   <button
                     type="button"
                     className="docs-sheet__menu-item"
