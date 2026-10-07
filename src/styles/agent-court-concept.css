@@ -401,3 +401,77 @@
     transition: none;
   }
 }
+
+/* ── Docs sheet as the app draws it (2026-10-07 floating paper host) ───────────────────────────────────────────
+   Port of jokuh-live `center-sheet-paper-card.css`: Docs width is paper width (920, `--docs`), not the 542 call card;
+   the body IS the inset paper fill (same box + 56/40 corners as ::before), and the header pills float over the fill
+   top. The old flow layout started the body under the header row, so its rounded corners sat ~35px below the
+   fill's — the "box inside a box". Scoped to this page; /defense still uses the flow layout. */
+
+.agent-court-app .defense-column {
+  width: min(920px, calc(100% - 24px));
+}
+
+@media (max-width: 639px) {
+  .agent-court-app .defense-column {
+    width: calc(100% - 16px);
+  }
+}
+
+.agent-court-app .center-sheet-paper-card::before,
+.agent-court-app .center-sheet-paper-card::after {
+  corner-shape: squircle;
+}
+
+.agent-court-app .defense-sheet__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.agent-court-app .defense-sheet__header :is(button, a, [role="button"]) {
+  pointer-events: auto;
+}
+
+.agent-court-app .defense-sheet__body {
+  position: absolute;
+  top: var(--paper-card-fill-top-inset, 62px);
+  bottom: var(--paper-card-bottom-inset, 10px);
+  left: 0;
+  right: 0;
+  z-index: 0;
+  margin: 0;
+  border-radius: var(--paper-card-fill-radius-top, 56px) var(--paper-card-fill-radius-top, 56px)
+    var(--paper-card-fill-radius-bottom, 40px) var(--paper-card-fill-radius-bottom, 40px);
+  corner-shape: squircle;
+  overflow: hidden;
+}
+
+/* Scroll runs under the floating pills into the rounded corners, with the app's soft edge fade. */
+.agent-court-app .defense-doc__scroll {
+  padding-top: 28px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 26px, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 26px, #000 calc(100% - 28px), transparent 100%);
+}
+
+/* Gutters sit outside the wider sheet; only when there's room for both. */
+.agent-court-app .defense-gutter {
+  width: 220px;
+}
+
+.agent-court-app .defense-gutter--left {
+  left: calc(50% - 460px - 28px - 220px);
+}
+
+.agent-court-app .defense-gutter--right {
+  right: calc(50% - 460px - 28px - 220px);
+}
+
+@media (max-width: 1559px) {
+  .agent-court-app .defense-gutter {
+    display: none;
+  }
+}
