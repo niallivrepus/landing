@@ -97,6 +97,11 @@
       "permanent": true
     },
     {
+      "source": "/live/:path*",
+      "destination": "https://app.jokuh.com/live/:path*",
+      "permanent": true
+    },
+    {
       "source": "/join/:path*",
       "destination": "https://app.jokuh.com/join/:path*",
       "permanent": true

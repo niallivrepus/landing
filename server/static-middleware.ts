@@ -64,6 +64,9 @@ export const PULSE_MEETING_PREFIXES = [
   "/newmeeting",
   // Public shareable call recap page (`app.jokuh.com/recap/<token>`, jokuh-live plan §2.4).
   "/recap",
+  // Public Profile Live watch page (`app.jokuh.com/live/<handle>`, jokuh-live `docs/profile-live-contract.md`):
+  // signed-out viewers watch public lives without an account.
+  "/live",
 ] as const;
 
 type RedirectRule = {
