@@ -148,6 +148,22 @@ export const AGENTS_SAFETY = {
   ] satisfies AgentsSafetyPoint[],
 } as const;
 
+/**
+ * Coding-agent bridge (`docs/coding-agents-bridge-*` in the app repo). Wording follows the figure's own caption
+ * (`public/figures/coding-bridge/`); Mac app + remote approval are still shipping, so it stays "rolling-out".
+ */
+export const AGENTS_CODING: AgentsFeature = {
+  id: "coding-agents",
+  title: "Approve your coding agents from anywhere",
+  body: "Coding agents on your Mac, like Claude Code, Codex and Cursor, ask before a risky step. Jokuh's Mac app shows the request in the Nexus island, and if you turn on remote approval for that Mac, on your phone too: tap Allow once or Deny. Nothing is approved for you. If no answer comes, the agent falls back to its own prompt.",
+  status: "rolling-out",
+};
+
+/** Lines that introduce the interactive figures (`data/figures.ts`). */
+export const AGENTS_FIGURE_LEADS = {
+  safety: "Step through it below: drop a request of each kind and see which ones wait for you.",
+} as const;
+
 export type AgentsLocation = { title: string; body: string; status: AgentsFeatureStatus };
 
 export const AGENTS_WHERE = {

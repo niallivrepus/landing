@@ -1,23 +1,27 @@
 /**
- * **Purpose:** Public `/agents` page — how Jokuh agents work and where to find them: hero over the OOpolis render, the
- * three-step start, the inbox (numbered answers), OOpolis, next steps, status dots, "Tell your agents", built-in Jokuh
- * tools, connectors, safety, where to find it, FAQs. Features still shipping carry a "Rolling out" tag.
+ * **Purpose:** Public `/agents` page — how Jokuh agents work and where to find them: hero with the interactive
+ * OOpolis figure, the three-step start, the inbox (numbered answers), OOpolis, next steps, status dots, "Tell your
+ * agents", built-in Jokuh tools, connectors, safety (+ approvals figure), coding agents (+ bridge figure), where to
+ * find it, FAQs. Features still shipping carry a "Rolling out" tag.
  * Same tertiary layout as `/business` (SiteTopBar + MegaFooter via `TertiaryPageChrome`).
  * **Connects to:** `data/agents-page.ts` (all copy + accuracy rules), `/agents` route in `App.tsx`,
  * `KNOWN_SPA_PREFIXES` in `server/static-middleware.ts`, search via `lib/site-search-articles.ts`, `public/sitemap.xml`,
  * `config/brand-taxonomy.ts`, `data/rigid-sitemap.ts`, homepage Agents tile (`console-home-products.ts`),
- * `public/agents/` (OOpolis renders + avatars).
+ * `public/agents/` (OOpolis renders + avatars), `components/FigureEmbed.tsx` + `public/figures/` (interactive figures).
  */
 import { cn } from "@jokuh/gooey";
 import type { ReactNode } from "react";
 import { FaqSection } from "../components/FaqSection";
+import { FigureEmbed } from "../components/FigureEmbed";
 import { PillLink, SquircleMedia, TertiaryPageChrome, pageHeroEyebrowClass } from "../components/system";
 import { CONTENT_SHELL_COMPANY, CONTENT_SHELL_WIDE } from "../components/system/shells";
 import {
   AGENTS_CLOSING,
+  AGENTS_CODING,
   AGENTS_CONNECTORS,
   AGENTS_FAQ,
   AGENTS_FEATURES,
+  AGENTS_FIGURE_LEADS,
   AGENTS_HERO,
   AGENTS_IMAGES,
   AGENTS_INBOX,
@@ -85,7 +89,7 @@ export function AgentsPage() {
         </section>
 
         <section className={cn(CONTENT_SHELL_WIDE, "pb-16 md:pb-24")}>
-          <HeroStage />
+          <FigureEmbed id="oopolis-workshop" className="max-w-[880px]" />
         </section>
 
         {/* How it works */}
@@ -166,6 +170,16 @@ export function AgentsPage() {
               </article>
             ))}
           </div>
+          <p className={cn(bodyClass, "mx-auto mt-14 max-w-[760px] md:mt-20")}>{AGENTS_FIGURE_LEADS.safety}</p>
+          <FigureEmbed id="agent-approvals" className="mt-6 max-w-[760px]" />
+        </section>
+
+        {/* Coding agents */}
+        <section className={cn(CONTENT_SHELL_COMPANY, "py-4 md:py-8")}>
+          <FeatureBlock
+            feature={AGENTS_CODING}
+            media={<FigureEmbed id="coding-bridge" caption="Interactive figure. The timer is shortened for the demo." />}
+          />
         </section>
 
         {/* Where to find it */}
@@ -207,37 +221,6 @@ export function AgentsPage() {
         </section>
       </main>
     </TertiaryPageChrome>
-  );
-}
-
-/** Hero visual: the OOpolis city render floating over the hive. Always dark — these are app renders. */
-function HeroStage() {
-  return (
-    <figure>
-      <SquircleMedia className="aspect-[4/5] w-full sm:aspect-[16/10] lg:aspect-[16/9]">
-        <div className="relative size-full overflow-hidden bg-black">
-          <img
-            src={AGENTS_IMAGES.hive}
-            alt=""
-            aria-hidden
-            decoding="async"
-            className="absolute inset-0 size-full object-cover opacity-70"
-          />
-          <img
-            src={AGENTS_IMAGES.city}
-            alt="OOpolis in the Jokuh app: agents around Queen OO, connected apps such as Gmail and Slack, and speech bubbles like “Reading in Gmail…” and “Need your OK: pay invoice #204”."
-            width={780}
-            height={1240}
-            fetchPriority="high"
-            decoding="async"
-            className="absolute top-1/2 left-1/2 h-[92%] w-auto max-w-none -translate-x-1/2 -translate-y-1/2"
-          />
-        </div>
-      </SquircleMedia>
-      <figcaption className="mt-3 text-center font-sans text-[13px] text-light-space/45 light:text-zinc-500">
-        OOpolis, rendered from the app. Agent names are examples.
-      </figcaption>
-    </figure>
   );
 }
 

@@ -227,12 +227,23 @@ function requestMethod(method: string | undefined): string {
  * **Inputs:** Node `ServerResponse` about to be committed.
  * **Outputs:** Mutates response headers. CSP is Report-Only so Gooey/inline `index.html` scripts keep working.
  */
-function applySecurityHeaders(res: ServerResponse): void {
+function applySecurityHeaders(res: ServerResponse, options: { sameOriginFrame?: boolean } = {}): void {
   res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("Content-Security-Policy-Report-Only", CSP_REPORT_ONLY);
+  res.setHeader("X-Frame-Options", options.sameOriginFrame ? "SAMEORIGIN" : "DENY");
+  res.setHeader(
+    "Content-Security-Policy-Report-Only",
+    options.sameOriginFrame ? CSP_REPORT_ONLY.replace("frame-ancestors 'none'", "frame-ancestors 'self'") : CSP_REPORT_ONLY,
+  );
+}
+
+/**
+ * The interactive figures in `public/figures/` are embedded in our own pages (`FigureEmbed.tsx`), so only
+ * that folder may be framed, and only by jokuh.com itself. Everything else stays `DENY`.
+ */
+function isSameOriginFramable(filePath: string): boolean {
+  return filePath.replace(/\\/g, "/").includes("/figures/");
 }
 
 /**
@@ -275,7 +286,7 @@ function sendFile(
   res.setHeader("Content-Type", contentType);
   res.setHeader("Content-Length", String(size));
   res.setHeader("Cache-Control", cacheControlFor(filePath));
-  applySecurityHeaders(res);
+  applySecurityHeaders(res, { sameOriginFrame: isSameOriginFramable(filePath) });
   if (extname(filePath).toLowerCase() === ".dmg") {
     res.setHeader("Content-Disposition", 'attachment; filename="Jokuh.dmg"');
   }

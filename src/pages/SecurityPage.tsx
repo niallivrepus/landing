@@ -2,11 +2,13 @@
  * **Purpose:** Short public page backing the homepage “E2EE by default” claim —
  * keys stay on device, OO only sees what you allow, then a path to the Privacy Policy.
  * **Connects to:** `/security` route in `App.tsx`, `ProductDemoSection` privacy power,
- * footer/sitemap via `rigid-sitemap.ts` and `brand-taxonomy.ts`, `/privacy`.
+ * footer/sitemap via `rigid-sitemap.ts` and `brand-taxonomy.ts`, `/privacy`, the OO encrypted-group figure
+ * (`FigureEmbed` → `public/figures/oo-e2ee-vault/`; its caption is the only claim it adds).
  */
 import { cn } from "@jokuh/gooey";
 import { TERTIARY_PAGE_SHELL, TertiaryPageHero } from "../components/system";
 import { CompanyPageLayout } from "../components/CompanyPageLayout";
+import { FigureEmbed } from "../components/FigureEmbed";
 import { SiteLink } from "../components/SiteLink";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
@@ -36,6 +38,11 @@ export function SecurityPage() {
               stay on the devices in that conversation — Jokuh is not sitting in the middle reading
               the thread.
             </p>
+            <p className={bodyText}>
+              When you add OO to an encrypted group, it joins as a member with its own key. The figure below
+              shows what that means, and what happens when it is removed.
+            </p>
+            <FigureEmbed id="oo-e2ee-vault" className="pt-4" />
           </section>
 
           <section className="scroll-mt-24 max-w-[720px] space-y-4">
