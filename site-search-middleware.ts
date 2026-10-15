@@ -1,5 +1,9 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Connect } from "vite";
+import { BodyTooLargeError, clientIp, createRateLimiter, readBody } from "./server/http-guards";
+
+/** Groq-backed answers per client per minute. */
+const siteSearchLimiter = createRateLimiter(20, 60_000);
 
 type SearchRequestArticle = {
   href: string;
@@ -8,15 +12,6 @@ type SearchRequestArticle = {
   meta: string;
   external: boolean;
 };
-
-function readBody(req: IncomingMessage): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (c: Buffer) => chunks.push(c));
-    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-    req.on("error", reject);
-  });
-}
 
 const SYSTEM = `You are the Jokuh website assistant. Jokuh builds ambient intelligence products. Tagline: "Your thinking is the product." Primary entry points: download the app at /download; developers docs at /developers/docs; newsroom at /newsroom; stories at /stories.
 
@@ -86,6 +81,12 @@ export function createSiteSearchMiddleware(apiKey: string | undefined): Connect.
 
     const resNode = res as ServerResponse;
 
+    if (!siteSearchLimiter.take(clientIp(req as IncomingMessage))) {
+      resNode.setHeader("Retry-After", "60");
+      json(resNode, 429, { error: "Too many requests. Try again in a minute." });
+      return;
+    }
+
     try {
       const raw = await readBody(req as IncomingMessage);
       let query = "";
@@ -150,7 +151,12 @@ export function createSiteSearchMiddleware(apiKey: string | undefined): Connect.
 
       json(resNode, 200, { summary });
     } catch (e) {
-      json(resNode, 500, { error: "Server error", detail: String(e) });
+      if (e instanceof BodyTooLargeError) {
+        json(resNode, 413, { error: "Request body is too large." });
+        return;
+      }
+      console.error("[site-search]", e);
+      json(resNode, 500, { error: "Server error" });
     }
   };
 }

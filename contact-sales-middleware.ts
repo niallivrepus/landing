@@ -1,5 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Connect } from "vite";
+import { BodyTooLargeError, clientIp, createRateLimiter, readBody } from "./server/http-guards";
 import {
   handleContactSalesSubmission,
   type ContactSalesRuntimeEnv,
@@ -7,24 +8,8 @@ import {
 
 const MAX_BODY_BYTES = 20_000;
 
-function readBody(req: IncomingMessage): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    let totalBytes = 0;
-
-    req.on("data", (chunk: Buffer) => {
-      totalBytes += chunk.length;
-      if (totalBytes > MAX_BODY_BYTES) {
-        reject(new Error("Request body is too large."));
-        req.destroy();
-        return;
-      }
-      chunks.push(chunk);
-    });
-    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-    req.on("error", reject);
-  });
-}
+/** Contact-sales submissions per client per minute. */
+const contactSalesLimiter = createRateLimiter(3, 60_000);
 
 function json(res: ServerResponse, status: number, body: unknown) {
   res.statusCode = status;
@@ -45,13 +30,25 @@ export function createContactSalesMiddleware(env: ContactSalesRuntimeEnv): Conne
       return;
     }
 
+    if (!contactSalesLimiter.take(clientIp(req as IncomingMessage))) {
+      resNode.setHeader("Retry-After", "60");
+      json(resNode, 429, { error: "Too many requests. Try again in a minute." });
+      return;
+    }
+
     try {
-      const result = await handleContactSalesSubmission(await readBody(req as IncomingMessage), env);
+      const result = await handleContactSalesSubmission(
+        await readBody(req as IncomingMessage, MAX_BODY_BYTES),
+        env,
+      );
       json(resNode, result.status, result.body);
     } catch (error) {
-      json(resNode, error instanceof Error && error.message.includes("too large") ? 413 : 500, {
-        error: error instanceof Error ? error.message : "Unable to submit contact sales request right now.",
-      });
+      if (error instanceof BodyTooLargeError) {
+        json(resNode, 413, { error: error.message });
+        return;
+      }
+      console.error("[contact-sales]", error);
+      json(resNode, 500, { error: "Unable to submit contact sales request right now." });
     }
   };
 }

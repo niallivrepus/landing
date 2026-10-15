@@ -4,6 +4,9 @@
  * those URLs on unmount to avoid memory leaks.
  */
 
+// Self-hosted worker (Vite emits a hashed asset) — no third-party CDN script without SRI.
+import pdfjsWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+
 let pitchDeckPdfjsLib: typeof import("pdfjs-dist") | null = null;
 let pitchDeckPdfjsLoading: Promise<typeof import("pdfjs-dist")> | null = null;
 
@@ -65,15 +68,7 @@ export async function getPitchDeckPdfjs() {
   pitchDeckPdfjsLoading = import("pdfjs-dist").then((mod) => {
     pitchDeckPdfjsLib = mod;
 
-    try {
-      const workerUrl = new URL(
-        "pdfjs-dist/build/pdf.worker.min.mjs",
-        import.meta.url
-      );
-      mod.GlobalWorkerOptions.workerSrc = workerUrl.href;
-    } catch {
-      mod.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${mod.version}/build/pdf.worker.min.mjs`;
-    }
+    mod.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl;
 
     return mod;
   });
@@ -209,17 +204,13 @@ async function fetchPitchDeckPdfBytes(pdfUrl: string): Promise<Uint8Array> {
 /**
  * PDF.js `getDocument` options shared by pitch deck loaders; uses in-memory `data` so we can pre-validate bytes.
  */
-function pitchDeckGetDocumentParams(
-  pdfjs: typeof import("pdfjs-dist"),
-  pdfBytes: Uint8Array
-) {
+function pitchDeckGetDocumentParams(pdfBytes: Uint8Array) {
+  // No remote cMapUrl: first-party decks embed their fonts, and we avoid loading CDN data without SRI.
   return {
     data: pdfBytes,
     useWorkerFetch: false,
     isEvalSupported: false,
     useSystemFonts: true,
-    cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
-    cMapPacked: true,
   } as const;
 }
 
@@ -234,7 +225,7 @@ export async function renderPitchDeckDocument(
   const pdfjs = await getPitchDeckPdfjs();
   const pdfBytes = await fetchPitchDeckPdfBytes(pdfUrl);
   const pdf = await pdfjs.getDocument(
-    pitchDeckGetDocumentParams(pdfjs, pdfBytes)
+    pitchDeckGetDocumentParams(pdfBytes)
   ).promise;
   const pages: RenderedPitchDeckPage[] = [];
   const firstPage = await pdf.getPage(1);
@@ -273,7 +264,7 @@ export async function renderPitchDeckDocumentAtMaxCssWidth(
   const pdfjs = await getPitchDeckPdfjs();
   const pdfBytes = await fetchPitchDeckPdfBytes(pdfUrl);
   const pdf = await pdfjs.getDocument(
-    pitchDeckGetDocumentParams(pdfjs, pdfBytes)
+    pitchDeckGetDocumentParams(pdfBytes)
   ).promise;
   const first = await pdf.getPage(1);
   const baseW = first.getViewport({ scale: 1 }).width;

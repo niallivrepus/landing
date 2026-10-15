@@ -9,7 +9,7 @@ COPY vendor/gooey /build/gooey
 COPY . /build/landing
 
 WORKDIR /build/gooey
-RUN corepack enable pnpm && pnpm install --no-frozen-lockfile
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
 WORKDIR /build/landing
 
@@ -30,7 +30,7 @@ ENV VITE_ORIGIN_APP=$VITE_ORIGIN_APP \
     NODE_OPTIONS=--max-old-space-size=4096
 
 RUN corepack enable pnpm \
-  && pnpm install --ignore-workspace --no-frozen-lockfile \
+  && pnpm install --ignore-workspace --frozen-lockfile \
   && pnpm run build:landing \
   && pnpm run build:server \
   && mkdir -p /build/out/.well-known /build/out/downloads \

@@ -194,9 +194,14 @@ async function fetchNetworkPreviewServer(
     if (key) accountById.set(key, account);
   }
 
+  // Only surface peers who are themselves curated demo accounts — never arbitrary users'
+  // names or signed identity photos from the service-role read.
+  const demoPool = new Set<string>(PROFILE_DEMO_USERNAME_POOL);
   const peers: ProfileDemoNetworkPeer[] = [];
   for (const peerId of previewIds) {
     const account = accountById.get(peerId);
+    const peerUsername = account?.username?.trim().toLowerCase() ?? "";
+    if (!peerUsername || !demoPool.has(peerUsername)) continue;
     const displayName =
       (account?.display_name ?? account?.username ?? peerId.slice(0, 8)).trim() ||
       peerId.slice(0, 8);
@@ -237,9 +242,15 @@ export async function fetchPublicProfileDemoServer(
   rawUsername: string | undefined,
   runtime: PublicProfileDemoRuntimeEnv,
 ): Promise<PublicProfileDemoResult> {
-  const candidates = rawUsername?.trim()
-    ? [rawUsername.trim().toLowerCase()]
-    : [PROFILE_DEMO_USERNAME, ...PROFILE_DEMO_USERNAME_POOL.filter((u) => u !== PROFILE_DEMO_USERNAME)];
+  // Only the curated demo pool may be looked up; any other `username` falls back to the pool order.
+  const defaultOrder: string[] = [
+    PROFILE_DEMO_USERNAME,
+    ...PROFILE_DEMO_USERNAME_POOL.filter((u) => u !== PROFILE_DEMO_USERNAME),
+  ];
+  const requested = rawUsername?.trim().toLowerCase() ?? "";
+  const candidates = defaultOrder.includes(requested)
+    ? [requested, ...defaultOrder.filter((u) => u !== requested)]
+    : defaultOrder;
 
   for (const username of candidates) {
     try {

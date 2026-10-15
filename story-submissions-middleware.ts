@@ -1,6 +1,10 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Connect } from "vite";
 import { createClient } from "@supabase/supabase-js";
+import { BodyTooLargeError, clientIp, createRateLimiter, readBody } from "./server/http-guards";
+
+/** Story submissions per client per minute. */
+const storySubmissionsLimiter = createRateLimiter(5, 60_000);
 
 type StorySubmissionPayload = {
   firstName: string;
@@ -18,15 +22,6 @@ type StorySubmissionPayload = {
   consent: boolean;
   website?: string;
 };
-
-function readBody(req: IncomingMessage): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (chunk: Buffer) => chunks.push(chunk));
-    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-    req.on("error", reject);
-  });
-}
 
 function json(res: ServerResponse, status: number, body: unknown) {
   res.statusCode = status;
@@ -109,6 +104,12 @@ export function createStorySubmissionsMiddleware(env: StoryMiddlewareEnv | undef
     const supabaseUrl = env?.supabaseUrl?.trim() || "";
     const hasSupabase = Boolean(supabaseUrl && serviceKey);
 
+    if (!storySubmissionsLimiter.take(clientIp(req as IncomingMessage))) {
+      resNode.setHeader("Retry-After", "60");
+      json(resNode, 429, { error: "Too many submissions. Try again in a minute." });
+      return;
+    }
+
     try {
       const payload = parsePayload(await readBody(req as IncomingMessage));
       if (!payload) {
@@ -161,6 +162,10 @@ export function createStorySubmissionsMiddleware(env: StoryMiddlewareEnv | undef
       console.log("[story-submissions] deferred (no Supabase):", { ...row, product_slugs: row.product_slugs.length });
       json(resNode, 202, { ok: true, deferred: true, mode: "deferred" });
     } catch (e) {
+      if (e instanceof BodyTooLargeError) {
+        json(resNode, 413, { error: "Request body is too large." });
+        return;
+      }
       console.error("[story-submissions]", e);
       json(resNode, 500, { error: "Unable to submit your story right now." });
     }
