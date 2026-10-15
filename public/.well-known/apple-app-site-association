@@ -4,7 +4,7 @@
     "details": [
       {
         "appIDs": ["A4XZK9JRPW.ai.antimatter.jokuh.mobile", "A4XZK9JRPW.app.jokuh"],
-        "paths": ["/pay/*", "/id/*", "/id/*/b/*", "/id/*/spine", "/id/*/spine/*", "/peer/*", "/invite/*", "/pulse/join/*", "/join/*", "/m/*", "/live/*", "/b/*", "/bubble/*", "/u/*", "/u/*/b/*", "/u/*/spine/rsvp"],
+        "paths": ["/pay/*", "/id/*", "/id/*/b/*", "/id/*/spine", "/id/*/spine/*", "/peer/*", "/invite/*", "/pulse/join/*", "/join/*", "/m/*", "/live/*", "/b/*", "/bubble/*", "/bi/*", "/u/*", "/u/*/b/*", "/u/*/spine/rsvp"],
         "components": [
           {
             "/": "/pay/*",
@@ -53,6 +53,10 @@
           {
             "/": "/bubble/*",
             "comment": "Public Bubble permalinks"
+          },
+          {
+            "/": "/bi/*",
+            "comment": "Bubble invite links (/bi/{code})"
           },
           {
             "/": "/u/*",
