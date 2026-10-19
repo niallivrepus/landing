@@ -1,0 +1,1456 @@
+/*
+ * Gooey homepage (`components/landing/gooey-home/`). Two themes, keyed on `.gh[data-scheme]` (follows the site
+ * ThemeProvider, which defaults to the system): Gooey Dark (obsidian goo, white ink) and Gooey Light Lite (white
+ * paper, flat goo). Slabs, pills and beads are CSS translations of the app's Splex numbers (`goo-kit.ts`
+ * `splexSpec`: 2 px inner rim at 20 %, top highlights (0,2,σ1.5) + (0,1,σ0.5) at 15 %, soft drop); real SVG goo is
+ * used where things move (corner pills, Nexus, Glyph mark, scroll merges). 8 px rhythm, Satoshi.
+ */
+
+.gh {
+  --gh-bg: #050505;
+  --gh-bg-2: #0b0b0c;
+  --gh-ink: #ffffff;
+  --gh-ink-2: rgba(255, 255, 255, 0.66);
+  --gh-ink-3: rgba(255, 255, 255, 0.42);
+  --gh-line: rgba(255, 255, 255, 0.1);
+  --gh-slab-bg: rgba(255, 255, 255, 0.05);
+  --gh-slab-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.16), inset 0 2px 1.5px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.15), 0 10px 10px rgba(0, 0, 0, 0.05);
+  --gh-slab-tint: rgba(255, 255, 255, 0.1);
+  --gh-phone-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --gh-go: #21dc11;
+  --gh-go-ink: #041a00;
+  --gh-focus: #2c81ff;
+  position: relative;
+  min-height: 100svh;
+  background: var(--gh-bg);
+  color: var(--gh-ink);
+  font-family: var(--font-sans, "Satoshi"), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+.gh[data-scheme="light"] {
+  --gh-bg: #f4f2ee;
+  --gh-bg-2: #ece9e3;
+  --gh-ink: #111111;
+  --gh-ink-2: rgba(17, 17, 17, 0.66);
+  --gh-ink-3: rgba(17, 17, 17, 0.45);
+  --gh-line: rgba(60, 45, 20, 0.12);
+  --gh-slab-bg: #ffffff;
+  --gh-slab-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.85), 0 0 0 1px rgba(60, 45, 20, 0.14),
+    0 8px 16px -10px rgba(91, 69, 38, 0.22), 0 1.5px 2.4px rgba(42, 32, 20, 0.08);
+  --gh-slab-tint: #f1eee8;
+  --gh-phone-shadow: 0 40px 70px -34px rgba(91, 69, 38, 0.45), 0 0 0 1px rgba(60, 45, 20, 0.12);
+  --gh-go-ink: #041a00;
+}
+
+.gh[data-scheme="dark"] .gh-only-light,
+.gh[data-scheme="light"] .gh-only-dark {
+  display: none;
+}
+
+.gh :focus-visible {
+  outline: 2px solid var(--gh-focus);
+  outline-offset: 3px;
+}
+
+.gh a {
+  color: inherit;
+}
+
+/* ── Goo surfaces ── */
+
+.gh-slab {
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+  border-radius: 28px;
+}
+
+.gh-slab--pill {
+  border-radius: 999px;
+}
+
+.gh-slab--tint {
+  background: var(--gh-slab-tint);
+}
+
+.gh-bead {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  color: var(--gh-ink);
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+  cursor: pointer;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, color 0.2s ease;
+}
+
+.gh-bead--sm {
+  width: 36px;
+  height: 36px;
+}
+
+.gh-bead:active:not(:disabled) {
+  transform: scale(1.08, 0.88);
+}
+
+/* Primary: the library's go green bead. Press squishes it flat; release pops it back. */
+.gh-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  padding: 0 30px;
+  border-radius: 999px;
+  background: var(--gh-go);
+  color: var(--gh-go-ink) !important;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-shadow: inset 0 2px 1.5px rgba(255, 255, 255, 0.5), inset 0 -3px 5px rgba(0, 60, 0, 0.22),
+    0 14px 30px -12px rgba(33, 220, 17, 0.6);
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.gh-go:hover {
+  transform: scale(1.03, 0.97);
+}
+
+.gh-go:active {
+  transform: scale(1.08, 0.86);
+}
+
+.gh-go--sm {
+  height: 42px;
+  padding: 0 20px;
+  font-size: 15px;
+}
+
+.gh-platforms {
+  margin: 0;
+  font-size: 14px;
+  color: var(--gh-ink-3);
+  text-align: center;
+}
+
+.gh-platforms a {
+  color: var(--gh-ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.gh-platforms a:hover {
+  color: var(--gh-ink);
+}
+
+.gh-platforms__tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gh-ink-3);
+}
+
+.gh-platforms__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+/* ── Hero: the app's home on the web ── */
+
+.gh-hero {
+  --gh-cinset: 64px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: max(720px, min(100svh, 1000px));
+  overflow: clip;
+}
+
+.gh-hero::before {
+  /* The squircle center column, framed by the corners (the app's column, quietly). */
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border-radius: 56px;
+  background: var(--gh-bg-2);
+  box-shadow: inset 0 0 0 1px var(--gh-line);
+  pointer-events: none;
+}
+
+.gh-frame {
+  position: absolute;
+  inset: 16px;
+  pointer-events: none;
+}
+
+.gh-frame > * {
+  pointer-events: auto;
+}
+
+.gh-frame__nexus {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.gh-corner {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.gh-frame[data-ready] .gh-corner {
+  opacity: 1;
+}
+
+.gh-corner--topLeading {
+  left: calc(var(--gh-cinset) - 100px - 16px);
+  top: calc(var(--gh-cinset) - 100px - 16px);
+}
+.gh-corner--topTrailing {
+  right: calc(var(--gh-cinset) - 100px - 16px);
+  top: calc(var(--gh-cinset) - 100px - 16px);
+}
+.gh-corner--bottomLeading {
+  left: calc(var(--gh-cinset) - 100px - 16px);
+  bottom: calc(var(--gh-cinset) - 100px - 16px);
+}
+.gh-corner--bottomTrailing {
+  right: calc(var(--gh-cinset) - 100px - 16px);
+  bottom: calc(var(--gh-cinset) - 100px - 16px);
+}
+
+.gh-corner__svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.gh-corner__btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gh-ink);
+  cursor: pointer;
+}
+
+.gh-nexus {
+  position: relative;
+}
+
+.gh-nexus__svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gh-nexus__link {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+}
+
+.gh-nexus__text {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: min(320px, calc(100vw - 190px));
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gh-ink);
+}
+
+.gh-nexus__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gh-nexus__dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--gh-go);
+  box-shadow: 0 0 8px rgba(33, 220, 17, 0.7);
+}
+
+
+/* Centre: the bar row at the hero's exact centre, in front of the Glyph mark (centred on the row behind it, nudged
+   up 4.4 px like the app). Chat, pills and CTA hang off the row, so nothing they do moves the logo or the field. */
+.gh-hero__center {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: min(560px, calc(100% - 40px));
+  height: 60px;
+  transform: translate(-50%, -50%);
+}
+
+.gh-hero__logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  /* Lifted so the bar rides over the mark's lower part, as on the app's home. */
+  transform: translate(-50%, -74%);
+  transition: opacity 0.3s ease;
+}
+
+.gh-hero__center > .gh-ask {
+  z-index: 1;
+}
+
+.gh-hero[data-chat] .gh-hero__logo {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gh-hero__center > .gh-chat {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 16px);
+}
+
+.gh-hero__below {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% 0;
+  width: min(600px, calc(100vw - 32px));
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+/* Goo "Ask OO…" bar (the app home's ask-anything bar). */
+.gh-ask {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.gh-ask::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gh-bg) 78%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.gh-ask__goo {
+  position: absolute;
+  left: -22px;
+  top: -22px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Goo beads in the bar: round Splex beads with a rim and an embossed glyph (app emboss: dark E6 ink with a shadow
+   below, light #323232 with a highlight below). */
+.gh-ask__bead {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #e6e6e6;
+  background: radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03) 60%), rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18), inset 0 2px 1.5px rgba(255, 255, 255, 0.16),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35), 0 3px 8px rgba(0, 0, 0, 0.45);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+}
+
+.gh-ask__bead svg {
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.7)) drop-shadow(0 -0.5px 0 rgba(255, 255, 255, 0.18));
+}
+
+.gh[data-scheme="light"] .gh-ask__bead {
+  color: #323232;
+  background: linear-gradient(180deg, #ffffff, #f3f0ea);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), 0 0 0 1px rgba(60, 45, 20, 0.16),
+    inset 0 -2px 3px rgba(60, 45, 20, 0.1), 0 3px 6px -2px rgba(91, 69, 38, 0.28);
+}
+
+.gh[data-scheme="light"] .gh-ask__bead svg {
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.95)) drop-shadow(0 -0.5px 0 rgba(0, 0, 0, 0.18));
+}
+
+.gh-ask__bead:active:not(:disabled) {
+  transform: scale(1.1, 0.86);
+}
+
+.gh-ask__bead--plus {
+  left: 8px;
+}
+
+.gh-ask__bead--mic,
+.gh-ask__bead--send {
+  right: 8px;
+}
+
+.gh-ask__bead--send,
+.gh[data-scheme="light"] .gh-ask__bead--send {
+  color: var(--gh-go-ink);
+  background: var(--gh-go);
+  box-shadow: inset 0 2px 1.5px rgba(255, 255, 255, 0.5), inset 0 -3px 4px rgba(0, 60, 0, 0.25),
+    0 6px 16px -6px rgba(33, 220, 17, 0.7);
+}
+
+.gh-ask__bead--send svg,
+.gh[data-scheme="light"] .gh-ask__bead--send svg {
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.45));
+}
+
+.gh-ask[data-listening] .gh-ask__bead--mic {
+  color: #ffffff;
+  background: #ff2a1f;
+}
+
+.gh-ask__bead:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.gh-ask__input {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0 64px 0 58px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--gh-ink);
+  font: inherit;
+  font-size: 17px;
+}
+
+.gh-ask__input::placeholder {
+  color: var(--gh-ink-3);
+}
+
+.gh-ask:focus-within .gh-ask__goo {
+  filter: drop-shadow(0 0 0.5px color-mix(in srgb, var(--gh-focus) 70%, transparent));
+}
+
+.gh-ask__input:focus-visible {
+  outline: none;
+}
+
+.gh-ask:has(.gh-ask__input:focus-visible)::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gh-focus) 60%, transparent);
+  pointer-events: none;
+}
+
+/* Tagline as the background layer: large, soft, low-contrast; words reveal one by one, then a slow drift. */
+.gh-bgtext {
+  position: absolute;
+  inset: 16px;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 72px 12px;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  color: var(--gh-ink);
+}
+
+.gh-bgtext p {
+  margin: 0;
+}
+
+.gh-bgtext__big {
+  font-size: clamp(44px, 15.5vw, 250px);
+  line-height: 0.88;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  opacity: 0.06;
+  white-space: nowrap;
+  animation: gh-drift-b 26s ease-in-out infinite alternate;
+}
+
+.gh-bgtext__big--top {
+  animation-name: gh-drift-a;
+}
+
+.gh-bgtext__value {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(96px, 11%, 120px);
+  translate: -50% 0;
+  width: min(34ch, calc(100% - 160px));
+  margin: 0 !important;
+  font-size: clamp(15px, 1.6vw, 22px);
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  opacity: 0.14;
+  text-wrap: balance;
+}
+
+.gh[data-scheme="light"] .gh-bgtext__big {
+  opacity: 0.07;
+}
+
+.gh-bgtext__word {
+  display: inline-block;
+  white-space: pre;
+  opacity: 0;
+  transform: translateY(0.18em);
+  filter: blur(10px);
+  animation: gh-word-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i) * 90ms + 200ms);
+}
+
+@keyframes gh-word-in {
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes gh-drift-a {
+  from {
+    transform: translate3d(-1.5%, 0, 0);
+  }
+  to {
+    transform: translate3d(1.5%, 0.6%, 0);
+  }
+}
+
+@keyframes gh-drift-b {
+  from {
+    transform: translate3d(1.5%, 0, 0);
+  }
+  to {
+    transform: translate3d(-1.5%, -0.6%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gh-bgtext__big {
+    animation: none;
+  }
+  .gh-bgtext__word {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.gh-glyph {
+  position: relative;
+  width: clamp(300px, 34vw, 420px);
+  aspect-ratio: 320 / 160;
+}
+
+.gh-glyph__svg,
+.gh-glyph__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.gh-glyph__hit {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.gh-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.gh-chip {
+  height: 38px;
+  padding: 0 16px;
+  border: 0;
+  color: var(--gh-ink-2);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+}
+
+.gh-chip:hover {
+  color: var(--gh-ink);
+  transform: scale(1.03, 0.97);
+}
+
+.gh-hero__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Temporary OO chat */
+.gh-chat {
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 100%);
+  max-height: min(52svh, 480px);
+  text-align: left;
+  border-radius: 32px;
+  overflow: hidden;
+}
+
+.gh-chat__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px 12px 18px;
+  border-bottom: 1px solid var(--gh-line);
+}
+
+.gh-chat__titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.gh-chat__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.gh-chat__sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--gh-ink-3);
+}
+
+.gh-chat__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px 18px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.gh-chat__me {
+  align-self: flex-end;
+  max-width: 82%;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.gh-chat__oo {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: var(--gh-ink);
+}
+
+.gh-chat__thinking {
+  color: var(--gh-ink-3);
+}
+
+.gh-chat__note {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--gh-ink-2);
+  border-radius: 22px;
+}
+
+.gh-chat__note p {
+  margin: 0;
+}
+
+/* ── Get Jokuh sheet ── */
+
+.gh-get {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  width: min(460px, calc(100vw - 24px));
+  max-height: calc(100svh - 24px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--gh-ink);
+  overflow: visible;
+}
+
+.gh-get::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.gh[data-scheme="light"] .gh-get::backdrop {
+  background: rgba(60, 45, 20, 0.28);
+}
+
+.gh-get[open] .gh-get__sheet {
+  animation: gh-sheet-in 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+@keyframes gh-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.94, 1.05);
+  }
+}
+
+.gh-get__sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-height: calc(100svh - 24px);
+  overflow-y: auto;
+  padding: 30px 24px 24px;
+  border-radius: 40px;
+  text-align: center;
+  background: var(--gh-bg-2);
+}
+
+.gh[data-scheme="light"] .gh-get__sheet {
+  background: #fbfaf7;
+}
+
+.gh-get__sheet > * {
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .gh-get {
+    margin: auto auto 12px;
+  }
+}
+
+.gh-get__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+
+.gh-get__title {
+  margin: 6px 0 0;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.gh-get__sub {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--gh-ink-2);
+}
+
+.gh-get__pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 58px;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gh-get__pill:active {
+  transform: scale(1.04, 0.9);
+}
+
+.gh-get__pill--go {
+  background: var(--gh-go);
+  color: var(--gh-go-ink) !important;
+  box-shadow: inset 0 2px 1.5px rgba(255, 255, 255, 0.5), inset 0 -3px 5px rgba(0, 60, 0, 0.22),
+    0 14px 30px -14px rgba(33, 220, 17, 0.7);
+}
+
+.gh-get__pill--dark {
+  background: var(--gh-ink);
+  color: var(--gh-bg) !important;
+  box-shadow: inset 0 2px 1.5px rgba(255, 255, 255, 0.18), 0 10px 24px -14px rgba(0, 0, 0, 0.6);
+}
+
+.gh-get__note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--gh-ink-3);
+}
+
+.gh-get__note--lead {
+  font-size: 15px;
+  color: var(--gh-ink-2);
+}
+
+.gh-get__divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 14px 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gh-ink-3);
+}
+
+.gh-get__divider::before,
+.gh-get__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--gh-line);
+}
+
+.gh-get__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.gh-get__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.gh-get__steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--gh-ink-2);
+}
+
+.gh-get__steps b {
+  color: var(--gh-ink);
+}
+
+.gh-get__num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gh-ink);
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+}
+
+.gh-get__qr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 12px;
+  border-radius: 24px;
+  text-align: left;
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+}
+
+.gh-get__qr img {
+  width: 104px;
+  height: 104px;
+  flex: none;
+  border-radius: 12px;
+  background: #fff;
+  padding: 4px;
+}
+
+.gh-get__qr p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--gh-ink-2);
+}
+
+.gh-get__devices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.gh-get__device {
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gh-ink-3);
+  cursor: pointer;
+}
+
+.gh-get__device.is-on {
+  color: var(--gh-bg);
+  background: var(--gh-ink);
+}
+
+/* ── Scroll merge ── */
+
+.gh-merge {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.gh-merge__svg {
+  width: min(360px, 80vw);
+  height: auto;
+  overflow: visible;
+}
+
+/* ── Sections ── */
+
+.gh-intro {
+  max-width: 720px;
+  margin: 24px auto 0;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.gh-intro__title {
+  margin: 0;
+  font-size: clamp(30px, 4.2vw, 48px);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.gh-intro__body {
+  margin: 14px 0 0;
+  font-size: 17px;
+  color: var(--gh-ink-2);
+}
+
+.gh-feature {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 96px 20px;
+  scroll-margin-top: 24px;
+}
+
+.gh-feature + .gh-feature {
+  border-top: 1px solid var(--gh-line);
+}
+
+.gh-feature__copy {
+  max-width: 460px;
+}
+
+.gh-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  margin: 0;
+  padding: 0 14px 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.gh-eyebrow__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--gh-accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gh-accent) 70%, transparent);
+}
+
+.gh-feature__title {
+  margin: 20px 0 0;
+  font-size: clamp(34px, 4.6vw, 56px);
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.gh-feature__body {
+  margin: 18px 0 0;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--gh-ink-2);
+}
+
+.gh-feature__points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gh-feature__points li {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gh-ink-2);
+}
+
+.gh-link {
+  display: inline-flex;
+  gap: 6px;
+  margin-top: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--gh-ink) !important;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--gh-accent) 70%, transparent);
+  padding-bottom: 2px;
+}
+
+.gh-feature__shots {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.gh-feature__shots::before {
+  /* A soft pool of the section's accent under the phones. */
+  content: "";
+  position: absolute;
+  inset: 12% 8% 18%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--gh-accent) 26%, transparent), transparent);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.gh-phone {
+  position: relative;
+  margin: 0;
+  width: min(300px, 74vw);
+  aspect-ratio: 360 / 780;
+  border-radius: 13.4% / 6.2%;
+  overflow: hidden;
+  box-shadow: var(--gh-phone-shadow);
+  background: var(--gh-bg-2);
+}
+
+.gh-phone__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gh-feature__shots--2 .gh-phone {
+  width: min(260px, 64vw);
+}
+
+.gh-feature__caption {
+  position: relative;
+  margin: 20px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--gh-ink-3);
+}
+
+/* ── Trust ── */
+
+.gh-trust {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 96px 20px 48px;
+  border-top: 1px solid var(--gh-line);
+}
+
+.gh-trust__title {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(32px, 4.4vw, 52px);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.gh-trust__grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.gh-trust__card {
+  padding: 26px 24px 28px;
+  border-radius: 32px;
+}
+
+.gh-trust__card h3 {
+  margin: 18px 0 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.gh-trust__card p {
+  margin: 8px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--gh-ink-2);
+}
+
+.gh-trust__icon {
+  cursor: default;
+}
+
+.gh-trust__fine {
+  max-width: 620px;
+  margin: 28px auto 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gh-ink-3);
+}
+
+.gh-trust__fine a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Final CTA ── */
+
+.gh-final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px 20px 96px;
+  text-align: center;
+}
+
+.gh-final__title {
+  margin: 8px 0 0;
+  font-size: clamp(36px, 5vw, 60px);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.gh-final__body {
+  margin: 0 0 8px;
+  font-size: 17px;
+  color: var(--gh-ink-2);
+}
+
+/* ── Footer ── */
+
+.gh-footer {
+  padding: 0 16px 16px;
+}
+
+.gh-footer__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 20px;
+  border-radius: 36px;
+}
+
+.gh-footer__cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 20px;
+}
+
+.gh-footer__head {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gh-ink);
+}
+
+.gh-footer__col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gh-footer__col a {
+  display: inline-block;
+  padding: 5px 0;
+  font-size: 14px;
+  color: var(--gh-ink-2);
+  text-decoration: none;
+}
+
+.gh-footer__col a:hover {
+  color: var(--gh-ink);
+}
+
+.gh-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--gh-line);
+  font-size: 13px;
+  color: var(--gh-ink-3);
+}
+
+.gh-footer__base p {
+  margin: 0;
+}
+
+.gh-footer__social {
+  display: flex;
+  gap: 16px;
+}
+
+.gh-footer__social a,
+.gh-footer__cookies {
+  color: var(--gh-ink-2);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.gh-theme {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+}
+
+.gh-theme button {
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gh-ink-3);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.gh-theme button.is-on {
+  background: var(--gh-ink);
+  color: var(--gh-bg);
+}
+
+/* ── Scroll reveal (squish in) ── */
+
+.gh-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gh-reveal--squish {
+  transform: translateY(36px) scale(0.94, 1.06);
+  transform-origin: 50% 100%;
+}
+
+.gh-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gh-reveal,
+  .gh-reveal--squish {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .gh-go,
+  .gh-chip,
+  .gh-bead {
+    transition: none;
+  }
+}
+
+/* ── Wider screens ── */
+
+@media (min-width: 720px) {
+  .gh-trust__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .gh-footer__cols {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .gh-feature {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 64px;
+    padding: 128px 32px;
+  }
+  .gh-feature--flip .gh-feature__copy {
+    order: 2;
+  }
+  .gh-feature--flip .gh-feature__media {
+    order: 1;
+  }
+  .gh-feature__shots--2 {
+    flex-wrap: nowrap;
+  }
+  .gh-feature__shots--2 > :nth-child(2) {
+    margin-top: 64px;
+  }
+  .gh-feature__shots--2 .gh-phone {
+    width: 250px;
+  }
+  .gh-phone {
+    width: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .gh-hero {
+    --gh-cinset: 40px;
+  }
+  /* Phones: the tagline stacks word over word to fill the background; the value line moves up under the Nexus. */
+  .gh-bgtext__big {
+    white-space: normal;
+    font-size: 25vw;
+    line-height: 0.86;
+  }
+  .gh-bgtext__big .gh-bgtext__word {
+    display: block;
+  }
+  .gh-bgtext__value {
+    top: 96px;
+    bottom: auto;
+    width: calc(100% - 48px);
+  }
+  .gh-hero::before,
+  .gh-frame {
+    inset: 8px;
+  }
+  .gh-hero::before {
+    border-radius: 44px;
+  }
+  .gh-corner--topLeading,
+  .gh-corner--bottomLeading {
+    left: calc(var(--gh-cinset) - 100px - 8px);
+  }
+  .gh-corner--topTrailing,
+  .gh-corner--bottomTrailing {
+    right: calc(var(--gh-cinset) - 100px - 8px);
+  }
+  .gh-corner--topLeading,
+  .gh-corner--topTrailing {
+    top: calc(var(--gh-cinset) - 100px - 8px);
+  }
+  .gh-corner--bottomLeading,
+  .gh-corner--bottomTrailing {
+    bottom: calc(var(--gh-cinset) - 100px - 8px);
+  }
+  .gh-feature {
+    padding: 72px 20px;
+  }
+  .gh-feature__shots--2 .gh-phone {
+    width: 42vw;
+  }
+  .gh-feature__shots--2 {
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+  .gh-feature__shots--2 > :nth-child(2) {
+    margin-top: 40px;
+  }
+}
