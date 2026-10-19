@@ -1,6 +1,6 @@
 import { useTheme } from "@jokuh/gooey";
 import { Fingerprint, Lock, ShieldCheck } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { resolveRigidNavColumns } from "../../../config/site-subdomains";
 import { LANDING_HERO_HEADLINE } from "../../../data/landing-hero-copy";
 import { RIGID_NAV_COLUMNS } from "../../../data/rigid-sitemap";
@@ -49,7 +49,42 @@ function Shot({ name, alt, eager }: { name: string; alt: string; eager?: boolean
   );
 }
 
-function FeatureSection({ f, index }: { f: GooFeature; index: number }) {
+const GooOopolisLive = lazy(() => import("./GooOopolisLive"));
+
+/**
+ * The live OOpolis, loaded when the section is within ~600 px of the viewport; until then (and while its chunk loads)
+ * the static capture holds the space.
+ */
+function LiveOopolis({ scheme, name, alt }: { scheme: GooScheme; name: string; alt: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return undefined;
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        setNear(true);
+        io.disconnect();
+      }
+    }, { rootMargin: "600px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+  const still = <Shot name={name} alt={alt} />;
+  return (
+    <div ref={ref}>
+      {near ? (
+        <Suspense fallback={still}>
+          <GooOopolisLive scheme={scheme} alt={alt} />
+        </Suspense>
+      ) : (
+        still
+      )}
+    </div>
+  );
+}
+
+function FeatureSection({ f, index, scheme }: { f: GooFeature; index: number; scheme: GooScheme }) {
   return (
     <section id={f.id} className={`gh-feature ${index % 2 ? "gh-feature--flip" : ""}`} aria-labelledby={`gh-${f.id}-title`} style={{ "--gh-accent": f.accent } as React.CSSProperties}>
       <div className="gh-feature__copy gh-reveal">
@@ -78,11 +113,11 @@ function FeatureSection({ f, index }: { f: GooFeature; index: number }) {
         <div className={`gh-feature__shots gh-feature__shots--${f.shots.length}`}>
           {f.shots.map((s, i) => (
             <div key={s.name} className="gh-reveal gh-reveal--squish" style={{ transitionDelay: `${i * 90}ms` }}>
-              <Shot name={s.name} alt={s.alt} />
+              {f.live === "oopolis" ? <LiveOopolis scheme={scheme} name={s.name} alt={s.alt} /> : <Shot name={s.name} alt={s.alt} />}
             </div>
           ))}
         </div>
-        <p className="gh-feature__caption">Jokuh's Gooey design, shown with demo data.</p>
+        <p className="gh-feature__caption">{f.live ? "Jokuh's Gooey design, animated with demo data." : "Jokuh's Gooey design, shown with demo data."}</p>
       </div>
     </section>
   );
@@ -205,7 +240,7 @@ export function GooeyHome() {
       </div>
 
       {GOO_FEATURES.map((f, i) => (
-        <FeatureSection key={f.id} f={f} index={i} />
+        <FeatureSection key={f.id} f={f} index={i} scheme={scheme} />
       ))}
 
       <section className="gh-trust" aria-labelledby="gh-trust-title">

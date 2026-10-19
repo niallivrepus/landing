@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { buildLandingHandoffUrl } from "../../../lib/landing-oo-handoff";
 import { GooCornerFrame } from "./GooCornerFrame";
@@ -7,6 +7,29 @@ import { GooNexus } from "./GooNexus";
 import { GooPromptBar } from "./GooPromptBar";
 import { GetJokuhButton, PlatformLinks } from "./GetJokuh";
 import type { GooScheme } from "./goo-kit";
+
+/** The background baby-OO swarm: its own chunk, mounted after first paint (never blocks the hero). */
+const GooHeroSwarm = lazy(() => import("./GooHeroSwarm"));
+
+/** True once the browser is idle after first paint. */
+function useAfterFirstPaint(): boolean {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    let idle = 0;
+    const raf = requestAnimationFrame(() => {
+      const ric = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+      if (ric) idle = ric(() => setReady(true), { timeout: 1500 });
+      else idle = window.setTimeout(() => setReady(true), 400);
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      const cic = (window as Window & { cancelIdleCallback?: (h: number) => void }).cancelIdleCallback;
+      if (cic) cic(idle);
+      window.clearTimeout(idle);
+    };
+  }, []);
+  return ready;
+}
 
 const SUGGESTIONS = ["What can you do, OO?", "Is Jokuh private?", "What's new this week?"] as const;
 
@@ -54,7 +77,7 @@ function HeroBackgroundText({ headline, valueLine }: { headline: string; valueLi
 
 /**
  * **Purpose:** Hero = the app's home on the web. The goo "Ask OO…" bar sits dead-centre and in front of the frozen
- * Glyph mark, whose vertical centre sits on the bar's centre so the bar runs across the middle of the mark
+ * Glyph mark (with the baby-OO swarm drifting behind, `GooHeroSwarm`, dimmed while the bar has focus or text), whose vertical centre sits on the bar's centre so the bar runs across the middle of the mark
  * (Sean 2026-10-19; web app `.home-logo-glob-glass-wrap--goo-hero`), framed by the goo corner pills (ID, Spine, Call, Text) and the Nexus; suggestion pills
  * and Get Jokuh hang below the field without moving it; the tagline animates in the background layer. Sending uses
  * the OO handoff: the first send or suggestion tap goes straight to the web app's signed-out OO
@@ -67,6 +90,8 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
   const [leaving, setLeaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const swarmReady = useAfterFirstPaint();
+  const [focused, setFocused] = useState(false);
 
   /** Hand the prompt to the web app's OO, right away (it answers there, looking the same). */
   const send = (text: string) => {
@@ -78,6 +103,11 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
 
   return (
     <section className="gh-hero" aria-labelledby="gh-hero-title">
+      {swarmReady ? (
+        <Suspense fallback={null}>
+          <GooHeroSwarm dim={focused || draft.length > 0 || leaving} />
+        </Suspense>
+      ) : null}
       <HeroBackgroundText headline={headline} valueLine={valueLine} />
       <h1 id="gh-hero-title" className="sr-only">
         {headline} {valueLine}
@@ -85,7 +115,13 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
 
       <GooCornerFrame scheme={scheme} nexus={<GooNexus scheme={scheme} />} />
 
-      <div className="gh-hero__center">
+      <div
+        className="gh-hero__center"
+        onFocus={() => setFocused(true)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+        }}
+      >
         <div className="gh-hero__logo">
           <GooGlyphMark scheme={scheme} className="gh-hero__glyph" />
         </div>

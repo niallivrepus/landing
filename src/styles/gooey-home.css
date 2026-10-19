@@ -1358,3 +1358,314 @@
     margin-top: 40px;
   }
 }
+
+/* ── Hero swarm: faint baby OOs drifting behind the tagline (`GooHeroSwarm`) ── */
+
+.gh-swarm {
+  position: absolute;
+  inset: 16px;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 56px;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.34;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: gh-swarm-in 1.4s ease-out both;
+}
+
+.gh[data-scheme="light"] .gh-swarm {
+  opacity: 0.42;
+}
+
+.gh-swarm.is-dim,
+.gh[data-scheme="light"] .gh-swarm.is-dim {
+  opacity: 0.08;
+}
+
+@keyframes gh-swarm-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.gh-swarm__baby {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+  transition: opacity 0.4s linear;
+}
+
+.gh-swarm__task {
+  position: absolute;
+  right: -5px;
+  bottom: -3px;
+  display: grid;
+  place-items: center;
+  width: 46%;
+  height: 46%;
+  border-radius: 999px;
+  background: var(--gh-bg-2);
+  color: var(--gh-ink);
+  box-shadow: inset 0 0 0 1px var(--gh-line);
+}
+
+.gh-swarm__pop {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--gh-ink);
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+  opacity: 0;
+  transform: translate(-50%, 4px) scale(0.86);
+  transform-origin: 50% 100%;
+  transition: opacity 0.3s ease, transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gh-swarm__pop.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gh-swarm {
+    animation: none;
+  }
+  .gh-swarm__pop {
+    display: none;
+  }
+}
+
+/* ── Live OOpolis in the "OO & agents" section (`GooOopolisLive`) ── */
+
+.gh-city {
+  cursor: default;
+  isolation: isolate;
+  background: radial-gradient(120% 70% at 50% 50%, color-mix(in srgb, #2c81ff 10%, var(--gh-bg-2)), var(--gh-bg-2) 70%);
+}
+
+.gh-city__stage {
+  --k: 0.8333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: scale(var(--k));
+  transform-origin: 0 0;
+  color: var(--gh-ink);
+}
+
+.gh-city__goo {
+  position: absolute;
+  inset: 0;
+}
+
+.gh-city__head {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.gh-city__title {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.gh-city__sub {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--gh-ink-2);
+}
+
+.gh-city__bldg-icon {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  transform: translate(-50%, -50%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.gh-city__bldg-name {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--gh-ink-2);
+  white-space: nowrap;
+}
+
+.gh-city__queen {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transform: translate(-50%, -34px);
+  pointer-events: none;
+}
+
+.gh-city__queen > :first-child {
+  border-radius: 999px;
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  animation: gh-city-breathe 3.2s ease-in-out infinite;
+}
+
+.gh-city__queen-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--gh-ink-2);
+}
+
+@keyframes gh-city-breathe {
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+.gh-city__drop {
+  filter: drop-shadow(0 0 4px rgba(44, 129, 255, 0.7));
+}
+
+.gh-city__baby {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gh-city__baby-art {
+  position: absolute;
+  left: 7px;
+  top: 7px;
+  width: 30px;
+  height: 30px;
+  display: block;
+  transform-origin: 50% 90%;
+}
+
+.gh-city__baby.is-picked .gh-city__baby-art {
+  box-shadow: 0 0 0 2.5px var(--gh-focus);
+  border-radius: 999px;
+}
+
+.gh-city__carry {
+  position: absolute;
+  right: -7px;
+  top: -6px;
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  color: #ffffff;
+  background: #2c81ff;
+  box-shadow: 0 0 0 1.5px var(--gh-bg-2);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.2s ease, transform 0.36s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gh-city__carry.is-on {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.gh-city__pop,
+.gh-city__bubble {
+  position: absolute;
+  padding: 5px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gh-ink);
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+  pointer-events: none;
+}
+
+.gh[data-scheme="dark"] .gh-city__pop,
+.gh[data-scheme="dark"] .gh-city__bubble {
+  background: #1d1d1f;
+}
+
+.gh-city__pop {
+  left: 50%;
+  bottom: calc(100% + 2px);
+  color: #0d4d06;
+  background: #e6ffe2 !important;
+  box-shadow: 0 0 0 1px rgba(33, 220, 17, 0.45), 0 6px 14px -8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translate(-50%, 6px) scale(0.7);
+  transform-origin: 50% 100%;
+  transition: opacity 0.25s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gh-city__pop.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.gh-city__bubble {
+  left: 0;
+  top: 0;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.gh-city__bubble.is-on {
+  opacity: 1;
+}
+
+.gh-city__foot {
+  position: absolute;
+  left: 50%;
+  bottom: 54px;
+  transform: translateX(-50%);
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--gh-ink-2);
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gh-city__queen > :first-child {
+    animation: none;
+  }
+  .gh-city__carry,
+  .gh-city__pop {
+    transition: none;
+  }
+}

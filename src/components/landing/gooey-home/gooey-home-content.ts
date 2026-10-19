@@ -23,6 +23,8 @@ export type GooFeature = {
   body: string;
   points: string[];
   shots: [GooFeatureShot] | [GooFeatureShot, GooFeatureShot];
+  /** Render a live scene in place of the captures (the capture is its first-paint placeholder). */
+  live?: "oopolis";
   /** Device capture still wanted for this section (TODO-capture). Shown in no UI. */
   todoCapture?: string;
   learnMore?: { href: string; label: string };
@@ -95,7 +97,8 @@ export const GOO_FEATURES: GooFeature[] = [
     title: "OO, and a city of helpers.",
     body: "OO is your own AI. It remembers what matters across your calls, chats and files without giving that context to anyone else. In OOpolis, your agents take on tasks and ask you before they act.",
     points: ["Your own AI", "Agents that ask first", "Works with the apps you use"],
-    shots: [{ name: "agents-city", alt: "OOpolis: agents around OO, linked to GitHub, Slack, Gmail, Notion and Calendar, with a box to tell your agents what to do" }],
+    shots: [{ name: "agents-city", alt: "OOpolis, live: Queen OO hands out tasks and baby OOs walk to Spine, Text, Wallet, Calls, Flights and Calendar, then pop what they finished" }],
+    live: "oopolis",
     learnMore: { href: "/agents", label: "More about agents" },
   },
 ];

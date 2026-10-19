@@ -1,5 +1,6 @@
 import { OO } from "@jokuh/gooey";
 import type { CSSProperties } from "react";
+import { BABY_COLORS, type BabyLook } from "../landing/gooey-home/oo-swarm-model";
 
 /**
  * **Purpose:** The one real OO for the whole landing site. It renders the Gooey OO mascot that ships in
@@ -9,11 +10,14 @@ import type { CSSProperties } from "react";
  * - `oo` — the OO as the app shows it: blue disc, Insight purple body (Gooey `OO` defaults; OOpolis' centre OO,
  *   jokuh-live `Sources/agents/oopolis/oopolis-oo-art.swift` `OopolisOOPainter` `.origin(insight)` on its paired blue).
  * - `queen` — Queen OO, OOpolis' "yang" look (white body, black eyes on house paper).
+ * - `baby-<origin>` — a baby OO (an agent): the same OO in its Gooey origin colours (`avatar.tsx` `OO_ORIGIN_COLORS`)
+ *   on the OOpolis Figma disc pairing (Swift `OopolisOOLook.origin`, web `OopolisHiveBackdrop` `buildOOSprite`).
+ *   Palettes live in `landing/gooey-home/oo-swarm-model.ts` `BABY_COLORS`; no lime `life` baby (read as a fake OO).
  * **Parity (jokuh-live web):** `frontend/src/components/home/JokuhMorphingBlurbsOO.tsx` (same body path + eyes),
  * `frontend/src/utils/oo-capsule-avatar-fill.tsx`.
  * **Connects to:** temp OO chat, mission intro, claim-identity swirl, landing inbox, agent court concept, Gooey home.
  */
-export type JokuhOOLook = "oo" | "queen";
+export type JokuhOOLook = "oo" | "queen" | `baby-${Exclude<BabyLook, "oo">}`;
 type OOExpression = "default" | "happy" | "rainbow-puke";
 type OOColors = {
   backgroundColor?: string;
@@ -24,8 +28,18 @@ type OOColors = {
   eyeColor?: string;
 };
 
+function babyLook(look: Exclude<BabyLook, "oo">): OOColors {
+  const c = BABY_COLORS[look];
+  return { backgroundColor: c.bg, bodyGradientStart: c.bodyStart, bodyGradientEnd: c.bodyEnd, bodyStrokeColor: c.stroke, eyeColor: c.eye };
+}
+
 const LOOKS: Record<JokuhOOLook, OOColors> = {
   oo: {},
+  "baby-fruta": babyLook("fruta"),
+  "baby-flame": babyLook("flame"),
+  "baby-solar": babyLook("solar"),
+  "baby-aether": babyLook("aether"),
+  "baby-spirit": babyLook("spirit"),
   queen: {
     backgroundColor: "#F7F7F7",
     borderColor: "rgba(0, 0, 0, 0.12)",
