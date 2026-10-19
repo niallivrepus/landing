@@ -14,6 +14,7 @@ import type { LandingLibraryServer } from "../../../data/landing-library-rail-da
 import { JokuhButton } from "../../system/JokuhButton";
 import { SquircleBox } from "../../system/squircle";
 import { RailServerAvatar } from "../LandingLibraryRail";
+import { JokuhOO } from "../../brand/JokuhOO";
 
 export type ConsoleBubblesPanelState =
   | { kind: "lobby"; server: LandingLibraryServer }
@@ -634,9 +635,7 @@ function BubbleRoom({
             initial={reduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <span className="console-line__oo" aria-hidden>
-              OO
-            </span>
+            <JokuhOO size={24} className="console-line__oo" />
             <p className="console-line__text">
               <span className="console-line__name">OO</span> Welcome to {server.name}. Mention @oo here and I&apos;ll
               keep track of what&apos;s decided, who said it and what needs doing next.

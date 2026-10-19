@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { JokuhButton } from "../../system/JokuhButton";
 import { SquircleBox } from "../../system/squircle";
 import type { LandingTempChat } from "./useLandingTempChat";
+import { JokuhOO } from "../../brand/JokuhOO";
 
 const ERROR_COPY = {
   busy: "Lots of people are talking to OO right now. Try again in a minute.",
@@ -53,9 +54,7 @@ export function LandingTempChatPanel({
         shadowClassName="landing-temp-chat__shadow"
       >
         <header className="landing-temp-chat__header">
-          <span className="landing-temp-chat__oo" aria-hidden>
-            OO
-          </span>
+          <JokuhOO size={30} className="landing-temp-chat__oo" />
           <div className="min-w-0 flex-1">
             <p className="landing-temp-chat__title">Temporary chat</p>
             <p className="landing-temp-chat__subtitle">Not saved · closes when you leave</p>

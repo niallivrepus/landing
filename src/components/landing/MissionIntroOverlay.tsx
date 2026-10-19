@@ -1,4 +1,3 @@
-import { Avatar } from "@jokuh/gooey";
 import { AnimatePresence, motion } from "motion/react";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import {
@@ -13,6 +12,7 @@ import {
 import { useScrambleReveal } from "../../hooks/useScrambleReveal";
 import { markMissionIntroSeen, resolveMissionIntroForce } from "../../lib/mission-intro-storage";
 import { LandingHomeBackdrop } from "./LandingHomeBackdrop";
+import { JokuhOO } from "../brand/JokuhOO";
 
 type MissionIntroOverlayProps = {
   /** Fires once the overlay has fully faded out and the home hero should take over. */
@@ -24,7 +24,7 @@ type MissionIntroOverlayProps = {
  * left-aligned over the landing hero photo, soft scramble, then fade into the hero.
  * The `00` mention unlocks an inline OO avatar beside the digits.
  * Plays once per session (`?intro=0` skips, `?intro=1` forces).
- * **Connects to:** `LandingImmersiveShell`, `LandingHomeBackdrop`, Gooey `Avatar`, `useScrambleReveal`.
+ * **Connects to:** `LandingImmersiveShell`, `LandingHomeBackdrop`, `JokuhOO` (the real OO), `useScrambleReveal`.
  */
 export function MissionIntroOverlay({ onComplete }: MissionIntroOverlayProps) {
   const [shouldPlay] = useState(() => {
@@ -133,14 +133,7 @@ export function MissionIntroOverlay({ onComplete }: MissionIntroOverlayProps) {
                               : "landing-mission-intro__oo"
                           }
                         >
-                          <Avatar
-                            showOO
-                            originColor="aether"
-                            size="mini"
-                            borderStyle="origins"
-                            disableNavigation
-                            className="landing-mission-intro__oo-avatar"
-                          />
+                          <JokuhOO size={28} className="landing-mission-intro__oo-avatar" />
                         </span>
                       ) : null}
                     </Fragment>

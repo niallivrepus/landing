@@ -1395,14 +1395,9 @@ html.console-home-host body {
   object-fit: cover;
 }
 
+/* The real OO (`components/brand/JokuhOO`), never a drawn stand-in. */
 .console-line__oo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(0deg, #7700ff, #b200ff);
-  color: #ffffff;
-  font-size: 9px;
-  font-weight: 800;
+  overflow: visible;
 }
 
 .console-line__text {

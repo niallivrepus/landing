@@ -54,19 +54,9 @@
   border-bottom-color: rgba(0, 0, 0, 0.06);
 }
 
+/* The real OO (`components/brand/JokuhOO`), never a drawn stand-in. */
 .landing-temp-chat__oo {
-  display: inline-flex;
-  width: 30px;
-  height: 30px;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: linear-gradient(0deg, #7700ff, #b200ff);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .landing-temp-chat__title {

@@ -9,7 +9,8 @@
  * (chips, cards, round avatar), `agents/oopolis/OopolisHiveBackdrop.tsx` (enclave palette).
  * **Connects to:** `AgentCourtAppShell.tsx`, `agent-court-steps.ts`, `styles/agent-court-concept.css`.
  */
-import { IncomingMessageBubble, MessageBubble, OO, cn } from "@jokuh/gooey";
+import { IncomingMessageBubble, MessageBubble, cn } from "@jokuh/gooey";
+import { JokuhOO } from "../brand/JokuhOO";
 import { useEffect, useRef, type ReactNode } from "react";
 
 /** Pixel, the design agent — one of the house villain avatars. */
@@ -46,14 +47,7 @@ function GenLayerBadge() {
 function QueenOO({ size = 1 }: { size?: number }) {
   return (
     <span className="agent-court__oo" style={{ transform: `scale(${size})` }} aria-hidden>
-      <OO
-        backgroundColor="transparent"
-        borderColor="transparent"
-        bodyGradientStart="#ffffff"
-        bodyGradientEnd="#e9e9e9"
-        bodyStrokeColor="rgba(0,0,0,0.12)"
-        eyeColor="#000000"
-      />
+      <JokuhOO look="queen" size={42} />
     </span>
   );
 }

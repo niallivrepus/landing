@@ -1,6 +1,6 @@
 import { cn } from "@jokuh/gooey";
 import type { MessagesInboxThread } from "../../data/messages-demo-inbox";
-import { OO } from "@jokuh/gooey";
+import { JokuhOO } from "../brand/JokuhOO";
 
 /**
  * **Purpose:** Texts inbox roster — tap a person to open their thread or story.
@@ -32,7 +32,7 @@ export function LandingMessagesInbox({
             <span className="landing-inbox-row__leading" aria-hidden>
               {thread.kind === "oo" ? (
                 <span className="landing-inbox-row__oo">
-                  <OO expression="happy" />
+                  <JokuhOO size={32} expression="happy" />
                 </span>
               ) : thread.avatarSrc ? (
                 <img src={thread.avatarSrc} alt="" className="landing-inbox-row__avatar" />

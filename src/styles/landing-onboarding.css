@@ -360,19 +360,15 @@
   height: 32px;
   border-radius: 999px;
   border: 1.5px solid var(--ob-rim-20);
-  background: #ff0700;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
+/* The real OO (`components/brand/JokuhOO`) fills the chip. */
 .claim-identity-swirl__oo {
   display: block;
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  object-position: center;
 }
 
 .onboarding-glass-card {
