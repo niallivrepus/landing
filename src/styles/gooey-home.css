@@ -317,9 +317,9 @@
   left: 50%;
   top: 50%;
   z-index: 0;
-  /* Centred on the bar: the bar runs across the middle of the mark (Sean 2026-10-19). The mask is centred in the
-     glyph stage, so -50% lines the mask's vertical centre up with the bar's. */
-  transform: translate(-50%, -50%);
+  /* Centred on the bar, nudged up a touch, same as the web app's signed-out home (jokuh-live
+     `guest-home.css` `.gh-hero__logo`, Sean 2026-10-19). */
+  transform: translate(-50%, -54%);
   transition: opacity 0.3s ease;
 }
 
