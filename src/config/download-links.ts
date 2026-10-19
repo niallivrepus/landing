@@ -8,6 +8,8 @@
  * that release so the page never links at github.com. Override with `VITE_MACOS_DOWNLOAD_URL`.
  */
 
+import { resolveGuestOoUrl } from "../lib/landing-oo-handoff";
+
 const DEFAULT_MACOS_RELEASE_URL = "/downloads/Jokuh.dmg";
 const DEFAULT_WEB_APP_ORIGIN = "https://app.jokuh.com";
 
@@ -24,11 +26,11 @@ export function resolveIphoneInstallUrl(): string {
 }
 
 /**
- * "Start on the web": the signed-out web app. The landing → web app prompt handoff (another builder) will define
- * extra params here; until then it is the plain origin.
+ * "Start on the web": the web app's signed-out OO (`/oo`), same origin as the OO handoff
+ * (`VITE_OO_HANDOFF_ORIGIN`, default https://app.jokuh.com). See `lib/landing-oo-handoff.ts`.
  */
 export function resolveWebStartUrl(): string {
-  return resolveWebAppOrigin();
+  return resolveGuestOoUrl();
 }
 
 /** Public Jokuh iOS / iPadOS TestFlight invite — used by “Download beta” / mobile access CTAs. */

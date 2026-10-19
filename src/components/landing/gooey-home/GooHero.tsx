@@ -1,8 +1,6 @@
-import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { JokuhOO } from "../../brand/JokuhOO";
-import { useLandingTempChat } from "../temp-chat/useLandingTempChat";
+import { buildLandingHandoffUrl } from "../../../lib/landing-oo-handoff";
 import { GooCornerFrame } from "./GooCornerFrame";
 import { GooGlyphMark } from "./GooGlyphMark";
 import { GooNexus } from "./GooNexus";
@@ -11,13 +9,6 @@ import { GetJokuhButton, PlatformLinks } from "./GetJokuh";
 import type { GooScheme } from "./goo-kit";
 
 const SUGGESTIONS = ["What can you do, OO?", "Is Jokuh private?", "What's new this week?"] as const;
-
-const ERROR_COPY = {
-  busy: "Lots of people are talking to OO right now. Try again in a minute.",
-  unavailable: "OO can't answer right now. Try again in a moment.",
-  network: "Couldn't reach OO. Check your connection and try again.",
-  turn_limit: "That's the end of this preview.",
-} as const;
 
 /** Words of a line, each revealed in turn (`--i` drives the CSS delay). */
 function Words({ text, start }: { text: string; start: number }) {
@@ -66,32 +57,27 @@ function HeroBackgroundText({ headline, valueLine }: { headline: string; valueLi
  * Glyph mark, which is centred on the bar's row behind it (app geometry: `HomePlainHomeLogoMark` behind the search
  * row, nudged up 4.4 pt — `behindRowVerticalNudge`; web `.home-logo-glob-glass-wrap`), framed by the goo corner pills (ID, Spine, Call, Text) and the Nexus; suggestion pills
  * and Get Jokuh hang below the field without moving it; the tagline animates in the background layer. Sending uses
- * the real signed-out OO chat (`useLandingTempChat` → jokuh-live edge function `landing-oo-chat`); the chat opens
- * above the field (the logo fades), so the field never moves. Nothing is saved.
- * **Connects to:** `GooeyHome`, `GooCornerFrame`, `GooGlyphMark`, `GooNexus`, `GooPromptBar`, `GetJokuh`, `JokuhOO`.
+ * the OO handoff: the first send or suggestion tap goes straight to the web app's signed-out OO
+ * (`app.jokuh.com/oo#q=…&theme=…`, `lib/landing-oo-handoff.ts`), which answers there; no reply renders here.
+ * **Connects to:** `GooeyHome`, `GooCornerFrame`, `GooGlyphMark`, `GooNexus`, `GooPromptBar`, `GetJokuh`,
+ * jokuh-live `frontend/src/guest-home/landing-handoff.ts` (the app side of the contract).
  */
 export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; headline: string; valueLine: string }) {
-  const chat = useLandingTempChat();
   const [draft, setDraft] = useState("");
+  const [leaving, setLeaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const last = chat.messages[chat.messages.length - 1];
 
-  useEffect(() => {
-    const node = listRef.current;
-    if (node) node.scrollTop = node.scrollHeight;
-  }, [chat.messages.length, last?.content, chat.error, chat.atLimit]);
-
+  /** Hand the prompt to the web app's OO, right away (it answers there, looking the same). */
   const send = (text: string) => {
     const t = text.trim();
-    if (!t || chat.streaming || chat.atLimit) return;
-    chat.send(t);
-    setDraft("");
+    if (!t || leaving) return;
+    setLeaving(true);
+    window.location.assign(buildLandingHandoffUrl([{ role: "user", content: t }], scheme));
   };
 
   return (
-    <section className="gh-hero" aria-labelledby="gh-hero-title" data-chat={chat.active || undefined}>
+    <section className="gh-hero" aria-labelledby="gh-hero-title">
       <HeroBackgroundText headline={headline} valueLine={valueLine} />
       <h1 id="gh-hero-title" className="sr-only">
         {headline} {valueLine}
@@ -104,41 +90,6 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
           <GooGlyphMark scheme={scheme} className="gh-hero__glyph" />
         </div>
 
-        {chat.active ? (
-          <div className="gh-chat gh-slab" aria-label="Temporary chat with OO">
-            <header className="gh-chat__head">
-              <JokuhOO size={30} />
-              <div className="gh-chat__titles">
-                <p className="gh-chat__title">Temporary chat with OO</p>
-                <p className="gh-chat__sub">Not saved. Closes when you leave.</p>
-              </div>
-              <button type="button" className="gh-bead gh-bead--sm" aria-label="Close chat" onClick={chat.reset}>
-                <X size={16} strokeWidth={2} aria-hidden />
-              </button>
-            </header>
-            <div ref={listRef} className="gh-chat__list" aria-live="polite" aria-busy={chat.streaming}>
-              {chat.messages.map((m, i) =>
-                m.role === "user" ? (
-                  <p key={i} className="gh-chat__me gh-slab gh-slab--tint">
-                    {m.content}
-                  </p>
-                ) : (
-                  <p key={i} className={`gh-chat__oo ${i === chat.messages.length - 1 && chat.streaming ? "is-streaming" : ""}`}>
-                    {m.content || <span className="gh-chat__thinking">OO is thinking…</span>}
-                  </p>
-                ),
-              )}
-              {chat.error && chat.error !== "turn_limit" ? <p className="gh-chat__note gh-slab">{ERROR_COPY[chat.error]}</p> : null}
-              {chat.atLimit || chat.error === "turn_limit" ? (
-                <div className="gh-chat__note gh-slab">
-                  <p>Keep going in the app. OO remembers what matters across your calls, chats and files.</p>
-                  <GetJokuhButton size="sm" />
-                </div>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-
         <GooPromptBar
           ref={inputRef}
           scheme={scheme}
@@ -146,21 +97,18 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
           onChange={setDraft}
           onSubmit={() => send(draft)}
           onPlus={() => navigate("/download")}
-          placeholder={chat.atLimit ? "Get Jokuh to keep talking with OO" : "Ask OO…"}
-          disabled={chat.atLimit}
-          busy={chat.streaming}
+          placeholder="Ask OO…"
+          busy={leaving}
         />
 
         <div className="gh-hero__below">
-          {chat.active ? null : (
-            <div className="gh-chips" role="list" aria-label="Try asking">
-              {SUGGESTIONS.map((s) => (
-                <button key={s} type="button" role="listitem" className="gh-chip gh-slab gh-slab--pill" onClick={() => send(s)}>
-                  {s}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="gh-chips" role="list" aria-label="Try asking">
+            {SUGGESTIONS.map((s) => (
+              <button key={s} type="button" role="listitem" className="gh-chip gh-slab gh-slab--pill" onClick={() => send(s)}>
+                {s}
+              </button>
+            ))}
+          </div>
           <div className="gh-hero__cta">
             <GetJokuhButton />
             <PlatformLinks />

@@ -151,7 +151,7 @@
 
 .gh-platforms__tag {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--gh-ink-3);
@@ -280,7 +280,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--gh-ink);
 }
 
@@ -324,19 +324,6 @@
 
 .gh-hero__center > .gh-ask {
   z-index: 1;
-}
-
-.gh-hero[data-chat] .gh-hero__logo {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.gh-hero__center > .gh-chat {
-  position: absolute;
-  z-index: 2;
-  left: 0;
-  right: 0;
-  bottom: calc(100% + 16px);
 }
 
 .gh-hero__below {
@@ -507,7 +494,7 @@
 .gh-bgtext__big {
   font-size: clamp(44px, 15.5vw, 250px);
   line-height: 0.88;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: -0.06em;
   opacity: 0.06;
   white-space: nowrap;
@@ -527,7 +514,7 @@
   margin: 0 !important;
   font-size: clamp(15px, 1.6vw, 22px);
   line-height: 1.35;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.015em;
   opacity: 0.14;
   text-wrap: balance;
@@ -638,90 +625,6 @@
   align-items: center;
   gap: 12px;
   margin-top: 8px;
-}
-
-/* Temporary OO chat */
-.gh-chat {
-  display: flex;
-  flex-direction: column;
-  width: min(560px, 100%);
-  max-height: min(52svh, 480px);
-  text-align: left;
-  border-radius: 32px;
-  overflow: hidden;
-}
-
-.gh-chat__head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 14px 12px 18px;
-  border-bottom: 1px solid var(--gh-line);
-}
-
-.gh-chat__titles {
-  flex: 1;
-  min-width: 0;
-}
-
-.gh-chat__title {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.gh-chat__sub {
-  margin: 2px 0 0;
-  font-size: 12px;
-  color: var(--gh-ink-3);
-}
-
-.gh-chat__list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px 18px 18px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.gh-chat__me {
-  align-self: flex-end;
-  max-width: 82%;
-  margin: 0;
-  padding: 10px 14px;
-  border-radius: 20px;
-  font-size: 15px;
-  line-height: 1.4;
-}
-
-.gh-chat__oo {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.55;
-  white-space: pre-wrap;
-  color: var(--gh-ink);
-}
-
-.gh-chat__thinking {
-  color: var(--gh-ink-3);
-}
-
-.gh-chat__note {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  margin: 0;
-  padding: 14px 16px;
-  font-size: 14px;
-  line-height: 1.45;
-  color: var(--gh-ink-2);
-  border-radius: 22px;
-}
-
-.gh-chat__note p {
-  margin: 0;
 }
 
 /* ── Get Jokuh sheet ── */
@@ -858,7 +761,7 @@
   width: 100%;
   margin: 14px 0 4px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--gh-ink-3);
 }
@@ -960,7 +863,7 @@
   border: 0;
   font: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--gh-ink-3);
   cursor: pointer;
 }
@@ -1085,7 +988,7 @@
   gap: 6px;
   margin-top: 24px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
   color: var(--gh-ink) !important;
   border-bottom: 1.5px solid color-mix(in srgb, var(--gh-accent) 70%, transparent);
@@ -1320,7 +1223,7 @@
   color: var(--gh-ink-3);
   font: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
