@@ -317,8 +317,9 @@
   left: 50%;
   top: 50%;
   z-index: 0;
-  /* Lifted so the bar rides over the mark's lower part, as on the app's home. */
-  transform: translate(-50%, -74%);
+  /* Centred on the bar: the bar runs across the middle of the mark (Sean 2026-10-19). The mask is centred in the
+     glyph stage, so -50% lines the mask's vertical centre up with the bar's. */
+  transform: translate(-50%, -50%);
   transition: opacity 0.3s ease;
 }
 

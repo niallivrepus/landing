@@ -54,8 +54,8 @@ function HeroBackgroundText({ headline, valueLine }: { headline: string; valueLi
 
 /**
  * **Purpose:** Hero = the app's home on the web. The goo "Ask OO…" bar sits dead-centre and in front of the frozen
- * Glyph mark, which is centred on the bar's row behind it (app geometry: `HomePlainHomeLogoMark` behind the search
- * row, nudged up 4.4 pt — `behindRowVerticalNudge`; web `.home-logo-glob-glass-wrap`), framed by the goo corner pills (ID, Spine, Call, Text) and the Nexus; suggestion pills
+ * Glyph mark, whose vertical centre sits on the bar's centre so the bar runs across the middle of the mark
+ * (Sean 2026-10-19; web app `.home-logo-glob-glass-wrap--goo-hero`), framed by the goo corner pills (ID, Spine, Call, Text) and the Nexus; suggestion pills
  * and Get Jokuh hang below the field without moving it; the tagline animates in the background layer. Sending uses
  * the OO handoff: the first send or suggestion tap goes straight to the web app's signed-out OO
  * (`app.jokuh.com/oo#q=…&theme=…`, `lib/landing-oo-handoff.ts`), which answers there; no reply renders here.
