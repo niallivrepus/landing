@@ -85,9 +85,12 @@ export function I({ b, e, a, z, fx = "fade", dx, dy, sc, fd, x, y, w, h, classNa
   );
 }
 
-/** Text typed in over `d` seconds from `a` into beat `b`. */
-export function T({ b, a, d = 0.9, text }: { b: number; a: number; d?: number; text: string }) {
-  return <span className="gds-type" data-tb={b} data-ta={a} data-td={d} data-text={text} />;
+/**
+ * Text typed in over `d` seconds from `a` into beat `b` (a caret rides the end while there is text). With `z` the
+ * field clears at `z` (sent); with `ph` the empty field shows that placeholder, like a real input.
+ */
+export function T({ b, a, d = 0.9, z, ph, text }: { b: number; a: number; d?: number; z?: number; ph?: string; text: string }) {
+  return <span className={`gds-type${ph != null ? " gds-type--field" : ""}`} data-tb={b} data-ta={a} data-td={d} data-tz={z} data-ph={ph} data-text={text} />;
 }
 
 /** A number counting from `from` to `to` (or a m:ss clock with `clock`). */
@@ -110,10 +113,16 @@ export type Item = {
   tf: string;
   vis: boolean;
 };
-type Typer = { el: HTMLElement; s: number; d: number; text: string; n: number };
+type Typer = { el: HTMLElement; s: number; d: number; z: number; text: string; n: number };
 type Counter = { el: HTMLElement; s: number; d: number; from: number; to: number; clock: boolean; last: string };
 
 const num = (v: string | undefined, fallback: number) => (v == null || v === "" ? fallback : Number(v));
+
+/** Characters of a typed field showing at `t` (0 before it starts and after it is sent). */
+export function typedCount(ty: Typer, t: number): number {
+  if (t < ty.s || t >= ty.z) return 0;
+  return Math.min(ty.text.length, Math.ceil(((t - ty.s) / ty.d) * ty.text.length));
+}
 
 export function parseItems(root: HTMLElement): { items: Item[]; typers: Typer[]; counters: Counter[] } {
   const items: Item[] = [];
@@ -142,7 +151,9 @@ export function parseItems(root: HTMLElement): { items: Item[]; typers: Typer[];
   const typers: Typer[] = [];
   root.querySelectorAll<HTMLElement>("[data-text]").forEach((el) => {
     const d = el.dataset;
-    typers.push({ el, s: DAY_STARTS[num(d.tb, 0)]! + num(d.ta, 0), d: num(d.td, 0.9), text: d.text ?? "", n: -1 });
+    const beat = num(d.tb, 0);
+    const z = d.tz != null && d.tz !== "" ? DAY_STARTS[beat]! + Number(d.tz) : Number.POSITIVE_INFINITY;
+    typers.push({ el, s: DAY_STARTS[beat]! + num(d.ta, 0), d: num(d.td, 0.9), z, text: d.text ?? "", n: -1 });
   });
   const counters: Counter[] = [];
   root.querySelectorAll<HTMLElement>("[data-from]").forEach((el) => {

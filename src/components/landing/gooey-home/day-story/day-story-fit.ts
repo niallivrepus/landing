@@ -3,7 +3,7 @@ import { useEffect, type RefObject } from "react";
 export const DAY_STAGE_W = 390;
 export const DAY_STAGE_H = 720;
 /** The desktop window / phone frame overhang above and below the 390 × 720 column. */
-const FRAME_PAD = 34;
+const FRAME_PAD = 40;
 
 /**
  * **Purpose:** Scales the day-story stage to fit its host box (largest scale that fits, capped at `max`), centred on
