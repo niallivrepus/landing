@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { buildLandingHandoffUrl } from "../../../lib/landing-oo-handoff";
 import { GooCornerFrame } from "./GooCornerFrame";
@@ -7,6 +7,10 @@ import { GooNexus } from "./GooNexus";
 import { GooPromptBar } from "./GooPromptBar";
 import { GetJokuhButton, PlatformLinks } from "./GetJokuh";
 import type { GooScheme } from "./goo-kit";
+
+/** "Watch a day": the auto-play day story, its own chunk, fetched on intent (hover / focus) or on tap. */
+const loadDayStoryPlayer = () => import("./day-story/DayStoryPlayer");
+const DayStoryPlayer = lazy(loadDayStoryPlayer);
 
 /** The background baby-OO swarm: its own chunk, mounted after first paint (never blocks the hero). */
 const GooHeroSwarm = lazy(() => import("./GooHeroSwarm"));
@@ -92,6 +96,12 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
   const navigate = useNavigate();
   const swarmReady = useAfterFirstPaint();
   const [focused, setFocused] = useState(false);
+  const [story, setStory] = useState(false);
+  const watchRef = useRef<HTMLButtonElement>(null);
+  const closeStory = useCallback(() => {
+    setStory(false);
+    requestAnimationFrame(() => watchRef.current?.focus({ preventScroll: true }));
+  }, []);
 
   /** Hand the prompt to the web app's OO, right away (it answers there, looking the same). */
   const send = (text: string) => {
@@ -102,7 +112,7 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
   };
 
   return (
-    <section className="gh-hero" aria-labelledby="gh-hero-title">
+    <section className={`gh-hero${story ? " is-story" : ""}`} aria-labelledby="gh-hero-title">
       {swarmReady ? (
         <Suspense fallback={null}>
           <GooHeroSwarm dim={focused || draft.length > 0 || leaving} />
@@ -135,6 +145,9 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
           onPlus={() => navigate("/download")}
           placeholder="Ask OO…"
           busy={leaving}
+          onWatch={() => setStory(true)}
+          onWatchIntent={() => void loadDayStoryPlayer()}
+          watchRef={watchRef}
         />
 
         <div className="gh-hero__below">
@@ -151,6 +164,12 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
           </div>
         </div>
       </div>
+
+      {story ? (
+        <Suspense fallback={null}>
+          <DayStoryPlayer scheme={scheme} onClose={closeStory} />
+        </Suspense>
+      ) : null}
     </section>
   );
 }

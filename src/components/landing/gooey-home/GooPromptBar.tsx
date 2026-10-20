@@ -37,6 +37,14 @@ function SubmitGlyph() {
   );
 }
 
+function PlayGlyph() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden>
+      <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor" />
+    </svg>
+  );
+}
+
 type SpeechCtor = new () => {
   lang: string;
   interimResults: boolean;
@@ -66,8 +74,13 @@ export const GooPromptBar = forwardRef<
     placeholder: string;
     disabled?: boolean;
     busy?: boolean;
+    /** "Watch a day": shows the ▶ bead while the field is empty (`GooHero` opens the day story). */
+    onWatch?: () => void;
+    /** Pointer / focus on the ▶ bead: prefetch the story chunk. */
+    onWatchIntent?: () => void;
+    watchRef?: React.Ref<HTMLButtonElement>;
   }
->(function GooPromptBar({ scheme, value, onChange, onSubmit, onPlus, placeholder, disabled, busy }, inputRef) {
+>(function GooPromptBar({ scheme, value, onChange, onSubmit, onPlus, placeholder, disabled, busy, onWatch, onWatchIntent, watchRef }, inputRef) {
   const uid = useId().replace(/[:]/g, "");
   const wrapRef = useRef<HTMLFormElement>(null);
   const innerInput = useRef<HTMLInputElement | null>(null);
@@ -76,6 +89,7 @@ export const GooPromptBar = forwardRef<
   const [listening, setListening] = useState(false);
   const recRef = useRef<InstanceType<SpeechCtor> | null>(null);
   const ready = value.trim().length > 0 && !disabled;
+  const showWatch = Boolean(onWatch) && !ready && !listening;
   const sq = useRef<Spring>({ x: 1, v: 0 });
   const sqTarget = useRef(1);
   const wRef = useRef(w);
@@ -160,6 +174,7 @@ export const GooPromptBar = forwardRef<
       className="gh-ask"
       data-ready={ready || undefined}
       data-listening={listening || undefined}
+      data-watch={showWatch || undefined}
       onPointerDown={squish}
       onSubmit={(e) => {
         e.preventDefault();
@@ -196,6 +211,23 @@ export const GooPromptBar = forwardRef<
         maxLength={600}
         disabled={disabled}
       />
+      {showWatch ? (
+        <button
+          ref={watchRef}
+          type="button"
+          className="gh-ask__bead gh-ask__bead--watch"
+          aria-label="Watch a day with Jokuh"
+          onClick={onWatch}
+          onPointerEnter={onWatchIntent}
+          onFocus={onWatchIntent}
+          disabled={disabled}
+        >
+          <PlayGlyph />
+          <span className="gh-ask__watch-label" aria-hidden>
+            Watch a day
+          </span>
+        </button>
+      ) : null}
       {ready ? (
         <button type="submit" className="gh-ask__bead gh-ask__bead--send" aria-label="Send to OO" disabled={busy}>
           <SubmitGlyph />

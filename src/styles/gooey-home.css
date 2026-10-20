@@ -1669,3 +1669,164 @@
     transition: none;
   }
 }
+
+/* ── A day with Jokuh: scroll-scrubbed story (`day-story/DayStoryScroll.tsx`); the stage's own CSS is lazy ── */
+
+.gh-day {
+  position: relative;
+}
+
+.gh-day__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gh-day__bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 4vw;
+  pointer-events: none;
+}
+
+.gh-day__bg p {
+  margin: 0;
+  font-size: clamp(56px, 11vw, 168px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  color: var(--gh-ink);
+  opacity: 0.05;
+}
+
+.gh-day__bg p:last-child {
+  text-align: right;
+}
+
+.gh-day__top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(560px, calc(100% - 32px));
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+.gh-day__eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gh-ink-3);
+}
+
+.gh-day__time {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.gh-day__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: 6px 16px 0;
+}
+
+.gh-day__fit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+
+.gh-day__bottom {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px 22px;
+}
+
+.gh-day__caption {
+  margin: 0;
+  min-height: 1.3em;
+  max-width: 34ch;
+  font-size: clamp(17px, 2.2vw, 21px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.gh-day__rail {
+  position: relative;
+  width: min(320px, 70%);
+  height: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--gh-ink) 14%, transparent);
+}
+
+.gh-day__fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: var(--gh-ink);
+  opacity: 0.8;
+}
+
+/* While "Watch a day" plays over the hero, the hero's own bar, logo and Nexus step back (the story draws its own). */
+.gh-hero.is-story .gh-hero__center,
+.gh-hero.is-story .gh-frame__nexus {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* "Watch a day" bead in the Ask OO bar (left of the mic). */
+.gh-ask__bead--watch {
+  right: 60px;
+  width: auto;
+  padding: 0 14px 0 12px;
+  gap: 6px;
+  display: inline-flex;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.gh-ask[data-watch] .gh-ask__input {
+  padding-right: 196px;
+}
+
+@media (max-width: 480px) {
+  .gh-ask__bead--watch {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  .gh-ask__bead--watch .gh-ask__watch-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .gh-ask[data-watch] .gh-ask__input {
+    padding-right: 116px;
+  }
+}

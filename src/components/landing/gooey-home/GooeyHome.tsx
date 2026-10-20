@@ -7,6 +7,7 @@ import { RIGID_NAV_COLUMNS } from "../../../data/rigid-sitemap";
 import { GetJokuhButton, GetJokuhSheet, PlatformLinks } from "./GetJokuh";
 import { GooHero } from "./GooHero";
 import { GooScrollMerge } from "./GooScrollMerge";
+import { DayStoryScroll } from "./day-story/DayStoryScroll";
 import { GOO_FEATURES, type GooFeature } from "./gooey-home-content";
 import type { GooScheme } from "./goo-kit";
 import { JokuhOO } from "../../brand/JokuhOO";
@@ -231,6 +232,8 @@ export function GooeyHome() {
   return (
     <div ref={root} className="gh" data-scheme={scheme}>
       <GooHero scheme={scheme} headline={LANDING_HERO_HEADLINE} valueLine={GOOEY_HOME_VALUE_LINE} />
+
+      <DayStoryScroll scheme={scheme} />
 
       <GooScrollMerge scheme={scheme} />
 
