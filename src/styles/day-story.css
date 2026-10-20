@@ -2164,3 +2164,887 @@
 .gh[data-scheme="light"] .gds-ask--home {
   background: #ffffff;
 }
+
+/* ── The real Gooey Spine (`DaySpine.tsx`) ── */
+
+.dsp {
+  position: absolute;
+  left: 0;
+  top: 0;
+  --gs-ink: var(--gh-ink);
+  --gs-ink-2: var(--gh-ink-2);
+  --gs-paper: rgba(24, 24, 27, 0.92);
+  --gs-well: rgba(255, 255, 255, 0.08);
+  --gs-line: rgba(255, 255, 255, 0.1);
+  --gs-accent: #0066ff;
+}
+
+[data-scheme="light"] .dsp {
+  --gs-paper: #ffffff;
+  --gs-well: rgba(60, 45, 20, 0.08);
+  --gs-line: rgba(60, 45, 20, 0.12);
+}
+
+.dsp-goo {
+  position: absolute;
+  left: 0;
+  overflow: visible;
+}
+
+.dsp-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  color: var(--gh-ink);
+}
+
+.dsp-label--panel {
+  transform-origin: 50% 0;
+}
+
+.dsp-day,
+.dsp-hour {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.dsp-day b,
+.dsp-hour b {
+  font-size: 12.5px;
+}
+
+.dsp-day small,
+.dsp-hour small {
+  font-size: 7.5px;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.dsp-day.is-today {
+  color: #fff;
+}
+
+.dsp-month {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.dsp-month.is-today {
+  color: #fff;
+}
+
+.dsp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+[data-scheme="light"] .dsp-chip {
+  color: #1a1308;
+}
+
+.dsp-nub {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--gh-ink-3);
+}
+
+.dsp-now {
+  font-size: 11px;
+  font-weight: 800;
+  color: #2c81ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.dsp-oo {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  box-shadow: 0 0 34px 10px rgba(147, 39, 255, 0.55);
+}
+
+.dsp-spaces {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--gh-slab-bg);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--gh-ink) 40%, transparent);
+}
+
+.dsp-panel {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 24px;
+  white-space: normal;
+  background: var(--gs-paper);
+  box-shadow: inset 0 0 0 1px var(--gs-line);
+}
+
+.dsp-panel--bare {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.dsp-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 6px 0 5px;
+  border-radius: 999px;
+  font-size: 14px;
+  background: var(--gs-well);
+  box-shadow: inset 0 0 0 1.5px var(--gs-line);
+}
+
+.dsp-entry strong {
+  flex: 1;
+}
+
+.dsp-entry__glyph {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.dsp-entry__well {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.dsp-quote {
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.dsp-quote mark {
+  color: inherit;
+  border-radius: 5px;
+  padding: 0 2px;
+  background: color-mix(in srgb, #2c81ff 40%, transparent);
+}
+
+.dsp-time {
+  font-size: 11px;
+  text-align: center;
+  color: var(--gh-ink-3);
+}
+
+/* ── Meeting slab (violet) ── */
+
+.goo-meeting {
+  --m-violet: #b56fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--m-violet) 16%, var(--gs-paper, rgba(24, 24, 27, 0.92)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--m-violet) 30%, transparent);
+  color: var(--gs-ink, #fff);
+}
+[data-scheme='light'] .goo-meeting {
+  --m-violet: #9327ff;
+}
+.goo-meeting.is-startingSoon {
+  box-shadow: inset 0 0 0 1.5px var(--m-violet);
+}
+.goo-meeting.is-live {
+  box-shadow: inset 0 0 0 1.5px #21dc11;
+}
+.goo-meeting__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.goo-meeting__glyph {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, var(--m-violet), color-mix(in srgb, var(--m-violet) 78%, transparent));
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.4);
+}
+.goo-meeting.is-live .goo-meeting__glyph {
+  background: #21dc11;
+}
+.goo-meeting.is-ended .goo-meeting__glyph,
+.goo-meeting.is-cancelled .goo-meeting__glyph {
+  background: #8e8e93;
+}
+.goo-meeting__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.goo-meeting__title {
+  font-size: 15px;
+  font-weight: 700;
+}
+.goo-meeting.is-cancelled .goo-meeting__title {
+  text-decoration: line-through;
+  color: var(--gs-ink-2);
+}
+.goo-meeting__time {
+  font-size: 12.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--gs-ink-2);
+}
+.goo-meeting__tag {
+  flex-shrink: 0;
+  margin-top: 2px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.goo-meeting__tag.is-live {
+  background: #21dc11;
+  color: #fff;
+}
+.goo-meeting__tag.is-soon {
+  background: var(--m-violet);
+  color: #fff;
+}
+.goo-meeting__tag.is-muted {
+  background: var(--gs-well);
+  color: var(--gs-ink-2);
+}
+.goo-meeting__people {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 42px;
+}
+.goo-meeting__faces {
+  display: inline-flex;
+}
+.goo-meeting__face {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-left: -8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--m-violet) 35%, #222);
+  box-shadow: 0 0 0 1.5px var(--gs-paper, #18181b);
+  overflow: visible;
+}
+.goo-meeting__face:first-child {
+  margin-left: 0;
+}
+.goo-meeting__face img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.goo-meeting__initials {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+}
+.goo-meeting__rsvp {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  font-size: 7px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 0 0 1.5px var(--gs-paper, #18181b);
+}
+.goo-meeting__rsvp.is-yes {
+  background: var(--m-violet);
+}
+.goo-meeting__rsvp.is-maybe {
+  background: #8e8e93;
+}
+.goo-meeting__rsvp.is-pending {
+  width: 10px;
+  height: 10px;
+  background: #ffc633;
+}
+.goo-meeting__with {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.goo-meeting__well {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 6px 6px 14px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--m-violet) 12%, transparent);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.18), inset 0 0 0 0.5px var(--gs-line, rgba(255, 255, 255, 0.1));
+}
+.goo-meeting__well-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gs-ink);
+}
+.goo-meeting__well-title.is-live {
+  color: #21dc11;
+}
+.goo-meeting__well-actions {
+  display: inline-flex;
+  gap: 6px;
+}
+.goo-meeting__btn {
+  height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--gs-well);
+  color: var(--gs-ink);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.goo-meeting__btn.is-primary {
+  background: var(--m-violet);
+  color: #fff;
+}
+.goo-meeting.is-live .goo-meeting__btn.is-primary {
+  background: #21dc11;
+}
+.goo-meeting__btn:disabled {
+  opacity: 0.5;
+}
+
+/* ── ID page, as the real one renders (5207 `/demo?surface=id`, dev-profile-pods) ── */
+
+/* Each pod is its own squircle tile with the house glass rim (never welded to its neighbour). */
+.gds-pod {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 10px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: #050505;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2), inset 0 2px 1.5px rgba(255, 255, 255, 0.12), 0 10px 18px -12px rgba(0, 0, 0, 0.8);
+}
+
+.gh[data-scheme="light"] .gds-pod {
+  background: #ffffff;
+  box-shadow: var(--gh-slab-shadow);
+}
+
+@supports (corner-shape: squircle) {
+  .gds-pod {
+    border-radius: 46px;
+    corner-shape: squircle;
+  }
+}
+
+.gds-podtitle {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Music: the vinyl with the cover in its centre, the track pill with the green play bead. */
+.gds-pod--music {
+  justify-content: space-between;
+}
+
+.gds-vinyl {
+  position: relative;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 64%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: repeating-radial-gradient(circle, #0b0b0b 0 3px, #161616 3px 4px);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18);
+}
+
+.gds-vinyl img {
+  width: 38%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.3);
+}
+
+.gds-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 5px 5px 5px 12px;
+  border-radius: 999px;
+  background: #000;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2);
+}
+
+.gds-track > span:first-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gds-track strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gds-track small {
+  font-size: 10px;
+  color: var(--gh-ink-3);
+}
+
+.gds-track__play {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.6);
+  background: radial-gradient(120% 120% at 50% 20%, #3fa52f, #1f6a14);
+}
+
+.gds-track__play svg {
+  fill: currentColor;
+}
+
+/* Gallery: the photo strip with two thumbnails hanging on goo necks. */
+.gds-pod--gallery {
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+}
+
+.gds-strip {
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.18);
+}
+
+.gds-strip img,
+.gds-strip__thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gds-strip__thumbs {
+  display: flex;
+  gap: 8px;
+}
+
+.gds-strip__thumbs img {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.25), 0 -5px 0 -2px rgba(255, 255, 255, 0.12);
+}
+
+/* Location: the styled dark map, the blue dot with its rings, the city pill. */
+.gds-pod--location {
+  padding: 0;
+}
+
+.gds-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gds-map__dot {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 999px;
+  background: #2c81ff;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 9px rgba(44, 129, 255, 0.16), 0 0 0 18px rgba(44, 129, 255, 0.08);
+}
+
+.gds-map__city {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0 0 0 1.2px rgba(255, 255, 255, 0.22);
+}
+
+/* Spine pod: day pills (today accent), the hour dots, "Activity · Book a time". */
+.gds-pod--spine {
+  align-items: stretch;
+  padding: 14px 12px;
+}
+
+.gds-spinepod {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.gds-spinepod__day {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1.2px rgba(255, 255, 255, 0.22);
+}
+
+.gds-spinepod__day small {
+  font-size: 9px;
+  color: var(--gh-ink-3);
+}
+
+.gds-spinepod__day i {
+  width: 1px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.gds-spinepod__day.is-today {
+  padding: 6px 14px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #2c6bff;
+  background: rgba(44, 107, 255, 0.35);
+  box-shadow: inset 0 0 0 1.5px #2c6bff;
+}
+
+.gds-spinepod__day.is-today small {
+  color: #2c6bff;
+}
+
+.gds-spinepod__dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  max-width: 110px;
+}
+
+.gds-spinepod__dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.gds-spinepod__dots i.is-on {
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.gds-spinepod__foot {
+  font-size: 10px;
+  text-align: center;
+  color: var(--gh-ink-3);
+}
+
+/* Bubble pod: the bubble's gradient disc, the name pill. */
+.gds-pod--bubble {
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.gds-bubbledisc {
+  display: grid;
+  place-items: center;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  color: #3d2cff;
+  background: linear-gradient(135deg, #7b3cff, #2c6bff);
+  box-shadow: 0 0 0 3px #000, 0 0 0 4.5px rgba(255, 255, 255, 0.2);
+}
+
+.gds-bubblepill {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 12px;
+  border-radius: 14px;
+  background: #000;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2);
+}
+
+.gds-bubblepill strong {
+  font-size: 12px;
+}
+
+.gds-bubblepill small {
+  font-size: 10px;
+  color: var(--gh-ink-3);
+}
+
+/* Blurbs pod: the dashed coloured orbits round your pearl, with the latest blurb's caption bubble. */
+.gds-pod--blurbs {
+  padding: 0;
+}
+
+.gds-orbits {
+  position: absolute;
+  inset: 0;
+}
+
+.gds-orbits i {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  border-radius: 999px;
+  border: 1.5px dashed;
+  translate: -50% -50%;
+}
+
+.gds-orbits i:nth-child(1) {
+  width: 46%;
+  aspect-ratio: 1;
+  border-color: #21dc11 #ffb800 #9327ff #ff312b;
+}
+
+.gds-orbits i:nth-child(2) {
+  width: 80%;
+  aspect-ratio: 1;
+  border-color: #ff5cf4 #2c81ff #ffb800 #21dc11;
+}
+
+.gds-orbits i:nth-child(3) {
+  width: 118%;
+  aspect-ratio: 1;
+  border-color: #ff312b #b56fff #43fdff #ff6b00;
+}
+
+.gds-orbits img {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  object-fit: cover;
+  translate: -50% -50%;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06), 0 0 0 1.5px rgba(255, 255, 255, 0.3);
+}
+
+.gds-orbits__bubble {
+  position: absolute;
+  left: 8px;
+  top: 10px;
+  max-width: 78%;
+  padding: 5px 9px;
+  border-radius: 12px;
+  font-size: 10.5px;
+  line-height: 1.3;
+  white-space: normal;
+  background: #1c1c1e;
+  box-shadow: inset 0 0 0 1.2px rgba(255, 255, 255, 0.2);
+}
+
+/* Contact pod: Chat and Mail tiles joined by a small link (dev-profile-pods small variant). */
+.gds-pod--contact {
+  padding: 8px;
+  justify-content: center;
+}
+
+.gds-contactpod {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gds-contactpod__half {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 52px;
+  padding: 0 10px 0 6px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.22);
+}
+
+.gds-contactpod__half > span:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.gds-contactpod__half strong {
+  font-size: 13px;
+}
+
+.gds-contactpod__half small {
+  font-size: 9px;
+  line-height: 1.2;
+  color: var(--gh-ink-3);
+}
+
+.gds-contactpod__icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 999px;
+  color: #ddd;
+  background: #2a2a2c;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2);
+}
+
+.gds-contactpod__link {
+  width: 40px;
+  height: 10px;
+  margin: -2px 0;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.2px rgba(255, 255, 255, 0.18);
+}
+
+/* Network strip (under the photo, inside the portrait card): tall face beads, "Network · N connections". */
+.gds-network {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+  background: none;
+  height: auto;
+}
+
+.gds-network__bead {
+  width: 26px;
+  height: 38px;
+  border-radius: 999px;
+  object-fit: cover;
+  opacity: 0.55;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.gds-network__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 4px;
+}
+
+.gds-network__label strong {
+  font-size: 13px;
+  color: #fff;
+}
+
+.gds-network__label small {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9.5px;
+  color: #8cf06f;
+}
+
+/* On the photo: the OO capsule with its two bars (bottom left) and the wallet chip (bottom right). */
+.gds-avatarcap {
+  bottom: 10px !important;
+}
+
+.gds-walletchip {
+  bottom: 10px !important;
+}
+
+.gds-avatarcap i {
+  background: linear-gradient(90deg, #ff8a6b 18%, rgba(255, 255, 255, 0.12) 18%) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.gds-avatarcap i + i {
+  background: linear-gradient(90deg, #8a5cff 10%, rgba(255, 255, 255, 0.12) 10%) !important;
+}
+
+.goo-meeting__btn {
+  display: inline-grid;
+  place-items: center;
+}
+
+/* Full-width pods (the phone ID): vinyl left + track pill right; the gallery strip with its thumbs below. */
+.gds-pod--music.is-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 12px;
+}
+
+.gds-pod--music.is-row .gds-vinyl {
+  width: auto;
+  height: 100%;
+}
+
+.gds-pod--music.is-row .gds-track {
+  flex: 1;
+  padding: 7px 6px 7px 14px;
+}
+
+.gds-pod--music.is-row .gds-track strong {
+  font-size: 14px;
+}
+
+.gds-pod--gallery.is-row .gds-strip {
+  height: 34px;
+  flex: none;
+}

@@ -28,7 +28,6 @@ export const DAY_BEATS: readonly DayBeat[] = [
   { id: "call", time: "7:58 am", caption: "Maya's calling. It rises out of the Nexus.", dur: 3.4, form: "desktop", still: 0.72 },
   { id: "transcript", time: "7:59 am", caption: "Pick up. Jokuh transcribes the call as you talk.", dur: 4.2, form: "desktop" },
   { id: "spine", time: "8:06 am", caption: "Hang up. The plan lands in your Spine.", dur: 3.4, form: "desktop" },
-  { id: "id", time: "8:07 am", caption: "Tap Maya: her ID links your spot and your history.", dur: 3.4, form: "desktop" },
   { id: "profile", time: "8:15 am", caption: "Your own ID builds itself, pod by pod.", dur: 4.2, form: "desktop" },
   // Out the door: the same app on your phone.
   { id: "mobile", time: "8:52 am", caption: "Heading out. Jokuh goes mobile with you.", dur: 3, form: "mobile" },

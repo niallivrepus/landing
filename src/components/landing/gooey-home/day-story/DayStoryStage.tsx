@@ -11,6 +11,7 @@ import { paintHeat } from "./blurb-heat-rim";
 import { DAY_BEAT_COUNT, DAY_STARTS, DB, dayBeatAt } from "./day-story-beats";
 import { backOut, beatEnd, clamp01, easeOut, Face, FACE, I, IC, Icon, lerp, N, parseItems, paintItem, T, typedCount } from "./day-story-engine";
 import DayStoryOrb, { DAY_ORB_ELLIPSE, type DayStoryOrbHandle } from "./DayStoryOrb";
+import DaySpine, { type DaySpineHandle } from "./DaySpine";
 import "../../../../styles/day-story.css";
 
 /**
@@ -116,8 +117,10 @@ function pressAt(t: number, q: CornerQuad): number {
 /** Desktop sheet column (the 5207 web app: ≈ 0.67 wide-to-tall, near full height) and the phone column. */
 const S_D: Rect = [-45, 37, 480, 716, 50];
 const S_M: Rect = [10, 8, 370, 704, 54];
-const CORD_D: Rect = [189, -34, 12, 788, 6];
-const CORD_M: Rect = [189, -4, 12, 716, 6];
+/** The Spine's cord (the real cord is 7 thick behind now): the one body melts into it, `DaySpine` draws the rest. */
+const CORD_D: Rect = [191.5, 96, 7, 640, 3.5];
+const CORD_M: Rect = [191.5, 120, 7, 560, 3.5];
+const FOLD_STUB: Rect = [191.5, 150, 7, 160, 3.5];
 const NEX_IDLE_D: Rect = [137, -12, 116, 36, 18];
 const NEX_IDLE_M: Rect = [139, 16, 112, 34, 17];
 const INCOMING: Rect = [55, -16, 280, 172, 42];
@@ -125,8 +128,9 @@ const BAR_D: Rect = [-50, 332, 490, 56, 28];
 const BAR_M: Rect = [24, 332, 342, 56, 28];
 const ASK_BAR: Rect = [24, 642, 342, 56, 28];
 const ORB_R: Rect = [DAY_ORB_ELLIPSE.cx - DAY_ORB_ELLIPSE.rx, DAY_ORB_ELLIPSE.cy - DAY_ORB_ELLIPSE.ry, DAY_ORB_ELLIPSE.rx * 2, DAY_ORB_ELLIPSE.ry * 2, DAY_ORB_ELLIPSE.ry];
-const PORTRAIT_W: Rect = [14, 110, 362, 540, 56];
-const PORTRAIT_N: Rect = [66, 110, 258, 262, 50];
+const PORTRAIT_W: Rect = [47, 100, 296, 300, 44];
+/** A narrow host shows the phone ID: the full-width portrait card, then the first pods full width (as 5207 at 375). */
+const PORTRAIT_N: Rect = [14, 84, 362, 386, 44];
 const CARD: Rect = [52, 190, 286, 286, 40];
 const DOT: Rect = [182, 286, 26, 26, 13];
 
@@ -138,7 +142,6 @@ function keyA(i: number, wide: boolean): Rect {
     case DB.transcript:
       return S_D;
     case DB.spine:
-    case DB.id:
       return CORD_D;
     case DB.profile:
       return wide ? PORTRAIT_W : PORTRAIT_N;
@@ -153,7 +156,7 @@ function keyA(i: number, wide: boolean): Rect {
     case DB.orb:
       return ORB_R;
     case DB.fold:
-      return CORD_M;
+      return FOLD_STUB;
     case FINALE:
       return DOT;
     default:
@@ -185,10 +188,10 @@ function bodyA(t: number, wide: boolean): Rect {
   return mixRect(from, to, backOut(clamp01(u / MORPH)));
 }
 
-function keyP(i: number, wide: boolean): Rect | null {
+function keyP(i: number, _wide: boolean): Rect | null {
   switch (i) {
     case DB.profile:
-      return wide ? [130, 62, 130, 30, 15] : [130, 62, 130, 30, 15];
+      return [140, 80, 110, 8, 4];
     case DB.ask:
       return [10, 36, 370, 590, 54];
     case DB.agents:
@@ -220,7 +223,6 @@ function nexusRect(i: number, t: number): Rect {
     case DB.transcript:
       return NEX_CALL_D;
     case DB.spine:
-    case DB.id:
       return NEX_TITLE_D;
     case DB.profile:
       return NEX_IDLE_D;
@@ -248,16 +250,20 @@ function bodyN(t: number): Rect {
 type GooRect = { b: number; e?: number; a: number; x: number; y: number; w: number; h: number; r: number; dx?: number; dy?: number };
 
 type PodKey = "music" | "gallery" | "location" | "spine" | "bubble" | "blurbs" | "contact";
-type Pod = { key: PodKey; a: number; dx: number; dy: number; n: [number, number, number, number]; w: [number, number, number, number] };
-/** The ID page's pods: `w` = the desktop bento around the portrait (5207 ID page + demo bento); `n` = narrow host. */
+type Pod = { key: PodKey; a: number; dx: number; dy: number; n: [number, number, number, number] | null; w: [number, number, number, number] };
+/**
+ * The ID page's pods, laid out like the real bento (5207 `/demo?surface=id`): `w` = desktop (music + gallery left of
+ * the portrait, Spine right, a row of four under it); `n` = a narrow host (two columns under a smaller portrait).
+ * Each pod is its own tile; goo only drips them into place.
+ */
 const PODS: Pod[] = [
-  { key: "music", a: 0.7, dx: -90, dy: -20, w: [-178, 110, 170, 150], n: [26, 388, 108, 92] },
-  { key: "gallery", a: 0.85, dx: -90, dy: 0, w: [-178, 272, 170, 196], n: [141, 388, 108, 92] },
-  { key: "location", a: 1.0, dx: -90, dy: 20, w: [-178, 480, 170, 170], n: [256, 388, 108, 92] },
-  { key: "spine", a: 1.15, dx: 90, dy: -20, w: [398, 110, 170, 168], n: [26, 488, 108, 92] },
-  { key: "bubble", a: 1.3, dx: 90, dy: 0, w: [398, 290, 170, 110], n: [141, 488, 108, 92] },
-  { key: "blurbs", a: 1.45, dx: 90, dy: 10, w: [398, 412, 170, 136], n: [256, 488, 108, 92] },
-  { key: "contact", a: 1.6, dx: 90, dy: 20, w: [398, 560, 170, 90], n: [26, 588, 338, 50] },
+  { key: "music", a: 0.7, dx: -80, dy: -20, w: [-110, 100, 150, 180], n: [14, 478, 362, 100] },
+  { key: "gallery", a: 0.85, dx: -80, dy: 10, w: [-110, 287, 150, 113], n: [14, 586, 362, 62] },
+  { key: "spine", a: 1.0, dx: 80, dy: -10, w: [350, 100, 150, 300], n: null },
+  { key: "location", a: 1.15, dx: -60, dy: 40, w: [-110, 408, 150, 140], n: null },
+  { key: "bubble", a: 1.3, dx: 0, dy: 50, w: [47, 408, 144, 140], n: null },
+  { key: "contact", a: 1.45, dx: 0, dy: 50, w: [199, 408, 144, 140], n: null },
+  { key: "blurbs", a: 1.6, dx: 60, dy: 40, w: [350, 408, 150, 140], n: null },
 ];
 const podBox = (p: Pod, wide: boolean) => (wide ? p.w : p.n);
 
@@ -268,14 +274,8 @@ const BUILDINGS: GooRect[] = [
   { b: DB.agents!, a: 0.6, x: 254, y: 404, w: 100, h: 74, r: 22, dx: 30 },
 ];
 
-function gooRects(wide: boolean): GooRect[] {
-  return [
-    ...PODS.map((p) => {
-      const [x, y, w, h] = podBox(p, wide);
-      return { b: DB.profile!, a: p.a, x, y, w, h, r: Math.min(30, h * 0.3), dx: p.dx, dy: p.dy };
-    }),
-    ...BUILDINGS,
-  ];
+function gooRects(_wide: boolean): GooRect[] {
+  return [...BUILDINGS];
 }
 
 function gooRectAt(g: GooRect, t: number): Rect | null {
@@ -297,10 +297,6 @@ const BLDG_DOORS = BUILDINGS.map((g) => ({ x: g.x + g.w / 2, y: g.y + g.h / 2 })
 /** The call's Splex toolbar: five Ø 40 cups at 3.25·R pitch with pinched necks (`controls/CallSelfSplex.tsx`). */
 const SPLEX_Y = 652;
 const SPLEX_X = [65, 130, 195, 260, 325];
-/** Spine: hour beads down the centre cord (desktop: full height; phone: inside the screen). */
-const HOUR_Y = [120, 200, 280, 360, 440, 520, 600, 680];
-const HOUR_LABELS = ["7 am", "8 am", "9 am", "10 am", "11 am", "12 pm", "1 pm", "2 pm"];
-
 const DROPS: Drop[] = [
   // The incoming call goos out of the Nexus: drops bulge under it while it rings.
   { b: DB.call!, a: 1.1, z: 2.0, x0: 195, y0: 170, r: 14, mode: "bulge" },
@@ -309,30 +305,17 @@ const DROPS: Drop[] = [
   { b: DB.call!, a: 1.6, z: 2.6, x0: 270, y0: 166, r: 9, mode: "bulge" },
   ...SPLEX_X.map((x, n) => ({ b: DB.transcript!, a: 0.5 + n * 0.06, x0: x, y0: SPLEX_Y, r: 20, mode: "sit" as const })),
   ...SPLEX_X.slice(0, 4).map((x, n) => ({ b: DB.transcript!, a: 0.6 + n * 0.06, x0: x + 32.5, y0: SPLEX_Y, r: 8, mode: "sit" as const })),
-  // The transcript drips onto the cord at 8 am; hour beads swell along it.
-  { b: DB.spine!, a: 0.1, z: 0.8, x0: 120, y0: 520, x1: 195, y1: 200, r: 12, mode: "fall" },
-  { b: DB.spine!, a: 0.2, z: 0.95, x0: 270, y0: 560, x1: 195, y1: 200, r: 10, mode: "fall" },
-  { b: DB.spine!, a: 0.3, z: 1.1, x0: 200, y0: 620, x1: 195, y1: 200, r: 8, mode: "fall" },
-  ...HOUR_Y.map((y, n) => ({ b: DB.spine!, e: DB.id, a: 0.35 + n * 0.05, x0: 195, y0: y, r: 13, mode: "sit" as const })),
-  // Event necks off the cord (Maya's call right, her ID left).
-  { b: DB.spine!, e: DB.id, a: 0.9, x0: 214, y0: 200, r: 9, mode: "sit" },
-  { b: DB.id!, a: 0.5, x0: 176, y0: 200, r: 9, mode: "sit" },
-  // 10:30: the group call's note lands on the cord.
-  ...HOUR_Y.slice(0, 7).map((y, n) => ({ b: DB.meet!, a: 2.0 + n * 0.04, x0: 195, y0: y, r: 12, mode: "sit" as const })),
-  { b: DB.meet!, a: 2.4, x0: 214, y0: 360, r: 9, mode: "sit" },
   // OOpolis streets (bead chains Queen → buildings) and babies budding off the Queen.
   ...BLDG_DOORS.flatMap((d, n) =>
     [0.25, 0.42, 0.59, 0.76].map((q, j) => ({ b: DB.agents!, a: 0.35 + n * 0.08 + j * 0.05, x0: lerp(QUEEN.x, d.x, q), y0: lerp(QUEEN.y, d.y, q), r: 5.5, mode: "sit" as const })),
   ),
   ...BLDG_DOORS.map((d, n) => ({ b: DB.agents!, a: 0.9 + n * 0.1, z: 1.7 + n * 0.1, x0: QUEEN.x, y0: QUEEN.y, x1: lerp(QUEEN.x, d.x, 0.75), y1: lerp(QUEEN.y, d.y, 0.75), r: 12, mode: "move" as const })),
   // Profile: pods drip out of the portrait card on their way to the bento.
-  { b: DB.profile!, a: 0.55, z: 1.3, x0: 195, y0: 380, x1: -90, y1: 190, r: 12, mode: "move" },
-  { b: DB.profile!, a: 0.75, z: 1.5, x0: 195, y0: 380, x1: 480, y1: 190, r: 12, mode: "move" },
+  { b: DB.profile!, a: 0.55, z: 1.25, x0: 120, y0: 250, x1: -35, y1: 190, r: 12, mode: "move" },
+  { b: DB.profile!, a: 0.75, z: 1.45, x0: 270, y0: 250, x1: 425, y1: 250, r: 12, mode: "move" },
+  { b: DB.profile!, a: 0.95, z: 1.65, x0: 195, y0: 390, x1: 195, y1: 470, r: 12, mode: "move" },
   // Blurbs: the author's pearl pours its tail.
   { b: DB.blurb!, a: 1.0, x0: 77, y0: 166, r: 22, mode: "sit" },
-  // Night: the day's moments drip onto the cord.
-  ...HOUR_Y.slice(0, 7).map((y, n) => ({ b: DB.fold!, a: 0.3 + n * 0.05, x0: 195, y0: y, r: 12, mode: "sit" as const })),
-  ...[0, 1, 2, 3, 4, 5, 6].map((n) => ({ b: DB.fold!, a: 0.1 + n * 0.26, z: 0.55 + n * 0.26, x0: n % 2 ? 60 : 330, y0: 40 + n * 80, x1: 195, y1: HOUR_Y[n]!, r: 8, mode: "fall" as const })),
 ];
 
 function dropAt(d: Drop, t: number): { x: number; y: number; r: number } | null {
@@ -406,9 +389,10 @@ function Head({ b, e, a = 0.3, z, left, right, children }: { b: number; e?: numb
 }
 
 /** A composer that types for real: placeholder → characters + caret → send bead → sent (empty again). */
-function Composer({ b, e, a = 0.4, x, y, w, h = 48, ph, text, ta, td = 0.7, send, plus = true }: {
+function Composer({ b, e, z, a = 0.4, x, y, w, h = 48, ph, text, ta, td = 0.7, send, plus = true }: {
   b: number;
   e?: number;
+  z?: number;
   a?: number;
   x: number;
   y: number;
@@ -422,7 +406,7 @@ function Composer({ b, e, a = 0.4, x, y, w, h = 48, ph, text, ta, td = 0.7, send
   plus?: boolean;
 }) {
   return (
-    <I b={b} e={e} a={a} fx="up" x={x} y={y} w={w} h={h} className="gds-composer gds-sq">
+    <I b={b} e={e} z={z} a={a} fx="up" x={x} y={y} w={w} h={h} className="gds-composer gds-sq">
       {plus ? <Icon d={IC.plus} size={16} /> : null}
       <span className="gds-composer__field">{text ? <T b={b} a={ta ?? a + 0.2} d={td} z={send} ph={ph} text={text} /> : <span className="gds-composer__ph">{ph}</span>}</span>
       {text && send != null ? (
@@ -448,15 +432,6 @@ const BLDG = [
   { label: "Reminders", d: IC.bell },
 ];
 
-const FOLD: { label: string; right: boolean }[] = [
-  { label: "Call · Maya", right: true },
-  { label: "Paid Maya", right: false },
-  { label: "Design sync note", right: true },
-  { label: "Thursday, planned", right: false },
-  { label: "Tulum moodboard", right: true },
-  { label: "Lake loop · 24 Fire", right: false },
-  { label: "Live in the Orb", right: true },
-];
 const PHONE_CORNERS = Object.fromEntries(QUADS.map((q) => [q, cornerAt(PHONE, q)])) as Record<CornerQuad, { x: number; y: number }>;
 const SPLEX_ICONS = [IC.mic, IC.video, IC.share, "M15 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM4 20c0-3 3.6-5 8-5M18 14v6M15 17h6", "M6 12h.01M12 12h.01M18 12h.01"];
 const RIM_CORNERS = [
@@ -466,19 +441,6 @@ const RIM_CORNERS = [
   ["bottomTrailing", "Ice", IC.ice, " gds-rimcorner--ice"],
 ] as const;
 
-/** One Spine hour bead (a capsule on the cord) and its label. */
-function Hours({ b, e, a, labels = HOUR_LABELS }: { b: number; e?: number; a: number; labels?: string[] }) {
-  return (
-    <>
-      {labels.map((h, n) => (
-        <I key={`${b}-${h}`} b={b} e={e} a={a + n * 0.05} fx="pop" x={172} y={HOUR_Y[n]! - 11} w={46} h={22} className={`gds-hourbead${n === 1 && b !== DB.fold ? " gds-hourbead--now" : ""}`}>
-          {h}
-        </I>
-      ))}
-    </>
-  );
-}
-
 /* ── The stage ── */
 
 const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: number; onBeat?: (i: number) => void }>(function DayStoryStage(
@@ -487,7 +449,7 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
 ) {
   const uid = useId().replace(/[:]/g, "");
   const ext = Math.max(20, Math.round(extIn));
-  const wide = ext >= 185;
+  const wide = ext >= 140;
   const rootRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<SVGPathElement>(null);
   const shellSvg = useRef<SVGSVGElement>(null);
@@ -505,6 +467,7 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
   const arches = useRef<(SVGPathElement | null)[]>([]);
   const heatRef = useRef<HTMLCanvasElement>(null);
   const orbRef = useRef<DayStoryOrbHandle | null>(null);
+  const spineRef = useRef<DaySpineHandle | null>(null);
   const parsed = useRef<ReturnType<typeof parseItems> | null>(null);
   const attrCache = useRef(new WeakMap<Element, Record<string, string>>());
   const lastBeat = useRef(-1);
@@ -609,6 +572,11 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
     const o0 = DAY_STARTS[ORB_BEAT]!;
     if (t >= o0 && t <= beatEnd(ORB_BEAT)) orbRef.current?.paint(t - o0);
     if (bi === BLURB_BEAT) paintHeatRim(t);
+    // The real Spine paints while one of its moments is up.
+    const su = t - DAY_STARTS[bi]!;
+    if (bi === DB.spine) spineRef.current?.paint("land", su);
+    else if (bi === DB.meet && su >= 1.7) spineRef.current?.paint("meet", su - 1.8);
+    else if (bi === DB.fold) spineRef.current?.paint("fold", su);
     for (const it of p.items) paintItem(it, t);
     for (const ty of p.typers) {
       const n = typedCount(ty, t);
@@ -648,6 +616,7 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
   useImperativeHandle(ref, () => ({ seek }), []);
 
   const orbOn = beat >= ORB_BEAT - 1 && beat <= ORB_BEAT + 1;
+  const spineOn = Math.abs(beat - DB.spine!) <= 1 ? "land" : Math.abs(beat - DB.meet!) <= 1 ? "meet" : Math.abs(beat - DB.fold!) <= 1 ? "fold" : null;
   const homeGlyphOn = beat <= DB.call! + 1 || Math.abs(beat - MOBILE_AT) <= 1;
   const finaleGlyphOn = beat >= FINALE - 1;
   const fill = roleColor(scheme, "base");
@@ -735,7 +704,7 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
         <I b={MOBILE_AT} e={BLURB_BEAT} a={1.5} x={NEX_IDLE_M[0]} y={NEX_IDLE_M[1]} w={NEX_IDLE_M[2]} h={NEX_IDLE_M[3]} className="gds-nexusglyph">
           <Infinity />
         </I>
-        <I b={DB.spine!} e={DB.id} a={0.5} x={NEX_TITLE_D[0]} y={NEX_TITLE_D[1]} w={NEX_TITLE_D[2]} h={NEX_TITLE_D[3]} className="gds-nexustitle">
+        <I b={DB.spine!} a={0.5} x={NEX_TITLE_D[0]} y={NEX_TITLE_D[1]} w={NEX_TITLE_D[2]} h={NEX_TITLE_D[3]} className="gds-nexustitle">
           October
         </I>
         <I b={DB.fold!} a={0.5} x={NEX_TITLE_M[0]} y={NEX_TITLE_M[1]} w={NEX_TITLE_M[2]} h={NEX_TITLE_M[3]} className="gds-nexustitle">
@@ -827,57 +796,21 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
         ))}
         <Composer b={DB.transcript!} a={0.5} x={-20} y={692} w={430} h={44} ph="Message" text="Sending you the Blue Bottle pin" ta={2.9} td={0.8} send={3.85} />
 
-        {/* 2 · 8:06 am (desktop Spine): the call column melts into the centre cord; the call lands at 8 am */}
-        <I b={DB.spine!} e={DB.id} a={0.3} fx="pop" x={160} y={52} w={70} h={26} className="gds-daybead">
-          19 Mon
-        </I>
-        <Hours b={DB.spine!} e={DB.id} a={0.4} />
-        <I b={DB.spine!} e={DB.id} a={0.9} fx="right" x={222} y={186} w={170} h={30} className="gds-pill gds-sq">
-          <Icon d={IC.phone} size={13} /> Call · Maya · 6 min
-        </I>
-        <I b={DB.spine!} e={DB.id} a={1.2} fx="up" x={222} y={226} w={200} className="gds-card gds-slab gds-sq">
-          <span className="gds-card__meta">Transcript saved</span>
-          <span className="gds-quote">
-            “
-            <span className="gds-hl">
-              <I b={DB.spine!} e={DB.id} a={1.7} fx="wipe" className="gds-hl__bar" />
-              <span className="gds-hl__text">Coffee Thursday?</span>
-            </span>{" "}
-            9 at Blue Bottle.”
-          </span>
-        </I>
-        <I b={DB.spine!} e={DB.id} a={1.0} fx="pop" x={222} y={426} w={110} h={28} className="gds-pill gds-pill--amber gds-sq">
-          <Icon d={IC.bell} size={12} /> Hydrate
+        {/* 2 · 8:06 am (desktop): the real Spine; Maya's call lands as a bead at 8 AM and the hour opens */}
+        <I b={DB.spine!} a={0} x={0} y={0} w={W} h={H + 40} className="gds-spineitem">
+          {spineOn === "land" ? <DaySpine ref={spineRef} scheme={scheme} mode="land" height={H + 40} /> : null}
         </I>
 
-        {/* 3 · 8:07 am: Maya's ID branches off the cord, threaded to the memory */}
-        <I b={DB.id!} a={0.5} fx="left" x={-20} y={176} w={196} h={120} className="gds-idcard gds-slab gds-sq">
-          <span className="gds-idcard__top">
-            <Face name="maya" size={40} ring />
-            <span>
-              <strong>Maya</strong>
-              <small>close friend</small>
-            </span>
-          </span>
-          <span className="gds-idcard__chips">
-            <span className="gds-chip">
-              <Icon d={IC.pin} size={12} /> Blue Bottle
-            </span>
-          </span>
-        </I>
-        <I b={DB.id!} a={1.7} fx="up" x={-20} y={306} w={196} className="gds-oonote gds-slab gds-sq">
-          <JokuhOO size={20} />
-          <span>Maya's your Thursday coffee. 3 calls this month.</span>
-        </I>
-
-        {/* 4 · 8:15 am (desktop ID page): name on its plinth, the big portrait card in its goo rim, pods in a bento around it */}
-        <I b={DB.profile!} a={0.4} fx="down" x={95} y={64} w={200} h={26} className="gds-center gds-profname">
+        {/* 4 · 8:15 am (desktop ID page, as the real one renders): your name, the portrait card in its goo rim with
+            the OO capsule and wallet chip on the photo and the Network strip under it, the pods in the bento, then
+            Edit profile and Go Live. */}
+        <I b={DB.profile!} a={0.4} fx="down" x={95} y={50} w={200} h={26} className="gds-center gds-profname">
           You
         </I>
-        <I b={DB.profile!} a={0.6} fx="fade" x={portrait[0] + 8} y={portrait[1] + 8} w={portrait[2] - 16} h={portrait[3] - 16} className="gds-portrait">
+        <I b={DB.profile!} a={0.6} fx="fade" x={portrait[0] + 6} y={portrait[1] + 6} w={portrait[2] - 12} h={portrait[3] - 82} className="gds-portrait">
           <img src={FACE("you-portrait")} alt="" draggable={false} />
           <I b={DB.profile!} a={1.1} fx="pop" className="gds-avatarcap">
-            <JokuhOO size={34} />
+            <JokuhOO size={30} />
             <span>
               <i />
               <i />
@@ -887,93 +820,136 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
             <strong>$1,284.20</strong>
             <small>↗ 2.1%</small>
           </I>
-          <I b={DB.profile!} a={1.4} fx="up" className="gds-network">
+        </I>
+        <I b={DB.profile!} a={1.35} fx="up" x={portrait[0] + 6} y={portrait[1] + portrait[3] - 70} w={portrait[2] - 12} h={62} className="gds-network">
+          {["maya", "leo", "june"].map((n) => (
+            <img key={n} className="gds-network__bead" src={FACE(n)} alt="" />
+          ))}
+          <span className="gds-network__label">
             <strong>Network</strong>
-            <span className="gds-faces gds-faces--sm">
-              <Face name="maya" size={22} />
-              <Face name="leo" size={22} />
-              <Face name="june" size={22} />
-              <Face name="kenji" size={22} />
-            </span>
-          </I>
+            <small>8 connections</small>
+          </span>
+          {["kenji", "lyra", "malik"].map((n) => (
+            <img key={n} className="gds-network__bead" src={FACE(n)} alt="" />
+          ))}
         </I>
         {PODS.map((pod) => {
-          const [x, y, w, h] = podBox(pod, wide);
+          const box = podBox(pod, wide);
+          if (!box) return null;
+          const [x, y, w, h] = box;
           return (
-            <I key={pod.key} b={DB.profile!} a={pod.a + 0.1} fx="snap" sc={0.4} dx={pod.dx} dy={pod.dy} x={x} y={y} w={w} h={h} className={`gds-pod gds-pod--${pod.key}`}>
+            <I key={pod.key} b={DB.profile!} a={pod.a + 0.1} fx="snap" sc={0.4} dx={pod.dx} dy={pod.dy} x={x} y={y} w={w} h={h} className={`gds-pod gds-pod--${pod.key}${w > h * 2 ? " is-row" : ""}`}>
               {pod.key === "music" ? (
                 <>
-                  <span className="gds-music">
+                  <span className="gds-vinyl">
                     <img src={FACE("music")} alt="" />
+                  </span>
+                  <span className="gds-track">
                     <span>
                       <strong>Blue Hour</strong>
                       <small>Loma</small>
                     </span>
-                  </span>
-                  <span className="gds-music__bar">
-                    <i />
-                  </span>
-                  <span className="gds-music__play">
-                    <Icon d="M8 5.5v13l10.5-6.5z" size={12} />
+                    <span className="gds-track__play">
+                      <Icon d="M8 5.5v13l10.5-6.5z" size={10} />
+                    </span>
                   </span>
                 </>
               ) : pod.key === "gallery" ? (
-                <span className="gds-gallery">
-                  <img src={FACE("mood-coast")} alt="" />
-                  <img src={FACE("gallery")} alt="" />
-                  <img src={FACE("mood-walk")} alt="" />
-                </span>
+                <>
+                  <span className="gds-strip">
+                    <img src={FACE("mood-walk")} alt="" />
+                  </span>
+                  <span className="gds-strip__thumbs">
+                    <img src={FACE("mood-coast")} alt="" />
+                    <img src={FACE("gallery")} alt="" />
+                  </span>
+                </>
               ) : pod.key === "location" ? (
                 <>
-                  <img className="gds-pod__fill" src={FACE("map")} alt="" />
-                  <span className="gds-pin" />
-                  <span className="gds-pod__tag">Echo Park</span>
+                  <svg className="gds-map" viewBox="0 0 150 140" preserveAspectRatio="xMidYMid slice" aria-hidden>
+                    <rect width="150" height="140" fill="#2b2f33" />
+                    <path d="M-10 30 C 40 60, 90 20, 160 50" stroke="#1d2024" strokeWidth="16" fill="none" />
+                    <path d="M20 -10 C 30 60, 10 100, 40 150" stroke="#1d2024" strokeWidth="12" fill="none" />
+                    <path d="M-10 110 C 50 80, 110 120, 160 90" stroke="#5b6066" strokeWidth="7" fill="none" />
+                    <path d="M110 -10 C 100 50, 130 90, 120 150" stroke="#3a3f44" strokeWidth="5" fill="none" />
+                  </svg>
+                  <span className="gds-map__dot" />
+                  <span className="gds-map__city">Echo Park</span>
                 </>
               ) : pod.key === "spine" ? (
                 <>
-                  <span className="gds-minicord">
-                    <i />
-                    <b>8 am</b>
-                    <b>9 am</b>
-                    <b>6 pm</b>
+                  <strong className="gds-podtitle">Spine</strong>
+                  <span className="gds-spinepod">
+                    <span className="gds-spinepod__day">
+                      <small>Sun</small>
+                      <i />
+                      18
+                    </span>
+                    <span className="gds-spinepod__day is-today">
+                      <small>Mon</small>
+                      <i />
+                      19
+                    </span>
+                    <span className="gds-spinepod__dots">
+                      {Array.from({ length: 11 }, (_, i) => (
+                        <i key={i} className={i === 8 || i === 9 ? "is-on" : undefined} />
+                      ))}
+                    </span>
+                    <span className="gds-spinepod__day">
+                      <small>Tue</small>
+                      <i />
+                      20
+                    </span>
                   </span>
-                  <span className="gds-pod__label">Spine</span>
+                  <small className="gds-spinepod__foot">Activity · Book a time</small>
                 </>
               ) : pod.key === "bubble" ? (
                 <>
-                  <span className="gds-faces">
-                    <Face name="maya" size={28} />
-                    <Face name="leo" size={28} />
-                    <Face name="june" size={28} />
+                  <span className="gds-bubbledisc">
+                    <Icon d="M12 12m-1 0a1 1 0 1 0 2 0a3 3 0 1 0-6 0a5 5 0 1 0 10 0" size={22} />
                   </span>
-                  <strong className="gds-pod__title">Tulum crew</strong>
+                  <span className="gds-bubblepill">
+                    <strong>Tulum crew</strong>
+                    <small>3 members</small>
+                  </span>
                 </>
               ) : pod.key === "blurbs" ? (
                 <>
-                  <span className="gds-orbit">
-                    <span className="gds-orbit__ring" />
+                  <span className="gds-orbits">
+                    <i />
+                    <i />
+                    <i />
                     <img src={FACE("you")} alt="" />
-                    <img className="gds-orbit__m" src={FACE("blurb-lake")} alt="" />
                   </span>
-                  <span className="gds-pod__label">Blurbs</span>
+                  <span className="gds-orbits__bubble">Lake loop after a good day.</span>
                 </>
               ) : (
-                <span className="gds-contact">
-                  <span>
-                    <Icon d={IC.chat} size={13} /> Chat
+                <span className="gds-contactpod">
+                  <span className="gds-contactpod__half">
+                    <span className="gds-contactpod__icon">
+                      <Icon d={IC.chat} size={13} />
+                    </span>
+                    <span>
+                      <strong>Chat</strong>
+                      <small>No connection needed</small>
+                    </span>
                   </span>
-                  <span>
-                    <Icon d={IC.mail} size={13} /> Mail
+                  <span className="gds-contactpod__link" />
+                  <span className="gds-contactpod__half">
+                    <span className="gds-contactpod__icon">
+                      <Icon d={IC.mail} size={13} />
+                    </span>
+                    <strong>Mail</strong>
                   </span>
                 </span>
               )}
             </I>
           );
         })}
-        <I b={DB.profile!} a={2.0} fx="up" x={138} y={662} w={114} h={34} className="gds-editpill gds-sq">
+        <I b={DB.profile!} a={2.0} fx="up" x={138} y={wide ? 560 : 656} w={114} h={34} className="gds-editpill gds-sq">
           Edit profile
         </I>
-        <I b={DB.profile!} a={2.1} fx="up" x={126} y={702} w={138} h={46} className="gds-golive">
+        <I b={DB.profile!} a={2.1} fx="up" x={126} y={wide ? 602 : 696} w={138} h={46} className="gds-golive">
           <Icon d={IC.radio} size={18} /> Go Live
         </I>
 
@@ -1090,16 +1066,9 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
         <I b={DB.meet!} a={1.25} z={1.8} fx="right" x={30} y={262} w={330} className="gds-row gds-row--me">
           <span className="gds-bub gds-bub--me">Joining!</span>
         </I>
-        <Composer b={DB.meet!} a={0.3} x={24} y={644} w={342} ph="Message" text="Joining!" ta={0.7} td={0.4} send={1.2} />
-        <Hours b={DB.meet!} a={2.0} labels={HOUR_LABELS.slice(0, 7)} />
-        <I b={DB.meet!} a={2.5} fx="right" x={222} y={346} w={158} h={30} className="gds-pill gds-pill--blue gds-sq">
-          <Icon d={IC.doc} size={13} /> Call note · Design sync
-        </I>
-        <I b={DB.meet!} a={2.8} fx="up" x={222} y={384} w={158} className="gds-card gds-slab gds-sq">
-          <ul className="gds-list">
-            <li>Ship onboarding Thursday</li>
-            <li>June owns the copy</li>
-          </ul>
+        <Composer b={DB.meet!} z={1.8} a={0.3} x={24} y={644} w={342} ph="Message" text="Joining!" ta={0.7} td={0.4} send={1.2} />
+        <I b={DB.meet!} a={1.8} x={0} y={0} w={W} h={H} className="gds-spineitem">
+          {spineOn === "meet" ? <DaySpine ref={spineRef} scheme={scheme} mode="meet" height={H} /> : null}
         </I>
 
         {/* 9 · 11:20 am: the note becomes a Doc (typed), shared to the Space, mailed out */}
@@ -1389,23 +1358,10 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
           </span>
         </I>
 
-        {/* 16 · 11:40 pm: the whole day folds onto the Spine cord */}
-        <Hours b={DB.fold!} a={0.3} labels={["8 am", "9 am", "10 am", "12 pm", "3 pm", "6 pm", "9 pm"]} />
-        {FOLD.map((f, n) => (
-          <I
-            key={f.label}
-            b={DB.fold!}
-            a={0.55 + n * 0.26}
-            fx={f.right ? "right" : "left"}
-            x={f.right ? 222 : 18}
-            y={HOUR_Y[n]! - 15}
-            w={150}
-            h={30}
-            className="gds-pill gds-sq"
-          >
-            {f.label}
-          </I>
-        ))}
+        {/* 16 · 11:40 pm: the day's hours fold back into the day pill, then the month */}
+        <I b={DB.fold!} a={0} x={0} y={0} w={W} h={H} className="gds-spineitem">
+          {spineOn === "fold" ? <DaySpine ref={spineRef} scheme={scheme} mode="fold" height={H} /> : null}
+        </I>
 
         {/* 17 · 11:41 pm: everything melts into the Glyph mark, on the open stage */}
         <I b={FINALE} a={0.6} x={45} y={225} w={300} h={150} className="gds-glyph">
