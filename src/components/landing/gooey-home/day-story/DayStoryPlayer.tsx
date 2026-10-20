@@ -66,7 +66,7 @@ export default function DayStoryPlayer({ scheme, onClose }: { scheme: GooScheme;
   const playingRef = useRef(playing);
   playingRef.current = playing;
 
-  useFitStage(hostRef, fitRef, 1.2);
+  useFitStage(hostRef, fitRef, 1.8);
 
   const paint = useCallback(() => {
     stage.current?.seek(t.current);

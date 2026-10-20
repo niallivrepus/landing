@@ -18,6 +18,7 @@ export function useFitStage(host: RefObject<HTMLElement | null>, fit: RefObject<
       const k = Math.max(0.3, Math.min(max, w / DAY_STAGE_W, hh / DAY_STAGE_H));
       const x = (w - DAY_STAGE_W * k) / 2;
       const y = (hh - DAY_STAGE_H * k) / 2;
+      el.dataset.k = k.toFixed(3);
       el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${k.toFixed(4)})`;
     };
     const ro = new ResizeObserver((entries) => {
