@@ -37,7 +37,7 @@ export const DAY_BEATS: readonly DayBeat[] = [
   { id: "meet", time: "10:30 am", caption: "Join the 10:30 from the group chat. Its call note lands in your Spine.", dur: 3.8, form: "mobile" },
   { id: "docs", time: "11:20 am", caption: "Turn the note into a Doc, share it to a Space, mail it out.", dur: 3.2, form: "mobile" },
   { id: "ask", time: "12:30 pm", caption: "Ask OO to plan your Thursday.", dur: 3.6, form: "mobile" },
-  { id: "agents", time: "12:31 pm", caption: "OO's agents draft the invite and the reminder, then ask before sending.", dur: 4, form: "mobile" },
+  { id: "agents", time: "12:31 pm", caption: "OO's agents set your reminder and draft a heads-up to Leo and June, then ask before sending.", dur: 4, form: "mobile" },
   { id: "bubble", time: "3:00 pm", caption: "Maya starts a Bubble for the Tulum trip. Everyone drops ideas.", dur: 3.8, form: "mobile" },
   { id: "arcade", time: "5:20 pm", caption: "On the train, Leo challenges you in Arcade. You win.", dur: 2.8, form: "mobile" },
   { id: "blurb", time: "6:40 pm", caption: "Blurb the lake loop. Fire rolls in from your people.", dur: 4.2, form: "mobile" },
