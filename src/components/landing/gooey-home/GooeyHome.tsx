@@ -1,4 +1,5 @@
 import { useTheme } from "@jokuh/gooey";
+import { OPTIONAL_TRACKING_CONFIGURED } from "../../../lib/cookie-consent";
 import { Fingerprint, Lock, ShieldCheck } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { resolveRigidNavColumns } from "../../../config/site-subdomains";
@@ -205,9 +206,11 @@ function GooFooter() {
             <a href="https://www.youtube.com/@jokuh" target="_blank" rel="noopener noreferrer">
               YouTube
             </a>
-            <button type="button" className="gh-footer__cookies" onClick={() => window.dispatchEvent(new Event("jokuh-open-cookies"))}>
-              Cookies
-            </button>
+            {OPTIONAL_TRACKING_CONFIGURED ? (
+              <button type="button" className="gh-footer__cookies" onClick={() => window.dispatchEvent(new Event("jokuh-open-cookies"))}>
+                Cookies
+              </button>
+            ) : null}
           </div>
           <ThemeToggle />
         </div>

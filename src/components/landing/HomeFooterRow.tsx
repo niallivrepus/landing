@@ -1,5 +1,6 @@
 import { cn } from "@jokuh/gooey";
 import { SiteLink } from "../SiteLink";
+import { OPTIONAL_TRACKING_CONFIGURED } from "../../lib/cookie-consent";
 
 /** Dispatched to `CookieBanner` (mounted app-wide in `App.tsx`); same event MegaFooter's "Manage cookies" uses. */
 const OPEN_COOKIES_EVENT = "jokuh-open-cookies";
@@ -63,15 +64,17 @@ export function HomeFooterRow({ className }: HomeFooterRowProps) {
             </SiteLink>
           </li>
         ))}
-        <li className={separatorClass}>
-          <button
-            type="button"
-            className={cn(itemClass, "cursor-pointer")}
-            onClick={() => window.dispatchEvent(new Event(OPEN_COOKIES_EVENT))}
-          >
-            Cookies
-          </button>
-        </li>
+        {OPTIONAL_TRACKING_CONFIGURED ? (
+          <li className={separatorClass}>
+            <button
+              type="button"
+              className={cn(itemClass, "cursor-pointer")}
+              onClick={() => window.dispatchEvent(new Event(OPEN_COOKIES_EVENT))}
+            >
+              Cookies
+            </button>
+          </li>
+        ) : null}
         <li className={cn(separatorClass, "whitespace-nowrap text-white/45 light:text-zinc-500")}>
           © 2026 Jokuh
         </li>

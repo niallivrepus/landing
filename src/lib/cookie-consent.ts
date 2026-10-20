@@ -1,3 +1,10 @@
+/**
+ * True only when an optional tracker (Google Analytics) is configured. With none set, the site stores essential
+ * preferences only, so no consent banner or "Cookies" link is shown; both come back automatically once
+ * `VITE_GA_MEASUREMENT_ID` is set.
+ */
+export const OPTIONAL_TRACKING_CONFIGURED = Boolean(import.meta.env.VITE_GA_MEASUREMENT_ID?.trim());
+
 export const COOKIE_CONSENT_STORAGE_KEY = "jokuh.cookieConsent";
 export const COOKIE_PREFS_STORAGE_KEY = "jokuh.cookiePreferences";
 export const COOKIE_CONSENT_COOKIE = "jokuh_cookie_consent";

@@ -2,6 +2,7 @@ import { Suspense, lazy, type ComponentType, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { ConsentManagedScripts } from "./components/ConsentManagedScripts";
 import { CookieBanner } from "./components/CookieBanner";
+import { OPTIONAL_TRACKING_CONFIGURED } from "./lib/cookie-consent";
 import { GoogleTranslateHost } from "./components/GoogleTranslateHost";
 import { RSS_FEED_PATH } from "./config/rss";
 import { primeGentleHoverSfx } from "./lib/gentle-hover-sfx";
@@ -110,7 +111,7 @@ function RouteFallback() {
 function PitchDeckChrome() {
   const location = useLocation();
   const isTheatre = location.pathname === "/pitchdeck" || location.pathname === "/pitch-deck";
-  if (isTheatre) return null;
+  if (isTheatre || !OPTIONAL_TRACKING_CONFIGURED) return null;
   return <CookieBanner />;
 }
 

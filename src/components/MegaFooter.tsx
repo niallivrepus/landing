@@ -1,4 +1,5 @@
 import { ChevronDown, Globe } from "lucide-react";
+import { OPTIONAL_TRACKING_CONFIGURED } from "../lib/cookie-consent";
 import { useEffect, useMemo, useState, type ComponentType, type CSSProperties } from "react";
 import { useLocation } from "react-router-dom";
 import { SITE_LANGUAGES, findSiteLanguageForActive } from "../data/site-languages";
@@ -201,6 +202,8 @@ export function MegaFooter() {
               <SiteLink href="/support" className={footerMetaLink}>
                 Support
               </SiteLink>
+              {OPTIONAL_TRACKING_CONFIGURED ? (
+                <>
               <span className="mx-1.5 text-light-space/30 light:text-zinc-300" aria-hidden>
                 ·
               </span>
@@ -211,6 +214,8 @@ export function MegaFooter() {
               >
                 Manage cookies
               </button>
+                </>
+              ) : null}
             </p>
 
             <div className="flex shrink-0 items-center gap-2 md:shrink-0">
