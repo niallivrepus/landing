@@ -128,9 +128,9 @@ const BAR_D: Rect = [-50, 332, 490, 56, 28];
 const BAR_M: Rect = [24, 332, 342, 56, 28];
 const ASK_BAR: Rect = [24, 642, 342, 56, 28];
 const ORB_R: Rect = [DAY_ORB_ELLIPSE.cx - DAY_ORB_ELLIPSE.rx, DAY_ORB_ELLIPSE.cy - DAY_ORB_ELLIPSE.ry, DAY_ORB_ELLIPSE.rx * 2, DAY_ORB_ELLIPSE.ry * 2, DAY_ORB_ELLIPSE.ry];
-const PORTRAIT_W: Rect = [47, 100, 296, 300, 44];
+const PORTRAIT_W: Rect = [42, 100, 300, 300, 44];
 /** A narrow host shows the phone ID: the full-width portrait card, then the first pods full width (as 5207 at 375). */
-const PORTRAIT_N: Rect = [14, 84, 362, 386, 44];
+const PORTRAIT_N: Rect = [14, 84, 362, 300, 44];
 const CARD: Rect = [52, 190, 286, 286, 40];
 const DOT: Rect = [182, 286, 26, 26, 13];
 
@@ -249,23 +249,31 @@ function bodyN(t: number): Rect {
 /** Inner goo rects (profile pods, OOpolis buildings): snap in with their HTML, melt out at the end of `e`. */
 type GooRect = { b: number; e?: number; a: number; x: number; y: number; w: number; h: number; r: number; dx?: number; dy?: number };
 
-type PodKey = "music" | "gallery" | "location" | "spine" | "bubble" | "blurbs" | "contact";
-type Pod = { key: PodKey; a: number; dx: number; dy: number; n: [number, number, number, number] | null; w: [number, number, number, number] };
+type PodKey = "music" | "gallery" | "location" | "spine" | "bubble" | "page" | "blurbs" | "contact";
+type Pod = { key: PodKey; a: number; dx: number; dy: number; n: [number, number, number, number]; w: [number, number, number, number] };
 /**
- * The ID page's pods, laid out like the real bento (5207 `/demo?surface=id`): `w` = desktop (music + gallery left of
- * the portrait, Spine right, a row of four under it); `n` = a narrow host (two columns under a smaller portrait).
+ * The ID page's pods filling the real bento (`utils/profile-pod-bento-layout.ts`: 4 × 3 lattice, the profile hero over
+ * cols 1–2 / rows 0–1, eight companion slots L0–L2 · B0 B1 · R0–R2), every slot taken by a real pod kind from
+ * `PROFILE_POD_CATALOG`. `n` = a narrow host: the phone stack with half-width pairs (`phoneSpan` 1).
  * Each pod is its own tile; goo only drips them into place.
  */
+const TILE = 146;
+const COL = [-112, 42, 196, 350];
+const ROW = [100, 254, 408];
 const PODS: Pod[] = [
-  { key: "music", a: 0.7, dx: -80, dy: -20, w: [-110, 100, 150, 180], n: [14, 478, 362, 100] },
-  { key: "gallery", a: 0.85, dx: -80, dy: 10, w: [-110, 287, 150, 113], n: [14, 586, 362, 62] },
-  { key: "spine", a: 1.0, dx: 80, dy: -10, w: [350, 100, 150, 300], n: null },
-  { key: "location", a: 1.15, dx: -60, dy: 40, w: [-110, 408, 150, 140], n: null },
-  { key: "bubble", a: 1.3, dx: 0, dy: 50, w: [47, 408, 144, 140], n: null },
-  { key: "contact", a: 1.45, dx: 0, dy: 50, w: [199, 408, 144, 140], n: null },
-  { key: "blurbs", a: 1.6, dx: 60, dy: 40, w: [350, 408, 150, 140], n: null },
+  { key: "music", a: 0.7, dx: -80, dy: -20, w: [COL[0]!, ROW[0]!, TILE, TILE], n: [14, 392, 177, 96] },
+  { key: "gallery", a: 0.8, dx: -80, dy: 0, w: [COL[0]!, ROW[1]!, TILE, TILE], n: [199, 392, 177, 96] },
+  { key: "location", a: 0.9, dx: -80, dy: 20, w: [COL[0]!, ROW[2]!, TILE, TILE], n: [14, 494, 177, 96] },
+  { key: "bubble", a: 1.0, dx: -20, dy: 50, w: [COL[1]!, ROW[2]!, TILE, TILE], n: [14, 596, 177, 96] },
+  { key: "page", a: 1.1, dx: 20, dy: 50, w: [COL[2]!, ROW[2]!, TILE, TILE], n: [199, 596, 177, 96] },
+  { key: "spine", a: 1.2, dx: 80, dy: -20, w: [COL[3]!, ROW[0]!, TILE, TILE], n: [199, 494, 177, 96] },
+  { key: "contact", a: 1.3, dx: 80, dy: 0, w: [COL[3]!, ROW[1]!, TILE, TILE], n: [14, 392, 0, 0] },
+  { key: "blurbs", a: 1.4, dx: 80, dy: 20, w: [COL[3]!, ROW[2]!, TILE, TILE], n: [14, 392, 0, 0] },
 ];
-const podBox = (p: Pod, wide: boolean) => (wide ? p.w : p.n);
+const podBox = (p: Pod, wide: boolean) => {
+  const b = wide ? p.w : p.n;
+  return b[2] > 0 ? b : null;
+};
 
 const BUILDINGS: GooRect[] = [
   { b: DB.agents!, a: 0.3, x: 36, y: 136, w: 100, h: 74, r: 22, dx: -30 },
@@ -838,7 +846,7 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
           if (!box) return null;
           const [x, y, w, h] = box;
           return (
-            <I key={pod.key} b={DB.profile!} a={pod.a + 0.1} fx="snap" sc={0.4} dx={pod.dx} dy={pod.dy} x={x} y={y} w={w} h={h} className={`gds-pod gds-pod--${pod.key}${w > h * 2 ? " is-row" : ""}`}>
+            <I key={pod.key} b={DB.profile!} a={pod.a + 0.1} fx="snap" sc={0.4} dx={pod.dx} dy={pod.dy} x={x} y={y} w={w} h={h} className={`gds-pod gds-pod--${pod.key}${w > h * 1.6 ? " is-row" : ""}`}>
               {pod.key === "music" ? (
                 <>
                   <span className="gds-vinyl">
@@ -913,6 +921,17 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
                     <small>3 members</small>
                   </span>
                 </>
+              ) : pod.key === "page" ? (
+                <>
+                  <strong className="gds-podtitle">My page</strong>
+                  <small className="gds-page__text">Trips, film photos and the coffee spots I keep going back to.</small>
+                  <span className="gds-page__open">
+                    <span className="gds-contactpod__icon">
+                      <Icon d={IC.doc} size={12} />
+                    </span>
+                    Open page
+                  </span>
+                </>
               ) : pod.key === "blurbs" ? (
                 <>
                   <span className="gds-orbits">
@@ -946,10 +965,10 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
             </I>
           );
         })}
-        <I b={DB.profile!} a={2.0} fx="up" x={138} y={wide ? 560 : 656} w={114} h={34} className="gds-editpill gds-sq">
+        <I b={DB.profile!} a={2.0} fx="up" x={wide ? 138 : 50} y={wide ? 566 : 702} w={wide ? 114 : 130} h={wide ? 34 : 40} className="gds-editpill gds-sq">
           Edit profile
         </I>
-        <I b={DB.profile!} a={2.1} fx="up" x={126} y={wide ? 602 : 696} w={138} h={46} className="gds-golive">
+        <I b={DB.profile!} a={2.1} fx="up" x={wide ? 126 : 196} y={wide ? 606 : 700} w={wide ? 138 : 144} h={wide ? 46 : 44} className="gds-golive">
           <Icon d={IC.radio} size={18} /> Go Live
         </I>
 

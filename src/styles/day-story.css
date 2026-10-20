@@ -3048,3 +3048,215 @@
   height: 34px;
   flex: none;
 }
+
+/* Spine: the cord scrolls behind OO and the Nexus (the app's top fade); nested level labels; the open-hour panel. */
+.dsp-scroll {
+  position: absolute;
+  inset: -40px 0 0;
+  padding-top: 40px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, transparent 110px, #000 175px);
+  mask-image: linear-gradient(180deg, transparent 0, transparent 110px, #000 175px);
+}
+
+.dsp-scroll > .dsp-goo {
+  top: 0 !important;
+}
+
+.dsp-scroll > .dsp-label {
+  top: 40px;
+}
+
+.dsp-year {
+  font-size: 14px;
+}
+
+.dsp-month.is-future,
+.dsp-day.is-future,
+.dsp-day.is-quiet {
+  color: var(--gh-ink-3);
+}
+
+.dsp-label.is-open .dsp-hour {
+  padding: 3px 13px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px #2c6bff;
+}
+
+.dsp-label.is-open .dsp-month,
+.dsp-label.is-open .dsp-day {
+  color: #fff;
+}
+
+.dsp-panel {
+  width: 300px;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 26px;
+  background: #1c1c1e;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+[data-scheme="light"] .dsp-panel {
+  background: #ffffff;
+  box-shadow: var(--gh-slab-shadow);
+}
+
+/* A category row in an open hour (the app's "Today's News · 2 stories", "Voice Memo 0:42 Listen ›"). */
+.dsp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 14px;
+  background: #2a2a2c;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.14);
+}
+
+[data-scheme="light"] .dsp-row {
+  background: #f1eee8;
+}
+
+.dsp-row strong {
+  flex: 1;
+  font-weight: 600;
+}
+
+.dsp-row__glyph {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 999px;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.dsp-row__well {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #1c1c1e;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+[data-scheme="light"] .dsp-row__well {
+  background: #ffffff;
+}
+
+/* A memory tile in an open hour (like the app's reminder tile "Drink water"). */
+.dsp-tile {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 112px;
+  height: 78px;
+  border-radius: 10px;
+  color: #9cc4ff;
+  background: rgba(44, 129, 255, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(156, 196, 255, 0.4);
+}
+
+.dsp-tile small {
+  font-size: 11px;
+  color: #fff;
+}
+
+[data-scheme="light"] .dsp-tile small {
+  color: #0a2a60;
+}
+
+/* Page pod (`PagePodCard`): title, the page's line, "Open page". */
+.gds-pod--page {
+  gap: 6px;
+  padding: 12px;
+}
+
+.gds-page__text {
+  flex: 1;
+  overflow: hidden;
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: normal;
+  color: var(--gh-ink-3);
+}
+
+.gds-page__open {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 3px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #000;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2);
+}
+
+.gds-page__open .gds-contactpod__icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Square tiles (146) and half-width phone pairs (177 × 96): every pod face fits its slot. */
+.gds-pod--music .gds-vinyl {
+  width: 58%;
+}
+
+.gds-pod--contact .gds-contactpod__half {
+  height: 50px;
+}
+
+.gds-pod.is-row.gds-pod--music .gds-track {
+  padding: 5px 5px 5px 10px;
+}
+
+.gds-pod.is-row.gds-pod--music .gds-track strong {
+  font-size: 11px;
+}
+
+.gds-pod.is-row.gds-pod--music .gds-track small {
+  display: none;
+}
+
+.gds-pod.is-row.gds-pod--gallery .gds-strip {
+  height: 46px;
+}
+
+.gds-pod.is-row.gds-pod--spine {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+}
+
+.gds-pod.is-row.gds-pod--spine .gds-spinepod {
+  flex: none;
+}
+
+.gds-pod.is-row.gds-pod--spine .gds-spinepod__day:not(.is-today),
+.gds-pod.is-row.gds-pod--spine .gds-spinepod__dots,
+.gds-pod.is-row.gds-pod--spine .gds-spinepod__foot {
+  display: none;
+}
+
+.gds-pod.is-row.gds-pod--bubble {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.gds-pod.is-row.gds-pod--bubble .gds-bubbledisc {
+  width: 56px;
+}
+
+.gds-pod.is-row.gds-pod--page .gds-page__text {
+  display: none;
+}
