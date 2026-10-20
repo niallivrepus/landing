@@ -30,7 +30,8 @@ export function DayStoryScroll({ scheme }: { scheme: GooScheme }) {
   const [beat, setBeat] = useState(0);
   const [reduced] = useState(prefersReducedMotion);
 
-  useFitStage(hostRef, fitRef, 1.7);
+  const [ext, setExt] = useState(40);
+  useFitStage(hostRef, fitRef, 1.7, setExt);
 
   const paint = useCallback(() => {
     const el = sectionRef.current;
@@ -132,6 +133,7 @@ export function DayStoryScroll({ scheme }: { scheme: GooScheme }) {
                     if (h) paint();
                   }}
                   scheme={scheme}
+                  ext={ext}
                   onBeat={setBeat}
                 />
               </Suspense>

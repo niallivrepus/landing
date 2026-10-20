@@ -66,7 +66,8 @@ export default function DayStoryPlayer({ scheme, onClose }: { scheme: GooScheme;
   const playingRef = useRef(playing);
   playingRef.current = playing;
 
-  useFitStage(hostRef, fitRef, 1.8);
+  const [ext, setExt] = useState(40);
+  useFitStage(hostRef, fitRef, 1.8, setExt);
 
   const paint = useCallback(() => {
     stage.current?.seek(t.current);
@@ -204,6 +205,7 @@ export default function DayStoryPlayer({ scheme, onClose }: { scheme: GooScheme;
               if (h) paint();
             }}
             scheme={scheme}
+            ext={ext}
             onBeat={setBeat}
           />
         </div>

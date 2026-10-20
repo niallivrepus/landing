@@ -136,7 +136,7 @@ export function parseItems(root: HTMLElement): { items: Item[]; typers: Typer[];
       fd: num(d.fd, Number.isFinite(end) ? end - s : 1),
       op: "",
       tf: "",
-      vis: true,
+      vis: false,
     });
   });
   const typers: Typer[] = [];

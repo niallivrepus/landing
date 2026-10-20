@@ -17,27 +17,37 @@ export type DayBeat = {
   caption: string;
   /** Seconds this beat plays for. */
   dur: number;
+  /** Desktop app (the morning at your desk) or the phone (the rest of the day). */
+  form: "desktop" | "mobile";
+  /** Where the beat's still frame sits (fraction of `dur`, default 0.9): Reduce Motion and step-through use it. */
+  still?: number;
 };
 
 export const DAY_BEATS: readonly DayBeat[] = [
-  { id: "call", time: "7:58 am", caption: "Maya's calling.", dur: 3 },
-  { id: "transcript", time: "7:59 am", caption: "Pick up. Jokuh transcribes the call as you talk.", dur: 3.8 },
-  { id: "spine", time: "8:06 am", caption: "Hang up. The good part lands in your Spine.", dur: 3.4 },
-  { id: "id", time: "8:07 am", caption: "Your ID links it up: who Maya is, where you meet.", dur: 3.4 },
-  { id: "profile", time: "8:15 am", caption: "Your profile builds itself, pod by pod.", dur: 4 },
-  { id: "dm", time: "9:12 am", caption: "Text Maya. OO turns the plan into a meeting.", dur: 3.8 },
-  { id: "wallet", time: "9:13 am", caption: "Pay her back for last week's coffee, right in the chat.", dur: 3 },
-  { id: "meet", time: "10:30 am", caption: "Join the 10:30. The call note lands in your Spine.", dur: 3.8 },
-  { id: "docs", time: "11:20 am", caption: "Make it a Doc, share it to a Space, mail it out.", dur: 3.2 },
-  { id: "ask", time: "12:30 pm", caption: "Ask OO to plan your Thursday.", dur: 3.6 },
-  { id: "agents", time: "12:31 pm", caption: "Agents do the legwork, and ask before they act.", dur: 4 },
-  { id: "bubble", time: "3:00 pm", caption: "Moodboard the trip with friends in a Bubble.", dur: 3.8 },
-  { id: "arcade", time: "5:20 pm", caption: "A quick match in Arcade.", dur: 2.8 },
-  { id: "blurb", time: "6:40 pm", caption: "Blurb the lake loop. The Fire rolls in.", dur: 3.2 },
-  { id: "orb", time: "9:00 pm", caption: "Go live in the Orb. Your people pull up a seat.", dur: 5 },
-  { id: "fold", time: "11:40 pm", caption: "The whole day folds into your Spine.", dur: 3.2 },
-  { id: "finale", time: "11:41 pm", caption: "This was your day.", dur: 3.4 },
+  // At your desk: the desktop app.
+  { id: "call", time: "7:58 am", caption: "Maya's calling. It rises out of the Nexus.", dur: 3.4, form: "desktop", still: 0.72 },
+  { id: "transcript", time: "7:59 am", caption: "Pick up. Jokuh transcribes the call as you talk.", dur: 4.2, form: "desktop" },
+  { id: "spine", time: "8:06 am", caption: "Hang up. The plan lands in your Spine.", dur: 3.4, form: "desktop" },
+  { id: "id", time: "8:07 am", caption: "Tap Maya: her ID links your spot and your history.", dur: 3.4, form: "desktop" },
+  { id: "profile", time: "8:15 am", caption: "Your own ID builds itself, pod by pod.", dur: 4.2, form: "desktop" },
+  // Out the door: the same app on your phone.
+  { id: "mobile", time: "8:52 am", caption: "Heading out. Jokuh goes mobile with you.", dur: 3, form: "mobile" },
+  { id: "dm", time: "9:12 am", caption: "Text Maya. OO turns “Thursday?” into a meeting.", dur: 3.8, form: "mobile" },
+  { id: "wallet", time: "9:13 am", caption: "She asks for last week's coffee. Paid, right in the chat.", dur: 3, form: "mobile" },
+  { id: "meet", time: "10:30 am", caption: "Join the 10:30 from the group chat. Its call note lands in your Spine.", dur: 3.8, form: "mobile" },
+  { id: "docs", time: "11:20 am", caption: "Turn the note into a Doc, share it to a Space, mail it out.", dur: 3.2, form: "mobile" },
+  { id: "ask", time: "12:30 pm", caption: "Ask OO to plan your Thursday.", dur: 3.6, form: "mobile" },
+  { id: "agents", time: "12:31 pm", caption: "OO's agents draft the invite and the reminder, then ask before sending.", dur: 4, form: "mobile" },
+  { id: "bubble", time: "3:00 pm", caption: "Maya starts a Bubble for the Tulum trip. Everyone drops ideas.", dur: 3.8, form: "mobile" },
+  { id: "arcade", time: "5:20 pm", caption: "On the train, Leo challenges you in Arcade. You win.", dur: 2.8, form: "mobile" },
+  { id: "blurb", time: "6:40 pm", caption: "Blurb the lake loop. Fire rolls in from your people.", dur: 4.2, form: "mobile" },
+  { id: "orb", time: "9:00 pm", caption: "Go live in the Orb. Maya, Leo and the rest pull up a seat.", dur: 5, form: "mobile" },
+  { id: "fold", time: "11:40 pm", caption: "The whole day folds into your Spine.", dur: 3.2, form: "mobile" },
+  { id: "finale", time: "11:41 pm", caption: "This was your day.", dur: 3.4, form: "mobile" },
 ];
+
+/** Beat index by id (the stage's JSX refers to beats by name). */
+export const DB = Object.fromEntries(DAY_BEATS.map((b, i) => [b.id, i])) as Record<string, number>;
 
 export const DAY_BEAT_COUNT = DAY_BEATS.length;
 
@@ -59,5 +69,5 @@ export function dayBeatAt(t: number): number {
 /** The beat's still frame (everything in it has arrived, nothing has left): used by Reduce Motion. */
 export function dayStillTime(i: number): number {
   const b = DAY_BEATS[i]!;
-  return DAY_STARTS[i]! + b.dur * (i === DAY_BEAT_COUNT - 1 ? 0.98 : 0.9);
+  return DAY_STARTS[i]! + b.dur * (i === DAY_BEAT_COUNT - 1 ? 0.98 : b.still ?? 0.9);
 }
