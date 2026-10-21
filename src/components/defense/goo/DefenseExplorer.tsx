@@ -1,15 +1,15 @@
-import { cn } from "@jokuh/gooey";
+import { cn, useTheme } from "@jokuh/gooey";
 import { useReducedMotion } from "motion/react";
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   DEFENSE_GOO_INTRO,
   DEFENSE_MAP,
   DEFENSE_SCENARIOS,
   DEFENSE_SYSTEM_NODES,
   type DefenseMapNode,
-  type DefenseNodeId,
 } from "../../../data/defense";
-import { DEFENSE_NODE_ENERGY } from "./defense-energy";
+import { DEFENSE_BOUNDARY_ENERGY, DEFENSE_NODE_ENERGY } from "./defense-energy";
+import { GooStage, type GooBead, type GooLink, type GooZone } from "./GooStage";
 import { GooCapture } from "./GooCapture";
 import { GooTabs } from "./GooTabs";
 
@@ -18,7 +18,7 @@ import { GooTabs } from "./GooTabs";
  * a goo chain of steps advances with the real-app recording and what each step does) and **System map** (a living goo
  * graph of every part; tap one for what it does today, where its data is sealed, what we're designing it for, and
  * whether it's built or roadmap). All copy and the accuracy rules live in `data/defense.ts`.
- * **Connects to:** `GooTabs`, `GooCapture`, `GooDefs` (`#dg-goo-rail`, `#dg-goo-map`), `defense-goo.css`.
+ * **Connects to:** `GooTabs`, `GooCapture`, `GooDefs` (`#dg-splex-juicy`), `GooStage` (map), `defense-goo.css`.
  */
 type View = "scenarios" | "system";
 const STEP_MS = 6500;
@@ -153,13 +153,41 @@ function Missions({ reduceMotion }: { reduceMotion: boolean }) {
 
 // ── System map ──────────────────────────────────────────────────────────────
 
+const MAP_W = 1000;
+const MAP_H = 760;
+const MAP_R: Record<string, number> = { identity: 70, roadmap: 30 };
+
 function SystemMap({ reduceMotion }: { reduceMotion: boolean }) {
-  const { nodes, links, title, intro, boundaryLabels, statusLabels } = DEFENSE_MAP;
+  const { nodes, links, zones, hint, title, intro, boundaryLabels, statusLabels } = DEFENSE_MAP;
+  const { resolvedTheme } = useTheme();
   const [pickedId, setPickedId] = useState<string>("identity");
   const picked: DefenseMapNode = nodes.find((n) => n.id === pickedId) ?? nodes[0];
-  const byId = (id: string) => nodes.find((n) => n.id === id)!;
-  const live = new Set<string>([picked.id]);
-  for (const [a, b] of links) if (a === picked.id || b === picked.id) (live.add(a), live.add(b));
+
+  const beads = useMemo<GooBead[]>(
+    () =>
+      nodes.map((n) => ({
+        id: n.id,
+        x: n.x,
+        y: n.y,
+        r: n.status === "roadmap" ? MAP_R.roadmap! : MAP_R[n.id] ?? 50,
+        color: n.energy,
+        label: n.label,
+        sub: n.sub,
+        ghost: n.status === "roadmap",
+      })),
+    [nodes],
+  );
+  const gooLinks = useMemo<GooLink[]>(() => links.map(([a, b]) => ({ a, b, w: a === "identity" || b === "identity" ? 16 : 12 })), [links]);
+  const gooZones = useMemo<GooZone[]>(
+    () => zones.map((z) => ({ id: z.id, members: [...z.members], color: DEFENSE_BOUNDARY_ENERGY[z.id], pad: z.id === "account" ? 1.75 : 1.85 })),
+    [zones],
+  );
+  const zoneTag = (members: readonly string[]) => {
+    const ms = nodes.filter((n) => members.includes(n.id));
+    const x = ms.reduce((a, n) => a + n.x, 0) / ms.length;
+    const top = Math.min(...ms.map((n) => n.y - (MAP_R[n.id] ?? 50) * 1.85));
+    return { left: `${(x / MAP_W) * 100}%`, top: `${(Math.max(14, top) / MAP_H) * 100}%` };
+  };
 
   return (
     <div className="defense-map">
@@ -168,61 +196,31 @@ function SystemMap({ reduceMotion }: { reduceMotion: boolean }) {
         <p className="defense-lede">{intro}</p>
       </div>
       <div className="defense-map__body">
-        <div className="defense-map__canvas" data-motion={reduceMotion ? "off" : "on"}>
-          <svg viewBox="0 0 100 100" className="defense-map__svg" aria-hidden>
-            {/* Idle links: thin and crisp. Only the picked part's links join the goo (merge = selected). */}
-            {links.map(([a, b]) => {
-              const na = byId(a);
-              const nb = byId(b);
-              return <line key={`i-${a}-${b}`} x1={na.x} y1={na.y} x2={nb.x} y2={nb.y} className="defense-map__thread" />;
-            })}
-            <g style={{ filter: "url(#dg-goo-map)" }}>
-              {links.map(([a, b]) => {
-                if (a !== picked.id && b !== picked.id) return null;
-                const na = byId(a);
-                const nb = byId(b);
-                return (
-                  <line
-                    key={`${a}-${b}`}
-                    x1={na.x}
-                    y1={na.y}
-                    x2={nb.x}
-                    y2={nb.y}
-                    className="defense-map__neck"
-                    style={{ stroke: a === picked.id ? nb.energy : na.energy }}
-                  />
-                );
-              })}
-              {nodes.map((n) => (
-                <circle
-                  key={n.id}
-                  cx={n.x}
-                  cy={n.y}
-                  r={n.id === "identity" ? 10 : n.status === "roadmap" ? 4 : 6.8}
-                  className={cn("defense-map__bead", n.id === picked.id && "is-picked", live.has(n.id) && "is-live")}
-                  data-status={n.status}
-                  style={{ fill: n.status === "roadmap" ? "var(--dg-roadmap)" : n.energy }}
-                />
-              ))}
-            </g>
-          </svg>
-          {nodes.map((n) => (
-            <button
-              key={n.id}
-              type="button"
-              className={cn("defense-map__node", n.id === picked.id && "is-picked")}
-              data-status={n.status}
-              style={{ left: `${n.x}%`, top: `${n.y}%`, "--energy": n.energy, "--d": n.id === "identity" ? 20 : n.status === "roadmap" ? 8 : 13.6 } as CSSProperties}
-              aria-pressed={n.id === picked.id}
-              onClick={() => setPickedId(n.id)}
-              onFocus={() => setPickedId(n.id)}
-              onMouseEnter={() => setPickedId(n.id)}
-            >
-              <span className="defense-map__node-label">{n.label}</span>
-              <span className="defense-map__node-sub">{n.status === "roadmap" ? "Roadmap" : n.sub}</span>
-            </button>
+        <GooStage
+          width={MAP_W}
+          height={MAP_H}
+          beads={beads}
+          links={gooLinks}
+          zones={gooZones}
+          picked={picked.id}
+          onPick={setPickedId}
+          scheme={resolvedTheme === "light" ? "light" : "dark"}
+          reduceMotion={reduceMotion}
+          labels="below"
+          goo={48}
+          edge={55}
+          reach={0.12}
+          glow={resolvedTheme === "light" ? 0.22 : 0.38}
+          className="defense-map__stage"
+          ariaLabel="Map of the Jokuh system with its trust boundaries. Select a part to read what it does today."
+          hint={reduceMotion ? null : <span>{hint}</span>}
+        >
+          {zones.map((z) => (
+            <span key={z.id} className="defense-map__zone-tag" data-zone={z.id} style={{ ...zoneTag(z.members), "--energy": DEFENSE_BOUNDARY_ENERGY[z.id] } as CSSProperties}>
+              {z.label}
+            </span>
           ))}
-        </div>
+        </GooStage>
 
         <aside className="defense-detail" aria-live="polite" style={{ "--energy": picked.energy } as CSSProperties}>
           <div className="defense-detail__badges">
@@ -254,5 +252,3 @@ function SystemMap({ reduceMotion }: { reduceMotion: boolean }) {
     </div>
   );
 }
-
-export type { DefenseNodeId };

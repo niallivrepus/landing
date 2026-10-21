@@ -500,15 +500,15 @@ export const DEFENSE_MAP = {
   } satisfies Record<DefenseMapBoundary, string>,
   statusLabels: { built: "Built today", roadmap: "On our roadmap" } satisfies Record<DefenseMapStatus, string>,
   nodes: [
-    { id: "identity", label: "Identity", sub: "Passkey on device", status: "built", boundary: "sealed", body: "Sign in with a passkey that stays on your device. The keys behind your identity are held by you.", fit: "Phishing-resistant sign-in for teams that can't afford shared passwords.", surface: "signin", x: 50, y: 46, energy: "var(--color-purple-4, #9327ff)" },
-    { id: "messages", label: "Messages", sub: "End-to-end encrypted", status: "built", boundary: "sealed", body: "Direct and group messages are sealed on the sender's device and opened on the recipient's. Jokuh relays ciphertext it can't read.", fit: "Encrypted coordination for distributed teams.", surface: "texts", x: 50, y: 12, energy: "var(--color-red-4, #ff0700)" },
-    { id: "calls", label: "Calls", sub: "Voice and video", status: "built", boundary: "neutral", body: "Voice and video calls start from the roster and connect through a real-time media provider. We make no end-to-end encryption claim for calls.", fit: "One-tap reach to the person you need.", surface: "calls", x: 14, y: 36, energy: "var(--color-green-4, #21dc11)" },
-    { id: "bubbles", label: "Bubbles", sub: "Teams and huddles", status: "built", boundary: "account", body: "A space for a team, with a huddle for each part of the work and a view of who's live in voice.", fit: "A working space a team can stand up in minutes.", surface: "drawer", x: 16, y: 72, energy: "#2c81ff" },
-    { id: "spine", label: "Spine", sub: "Shared memory", status: "built", boundary: "account", body: "A private timeline for the day. Spine is private to the account and stored on our servers; it is not end-to-end encrypted.", fit: "One record of what happened, in order.", surface: "spine", x: 86, y: 36, energy: "var(--color-yellow-4, #ffb800)" },
-    { id: "docs", label: "Docs", sub: "Lives in Spine", status: "built", boundary: "account", body: "Briefings and notes written in Docs live on the Spine day. Private to the account, not end-to-end encrypted.", fit: "Handover briefings and running logs that stay attached to the day.", surface: "docs", x: 84, y: 72, energy: "#ff4d00" },
-    { id: "oo", label: "OO", sub: "AI assistant", status: "built", boundary: "ai", body: "An assistant that works only with the context you choose to share. It runs on third-party cloud AI models today.", fit: "A private workspace assistant. Not for classified or controlled information today.", surface: "oo", x: 50, y: 80, energy: "#8c73ff" },
-    { id: "deploy", label: "Self-hosted", sub: "Dedicated deployment", status: "roadmap", boundary: "roadmap", body: "Not available yet. We're building toward deployments an organization can run on infrastructure it controls.", fit: "For programs that need to keep infrastructure in their own hands.", x: 28, y: 92, energy: "var(--color-blue-4, #0066ff)" },
-    { id: "usonly", label: "US-only", sub: "Data processing", status: "roadmap", boundary: "roadmap", body: "Not available yet. We're building toward an option that keeps data processing inside the United States.", fit: "For programs with data-residency requirements.", x: 72, y: 92, energy: "var(--color-blue-4, #0066ff)" },
+    { id: "identity", label: "Identity", sub: "Passkey on device", status: "built", boundary: "sealed", body: "Sign in with a passkey that stays on your device. The keys behind your identity are held by you.", fit: "Phishing-resistant sign-in for teams that can't afford shared passwords.", surface: "signin", x: 330, y: 340, energy: "var(--color-purple-4)" },
+    { id: "messages", label: "Messages", sub: "End-to-end encrypted", status: "built", boundary: "sealed", body: "Direct and group messages are sealed on the sender's device and opened on the recipient's. Jokuh relays ciphertext it can't read.", fit: "Encrypted coordination for distributed teams.", surface: "texts", x: 165, y: 190, energy: "var(--color-red-4)" },
+    { id: "calls", label: "Calls", sub: "Voice and video", status: "built", boundary: "neutral", body: "Voice and video calls start from the roster and connect through a real-time media provider. We make no end-to-end encryption claim for calls.", fit: "One-tap reach to the person you need.", surface: "calls", x: 150, y: 540, energy: "var(--color-green-4)" },
+    { id: "bubbles", label: "Bubbles", sub: "Teams and huddles", status: "built", boundary: "account", body: "A space for a team, with a huddle for each part of the work and a view of who's live in voice.", fit: "A working space a team can stand up in minutes.", surface: "drawer", x: 590, y: 175, energy: "var(--color-blue-5)" },
+    { id: "spine", label: "Spine", sub: "Shared memory", status: "built", boundary: "account", body: "A private timeline for the day. Spine is private to the account and stored on our servers; it is not end-to-end encrypted.", fit: "One record of what happened, in order.", surface: "spine", x: 800, y: 270, energy: "var(--color-yellow-4)" },
+    { id: "docs", label: "Docs", sub: "Lives in Spine", status: "built", boundary: "account", body: "Briefings and notes written in Docs live on the Spine day. Private to the account, not end-to-end encrypted.", fit: "Handover briefings and running logs that stay attached to the day.", surface: "docs", x: 700, y: 455, energy: "var(--color-orange-4)" },
+    { id: "oo", label: "OO", sub: "AI assistant", status: "built", boundary: "ai", body: "An assistant that works only with the context you choose to share. It runs on third-party cloud AI models today.", fit: "A private workspace assistant. Not for classified or controlled information today.", surface: "oo", x: 470, y: 620, energy: "var(--color-pink-4)" },
+    { id: "deploy", label: "Self-hosted", sub: "Roadmap", status: "roadmap", boundary: "roadmap", body: "Not available yet. We're building toward deployments an organization can run on infrastructure it controls.", fit: "For programs that need to keep infrastructure in their own hands.", x: 880, y: 640, energy: "var(--color-smoke-4)" },
+    { id: "usonly", label: "US-only", sub: "Roadmap", status: "roadmap", boundary: "roadmap", body: "Not available yet. We're building toward an option that keeps data processing inside the United States.", fit: "For programs with data-residency requirements.", x: 920, y: 470, energy: "var(--color-smoke-4)" },
   ] satisfies DefenseMapNode[],
   links: [
     ["identity", "messages"],
@@ -516,10 +516,17 @@ export const DEFENSE_MAP = {
     ["identity", "bubbles"],
     ["identity", "spine"],
     ["identity", "oo"],
+    ["bubbles", "spine"],
     ["spine", "docs"],
     ["docs", "oo"],
-    ["bubbles", "calls"],
   ] satisfies [string, string][],
+  /** Trust membranes on the map: goo skins that follow their parts. Colours are the boundary energies. */
+  zones: [
+    { id: "sealed", members: ["identity", "messages"], label: "Sealed end to end" },
+    { id: "account", members: ["bubbles", "spine", "docs"], label: "Private to your account" },
+    { id: "ai", members: ["oo"], label: "Third-party AI" },
+  ] satisfies { id: "sealed" | "account" | "ai"; members: string[]; label: string }[],
+  hint: "Drag any part. Pull it out of its boundary and watch the link stretch, then snap.",
 } as const;
 
 export type DefenseDayBeat = {

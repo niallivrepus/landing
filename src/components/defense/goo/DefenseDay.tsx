@@ -9,7 +9,7 @@ import { GooCapture } from "./GooCapture";
  * **Purpose:** "A day in the life": one operator's shift as a scroll-driven goo timeline. A sticky real-app recording
  * follows the beat in view; each beat has its own goo bead on a rail (the active one swells and merges with the line).
  * Below `md` each beat carries its own recording instead. Reduced motion: posters only, beads don't animate.
- * **Connects to:** `GooCapture`, `GooDefs` (`#dg-goo-rail`), `data/defense.ts` (`DEFENSE_DAY`), `defense-goo.css`.
+ * **Connects to:** `GooCapture`, `GooDefs` (`#dg-splex-juicy`), `data/defense.ts` (`DEFENSE_DAY`), `defense-goo.css`.
  */
 export function DefenseDay() {
   const reduceMotion = useReducedMotion() ?? false;

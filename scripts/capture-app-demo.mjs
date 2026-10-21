@@ -136,7 +136,9 @@ function encodeLoop(inputArgs, { start, duration, crop, cssWidth }, outBase) {
   const target = cssWidth ? Math.round((cssWidth * OUTPUT_SCALE) / 2) * 2 : null;
   const scaleFilter = target ? `,scale='min(${target},iw)':-2:flags=lanczos` : "";
   const filter = [
-    `[0:v]trim=start=${start}:duration=${duration},setpts=PTS-STARTPTS,fps=30${cropFilter}${scaleFilter},split[a][b]`,
+    // setsar=1: `scale` keeps the display shape by changing the sample aspect ratio, which browsers honour (the clip
+    // plays squeezed against its poster). The pixels already have the poster's shape, so declare them square.
+    `[0:v]trim=start=${start}:duration=${duration},setpts=PTS-STARTPTS,fps=30${cropFilter}${scaleFilter},setsar=1,split[a][b]`,
     `[a]trim=start=${f},setpts=PTS-STARTPTS[body]`,
     `[b]trim=duration=${f},setpts=PTS-STARTPTS[head]`,
     `[body][head]xfade=transition=fade:duration=${f}:offset=${(duration - 2 * f).toFixed(3)},format=yuv420p[v]`,

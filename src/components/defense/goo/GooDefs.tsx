@@ -1,27 +1,24 @@
+import { useTheme } from "@jokuh/gooey";
+import { GooMaterialFilter } from "./GooMaterialFilter";
+import { gooParams, splexSpec } from "./goo-material";
+
 /**
- * **Purpose:** The Goo material for `/defense`: one hidden SVG holding the metaball filters (blur + alpha threshold, so
- * shapes that touch merge into one liquid body). Content (text, recordings) is never filtered: goo is the vessel.
- * **Connects to:** `DefenseGooPage` (mounts it once), every `goo/*` section that sets `filter: url(#dg-goo-*)`.
- * **Parity:** Splex goo glass in `frontend/src/components/gooey/goo-env/*` (Solid app) and `Sources/gooey/` (Swift).
+ * **Purpose:** Page-wide goo filters for HTML goo (`filter: url(#…)`): the tab bead, the Missions chain, the day rail
+ * and the recording splat all wear the real Splex glass (dark Splex / designed Gooey Light, by the site theme), with
+ * goo amounts from the doctrine tiers. Content inside them stays crisp (it is never under the filter).
+ * **Connects to:** `GooMaterialFilter.tsx`, `goo-material.ts`, `defense-goo.css`, `DefensePage.tsx` (mounted once).
  */
 export function GooDefs() {
+  const { resolvedTheme } = useTheme();
+  const spec = splexSpec(resolvedTheme === "light" ? "light" : "dark");
   return (
     <svg aria-hidden focusable="false" width="0" height="0" className="defense-goo-defs">
       <defs>
-        <GooFilter id="dg-goo-hero" blur={9} threshold="22 -10" />
-        <GooFilter id="dg-goo-chain" blur={6} threshold="20 -9" />
-        <GooFilter id="dg-goo-map" blur={1.7} threshold="20 -9" />
-        <GooFilter id="dg-goo-rail" blur={5} threshold="20 -9" />
+        {/* Standard: chrome (tabs). */}
+        <GooMaterialFilter id="dg-splex-standard" spec={spec} params={gooParams(40, 50)} />
+        {/* Juicy: moments (chain, rail, splat). */}
+        <GooMaterialFilter id="dg-splex-juicy" spec={spec} params={gooParams(58, 50)} />
       </defs>
     </svg>
-  );
-}
-
-function GooFilter({ id, blur, threshold }: { id: string; blur: number; threshold: string }) {
-  return (
-    <filter id={id} x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
-      <feGaussianBlur in="SourceGraphic" stdDeviation={blur} result="blur" />
-      <feColorMatrix in="blur" mode="matrix" values={`1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${threshold}`} />
-    </filter>
   );
 }
