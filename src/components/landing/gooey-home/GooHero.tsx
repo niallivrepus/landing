@@ -56,7 +56,7 @@ function Words({ text, start }: { text: string; start: number }) {
  * slowly (CSS transform/opacity only, compositor-cheap). Absolutely positioned: it can never move the foreground.
  * Reduce Motion: static. `aria-hidden`; the same text is the hero's (visually hidden) `h1`.
  */
-function HeroBackgroundText({ headline, valueLine }: { headline: string; valueLine: string }) {
+export function HeroBackgroundText({ headline, valueLine }: { headline: string; valueLine: string }) {
   const [first, ...rest] = headline.split(". ");
   const firstLine = rest.length ? `${first}.` : headline;
   const secondLine = rest.join(". ");

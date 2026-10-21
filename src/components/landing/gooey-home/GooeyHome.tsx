@@ -170,7 +170,7 @@ function ThemeToggle() {
   );
 }
 
-function GooFooter() {
+export function GooFooter() {
   const seen = new Set<string>();
   return (
     <footer className="gh-footer" aria-label="Site">

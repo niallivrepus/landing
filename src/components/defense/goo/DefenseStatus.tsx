@@ -13,7 +13,6 @@ import {
   DEFENSE_USE_CASES,
   DEFENSE_WORKING_WITH_US,
 } from "../../../data/defense";
-import { JokuhButton } from "../../system/JokuhButton";
 import { SiteLink } from "../../SiteLink";
 import { GooStage, type GooBead, type GooLink } from "./GooStage";
 import { useScrollProgress } from "./use-scroll-progress";
@@ -145,13 +144,13 @@ export function DefenseGovernment() {
           {DEFENSE_WORKING_WITH_US.title}
         </h2>
         <p className="defense-gov__body">{DEFENSE_WORKING_WITH_US.body}</p>
-        <div className="defense-hero__ctas">
-          <JokuhButton href={DEFENSE_WORKING_WITH_US.buttonHref} variant="primary">
+        <div className="dgoo-hero__cta dgoo-gov__cta">
+          <SiteLink className="gh-go gh-go--md" href={DEFENSE_WORKING_WITH_US.buttonHref}>
             {DEFENSE_WORKING_WITH_US.buttonLabel}
-          </JokuhButton>
-          <JokuhButton href="/defense/capability-statement.pdf" variant="secondary" download>
-            Capability statement (PDF)
-          </JokuhButton>
+          </SiteLink>
+          <a className="gh-link" href="/defense/capability-statement.pdf" download>
+            Capability statement (PDF) <span aria-hidden>↓</span>
+          </a>
         </div>
       </div>
       <div className="defense-close">

@@ -1358,103 +1358,6 @@
   pointer-events: none;
 }
 
-/* ══ Hero v2 ═══════════════════════════════════════════════════════════════════════════════════════════════════ */
-
-.dgoo-hero {
-  --leave: 0;
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
-  gap: 24px 8px;
-  align-items: center;
-  width: 100%;
-  max-width: 1360px;
-  min-height: min(880px, calc(100svh - 64px));
-  margin: 0 auto;
-  padding: 40px 20px 0;
-}
-
-.dgoo-hero::before {
-  content: "";
-  position: absolute;
-  inset: -64px -20vw 0;
-  z-index: -1;
-  background:
-    radial-gradient(48% 58% at 68% 44%, color-mix(in srgb, var(--color-purple-4) 22%, transparent), transparent 70%),
-    radial-gradient(30% 40% at 30% 80%, color-mix(in srgb, var(--color-blue-4) 12%, transparent), transparent 70%);
-  opacity: calc(1 - var(--leave) * 0.8);
-  pointer-events: none;
-}
-
-.dgoo-hero__copy {
-  position: relative;
-  z-index: 2;
-  opacity: calc(1 - var(--leave) * 1.2);
-  transform: translateY(calc(var(--leave) * -40px));
-}
-
-.dgoo-hero__title {
-  margin-top: 14px;
-  font-size: clamp(2.8rem, 6.4vw, 5.4rem);
-  line-height: 0.98;
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
-.dgoo-hero__sub {
-  margin-top: 22px;
-  max-width: 50ch;
-  font-size: 1.12rem;
-  line-height: 1.55;
-  color: var(--dg-ink-2);
-}
-
-.dgoo-hero__stage {
-  position: relative;
-  margin-right: -6%;
-}
-
-.dgoo-hero__line {
-  min-height: 3.2em;
-  margin: 4px auto 0;
-  max-width: 560px;
-  padding: 12px 18px;
-  border: 1px solid var(--dg-rim);
-  border-radius: 22px;
-  background: var(--dg-glass);
-  backdrop-filter: blur(14px);
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--dg-ink-2);
-  text-align: center;
-  transition: border-color 260ms ease, box-shadow 260ms ease;
-}
-
-.dgoo-hero__line[data-on="true"] {
-  border-color: color-mix(in srgb, var(--energy) 55%, transparent);
-  box-shadow: 0 10px 40px -18px var(--energy);
-}
-
-.dgoo-hero__line strong {
-  color: var(--dg-ink);
-}
-
-.dgoo-hero__solution {
-  grid-column: 1 / -1;
-}
-
-@media (max-width: 1023px) {
-  .dgoo-hero {
-    grid-template-columns: minmax(0, 1fr);
-    min-height: 0;
-  }
-
-  .dgoo-hero__stage {
-    margin-right: 0;
-  }
-}
-
 /* ── Recording splat (GooCapture) ────────────────────────────────────────── */
 
 .defense-cap__splat {
@@ -1643,4 +1546,265 @@
   width: 0;
   height: 0;
   overflow: hidden;
+}
+
+
+/* ══ House skin: /defense inside the Gooey home shell (`.gh`, gooey-home.css) ══════════════════════════════════
+   The page wears the homepage's tokens and materials: ink + slab + line come from `--gh-*`, every panel is a
+   `gh-slab` (white-15 % inner rim + soft drop on dark, white paper on light), eyebrows are slab pills, titles use the
+   homepage scale. Energies stay the library tokens. */
+
+.gh .defense-page {
+  --dg-ink: var(--gh-ink);
+  --dg-ink-2: var(--gh-ink-2);
+  --dg-ink-3: var(--gh-ink-3);
+  --dg-glass: var(--gh-slab-bg);
+  --dg-glass-2: var(--gh-slab-tint);
+  --dg-rim: var(--gh-line);
+  --dg-halo: var(--gh-bg);
+  --dg-focus: var(--gh-focus);
+  --dg-shadow: none;
+  --gh-accent: var(--color-purple-4);
+  padding-bottom: 0;
+}
+
+.gh .defense-section {
+  max-width: 1120px;
+  padding: 96px 20px 0;
+}
+
+.gh .defense-section__head {
+  max-width: 780px;
+  margin-bottom: 40px;
+}
+
+.gh .defense-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px 0 12px;
+  border-radius: 999px;
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gh-ink);
+}
+
+.gh .defense-eyebrow::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--gh-accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gh-accent) 70%, transparent);
+}
+
+.gh .defense-h2 {
+  margin-top: 20px;
+  font-size: clamp(34px, 4.6vw, 56px);
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.gh .defense-h2--sm {
+  margin-top: 0;
+  font-size: clamp(26px, 3vw, 36px);
+}
+
+.gh .defense-lede {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--gh-ink-2);
+}
+
+/* Every panel is a house slab. */
+.gh :is(.defense-missions, .defense-map, .defense-trust2, .defense-card, .defense-panel, .defense-gov__card, .defense-detail) {
+  border: 0;
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+}
+
+.gh :is(.defense-missions, .defense-map, .defense-trust2) {
+  border-radius: 40px;
+  padding: 30px;
+}
+
+.gh .defense-panel--roadmap {
+  border: 0;
+  background: var(--gh-slab-tint);
+}
+
+.gh .defense-trust2__zone {
+  border: 0;
+  border-radius: 28px;
+  background: var(--gh-slab-tint);
+}
+
+.gh .defense-trust2__zone[data-zone="ai"] {
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-pink-4) 35%, transparent);
+}
+
+.gh :is(.defense-chip, .defense-tchip, .defense-badge, .defense-hero__facts li) {
+  border: 0;
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+}
+
+.gh .defense-chip {
+  height: 38px;
+  padding: 0 16px;
+  font-size: 14px;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+}
+
+.gh .defense-chip:hover:not(:disabled) {
+  transform: scale(1.04);
+  background: var(--gh-slab-bg);
+}
+
+.gh .defense-chip.is-on {
+  background: var(--gh-ink);
+  color: var(--gh-bg);
+  box-shadow: none;
+}
+
+.gh .defense-tabs {
+  border: 0;
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+}
+
+.gh .defense-trust2__line {
+  background: var(--gh-slab-tint);
+}
+
+.gh .defense-detail {
+  background: var(--gh-slab-tint);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--energy) 30%, transparent);
+}
+
+/* ── Hero (the app's home) ───────────────────────────────────────────────── */
+
+.dgoo-hero {
+  --leave: 0;
+  min-height: max(820px, min(100svh, 1040px));
+}
+
+.dgoo-hero .gh-bgtext {
+  opacity: calc(1 - var(--leave) * 0.9);
+}
+
+.dgoo-hero .gh-bgtext__value {
+  display: none;
+}
+
+.dgoo-hero__center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(880px, calc(100% - 48px));
+  padding: 92px 0 84px;
+}
+
+.dgoo-hero__eyebrow {
+  --gh-accent: var(--color-green-4);
+}
+
+.dgoo-hero__stage {
+  width: min(640px, 100%, calc((100svh - 330px) * 1.5625));
+}
+
+.dgoo-hero__line {
+  max-width: 680px;
+  margin: 0;
+  padding: 12px 22px;
+  border-radius: 26px;
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--gh-ink-2);
+  transition: box-shadow 260ms ease;
+}
+
+.dgoo-hero__line[data-on="true"] {
+  box-shadow: var(--gh-slab-shadow), 0 0 0 1.5px color-mix(in srgb, var(--energy) 55%, transparent), 0 14px 40px -18px var(--energy);
+}
+
+.dgoo-hero__line strong {
+  color: var(--gh-ink);
+}
+
+.dgoo-hero__chips a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.dgoo-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 26px;
+  margin-top: 4px;
+}
+
+.dgoo-hero__cta .gh-link {
+  margin-top: 0;
+  --gh-accent: var(--color-green-4);
+}
+
+.dgoo-hero .goo-stage__hint {
+  right: 0;
+  bottom: -4px;
+}
+
+.dgoo-solution {
+  max-width: 1120px;
+  margin-top: 56px;
+}
+
+.dgoo-solution__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+  text-align: left;
+}
+
+.dgoo-solution__card {
+  padding: 26px 26px 28px;
+  border-radius: 32px;
+}
+
+.dgoo-solution__facts {
+  justify-content: center;
+}
+
+@media (max-width: 760px) {
+  .dgoo-solution__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dgoo-hero__center {
+    padding-top: 112px;
+  }
+}
+
+.dgoo-gov__cta {
+  justify-content: flex-start;
+  margin-top: 26px;
+}
+
+.dgoo-gov__cta .gh-link {
+  --gh-accent: var(--color-green-4);
 }

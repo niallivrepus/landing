@@ -383,6 +383,19 @@ export const DEFENSE_AUTOPLAY = {
 // Same accuracy rules as the top of this file. Every scenario below is an illustrative walk through features that
 // are built today; none is a deployment, a customer, or an agency. Step times are illustrative.
 
+/** The hero's background type (the homepage pattern: two short big lines + a value line; the h1 carries the claim). */
+export const DEFENSE_HERO_BACKGROUND = {
+  headline: "Defense. Free people.",
+  valueLine: "Secure communications and identity for the people who protect others.",
+} as const;
+
+/** Hero chips: jump to a section. */
+export const DEFENSE_HERO_JUMPS = [
+  { label: "Pick a mission", href: "#explore" },
+  { label: "Follow one shift", href: "#day" },
+  { label: "Where data is sealed", href: "#trust" },
+] as const;
+
 export const DEFENSE_HERO_FACTS = [
   "End-to-end encrypted direct and group messages",
   "Passkey sign-in, no password to phish",
