@@ -1,6 +1,6 @@
 {
-  "capturedAt": "2026-10-06T17:50:19.451Z",
-  "origin": "https://app.jokuh.com",
+  "capturedAt": "2026-10-21T19:27:33.874Z",
+  "origin": "http://localhost:5173",
   "viewport": {
     "width": 1280,
     "height": 900
@@ -165,10 +165,20 @@
         "poster": "/defense/captures/signin.jpg",
         "size": {
           "width": 714,
-          "height": 631
+          "height": 644
         },
         "webm": "/defense/captures/signin.webm",
         "mp4": "/defense/captures/signin.mp4",
+        "scenario": "team"
+      },
+      "light": {
+        "poster": "/defense/captures/signin-light.jpg",
+        "size": {
+          "width": 714,
+          "height": 644
+        },
+        "webm": "/defense/captures/signin-light.webm",
+        "mp4": "/defense/captures/signin-light.mp4",
         "scenario": "team"
       }
     }

@@ -417,7 +417,7 @@ async function main() {
 
   // `--force-device-scale-factor` makes the DevTools screencast deliver device-pixel (2×) frames; with only the
   // context's deviceScaleFactor, screencast frames come back at CSS size.
-  const browser = await chromium.launch({ args: [`--force-device-scale-factor=${DEVICE_SCALE}`] });
+  const browser = await chromium.launch({ ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: [`--force-device-scale-factor=${DEVICE_SCALE}`] });
   try {
     for (const theme of themes) {
       // Column captures.
