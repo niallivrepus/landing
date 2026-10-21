@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Defense share image</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  /* ?v=og (1200x630) | square (1080x1080) | banner (1584x396) | story (1080x1920) */
+  html, body { width: 100%; height: 100%; background: #050506; color: #fff; overflow: hidden; }
+  .card { position: relative; width: 100vw; height: 100vh; display: grid; align-items: center; padding: 6vmin 7vmin; background:
+    radial-gradient(70% 90% at 82% 40%, rgba(147,39,255,.28), transparent 60%),
+    radial-gradient(50% 60% at 10% 100%, rgba(44,129,255,.18), transparent 70%), #050506; }
+  .copy { position: relative; z-index: 2; max-width: 56%; }
+  .eyebrow { font-size: 2.1vmin; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,.5); }
+  h1 { margin-top: 2.2vmin; font-size: 8.6vmin; line-height: 1.0; letter-spacing: -.02em; font-weight: 900; text-wrap: balance; }
+  .sub { margin-top: 2.6vmin; font-size: 2.6vmin; line-height: 1.4; color: rgba(255,255,255,.68); max-width: 36ch; }
+  .tag { margin-top: 3.4vmin; display: inline-flex; align-items: center; gap: 1.2vmin; padding: 1.3vmin 2.2vmin; border: 1px solid rgba(255,255,255,.2); border-radius: 99px; font-size: 2vmin; color: rgba(255,255,255,.75); }
+  .dot { width: 1.3vmin; height: 1.3vmin; border-radius: 50%; background: #21dc11; box-shadow: 0 0 1.6vmin #21dc11; }
+  svg#cluster { position: absolute; right: -4vmin; top: 50%; transform: translateY(-50%); width: 62vmax; max-width: 78%; overflow: visible; filter: drop-shadow(0 3vmin 5vmin rgba(0,0,0,.5)); }
+  .foot { position: absolute; left: 7vmin; bottom: 4.6vmin; display: flex; align-items: center; gap: 1.6vmin; font-size: 1.9vmin; color: rgba(255,255,255,.55); z-index: 2; }
+  .foot img { height: 3vmin; }
+  /* square + story: cluster below the copy */
+  body[data-v="square"] .card, body[data-v="story"] .card { align-items: start; }
+  body[data-v="square"] .copy, body[data-v="story"] .copy { max-width: 100%; }
+  body[data-v="square"] h1 { font-size: 9.4vmin; }
+  body[data-v="square"] .sub, body[data-v="square"] .tag { display: none; }
+  body[data-v="square"] svg#cluster, body[data-v="story"] svg#cluster { top: auto; bottom: 10vmin; right: 50%; transform: translateX(50%); width: 100%; max-width: none; }
+  body[data-v="story"] .card { padding-top: 12vmin; }
+  body[data-v="story"] h1 { font-size: 10.5vmin; }
+  body[data-v="story"] svg#cluster { bottom: 16vmin; width: 104%; }
+  /* banner: compact */
+  body[data-v="banner"] .copy { max-width: 62%; }
+  body[data-v="banner"] h1 { font-size: 10vmin; margin-top: 1vmin; }
+  body[data-v="banner"] .eyebrow { font-size: 4.4vmin; }
+  body[data-v="banner"] .sub, body[data-v="banner"] .tag, body[data-v="banner"] .foot { display: none; }
+  body[data-v="banner"] svg#cluster { width: 50vmax; right: -2vmin; }
+</style></head>
+<body>
+<div class="card">
+  <div class="copy">
+    <p class="eyebrow">Jokuh · Defense</p>
+    <h1>Defense technology for free people</h1>
+    <p class="sub">Encrypted messages, an identity you control, and a private workspace for you and your AI.</p>
+    <span class="tag"><i class="dot"></i> End-to-end encrypted direct and group messages</span>
+  </div>
+  <svg id="cluster" role="img" aria-label="Jokuh system diagram"></svg>
+  <div class="foot"><img src="../../public/brand/jokuh-logomark-white.svg" alt=""> jokuh.com/defense</div>
+</div>
+<script>document.body.dataset.v = new URLSearchParams(location.search).get("v") || "og";</script>
+<script src="goo-cluster.js"></script>
+</body></html>

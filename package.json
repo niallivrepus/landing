@@ -16,6 +16,7 @@
     "build:landing": "npm run sync:news-art && npm run generate:rss && VITE_SITE_ENTRY=landing vite build",
     "preview": "vite preview",
     "preview:e2e": "npm run build:landing && vite preview --host 127.0.0.1 --port 4173",
+    "render:defense-assets": "node scripts/render-defense-assets.mjs",
     "build:server": "esbuild server/railway.ts --bundle --platform=node --format=esm --outfile=server-dist/railway.mjs",
     "start": "node server-dist/railway.mjs",
     "start:railway": "tsx server/railway.ts",

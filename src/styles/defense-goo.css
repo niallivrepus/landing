@@ -1,0 +1,1250 @@
+/**
+ * **Purpose:** `/defense` on the Goo material. Dark is Splex goo glass; light is the designed milky counterpart.
+ * Goo (SVG metaball filters from `GooDefs`) is only ever the vessel: beads, necks, the tab pill. Text and recordings
+ * are crisp and never filtered. Idle is still: ambient drift is limited to the hero cluster and stops under reduced
+ * motion. Light scope = the site's `:is(.light, [data-theme="light"])`.
+ * **Connects to:** `components/defense/goo/*`, `pages/DefensePage.tsx`.
+ */
+
+.defense-goo-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.defense-page {
+  --dg-ink: #ffffff;
+  --dg-ink-2: rgba(255, 255, 255, 0.68);
+  --dg-ink-3: rgba(255, 255, 255, 0.44);
+  --dg-glass: rgba(255, 255, 255, 0.055);
+  --dg-glass-2: rgba(255, 255, 255, 0.1);
+  --dg-rim: rgba(255, 255, 255, 0.14);
+  /* Goo layers need opaque fills (the metaball threshold drops low alpha). */
+  --dg-neck: #2a2a30;
+  --dg-idle: #34343b;
+  --dg-roadmap: #55555e;
+  --dg-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
+  --dg-halo: rgba(8, 8, 10, 0.9);
+  --dg-sealed: var(--color-green-4, #21dc11);
+  --dg-account: var(--color-yellow-4, #ffb800);
+  --dg-ai: #8c73ff;
+  --dg-neutral: #7e8aa6;
+  --dg-focus: var(--color-blue-4, #0066ff);
+  position: relative;
+  color: var(--dg-ink);
+  padding-bottom: 96px;
+  overflow-x: clip;
+}
+
+:is(.light, [data-theme="light"]) .defense-page {
+  --dg-ink: #0a0a0b;
+  --dg-ink-2: rgba(10, 10, 11, 0.66);
+  --dg-ink-3: rgba(10, 10, 11, 0.46);
+  --dg-glass: rgba(10, 10, 11, 0.04);
+  --dg-glass-2: rgba(10, 10, 11, 0.07);
+  --dg-rim: rgba(10, 10, 11, 0.12);
+  --dg-neck: #dcdce2;
+  --dg-idle: #d2d2d9;
+  --dg-roadmap: #b4b4be;
+  --dg-shadow: 0 24px 60px -30px rgba(10, 10, 11, 0.3);
+  --dg-halo: rgba(255, 255, 255, 0.95);
+  --dg-sealed: #12a806;
+  --dg-account: #c98a00;
+  --dg-ai: #6a4fe0;
+  --dg-neutral: #56627f;
+}
+
+.defense-page button:focus-visible,
+.defense-page a:focus-visible {
+  outline: 2px solid var(--dg-focus);
+  outline-offset: 3px;
+}
+
+/* ── Type ───────────────────────────────────────────────────────────────── */
+
+.defense-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dg-ink-3);
+}
+
+.defense-h2 {
+  margin-top: 10px;
+  font-size: clamp(1.9rem, 4.2vw, 3rem);
+  line-height: 1.06;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.defense-h2--sm {
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  margin-top: 0;
+}
+
+.defense-h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.defense-lede {
+  margin-top: 12px;
+  max-width: 62ch;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--dg-ink-2);
+}
+
+.defense-tag,
+.defense-caption {
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--dg-ink-3);
+}
+
+.defense-section {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 88px 20px 0;
+}
+
+.defense-section__head {
+  max-width: 760px;
+  margin-bottom: 36px;
+}
+
+.defense-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  vertical-align: 0.08em;
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+
+.defense-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 40px 32px;
+  align-items: center;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 56px 20px 0;
+}
+
+.defense-hero__title {
+  margin-top: 14px;
+  font-size: clamp(2.6rem, 6.2vw, 4.6rem);
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.defense-hero__sub {
+  margin-top: 20px;
+  max-width: 54ch;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: var(--dg-ink-2);
+}
+
+.defense-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.defense-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.defense-hero__facts li {
+  padding: 7px 13px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 999px;
+  background: var(--dg-glass);
+  font-size: 13px;
+  color: var(--dg-ink-2);
+}
+
+.defense-hero__field {
+  position: relative;
+  aspect-ratio: 800 / 440;
+  width: 100%;
+}
+
+.defense-hero__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.28));
+}
+
+.defense-hero__neck {
+  stroke-width: 26;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+.defense-hero__bead {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.defense-hero[data-motion="on"] .defense-hero__bead {
+  animation: defense-drift 9s ease-in-out infinite alternate;
+  animation-delay: calc(var(--d) * -1.7s);
+}
+
+@keyframes defense-drift {
+  from {
+    transform: translate(-8px, 5px) scale(0.97);
+  }
+  to {
+    transform: translate(9px, -7px) scale(1.04);
+  }
+}
+
+.defense-hero__label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: clamp(11px, 1.5vw, 15px);
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.defense-hero__packet {
+  position: absolute;
+  left: 50%;
+  bottom: -30px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 999px;
+  background: var(--dg-glass-2);
+  backdrop-filter: blur(10px);
+  font-size: 12px;
+  color: var(--dg-ink-2);
+  white-space: nowrap;
+}
+
+.defense-hero__lock {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dg-sealed);
+  box-shadow: 0 0 8px var(--dg-sealed);
+}
+
+.defense-solution {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.defense-solution__title {
+  grid-column: 1 / -1;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.defense-solution > div {
+  padding: 22px 24px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 28px;
+  background: var(--dg-glass);
+  box-shadow: var(--dg-shadow);
+}
+
+.defense-solution__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dg-ink-3);
+}
+
+.defense-solution__body {
+  margin-top: 8px;
+  line-height: 1.55;
+  color: var(--dg-ink-2);
+}
+
+/* ── Goo tabs ───────────────────────────────────────────────────────────── */
+
+.defense-tabs {
+  display: inline-flex;
+  padding: 5px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 999px;
+  background: var(--dg-glass);
+}
+
+.defense-tabs__tab {
+  position: relative;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dg-ink-2);
+  transition: color 160ms ease;
+}
+
+.defense-tabs__tab.is-selected {
+  color: #fff;
+}
+
+.defense-tabs__goo {
+  position: absolute;
+  inset: -3px;
+  filter: url(#dg-goo-rail);
+}
+
+.defense-tabs__bead {
+  position: absolute;
+  inset: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #5a2dff 0%, #3a1bd6 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.defense-tabs__label {
+  position: relative;
+}
+
+.defense-explorer__panel {
+  margin-top: 28px;
+}
+
+/* ── Chips ──────────────────────────────────────────────────────────────── */
+
+.defense-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.defense-chip {
+  padding: 8px 15px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 999px;
+  background: var(--dg-glass);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dg-ink-2);
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.defense-chip:hover:not(:disabled) {
+  background: var(--dg-glass-2);
+  color: var(--dg-ink);
+}
+
+.defense-chip:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.defense-chip.is-on,
+.defense-chip[aria-pressed="true"].is-on {
+  background: var(--dg-ink);
+  border-color: transparent;
+  color: var(--dg-glass-solid, #0a0a0b);
+}
+
+:is(.light, [data-theme="light"]) .defense-chip.is-on {
+  color: #fff;
+}
+
+.defense-chip:disabled {
+  opacity: 0.45;
+}
+
+/* ── Missions ───────────────────────────────────────────────────────────── */
+
+.defense-missions {
+  padding: 26px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 36px;
+  background: var(--dg-glass);
+  box-shadow: var(--dg-shadow);
+}
+
+.defense-missions__top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.defense-missions__tagline {
+  margin-top: 14px;
+  max-width: 66ch;
+  color: var(--dg-ink-2);
+  line-height: 1.5;
+}
+
+.defense-chain {
+  --p: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  margin-top: 26px;
+  padding-top: 64px;
+}
+
+.defense-chain__goo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  filter: url(#dg-goo-rail);
+}
+
+.defense-chain__line,
+.defense-chain__fill {
+  position: absolute;
+  top: 28px;
+  left: calc(50% / var(--n));
+  height: 8px;
+  transform: translateY(-50%);
+  border-radius: 99px;
+}
+
+.defense-chain__line {
+  right: calc(50% / var(--n));
+  background: var(--dg-idle);
+}
+
+.defense-chain__fill {
+  width: calc((100% - 100% / var(--n)) * var(--p));
+  background: var(--energy);
+  transition: width 520ms cubic-bezier(0.22, 1, 0.36, 1), background 300ms ease;
+}
+
+.defense-chain__bead {
+  position: absolute;
+  top: 28px;
+  left: calc((var(--col) + 0.5) / var(--n) * 100%);
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  background: var(--dg-idle);
+  transition: transform 460ms cubic-bezier(0.34, 1.56, 0.64, 1), background 300ms ease;
+}
+
+.defense-chain__bead[data-state="done"] {
+  background: var(--bead);
+  transform: scale(1.05);
+}
+
+.defense-chain__bead[data-state="now"] {
+  background: var(--bead);
+  transform: scale(2.1);
+}
+
+.defense-chain__item {
+  min-width: 0;
+}
+
+.defense-chain__btn {
+  display: block;
+  width: 100%;
+  padding: 4px 8px 6px;
+  text-align: center;
+}
+
+.defense-chain__time {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--dg-ink-3);
+}
+
+.defense-chain__name {
+  display: block;
+  margin-top: 3px;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--dg-ink-2);
+}
+
+.defense-chain__btn[aria-current="step"] .defense-chain__name {
+  color: var(--dg-ink);
+  font-weight: 600;
+}
+
+.defense-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: 36px;
+  align-items: center;
+  margin-top: 28px;
+  /* Tallest recording (portrait) + caption, so switching steps never shifts the page. */
+  min-height: 530px;
+}
+
+.defense-stage__time {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dg-ink-3);
+}
+
+.defense-stage__title {
+  margin-top: 10px;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.12;
+  font-weight: 600;
+}
+
+.defense-stage__body {
+  margin-top: 12px;
+  max-width: 52ch;
+  line-height: 1.6;
+  color: var(--dg-ink-2);
+}
+
+.defense-stage__ctl {
+  display: flex;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+/* ── Capture frame ──────────────────────────────────────────────────────── */
+
+.defense-cap {
+  margin: 0;
+}
+
+.defense-cap__frame {
+  --energy: #8c73ff;
+  --ratio: 0.64;
+  position: relative;
+  width: min(100%, calc(var(--ratio) * 480px));
+  aspect-ratio: var(--ratio);
+  border-radius: 30px;
+  transition: box-shadow 400ms ease;
+}
+
+.defense-cap--small .defense-cap__frame {
+  width: min(100%, calc(var(--ratio) * 300px));
+  border-radius: 24px;
+}
+
+.defense-cap__ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, var(--energy) 70%, transparent),
+    0 18px 46px -14px color-mix(in srgb, var(--energy) 55%, transparent);
+  pointer-events: none;
+  transition: box-shadow 400ms ease;
+}
+
+.defense-cap__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--dg-glass-2);
+}
+
+.defense-cap__img,
+.defense-cap__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.defense-cap__video {
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+
+.defense-cap__video[data-ready="true"] {
+  opacity: 1;
+}
+
+.defense-cap__caption {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--dg-ink-3);
+}
+
+/* ── System map ─────────────────────────────────────────────────────────── */
+
+.defense-map {
+  padding: 26px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 36px;
+  background: var(--dg-glass);
+  box-shadow: var(--dg-shadow);
+}
+
+.defense-map__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.defense-map__canvas {
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto 44px;
+}
+
+.defense-map__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.22));
+}
+
+.defense-map__thread {
+  stroke: var(--dg-rim);
+  stroke-width: 0.35;
+}
+
+.defense-map__neck {
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.defense-map__bead {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0.5;
+  transition: transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 260ms ease;
+}
+
+.defense-map__bead.is-live {
+  opacity: 1;
+}
+
+.defense-map__bead.is-picked {
+  transform: scale(1.16);
+}
+
+.defense-map__node {
+  position: absolute;
+  width: calc(var(--d) * 1cqi);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.defense-map__node-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 12px);
+  font-size: clamp(11px, 2.3cqi, 14px);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--dg-ink);
+  text-shadow: 0 0 10px var(--dg-halo), 0 0 3px var(--dg-halo);
+}
+
+.defense-map__node-sub {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, calc(1.5em + 14px));
+  font-size: clamp(9.5px, 1.8cqi, 11.5px);
+  white-space: nowrap;
+  color: var(--dg-ink-3);
+}
+
+.defense-map__node[data-status="roadmap"] .defense-map__node-label {
+  color: var(--dg-ink-2);
+  font-weight: 500;
+}
+
+.defense-detail {
+  position: sticky;
+  top: 96px;
+  padding: 22px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 28px;
+  background: var(--dg-glass-2);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--energy) 20%, transparent), var(--dg-shadow);
+  transition: box-shadow 300ms ease;
+}
+
+.defense-detail__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.defense-detail__title {
+  margin-top: 14px;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.defense-detail__body {
+  margin-top: 8px;
+  line-height: 1.55;
+  color: var(--dg-ink-2);
+}
+
+.defense-detail__fitlabel {
+  margin-top: 16px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dg-ink-3);
+}
+
+.defense-detail__fit {
+  margin-top: 4px;
+  line-height: 1.5;
+  color: var(--dg-ink);
+}
+
+.defense-detail .defense-cap {
+  margin-top: 18px;
+}
+
+.defense-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dg-ink-2);
+}
+
+.defense-badge[data-status="built"] {
+  color: var(--dg-sealed);
+  border-color: color-mix(in srgb, var(--dg-sealed) 45%, transparent);
+}
+
+.defense-badge[data-status="roadmap"] {
+  border-style: dashed;
+  color: var(--dg-ink-2);
+}
+
+.defense-badge__sw {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--dg-neutral);
+}
+
+[data-boundary="sealed"] > .defense-badge__sw,
+[data-kind="sealed"] > .defense-badge__sw {
+  background: var(--dg-sealed);
+}
+
+[data-boundary="account"] > .defense-badge__sw,
+[data-kind="account"] > .defense-badge__sw {
+  background: var(--dg-account);
+}
+
+[data-boundary="ai"] > .defense-badge__sw,
+[data-kind="ai"] > .defense-badge__sw {
+  background: var(--dg-ai);
+}
+
+[data-boundary="roadmap"] > .defense-badge__sw,
+[data-kind="roadmap"] > .defense-badge__sw {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--dg-ink-3);
+}
+
+.defense-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 22px;
+  font-size: 12.5px;
+  color: var(--dg-ink-3);
+}
+
+.defense-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* ── Day in the life ────────────────────────────────────────────────────── */
+
+.defense-day__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.defense-day__sticky {
+  position: sticky;
+  top: 112px;
+}
+
+.defense-day__now {
+  margin-top: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dg-ink-3);
+}
+
+.defense-day__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.defense-beat {
+  --energy: #8c73ff;
+  position: relative;
+  min-height: 38vh;
+  padding: 26px 0 26px 64px;
+  opacity: 0.42;
+  transition: opacity 320ms ease;
+}
+
+.defense-beat.is-active,
+.defense-beat.is-past {
+  opacity: 1;
+}
+
+.defense-beat.is-past:not(.is-active) {
+  opacity: 0.62;
+}
+
+.defense-beat__rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 44px;
+  filter: url(#dg-goo-rail);
+}
+
+.defense-beat__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 7px;
+  transform: translateX(-50%);
+  background: var(--dg-idle);
+}
+
+.defense-beat:first-child .defense-beat__line {
+  top: 40px;
+}
+
+.defense-beat:last-child .defense-beat__line {
+  bottom: auto;
+  height: 40px;
+}
+
+.defense-beat.is-past .defense-beat__line,
+.defense-beat.is-active .defense-beat__line {
+  background: var(--energy);
+}
+
+.defense-beat__bead {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: var(--dg-idle);
+  transition: transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1), background 260ms ease;
+}
+
+.defense-beat.is-past .defense-beat__bead {
+  background: var(--energy);
+}
+
+.defense-beat.is-active .defense-beat__bead {
+  background: var(--energy);
+  transform: scale(2.2);
+}
+
+.defense-beat__time {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--dg-ink-3);
+}
+
+.defense-beat__title {
+  margin-top: 6px;
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.defense-beat__text {
+  margin-top: 10px;
+  max-width: 50ch;
+  line-height: 1.6;
+  color: var(--dg-ink-2);
+}
+
+.defense-beat__cap {
+  display: none;
+  margin-top: 18px;
+}
+
+/* ── Trust boundaries ───────────────────────────────────────────────────── */
+
+.defense-trust2 {
+  margin: 0;
+  padding: 26px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 36px;
+  background: var(--dg-glass);
+  box-shadow: var(--dg-shadow);
+}
+
+.defense-trust2__zones {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.defense-trust2__zone {
+  padding: 16px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 24px;
+  background: var(--dg-glass);
+}
+
+.defense-trust2__zone[data-zone="ai"] {
+  border-style: dashed;
+}
+
+.defense-trust2__zonelabel {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dg-ink-3);
+}
+
+.defense-trust2__chips {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.defense-tchip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 18px;
+  background: var(--dg-glass-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--dg-ink);
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1), border-color 200ms ease;
+}
+
+.defense-tchip:hover {
+  transform: translateY(-1px);
+}
+
+.defense-tchip.is-on {
+  border-color: var(--dg-ink-2);
+  transform: scale(1.03);
+}
+
+.defense-trust2__line {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--dg-neutral);
+  border-radius: 6px 18px 18px 6px;
+  background: var(--dg-glass-2);
+  line-height: 1.55;
+  color: var(--dg-ink-2);
+}
+
+.defense-trust2__line[data-kind="sealed"] {
+  border-left-color: var(--dg-sealed);
+}
+
+.defense-trust2__line[data-kind="account"] {
+  border-left-color: var(--dg-account);
+}
+
+.defense-trust2__line[data-kind="ai"] {
+  border-left-color: var(--dg-ai);
+}
+
+.defense-trust2__line strong {
+  color: var(--dg-ink);
+}
+
+/* ── Cards, status, close ───────────────────────────────────────────────── */
+
+.defense-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.defense-cards--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.defense-card {
+  padding: 22px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 28px;
+  background: var(--dg-glass);
+}
+
+.defense-card__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.defense-card__body {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--dg-ink-2);
+}
+
+.defense-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.defense-panel {
+  padding: 28px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 36px;
+  background: var(--dg-glass);
+}
+
+.defense-panel--roadmap {
+  border-style: dashed;
+}
+
+.defense-panel--roadmap .defense-h2 {
+  margin-top: 14px;
+}
+
+.defense-checks {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.defense-checks li {
+  display: flex;
+  gap: 12px;
+  line-height: 1.5;
+  color: var(--dg-ink-2);
+}
+
+.defense-check {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--dg-sealed);
+  box-shadow: inset 0 0 0 5px color-mix(in srgb, var(--dg-sealed) 35%, transparent);
+}
+
+.defense-roadmap {
+  display: grid;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.defense-gov__card {
+  padding: 36px;
+  border: 1px solid var(--dg-rim);
+  border-radius: 40px;
+  background: var(--dg-glass-2);
+  box-shadow: var(--dg-shadow);
+}
+
+.defense-gov__body {
+  margin-top: 14px;
+  max-width: 68ch;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--dg-ink-2);
+}
+
+.defense-close {
+  margin-top: 64px;
+  text-align: center;
+}
+
+.defense-close__headline {
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.defense-close__sig {
+  margin-top: 14px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--dg-ink-3);
+}
+
+.defense-close__sig strong {
+  color: var(--dg-ink-2);
+  letter-spacing: 0.14em;
+}
+
+.defense-close__links {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 18px;
+  font-size: 14px;
+  color: var(--dg-ink-2);
+}
+
+.defense-close__links a:hover {
+  color: var(--dg-ink);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+  .defense-stage {
+    min-height: 0;
+  }
+
+  .defense-hero,
+  .defense-stage,
+  .defense-map__body,
+  .defense-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .defense-detail {
+    position: static;
+  }
+
+  .defense-cards,
+  .defense-trust2__zones {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .defense-cards--three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .defense-day__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .defense-day__sticky {
+    display: none;
+  }
+
+  .defense-beat {
+    min-height: 0;
+    opacity: 1;
+  }
+
+  .defense-beat__cap {
+    display: block;
+  }
+}
+
+@media (max-width: 639px) {
+  .defense-section {
+    padding-top: 64px;
+  }
+
+  .defense-missions,
+  .defense-map,
+  .defense-trust2,
+  .defense-panel,
+  .defense-gov__card {
+    padding: 18px;
+    border-radius: 28px;
+  }
+
+  .defense-solution,
+  .defense-cards,
+  .defense-trust2__zones {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The chain becomes a stacked list on phones: the beads sit above, labels wrap beneath. */
+  .defense-chain__name {
+    font-size: 11.5px;
+  }
+
+  .defense-chain__time {
+    font-size: 10px;
+  }
+
+  .defense-chain__btn {
+    padding-inline: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .defense-page * {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}

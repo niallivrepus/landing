@@ -7,7 +7,7 @@ import type { DefenseCaptureSurface } from "../../data/defense";
  * "Field Team North" demo team, real components); re-record with
  * `scripts/capture-app-demo.mjs --scenario team --out public/defense/captures --surfaces signin,drawer,texts,calls,spine,docs,oo,id`
  * (signin and drawer dark only) and the page follows.
- * **Connects to:** `DefenseCapture`, `DefenseCapabilities`, `scripts/capture-app-demo.mjs`.
+ * **Connects to:** `goo/GooCapture`, `scripts/capture-app-demo.mjs`.
  */
 
 export type DefenseCaptureFiles = {

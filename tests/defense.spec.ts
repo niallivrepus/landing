@@ -1,84 +1,96 @@
 import { expect, test } from '@playwright/test';
 import { primeCookieConsent } from './helpers';
 
-test('defense page renders its heading and CTAs', async ({ page }) => {
+test('defense page renders its heading, plain answer and honest status', async ({ page }) => {
   await primeCookieConsent(page);
   await page.goto('/defense');
 
   await expect(page).toHaveURL(/\/defense$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Defense technology for free people' })).toBeVisible();
-  // Government readers get the plain answer and the honest status.
   await expect(page.getByRole('heading', { level: 2, name: "What we're building" })).toBeVisible();
   await expect(page.getByText('Our solution', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Working with government' })).toBeVisible();
   await expect(page.getByText(/isn't approved for classified information or CUI/)).toBeVisible();
 
-  const main = page.getByRole('main');
+  const main = page.locator('.defense-page');
   await expect(main.getByRole('link', { name: 'Talk to our team' }).first()).toHaveAttribute('href', /\/contact$/);
   await expect(main.getByRole('link', { name: 'Read our security approach' }).first()).toHaveAttribute('href', /\/security$/);
   await expect(main.getByRole('heading', { level: 2, name: 'On our roadmap' })).toBeVisible();
+  await expect(main.getByRole('link', { name: 'Capability statement (PDF)' })).toHaveAttribute('href', '/defense/capability-statement.pdf');
 });
 
-test('defense page is the app: Docs sheet, corner pills, walkthrough, architecture, capabilities', async ({ page }) => {
+test('defense missions: scenarios and steps are interactive and labelled illustrative', async ({ page }) => {
   await primeCookieConsent(page);
   await page.goto('/defense');
 
-  // The center column is a Jokuh Docs sheet with the app's header flanks.
-  await expect(page.locator('.center-sheet-paper-card')).toBeVisible();
-  await expect(page.locator('.docs-sheet__header-title')).toHaveText('Docs');
-  for (const name of ['Back', 'Share', 'More', 'Close']) {
-    await expect(page.getByRole('button', { name, exact: true })).toBeVisible();
-  }
+  await expect(page.getByRole('tab', { name: 'Missions' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByText('Illustrative scenarios · real app UI with demo data')).toBeVisible();
 
-  // Walkthrough: labelled as an illustrative scenario of the real app on demo data.
-  await expect(page.getByRole('heading', { level: 2, name: 'See it work' })).toBeVisible();
-  await expect(page.getByText('Illustrative scenario · real app UI with demo data', { exact: true })).toBeVisible();
-  for (const step of ['One identity', 'The team space', 'Encrypted coordination', 'Reach anyone', 'Shared memory', 'Private AI']) {
-    await expect(page.getByRole('heading', { level: 3, name: step })).toBeVisible();
-  }
-  await expect(page.locator('.defense-media')).toHaveCount(6);
+  await page.getByRole('button', { name: 'Incident response' }).click();
+  await expect(page.getByRole('button', { name: 'Incident response' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.defense-chain__item')).toHaveCount(4);
 
-  // Architecture: honest trust boundaries; a part explains itself when picked.
+  await page.getByRole('button', { name: /Keep sensitive detail in threads/ }).click();
+  await expect(page.locator('.defense-stage__title')).toHaveText('Keep sensitive detail in threads');
+  await expect(page.locator('.defense-stage__body')).toContainText('end-to-end encrypted');
+  // Reader input pauses the autoplay.
+  await expect(page.getByRole('button', { name: 'Play' })).toBeVisible();
+});
+
+test('defense system map keeps the trust claims honest', async ({ page }) => {
+  await primeCookieConsent(page);
+  await page.goto('/defense');
+
+  await page.getByRole('tab', { name: 'System map' }).click();
+  await expect(page.getByRole('tab', { name: 'System map' })).toHaveAttribute('aria-selected', 'true');
+
+  const detail = page.locator('.defense-detail');
+  const map = page.locator('.defense-map__canvas');
+  await map.getByRole('button', { name: /^Spine/ }).click();
+  await expect(detail).toContainText('not end-to-end encrypted');
+  await expect(detail).toContainText('Built today');
+
+  await map.getByRole('button', { name: /^Calls/ }).click();
+  await expect(detail).toContainText('no end-to-end encryption claim for calls');
+
+  await map.getByRole('button', { name: /^OO/ }).click();
+  await expect(detail).toContainText('third-party cloud AI models today');
+
+  await map.getByRole('button', { name: /^Self-hosted/ }).click();
+  await expect(detail).toContainText('Not available yet');
+  await expect(detail).toContainText('On our roadmap');
+});
+
+test('defense day in the life and trust boundaries render', async ({ page }) => {
+  await primeCookieConsent(page);
+  await page.goto('/defense');
+
+  await expect(page.getByRole('heading', { level: 2, name: 'A day in the life' })).toBeVisible();
+  await expect(page.locator('.defense-beat')).toHaveCount(7);
+
   await expect(page.getByRole('heading', { level: 2, name: "How it's connected" })).toBeVisible();
-  const store = page.locator('.defense-trust__node[data-kind="account"]');
+  const store = page.getByRole('button', { name: /Spine · Docs · Mail/ });
   await store.scrollIntoViewIfNeeded();
   await store.click();
-  await expect(page.locator('.defense-trust__line')).toContainText('not end-to-end encrypted');
-
-  await expect(page.getByRole('heading', { level: 2, name: 'At a glance' })).toBeVisible();
-  await expect(page.locator('.defense-cap')).toHaveCount(6);
-
-  // The corner pills still navigate where they do on the rest of the site.
-  await page.getByRole('button', { name: /^Profile/ }).click();
-  await expect(page).toHaveURL(/\/profile$/);
+  await expect(page.locator('.defense-trust2__line')).toContainText('not end-to-end encrypted');
 });
 
-test('defense doc plays itself and pauses on reader input', async ({ page }) => {
+test('defense page makes no claim it has no basis for', async ({ page }) => {
   await primeCookieConsent(page);
   await page.goto('/defense');
-
-  const toggle = page.getByRole('button', { name: 'Auto-play' });
-  await expect(toggle).toHaveAttribute('aria-pressed', 'true', { timeout: 5000 });
-  const progress = page.getByRole('progressbar', { name: 'Doc progress' });
-  await expect(progress).toHaveAttribute('aria-valuenow', '2', { timeout: 12_000 });
-
-  // Reader input pauses; the toggle resumes.
-  await page.locator('[data-defense-scroller]').dispatchEvent('wheel');
-  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
-  await toggle.click();
-  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  const text = await page.locator('.defense-page').innerText();
+  for (const banned of [/FedRAMP (authorized|certified|moderate|high)/i, /FISMA/i, /air-?gapped/i, /sovereign/i, /contract award/i, /awarded/i, /endorsed by/i, /trusted by/i]) {
+    expect(text, `unexpected claim ${banned}`).not.toMatch(banned);
+  }
 });
 
-test('defense doc is static under reduced motion', async ({ page }) => {
+test('defense page is still under reduced motion: no recordings mounted', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await primeCookieConsent(page);
   await page.goto('/defense');
 
   await expect(page.getByRole('heading', { level: 1, name: 'Defense technology for free people' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Auto-play' })).toHaveCount(0);
-  await page.waitForTimeout(3000);
-  // No auto-scroll, no recordings mounted: posters only.
-  expect(await page.locator('[data-defense-scroller]').evaluate((el) => el.scrollTop)).toBe(0);
-  await expect(page.locator('.defense-media video')).toHaveCount(0);
-  await expect(page.getByText('Illustrative scenario · real app UI with demo data', { exact: true })).toBeVisible();
+  await page.waitForTimeout(1500);
+  await expect(page.locator('.defense-cap video')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Pause' })).toHaveCount(0);
 });

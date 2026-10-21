@@ -378,3 +378,170 @@ export const DEFENSE_AUTOPLAY = {
   label: "Auto-play",
   replay: "Replay",
 } as const;
+
+// ─── Goo redesign (2026-10): scenarios, system map, day in the life ──────────
+// Same accuracy rules as the top of this file. Every scenario below is an illustrative walk through features that
+// are built today; none is a deployment, a customer, or an agency. Step times are illustrative.
+
+export const DEFENSE_HERO_FACTS = [
+  "End-to-end encrypted direct and group messages",
+  "Passkey sign-in, no password to phish",
+  "iPhone, iPad, Mac, Android and web",
+] as const;
+
+export const DEFENSE_GOO_INTRO = {
+  eyebrow: "Government technology",
+  title: "See how it works",
+  intro:
+    "Pick a mission, explore the system, then follow one shift. Every screen is a recording of the real app on demo data. Nothing here is a deployment, a customer, or an endorsement.",
+  tabs: [
+    { id: "scenarios", label: "Missions" },
+    { id: "system", label: "System map" },
+  ],
+} as const;
+
+export type DefenseScenarioStep = {
+  id: string;
+  /** Illustrative clock label. */
+  time: string;
+  title: string;
+  body: string;
+  surface: DefenseCaptureSurface;
+  node: DefenseNodeId;
+};
+
+export type DefenseScenario = {
+  id: string;
+  label: string;
+  tagline: string;
+  steps: DefenseScenarioStep[];
+};
+
+export const DEFENSE_SCENARIOS = {
+  title: "Pick a mission",
+  label: "Illustrative scenarios · real app UI with demo data",
+  items: [
+    {
+      id: "field",
+      label: "Field team",
+      tagline: "A distributed team stays in step across personal or issued phones and laptops.",
+      steps: [
+        { id: "id", time: "06:30", title: "Everyone signs in the same way", body: "A passkey bound to each person's device opens the app. There's no shared password to phish.", surface: "signin", node: "identity" },
+        { id: "space", time: "06:45", title: "One space for the team", body: "A Bubble holds the team, with a huddle for each part of the work and a view of who's live in voice.", surface: "drawer", node: "bubbles" },
+        { id: "text", time: "09:15", title: "Coordinate in encrypted threads", body: "Direct and group messages are sealed on the sender's device and opened on the recipient's. The platform in the middle only relays ciphertext.", surface: "texts", node: "messages" },
+        { id: "call", time: "13:00", title: "Reach the person you need", body: "Voice and video calls start from the same roster, one tap away.", surface: "calls", node: "calls" },
+      ],
+    },
+    {
+      id: "response",
+      label: "Incident response",
+      tagline: "A small team stands up a working space fast and keeps one record of what happened.",
+      steps: [
+        { id: "space", time: "T+0", title: "Stand up a space", body: "Create a Bubble and open a huddle for the incident. People join from the devices they already carry.", surface: "drawer", node: "bubbles" },
+        { id: "call", time: "T+5 min", title: "Open a voice line", body: "Start a call from the roster. Calls connect through a real-time media provider; we make no end-to-end encryption claim for them.", surface: "calls", node: "calls" },
+        { id: "text", time: "T+10 min", title: "Keep sensitive detail in threads", body: "Direct and group messages are end-to-end encrypted, so detail can travel without the platform reading it.", surface: "texts", node: "messages" },
+        { id: "doc", time: "T+40 min", title: "Write the running log", body: "A log kept in Docs lives on the Spine timeline. Spine and Docs are private to the account but not end-to-end encrypted.", surface: "docs", node: "docs" },
+      ],
+    },
+    {
+      id: "handover",
+      label: "Shift handover",
+      tagline: "The outgoing team hands the day to the incoming team, with context that travels.",
+      steps: [
+        { id: "spine", time: "17:00", title: "The day on one timeline", body: "Spine keeps calls, notes and files for the day in one private timeline.", surface: "spine", node: "spine" },
+        { id: "doc", time: "17:20", title: "Write the briefing", body: "The handover briefing is written in Docs and sits right on the day it describes.", surface: "docs", node: "docs" },
+        { id: "oo", time: "17:40", title: "Summarize with OO", body: "OO can summarize the handover using only the context the user chooses to share. It runs on third-party cloud AI models today.", surface: "oo", node: "oo" },
+        { id: "text", time: "17:55", title: "Send it on, sealed", body: "The outgoing lead sends the summary to the incoming team in an end-to-end encrypted thread.", surface: "texts", node: "messages" },
+      ],
+    },
+    {
+      id: "program",
+      label: "Program office",
+      tagline: "Several teams coordinate one effort without everyone living in everyone's inbox.",
+      steps: [
+        { id: "id", time: "Mon", title: "One identity across teams", body: "The same passkey-backed identity carries across every part of the app.", surface: "id", node: "identity" },
+        { id: "docs", time: "Mon", title: "Shared plans in Docs", body: "Plans and status notes live in Docs, on the Spine timeline each team already uses.", surface: "docs", node: "docs" },
+        { id: "oo", time: "Wed", title: "Ask OO to pull it together", body: "OO works only with the context a person chooses to share, to draft a status summary.", surface: "oo", node: "oo" },
+        { id: "call", time: "Fri", title: "Close the loop live", body: "A voice or video call from the roster wraps the week.", surface: "calls", node: "calls" },
+      ],
+    },
+  ] satisfies DefenseScenario[],
+} as const;
+
+export type DefenseMapStatus = "built" | "roadmap";
+export type DefenseMapBoundary = "sealed" | "account" | "ai" | "neutral" | "roadmap";
+
+export type DefenseMapNode = {
+  id: string;
+  label: string;
+  sub: string;
+  status: DefenseMapStatus;
+  boundary: DefenseMapBoundary;
+  /** Plain statement of what it is today. */
+  body: string;
+  /** What we're designing it for. Intent, never a deployment. */
+  fit: string;
+  surface?: DefenseCaptureSurface;
+  /** Position in the map's 0–100 × 0–100 grid. */
+  x: number;
+  y: number;
+  energy: string;
+};
+
+export const DEFENSE_MAP = {
+  title: "The whole system, on one map",
+  intro: "Tap a part to see what it does today, where its data is sealed, and what we're designing it for.",
+  boundaryLabels: {
+    sealed: "Sealed end to end",
+    account: "Private to your account, not end-to-end encrypted",
+    ai: "Sent to third-party AI, only what you choose",
+    neutral: "Real-time media provider, no end-to-end claim",
+    roadmap: "Roadmap, not available yet",
+  } satisfies Record<DefenseMapBoundary, string>,
+  statusLabels: { built: "Built today", roadmap: "On our roadmap" } satisfies Record<DefenseMapStatus, string>,
+  nodes: [
+    { id: "identity", label: "Identity", sub: "Passkey on device", status: "built", boundary: "sealed", body: "Sign in with a passkey that stays on your device. The keys behind your identity are held by you.", fit: "Phishing-resistant sign-in for teams that can't afford shared passwords.", surface: "signin", x: 50, y: 46, energy: "var(--color-purple-4, #9327ff)" },
+    { id: "messages", label: "Messages", sub: "End-to-end encrypted", status: "built", boundary: "sealed", body: "Direct and group messages are sealed on the sender's device and opened on the recipient's. Jokuh relays ciphertext it can't read.", fit: "Encrypted coordination for distributed teams.", surface: "texts", x: 50, y: 12, energy: "var(--color-red-4, #ff0700)" },
+    { id: "calls", label: "Calls", sub: "Voice and video", status: "built", boundary: "neutral", body: "Voice and video calls start from the roster and connect through a real-time media provider. We make no end-to-end encryption claim for calls.", fit: "One-tap reach to the person you need.", surface: "calls", x: 14, y: 36, energy: "var(--color-green-4, #21dc11)" },
+    { id: "bubbles", label: "Bubbles", sub: "Teams and huddles", status: "built", boundary: "account", body: "A space for a team, with a huddle for each part of the work and a view of who's live in voice.", fit: "A working space a team can stand up in minutes.", surface: "drawer", x: 16, y: 72, energy: "#2c81ff" },
+    { id: "spine", label: "Spine", sub: "Shared memory", status: "built", boundary: "account", body: "A private timeline for the day. Spine is private to the account and stored on our servers; it is not end-to-end encrypted.", fit: "One record of what happened, in order.", surface: "spine", x: 86, y: 36, energy: "var(--color-yellow-4, #ffb800)" },
+    { id: "docs", label: "Docs", sub: "Lives in Spine", status: "built", boundary: "account", body: "Briefings and notes written in Docs live on the Spine day. Private to the account, not end-to-end encrypted.", fit: "Handover briefings and running logs that stay attached to the day.", surface: "docs", x: 84, y: 72, energy: "#ff4d00" },
+    { id: "oo", label: "OO", sub: "AI assistant", status: "built", boundary: "ai", body: "An assistant that works only with the context you choose to share. It runs on third-party cloud AI models today.", fit: "A private workspace assistant. Not for classified or controlled information today.", surface: "oo", x: 50, y: 80, energy: "#8c73ff" },
+    { id: "deploy", label: "Self-hosted", sub: "Dedicated deployment", status: "roadmap", boundary: "roadmap", body: "Not available yet. We're building toward deployments an organization can run on infrastructure it controls.", fit: "For programs that need to keep infrastructure in their own hands.", x: 28, y: 92, energy: "var(--color-blue-4, #0066ff)" },
+    { id: "usonly", label: "US-only", sub: "Data processing", status: "roadmap", boundary: "roadmap", body: "Not available yet. We're building toward an option that keeps data processing inside the United States.", fit: "For programs with data-residency requirements.", x: 72, y: 92, energy: "var(--color-blue-4, #0066ff)" },
+  ] satisfies DefenseMapNode[],
+  links: [
+    ["identity", "messages"],
+    ["identity", "calls"],
+    ["identity", "bubbles"],
+    ["identity", "spine"],
+    ["identity", "oo"],
+    ["spine", "docs"],
+    ["docs", "oo"],
+    ["bubbles", "calls"],
+  ] satisfies [string, string][],
+} as const;
+
+export type DefenseDayBeat = {
+  id: string;
+  time: string;
+  title: string;
+  body: string;
+  surface: DefenseCaptureSurface;
+  node: DefenseNodeId;
+};
+
+export const DEFENSE_DAY = {
+  title: "A day in the life",
+  label: "Illustrative day · real app UI with demo data",
+  intro: "One operator, one shift. Scroll to follow the day through the app.",
+  beats: [
+    { id: "signin", time: "06:30", title: "Sign in", body: "A passkey on the device opens the app. No password, nothing to phish.", surface: "signin", node: "identity" },
+    { id: "brief", time: "07:00", title: "Read the briefing", body: "The night shift's briefing is waiting in Docs, on today's Spine timeline.", surface: "docs", node: "docs" },
+    { id: "team", time: "08:30", title: "Check who's on", body: "The team's Bubble shows who's live in voice and which huddles are open.", surface: "drawer", node: "bubbles" },
+    { id: "text", time: "09:15", title: "Coordinate", body: "Updates move through end-to-end encrypted threads, sealed on one device and opened on the other.", surface: "texts", node: "messages" },
+    { id: "call", time: "13:00", title: "Make the call", body: "A voice or video call from the roster, one tap to reach the person you need.", surface: "calls", node: "calls" },
+    { id: "spine", time: "16:00", title: "Look back at the day", body: "Spine keeps the day's calls, notes and files on one private timeline.", surface: "spine", node: "spine" },
+    { id: "handover", time: "17:45", title: "Hand it over", body: "OO summarizes the handover from the context the operator chooses to share, ready for the next shift.", surface: "oo", node: "oo" },
+  ] satisfies DefenseDayBeat[],
+} as const;

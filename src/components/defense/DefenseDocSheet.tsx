@@ -12,7 +12,7 @@ import { SquircleBox } from "../system/squircle";
  * −135°; Close in red dismiss glass). Numbers are the Swift iOS Docs sheet's (`Sources/docs/docs-sheet.swift`,
  * `Sources/sheets/text-sheet.swift`, `wallet-liquid-chrome.swift`, `contact-row.swift`). Share copies the page link (native share sheet where there is one), More opens
  * the docs menu, Back / Close leave like the sheet would. The body (`children`) is the doc scroller.
- * **Connects to:** `DefenseAppShell`, `DefenseDoc`; styles `defense-app.css`.
+ * **Connects to:** `pages/AgentCourtConceptPage` (the Defense page itself moved to `goo/`); styles `defense-app.css`.
  * **Parity:** web app `components/sheets/DocsSheet.tsx`, `TextSheetHeaderFlanks.tsx`, `styles/center-sheet-paper-card.css`,
  * `styles/docs-sheet.css` (read-only source; values copied, not restyled).
  */

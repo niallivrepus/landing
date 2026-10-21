@@ -1,0 +1,11 @@
+/* Shared by the /defense marketing assets (capability statement, share images). Rendered by scripts/render-defense-assets.mjs. */
+@font-face { font-family: "Satoshi"; font-weight: 400; src: url("../../public/fonts/Satoshi-Regular.otf"); }
+@font-face { font-family: "Satoshi"; font-weight: 500; src: url("../../public/fonts/Satoshi-Medium.otf"); }
+@font-face { font-family: "Satoshi"; font-weight: 700; src: url("../../public/fonts/Satoshi-Bold.otf"); }
+@font-face { font-family: "Satoshi"; font-weight: 900; src: url("../../public/fonts/Satoshi-Black.otf"); }
+
+:root {
+  --purple: #9327ff; --red: #ff0700; --green: #21dc11; --yellow: #ffb800; --orange: #ff4d00; --oo: #8c73ff; --blue: #2c81ff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: "Satoshi", -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }

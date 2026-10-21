@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Jokuh — Capability Statement</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  @page { size: Letter; margin: 0; }
+  html, body { background: #fff; color: #0a0a0b; }
+  .page { width: 8.5in; height: 11in; position: relative; padding: .55in .6in .5in; overflow: hidden; }
+  .band { position: absolute; left: 0; right: 0; top: 0; height: 2.3in; background: #08080a; overflow: hidden; }
+  .band svg { position: absolute; right: .15in; top: .05in; width: 3.55in; overflow: visible; }
+  .head { position: relative; color: #fff; height: 1.55in; display: flex; flex-direction: column; justify-content: center; }
+  .head img { height: .3in; width: auto; align-self: flex-start; }
+  .kicker { margin-top: .16in; font-size: 9pt; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,.55); }
+  h1 { margin-top: .05in; font-size: 23pt; line-height: 1.06; font-weight: 900; letter-spacing: -.01em; max-width: 4.3in; }
+  .body { position: relative; margin-top: .72in; display: grid; grid-template-columns: 1.55fr 1fr; gap: .3in; }
+  h2 { font-size: 8.5pt; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: #6b6b73; margin-bottom: .08in; }
+  p, li { font-size: 9.6pt; line-height: 1.45; color: #2a2a2f; }
+  section { margin-bottom: .2in; }
+  ul { list-style: none; }
+  li { position: relative; padding-left: .17in; margin-bottom: .05in; }
+  li::before { content: ""; position: absolute; left: 0; top: .055in; width: .075in; height: .075in; border-radius: 50%; background: var(--c, #9327ff); }
+  .lead { font-size: 11pt; line-height: 1.45; color: #0a0a0b; }
+  .roadmap li::before { background: transparent; box-shadow: inset 0 0 0 1.2pt #9a9aa3; }
+  .status { padding: .14in .16in; border: 1px solid #d9d9df; border-radius: .16in; background: #f6f6f8; }
+  .status p { font-size: 9.2pt; }
+  .data dt { font-size: 7.8pt; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #85858d; margin-top: .09in; }
+  .data dd { font-size: 9.4pt; color: #1a1a1f; }
+  .shots { display: flex; gap: .1in; margin-top: .06in; }
+  .shots figure { flex: 1; }
+  .shots img { width: 100%; height: 1.55in; object-fit: cover; object-position: top; border-radius: .1in; border: 1px solid #d9d9df; background: #0a0a0b; }
+  .shots figcaption { margin-top: .04in; font-size: 7.2pt; color: #85858d; }
+  .foot { position: absolute; left: .6in; right: .6in; bottom: .38in; display: flex; justify-content: space-between; font-size: 7.6pt; color: #85858d; border-top: 1px solid #e4e4e8; padding-top: .09in; }
+</style></head>
+<body><div class="page">
+  <div class="band"><svg id="cluster"></svg></div>
+  <header class="head">
+    <img src="../../public/brand/jokuh-logomark-white.svg" alt="Jokuh">
+    <p class="kicker">Capability statement</p>
+    <h1>Secure communications and identity, with a private AI workspace</h1>
+  </header>
+
+  <div class="body">
+    <div>
+      <section>
+        <h2>Overview</h2>
+        <p class="lead">Jokuh is a secure communications and identity platform: end-to-end encrypted direct and group messages, voice and video calls, and phishing-resistant passkey sign-in, in one app on iPhone, iPad, Mac, Android and the web.</p>
+      </section>
+      <section>
+        <h2>Core competencies</h2>
+        <ul>
+          <li>Mobile-first secure communications engineering across Swift, Kotlin and the web</li>
+          <li>End-to-end encrypted direct and group messaging, with keys held on user devices</li>
+          <li>Passkey (WebAuthn) identity bound to the device: no shared password to phish</li>
+          <li>AI assistant orchestration (OO) that works only with context the user chooses to share</li>
+          <li>Real-time voice and video calling, integrated with team rosters and spaces</li>
+          <li>Full-stack delivery: Postgres and edge-function backend, push notification infrastructure</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Built today</h2>
+        <ul style="--c:#21dc11">
+          <li>End-to-end encrypted direct and group messages</li>
+          <li>Voice and video calls</li>
+          <li>Passkey sign-in and an identity you control</li>
+          <li>Bubbles: team spaces with live huddles</li>
+          <li>Spine and Docs: a private timeline and workspace (private to the account, not end-to-end encrypted)</li>
+          <li>OO, a private assistant (runs on third-party cloud AI models today)</li>
+          <li>Report and block tools to keep communities safe</li>
+        </ul>
+      </section>
+      <section>
+        <h2>On our roadmap</h2>
+        <ul class="roadmap">
+          <li>Dedicated and self-hosted deployment</li>
+          <li>US-only data processing</li>
+        </ul>
+      </section>
+    </div>
+
+    <aside>
+      <section class="status">
+        <h2>Where we are</h2>
+        <p>We're at the start of the government process. We don't hold federal contracts, authorizations, or certifications yet, and Jokuh isn't approved for classified information or CUI. We're open to pilots, research partnerships, and early programs that need private communications and identity.</p>
+      </section>
+      <section>
+        <h2>Designed for</h2>
+        <ul style="--c:#8c73ff">
+          <li>Secure team coordination on personal or issued devices</li>
+          <li>Phishing-resistant identity</li>
+          <li>A private AI workspace (not for classified or controlled information today)</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Company data</h2>
+        <dl class="data">
+          <dt>Offering</dt><dd>Secure communications and identity platform (software)</dd>
+          <dt>Relevant NAICS</dt><dd>513210 · 541511 · 541512</dd>
+          <dt>Platforms</dt><dd>iPhone, iPad, Mac, Android, web</dd>
+          <dt>Contact</dt><dd>jokuh.com/contact<br>jokuh.com/defense</dd>
+        </dl>
+      </section>
+    </aside>
+  </div>
+
+  <div class="foot"><span><b>JOKUH</b> · Joining Our Knowledge, Unifying Humanity.</span><span>App screens are recordings of the real app on demo data. Illustrative scenarios only.</span></div>
+</div>
+<script src="goo-cluster.js"></script>
+</body></html>
