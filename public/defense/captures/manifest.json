@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-10-21T20:08:50.667Z",
+  "capturedAt": "2026-10-21T21:07:02.033Z",
   "origin": "http://localhost:5173",
   "viewport": {
     "width": 1280,
@@ -174,8 +174,8 @@
       "light": {
         "poster": "/defense/captures/signin-light.jpg",
         "size": {
-          "width": 714,
-          "height": 644
+          "width": 650,
+          "height": 542
         },
         "webm": "/defense/captures/signin-light.webm",
         "mp4": "/defense/captures/signin-light.mp4",
