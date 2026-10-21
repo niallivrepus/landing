@@ -426,8 +426,8 @@ export const DEFENSE_SCENARIOS = {
       label: "Field team",
       tagline: "A distributed team stays in step across personal or issued phones and laptops.",
       steps: [
-        { id: "id", time: "06:30", title: "Everyone signs in the same way", body: "A passkey bound to each person's device opens the app. There's no shared password to phish.", surface: "signin", node: "identity" },
-        { id: "space", time: "06:45", title: "One space for the team", body: "A Bubble holds the team, with a huddle for each part of the work and a view of who's live in voice.", surface: "drawer", node: "bubbles" },
+        { id: "id", time: "06:30", title: "Everyone signs in the same way", body: "Each person signs in from one Welcome card with a passkey bound to their device. There's no shared password to phish.", surface: "signin", node: "identity" },
+        { id: "space", time: "06:45", title: "One space for the team", body: "The team gets a Bubble: a living drop that grows with its members, with faces on its rim for whoever's live in voice.", surface: "drawer", node: "bubbles" },
         { id: "text", time: "09:15", title: "Coordinate in encrypted threads", body: "Direct and group messages are sealed on the sender's device and opened on the recipient's. The platform in the middle only relays ciphertext.", surface: "texts", node: "messages" },
         { id: "call", time: "13:00", title: "Reach the person you need", body: "Voice and video calls start from the same roster, one tap away.", surface: "calls", node: "calls" },
       ],
@@ -538,7 +538,7 @@ export const DEFENSE_DAY = {
   beats: [
     { id: "signin", time: "06:30", title: "Sign in", body: "A passkey on the device opens the app. No password, nothing to phish.", surface: "signin", node: "identity" },
     { id: "brief", time: "07:00", title: "Read the briefing", body: "The night shift's briefing is waiting in Docs, on today's Spine timeline.", surface: "docs", node: "docs" },
-    { id: "team", time: "08:30", title: "Check who's on", body: "The team's Bubble shows who's live in voice and which huddles are open.", surface: "drawer", node: "bubbles" },
+    { id: "team", time: "08:30", title: "Check who's on", body: "The team's Bubbles show who's live in voice and where unread messages are waiting.", surface: "drawer", node: "bubbles" },
     { id: "text", time: "09:15", title: "Coordinate", body: "Updates move through end-to-end encrypted threads, sealed on one device and opened on the other.", surface: "texts", node: "messages" },
     { id: "call", time: "13:00", title: "Make the call", body: "A voice or video call from the roster, one tap to reach the person you need.", surface: "calls", node: "calls" },
     { id: "spine", time: "16:00", title: "Look back at the day", body: "Spine keeps the day's calls, notes and files on one private timeline.", surface: "spine", node: "spine" },
