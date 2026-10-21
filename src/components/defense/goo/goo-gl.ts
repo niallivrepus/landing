@@ -177,18 +177,23 @@ void main() {
 
   vec3 col;
   float d = shapeCol(p, col);
+  // One distance + its gradient; every offset band (highlights, shade, drops, specular) uses the first-order
+  // estimate d(p + v) ≈ d + g·v, so the material costs no extra shape evaluations. Far from an edge: nothing to do.
+  float edge = 26.0 * uS;
+  if (d > edge && uLight == 0) { o = c; return; }
+  vec2 g = vec2(0.0);
+  if (abs(d) < edge) {
+    float e = 0.75 * uS;
+    g = vec2(shape(p + vec2(e, 0.0)) - d, shape(p + vec2(0.0, e)) - d) / e;
+  }
   float inside = band(d, aa);
 
-  if (uLight == 1) {
+  if (uLight == 1 && d < edge) {
     // Warm cast + contact shadow (cut out of the shape) and the refraction tint under tinted beads.
-    float dd = shape(p - vec2(0.0, 9.0 * uS));
-    c = over(c, vec3(0.357, 0.271, 0.149), (1.0 - inside) * band(dd, 8.0 * uS) * 0.2);
-    float dc = shape(p - vec2(0.0, 1.5 * uS));
-    c = over(c, vec3(0.165, 0.125, 0.078), (1.0 - inside) * band(dc, 1.2 * uS) * 0.22);
+    c = over(c, vec3(0.357, 0.271, 0.149), (1.0 - inside) * band(d - 9.0 * uS * g.y, 8.0 * uS) * 0.2);
+    c = over(c, vec3(0.165, 0.125, 0.078), (1.0 - inside) * band(d - 1.5 * uS * g.y, 1.2 * uS) * 0.22);
     float tint = clamp(0.12 * (3.0 - (col.r + col.g + col.b)), 0.0, 1.0);
-    float dk = shape(p - vec2(0.0, 7.0 * uS));
-    c = over(c, col, (1.0 - inside) * band(dk, 6.0 * uS) * tint);
-    // Warm outer hairline.
+    c = over(c, col, (1.0 - inside) * band(d - 7.0 * uS * g.y, 6.0 * uS) * tint);
     c = over(c, vec3(0.235, 0.176, 0.078), (1.0 - inside) * band(d - 1.0 * uS, aa) * 0.2);
   }
 
@@ -197,33 +202,22 @@ void main() {
     float ba = uLight == 1 ? clamp(0.3 + 0.16 * lum, 0.0, 1.0) : clamp(0.77 - 0.24 * lum, 0.0, 1.0);
     c = over(c, col, inside * ba);
     if (uLight == 1) {
-      // Bottom gradient + warm inner shade.
-      float dg = shape(p + vec2(0.0, 14.0 * uS));
-      c = over(c, vec3(0.541, 0.478, 0.376), inside * smoothstep(-10.0 * uS, 10.0 * uS, dg) * 0.14);
-      float ds = shape(p + vec2(0.0, 3.0 * uS));
-      c = over(c, vec3(0.235, 0.176, 0.078), inside * smoothstep(-2.0 * uS, 2.0 * uS, ds) * 0.16);
+      c = over(c, vec3(0.541, 0.478, 0.376), inside * smoothstep(-10.0 * uS, 10.0 * uS, d + 14.0 * uS * g.y) * 0.14);
+      c = over(c, vec3(0.235, 0.176, 0.078), inside * smoothstep(-2.0 * uS, 2.0 * uS, d + 3.0 * uS * g.y) * 0.16);
     }
-    // Top highlights: where the pixel just above is outside the shape.
     float hiDy = (uLight == 1 ? 2.5 : 2.0) * uS;
     float hiBlur = (uLight == 1 ? 1.2 : 1.5) * uS;
-    float dUp = shape(p - vec2(0.0, hiDy));
-    c = over(c, vec3(1.0), inside * smoothstep(-hiBlur, hiBlur, dUp) * (uLight == 1 ? 1.0 : 0.15));
-    float dUp2 = shape(p - vec2(0.0, 1.0 * uS));
-    c = over(c, vec3(1.0), inside * smoothstep(-(uLight == 1 ? 0.4 : 0.5) * uS, 0.5 * uS, dUp2) * (uLight == 1 ? 0.9 : 0.15));
-    // Inside rim.
+    c = over(c, vec3(1.0), inside * smoothstep(-hiBlur, hiBlur, d - hiDy * g.y) * (uLight == 1 ? 1.0 : 0.15));
+    c = over(c, vec3(1.0), inside * smoothstep(-0.5 * uS, 0.5 * uS, d - 1.0 * uS * g.y) * (uLight == 1 ? 0.9 : 0.15));
     float rimW = (uLight == 1 ? 1.0 : 2.0) * uS;
     c = over(c, vec3(1.0), inside * band(-d - rimW, aa) * (uLight == 1 ? 0.85 : 0.2));
     if (uLight == 1) {
-      // Dome specular (light from the upper left, as the kit's feDistantLight 235° / 58°).
-      float e = 1.5 * uS;
+      // Dome specular: the surface tilts outward near the edge (light from the upper left, the kit's 235° / 58°).
       float R = 7.0 * uS;
-      float hx = clamp(-shape(p + vec2(e, 0.0)) / R, 0.0, 1.0) - clamp(-shape(p - vec2(e, 0.0)) / R, 0.0, 1.0);
-      float hy = clamp(-shape(p + vec2(0.0, e)) / R, 0.0, 1.0) - clamp(-shape(p - vec2(0.0, e)) / R, 0.0, 1.0);
-      vec3 n = normalize(vec3(-hx * 3.0, -hy * 3.0, 2.0 * e / R));
-      vec3 L = normalize(vec3(-0.30, -0.43, 0.85));
-      vec3 H = normalize(L + vec3(0.0, 0.0, 1.0));
-      float sp = pow(max(dot(n, H), 0.0), 26.0);
-      c = over(c, vec3(1.0), inside * sp * 0.55);
+      float rim = step(-R, d);
+      vec3 n = normalize(vec3(g * 1.6 * rim, 1.0));
+      vec3 H = normalize(normalize(vec3(-0.30, -0.43, 0.85)) + vec3(0.0, 0.0, 1.0));
+      c = over(c, vec3(1.0), inside * pow(max(dot(n, H), 0.0), 26.0) * 0.55 * rim);
     }
   }
   o = c;
