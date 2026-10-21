@@ -1,7 +1,8 @@
 import { cn } from "@jokuh/gooey";
-import { useCallback, useEffect, useId, useMemo, useRef, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { GooMaterialFilter } from "./GooMaterialFilter";
 import { gooParams, splexSpec, viscositySpring, type GooScheme, type SpringParams } from "./goo-material";
+import { GooGL, resolveRgb, type GlFrame } from "./goo-gl";
 
 /**
  * **Purpose:** A living goo stage: beads of Splex glass you can poke, reach for, drag and fling. Each bead is a 2-D
@@ -43,6 +44,8 @@ const SCALE_SPRING: SpringParams = viscositySpring(20);
 const MAX_DT = 0.05;
 /** Membrane bridge circles between consecutive zone members, so a zone reads as one skin. */
 const BRIDGE = 4;
+/** The GPU canvas bleeds past the stage on every side (fraction of the stage), so glows and drops are never clipped. */
+const BLEED = 0.18;
 
 function step(x: number, v: number, target: number, p: SpringParams, dt: number): [number, number] {
   let left = Math.min(dt, MAX_DT);
@@ -110,6 +113,11 @@ export function GooStage({
   const circleRefs = useRef(new Map<string, SVGCircleElement>());
   const zoneRefs = useRef(new Map<string, SVGCircleElement>());
   const glowRefs = useRef(new Map<string, SVGCircleElement>());
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const probeRef = useRef<HTMLSpanElement>(null);
+  const glRef = useRef<GooGL | null>(null);
+  const [useGl, setUseGl] = useState(false);
+  const rgb = useRef(new Map<string, [number, number, number]>());
   const linkRefs = useRef(new Map<string, SVGLineElement>());
   const labelRefs = useRef(new Map<string, HTMLElement>());
   const sims = useRef(new Map<string, Sim>());
@@ -117,8 +125,8 @@ export function GooStage({
   const drag = useRef<{ id: string; x: number; y: number; moved: boolean; pointerId: number } | null>(null);
   const raf = useRef(0);
   const last = useRef(0);
-  const props = useRef({ beads, links, zones, picked, spread, converge, reach });
-  props.current = { beads, links, zones, picked, spread, converge, reach };
+  const props = useRef({ beads, links, zones, picked, spread, converge, reach, scheme, goo, glow });
+  props.current = { beads, links, zones, picked, spread, converge, reach, scheme, goo, glow };
 
   const params = useMemo(() => gooParams(goo, edge), [goo, edge]);
   const glowScale = 1.5;
@@ -144,8 +152,58 @@ export function GooStage({
     }
   }
 
+  const linkWidth = useCallback(
+    (lk: GooLink, a: Sim, b: Sim) => {
+      const bs = props.current.beads;
+      const ba = bs.find((x) => x.id === lk.a);
+      const bb = bs.find((x) => x.id === lk.b);
+      if (!ba || !bb) return 0;
+      const ha = homeOf(ba);
+      const hb = homeOf(bb);
+      const rest = Math.hypot(ha.x - hb.x, ha.y - hb.y);
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      // Stretch thins the neck; past 1.6× its rest length it has snapped (drip).
+      const stretch = Math.max(0, d - rest) / Math.max(1, rest * 0.6);
+      return lk.w * Math.max(0, 1 - stretch) * (0.75 + 0.25 * Math.min(a.s, b.s));
+    },
+    [homeOf],
+  );
+
   const paint = useCallback(() => {
     const { beads: bs, links: ls, zones: zs } = props.current;
+    const gl = glRef.current;
+    const canvas = canvasRef.current;
+    if (gl && canvas) {
+      const solidIds = bs.filter((b) => !b.ghost).map((b) => b.id);
+      const index = new Map(solidIds.map((id, i) => [id, i]));
+      const frame: GlFrame = {
+        scale: canvas.width / (width * (1 + 2 * BLEED)),
+        ox: width * BLEED,
+        oy: height * BLEED,
+        light: props.current.scheme === "light",
+        goo: gooParams(props.current.goo, 50).blur * 3,
+        glow: props.current.glow,
+        beads: solidIds.map((id) => {
+          const b = bs.find((x) => x.id === id)!;
+          const s = sims.current.get(id)!;
+          return { x: s.x, y: s.y, r: Math.max(0, b.r * s.s), rgb: rgb.current.get(id) ?? [0.5, 0.5, 0.5] };
+        }),
+        links: ls.flatMap((lk) => {
+          const a = sims.current.get(lk.a);
+          const b = sims.current.get(lk.b);
+          const ia = index.get(lk.a);
+          const ib = index.get(lk.b);
+          if (!a || !b || ia == null || ib == null) return [];
+          return [{ ax: a.x, ay: a.y, bx: b.x, by: b.y, w: linkWidth(lk, a, b), a: ia, b: ib }];
+        }),
+        zones: zs.map((z) => ({
+          members: z.members.map((m) => index.get(m) ?? -1).filter((i) => i >= 0),
+          pad: z.pad,
+          rgb: rgb.current.get(`zone:${z.id}`) ?? [0.5, 0.5, 0.5],
+        })),
+      };
+      gl.draw(frame);
+    }
     for (const b of bs) {
       const s = sims.current.get(b.id);
       if (!s) continue;
@@ -202,20 +260,14 @@ export function GooStage({
       const ba = bs.find((x) => x.id === lk.a);
       const bb = bs.find((x) => x.id === lk.b);
       if (!a || !b || !el || !ba || !bb) continue;
-      const ha = homeOf(ba);
-      const hb = homeOf(bb);
-      const rest = Math.hypot(ha.x - hb.x, ha.y - hb.y);
-      const d = Math.hypot(a.x - b.x, a.y - b.y);
-      // Stretch thins the neck; past 1.6× its rest length it has snapped (drip).
-      const stretch = Math.max(0, d - rest) / Math.max(1, rest * 0.6);
-      const w = lk.w * Math.max(0, 1 - stretch) * (0.75 + 0.25 * Math.min(a.s, b.s));
+      const w = linkWidth(lk, a, b);
       el.setAttribute("x1", a.x.toFixed(2));
       el.setAttribute("y1", a.y.toFixed(2));
       el.setAttribute("x2", b.x.toFixed(2));
       el.setAttribute("y2", b.y.toFixed(2));
       el.setAttribute("stroke-width", w.toFixed(2));
     }
-  }, [height, homeOf, width, glowScale]);
+  }, [height, homeOf, width, glowScale, linkWidth]);
 
   const tick = useCallback(
     (now: number) => {
@@ -289,6 +341,49 @@ export function GooStage({
     if (!raf.current) raf.current = requestAnimationFrame(tick);
   }, [homeOf, paint, reduceMotion, tick]);
 
+  // GPU renderer (falls back to the SVG filters when WebGL2 is unavailable).
+  useLayoutEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+    const gl = GooGL.create(canvas);
+    glRef.current = gl;
+    setUseGl(Boolean(gl));
+    return () => {
+      glRef.current = null;
+    };
+  }, []);
+
+  // Resolve library colours (CSS vars) to RGB for the shader; again when the theme changes.
+  useLayoutEffect(() => {
+    const probe = probeRef.current;
+    if (!probe) return;
+    for (const b of beads) rgb.current.set(b.id, resolveRgb(probe, b.color));
+    for (const z of zones) rgb.current.set(`zone:${z.id}`, resolveRgb(probe, z.color));
+    paint();
+  }, [beads, zones, scheme, paint]);
+
+  // Canvas backing size follows the stage (device pixels, capped at 2×).
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    const canvas = canvasRef.current;
+    if (!wrap || !canvas || !useGl) return undefined;
+    const fit = () => {
+      // CPU rasterisers get a lighter canvas (upscaled by CSS); real GPUs render at up to 2× device pixels.
+      const dpr = glRef.current?.software ? 0.6 : Math.min(2, window.devicePixelRatio || 1);
+      const w = Math.max(1, Math.round(wrap.clientWidth * (1 + 2 * BLEED) * dpr));
+      const h = Math.max(1, Math.round(wrap.clientHeight * (1 + 2 * BLEED) * dpr));
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
+      paint();
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [paint, useGl]);
+
   useEffect(() => {
     wake();
   }, [wake, picked, spread, converge, beads]);
@@ -310,6 +405,8 @@ export function GooStage({
 
   const onMove = (e: PointerEvent<HTMLDivElement>) => {
     if (reduceMotion) return;
+    // No GPU (software WebGL or the SVG fallback): skip the idle reach so a CPU only renders while someone drags.
+    if (!drag.current && (!glRef.current || glRef.current.software)) return;
     const p = toStage(e);
     if (!p) return;
     pointer.current = p;
@@ -382,6 +479,14 @@ export function GooStage({
       role="group"
       aria-label={ariaLabel}
     >
+      <canvas
+        ref={canvasRef}
+        className="goo-stage__canvas"
+        aria-hidden
+        data-on={useGl ? "true" : "false"}
+        style={{ inset: `${-BLEED * 100}% ${-BLEED * 100}%`, width: `${(1 + 2 * BLEED) * 100}%`, height: `${(1 + 2 * BLEED) * 100}%` }}
+      />
+      <span ref={probeRef} aria-hidden className="goo-stage__probe" />
       <svg className="goo-stage__svg" viewBox={`0 0 ${width} ${height}`} aria-hidden focusable="false">
         <defs>
           <GooMaterialFilter id={filterId} spec={spec} params={params} region={{ x: -margin, y: -margin, width: width + margin * 2, height: height + margin * 2 }} />
@@ -406,7 +511,7 @@ export function GooStage({
           </filter>
         </defs>
 
-        {glow > 0 ? (
+        {!useGl && glow > 0 ? (
           <g filter={`url(#${glowId})`} opacity={glow} className="goo-stage__glow">
             {solid.map((b) => (
               <circle
@@ -424,7 +529,7 @@ export function GooStage({
           </g>
         ) : null}
 
-        {zones.map((z) => (
+        {(useGl ? [] : zones).map((z) => (
           <g key={z.id} filter={`url(#${zoneFilterId})`} className="goo-stage__zone" data-zone={z.id}>
             {z.members.slice(0, -1).flatMap((m, i) => {
               const a = beads.find((x) => x.id === m);
@@ -482,6 +587,7 @@ export function GooStage({
           />
         ))}
 
+        {useGl ? null : (
         <g filter={`url(#${filterId})`}>
           {links.map((lk) => {
             const a = beads.find((x) => x.id === lk.a);
@@ -521,6 +627,7 @@ export function GooStage({
             );
           })}
         </g>
+        )}
       </svg>
 
       {beads.map((b) => (

@@ -5,6 +5,7 @@ import { DEFENSE_HERO, DEFENSE_HERO_FACTS, DEFENSE_MAP, DEFENSE_SOLUTION } from 
 import { JokuhButton } from "../../system/JokuhButton";
 import { DEFENSE_NODE_ENERGY } from "./defense-energy";
 import { GooStage, type GooBead, type GooLink } from "./GooStage";
+import { useNarrow } from "./use-narrow";
 import { useScrollProgress } from "./use-scroll-progress";
 
 /**
@@ -28,6 +29,22 @@ const BEADS: GooBead[] = [
   { id: "bubbles", x: 150, y: 250, r: 42, color: DEFENSE_NODE_ENERGY.bubbles, label: "Bubbles" },
 ];
 
+/** Phones: a portrait cluster with bigger beads (finger-sized). */
+const NARROW = { w: 600, h: 660 };
+const NARROW_POS: Record<string, [number, number, number]> = {
+  identity: [310, 330, 92],
+  messages: [150, 150, 62],
+  spine: [460, 140, 62],
+  calls: [130, 470, 58],
+  docs: [490, 460, 56],
+  oo: [320, 580, 60],
+  bubbles: [62, 300, 42],
+};
+const NARROW_BEADS: GooBead[] = BEADS.map((b) => {
+  const [x, y, r] = NARROW_POS[b.id]!;
+  return { ...b, x, y, r };
+});
+
 const LINKS: GooLink[] = [
   { a: "identity", b: "messages", w: 30 },
   { a: "identity", b: "spine", w: 30 },
@@ -44,6 +61,7 @@ export function DefenseHero() {
   const scheme = resolvedTheme === "light" ? "light" : "dark";
   const ref = useRef<HTMLElement>(null);
   const leave = useScrollProgress(ref, "leave", !reduceMotion);
+  const narrow = useNarrow();
   const [picked, setPicked] = useState<string | null>(null);
   const line = useMemo(() => (picked ? DEFENSE_MAP.nodes.find((n) => n.id === picked) : null), [picked]);
 
@@ -70,9 +88,10 @@ export function DefenseHero() {
 
       <div className="dgoo-hero__stage">
         <GooStage
-          width={W}
-          height={H}
-          beads={BEADS}
+          key={narrow ? "narrow" : "wide"}
+          width={narrow ? NARROW.w : W}
+          height={narrow ? NARROW.h : H}
+          beads={narrow ? NARROW_BEADS : BEADS}
           links={LINKS}
           picked={picked}
           onPick={(id) => setPicked((p) => (p === id ? null : id))}

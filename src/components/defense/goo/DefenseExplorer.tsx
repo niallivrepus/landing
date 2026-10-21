@@ -10,6 +10,7 @@ import {
 } from "../../../data/defense";
 import { DEFENSE_BOUNDARY_ENERGY, DEFENSE_NODE_ENERGY } from "./defense-energy";
 import { GooStage, type GooBead, type GooLink, type GooZone } from "./GooStage";
+import { useNarrow } from "./use-narrow";
 import { GooCapture } from "./GooCapture";
 import { GooTabs } from "./GooTabs";
 
@@ -105,7 +106,7 @@ function Missions({ reduceMotion }: { reduceMotion: boolean }) {
       </div>
       <p className="defense-missions__tagline">{scenario.tagline}</p>
 
-      <ol className="defense-chain" style={{ "--n": steps.length, "--p": progress, "--energy": energy } as CSSProperties} aria-label="Steps">
+      <ol className="defense-chain" style={{ "--n": steps.length, "--p": progress, "--a": index, "--energy": energy } as CSSProperties} aria-label="Steps">
         <span aria-hidden className="defense-chain__goo">
           <span className="defense-chain__line" />
           <span className="defense-chain__fill" />
@@ -156,37 +157,61 @@ function Missions({ reduceMotion }: { reduceMotion: boolean }) {
 const MAP_W = 1000;
 const MAP_H = 760;
 const MAP_R: Record<string, number> = { identity: 70, roadmap: 30 };
+/** Phones: a portrait map (same zones, stacked) with finger-sized parts. */
+const MAP_NARROW = { w: 600, h: 980 };
+const MAP_NARROW_POS: Record<string, [number, number, number]> = {
+  messages: [150, 150, 60],
+  identity: [390, 260, 80],
+  calls: [120, 450, 56],
+  bubbles: [350, 500, 54],
+  spine: [500, 640, 56],
+  docs: [330, 770, 54],
+  oo: [120, 760, 58],
+  usonly: [520, 880, 34],
+  deploy: [300, 930, 34],
+};
 
 function SystemMap({ reduceMotion }: { reduceMotion: boolean }) {
   const { nodes, links, zones, hint, title, intro, boundaryLabels, statusLabels } = DEFENSE_MAP;
   const { resolvedTheme } = useTheme();
   const [pickedId, setPickedId] = useState<string>("identity");
   const picked: DefenseMapNode = nodes.find((n) => n.id === pickedId) ?? nodes[0];
+  const narrow = useNarrow();
+  const W = narrow ? MAP_NARROW.w : MAP_W;
+  const H = narrow ? MAP_NARROW.h : MAP_H;
+  const pos = (n: DefenseMapNode): [number, number, number] =>
+    narrow ? MAP_NARROW_POS[n.id]! : [n.x, n.y, n.status === "roadmap" ? MAP_R.roadmap! : MAP_R[n.id] ?? 50];
 
   const beads = useMemo<GooBead[]>(
     () =>
       nodes.map((n) => ({
         id: n.id,
-        x: n.x,
-        y: n.y,
-        r: n.status === "roadmap" ? MAP_R.roadmap! : MAP_R[n.id] ?? 50,
+        x: pos(n)[0],
+        y: pos(n)[1],
+        r: pos(n)[2],
         color: n.energy,
         label: n.label,
         sub: n.sub,
         ghost: n.status === "roadmap",
       })),
-    [nodes],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [nodes, narrow],
   );
   const gooLinks = useMemo<GooLink[]>(() => links.map(([a, b]) => ({ a, b, w: a === "identity" || b === "identity" ? 16 : 12 })), [links]);
   const gooZones = useMemo<GooZone[]>(
     () => zones.map((z) => ({ id: z.id, members: [...z.members], color: DEFENSE_BOUNDARY_ENERGY[z.id], pad: z.id === "account" ? 1.75 : 1.85 })),
     [zones],
   );
-  const zoneTag = (members: readonly string[]) => {
-    const ms = nodes.filter((n) => members.includes(n.id));
-    const x = ms.reduce((a, n) => a + n.x, 0) / ms.length;
-    const top = Math.min(...ms.map((n) => n.y - (MAP_R[n.id] ?? 50) * 1.85));
-    return { left: `${(x / MAP_W) * 100}%`, top: `${(Math.max(14, top) / MAP_H) * 100}%` };
+  const zoneTag = (id: string, members: readonly string[]) => {
+    const ms = nodes.filter((n) => members.includes(n.id)).map(pos);
+    const x = ms.reduce((a, p) => a + p[0], 0) / ms.length;
+    // Phones: the account membrane sits under Identity, so its tag goes below the zone instead.
+    if (narrow && id === "account") {
+      const bottom = Math.max(...ms.map((p) => p[1] + p[2] * 1.85));
+      return { left: `${(x / W) * 100}%`, top: `${(Math.min(H - 14, bottom) / H) * 100}%`, transform: "translate(-50%, 0)" };
+    }
+    const top = Math.min(...ms.map((p) => p[1] - p[2] * 1.85));
+    return { left: `${(x / W) * 100}%`, top: `${(Math.max(14, top) / H) * 100}%` };
   };
 
   return (
@@ -197,8 +222,9 @@ function SystemMap({ reduceMotion }: { reduceMotion: boolean }) {
       </div>
       <div className="defense-map__body">
         <GooStage
-          width={MAP_W}
-          height={MAP_H}
+          key={narrow ? "narrow" : "wide"}
+          width={W}
+          height={H}
           beads={beads}
           links={gooLinks}
           zones={gooZones}
@@ -216,7 +242,7 @@ function SystemMap({ reduceMotion }: { reduceMotion: boolean }) {
           hint={reduceMotion ? null : <span>{hint}</span>}
         >
           {zones.map((z) => (
-            <span key={z.id} className="defense-map__zone-tag" data-zone={z.id} style={{ ...zoneTag(z.members), "--energy": DEFENSE_BOUNDARY_ENERGY[z.id] } as CSSProperties}>
+            <span key={z.id} className="defense-map__zone-tag" data-zone={z.id} style={{ ...zoneTag(z.id, z.members), "--energy": DEFENSE_BOUNDARY_ENERGY[z.id] } as unknown as CSSProperties}>
               {z.label}
             </span>
           ))}

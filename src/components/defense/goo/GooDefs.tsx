@@ -16,7 +16,9 @@ export function GooDefs() {
       <defs>
         {/* Standard: chrome (tabs). */}
         <GooMaterialFilter id="dg-splex-standard" spec={spec} params={gooParams(40, 50)} />
-        {/* Juicy: moments (chain, rail, splat). */}
+        {/* Subtle: reading surfaces (the Missions chain, the day rail). */}
+        <GooMaterialFilter id="dg-splex-subtle" spec={spec} params={gooParams(16, 55)} />
+        {/* Juicy: moments (the recording splat). */}
         <GooMaterialFilter id="dg-splex-juicy" spec={spec} params={gooParams(58, 50)} />
       </defs>
     </svg>

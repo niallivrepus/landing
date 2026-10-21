@@ -45,7 +45,7 @@ test('defense system map keeps the trust claims honest', async ({ page }) => {
   await expect(page.getByRole('tab', { name: 'System map' })).toHaveAttribute('aria-selected', 'true');
 
   const detail = page.locator('.defense-detail');
-  const map = page.locator('.defense-map__canvas');
+  const map = page.locator('.defense-map__stage');
   await map.getByRole('button', { name: /^Spine/ }).click();
   await expect(detail).toContainText('not end-to-end encrypted');
   await expect(detail).toContainText('Built today');
@@ -93,4 +93,30 @@ test('defense page is still under reduced motion: no recordings mounted', async 
   await page.waitForTimeout(1500);
   await expect(page.locator('.defense-cap video')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Pause' })).toHaveCount(0);
+});
+
+test('defense goo: a part can be dragged out and springs home', async ({ page }) => {
+  await primeCookieConsent(page);
+  await page.goto('/defense');
+
+  const bead = page.locator('.dgoo-hero .goo-stage__bead', { hasText: 'Messages' });
+  await expect(bead).toBeVisible();
+  const home = await bead.boundingBox();
+  if (!home) throw new Error('no bead');
+  const x = home.x + home.width / 2;
+  const y = home.y + home.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x - 180, y + 60, { steps: 8 });
+  await page.waitForTimeout(250);
+  const pulled = await bead.boundingBox();
+  expect(Math.abs((pulled?.x ?? 0) - home.x)).toBeGreaterThan(80);
+  await page.mouse.up();
+  await expect
+    .poll(async () => Math.abs(((await bead.boundingBox())?.x ?? 0) - home.x), { timeout: 4000 })
+    .toBeLessThan(4);
+
+  // A tap reads the part's line.
+  await page.locator('.dgoo-hero .goo-stage__bead', { hasText: 'Spine' }).click();
+  await expect(page.locator('.dgoo-hero__line')).toContainText('not end-to-end encrypted');
 });
