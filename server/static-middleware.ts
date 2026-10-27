@@ -2,6 +2,7 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { dirname, extname, join, normalize } from "node:path";
 import type { ServerResponse } from "node:http";
 import type { Connect } from "vite";
+import { isHiddenRoute, redirectTargetFor } from "../src/config/hidden-routes";
 
 const MIME_TYPES: Record<string, string> = {
   ".css": "text/css; charset=utf-8",
@@ -144,7 +145,6 @@ function redirect(res: ServerResponse, location: string, status = 302) {
  */
 const KNOWN_SPA_PREFIXES = [
   "/demo",
-  "/download",
   "/newsroom",
   "/journal",
   "/news",
@@ -405,6 +405,20 @@ export function createStaticMiddleware(options: {
 
     if (canonicalHost === "apex" && host.startsWith("www.")) {
       redirect(resNode, `https://${host.slice(4)}${url.pathname}${url.search}`, 308);
+      return;
+    }
+
+    // Old URLs that moved to a live page (`/download` -> the Download Jokuh sheet at `/?get=1`).
+    const movedTo = redirectTargetFor(pathname);
+    if (movedTo) {
+      redirect(resNode, movedTo, 302);
+      return;
+    }
+
+    // Hidden marketing pages (`src/config/hidden-routes.ts`) go home. 302, not 301, so a page can come back later
+    // without browsers having cached the hop. Files such as `/shipped-feed.json` and `/rss.xml` never match.
+    if (isHiddenRoute(pathname)) {
+      redirect(resNode, `/${url.search}`, 302);
       return;
     }
 

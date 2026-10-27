@@ -34,7 +34,7 @@ export const AGENTS_HERO = {
   title: "Your agents. Answer in a tap.",
   subtitle:
     "Villains that work for you across your apps and inside Jokuh. When one needs a decision, it asks, and you answer with a tap or a keystroke.",
-  primary: { label: "Get Jokuh", href: "/download" },
+  primary: { label: "Get Jokuh", href: "/?get=1" },
   secondary: { label: "How it works", href: "#how-it-works" },
   note: "Agents are rolling out on iPhone, iPad, Mac, Android and the web. Anything marked Rolling out may not be on your device yet.",
 } as const;
@@ -213,7 +213,7 @@ export const AGENTS_FAQ = [
 export const AGENTS_CLOSING = {
   title: "Meet your agents.",
   label: "Get Jokuh",
-  href: "/download",
+  href: "/?get=1",
 } as const;
 
 /** Inbox illustration rows (static). Agent names and avatars come from the OOpolis render — villains, not people. */

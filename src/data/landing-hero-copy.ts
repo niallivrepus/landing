@@ -20,7 +20,7 @@ export const SITE_DOCUMENT_TITLE = "Jokuh — Private intelligence, identity, an
  * first line of `FOOTER_SIGNATURE`.
  */
 export const SITE_PRODUCT_SENTENCE =
-  "Jokuh is a private workspace with your own AI, OO, that remembers your calls, chats, and files — without giving that context to anyone else.";
+  "Jokuh is one private app for your calls, texts, memories and money. OO helps with all of it.";
 
 /** Full-bleed office hero behind the homepage headline and prompt bar. */
 export const LANDING_HOME_HERO_IMAGE = "/images/home/hero-office.png";

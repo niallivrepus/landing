@@ -41,10 +41,17 @@ const LABEL_GAP_SPREAD_MS = 2200;
  * **Dims** while the visitor focuses or types in the bar (`dim`, CSS opacity transition).
  * **Parity:** jokuh-live `frontend/src/guest-home/GuestHeroSwarm.tsx` (same model file).
  */
-export default function GooHeroSwarm({ dim }: { dim: boolean }) {
+export default function GooHeroSwarm({
+  dim,
+  frameFor = swarmFrame,
+}: {
+  dim: boolean;
+  /** The clear zone for a stage of `w` × `h` (default: the hero column). The Docs shell clears its sheet instead. */
+  frameFor?: (w: number, h: number) => SwarmFrame;
+}) {
   const root = useRef<HTMLDivElement>(null);
   const items = useRef<(HTMLDivElement | null)[]>([]);
-  const frame = useRef<SwarmFrame>(swarmFrame(1200, 800));
+  const frame = useRef<SwarmFrame>(frameFor(1200, 800));
   const [reduced] = useState(prefersReducedMotion);
   const [label, setLabel] = useState<{ i: number; text: string } | null>(null);
   const fades = useRef<number[]>(HERO_BABIES.map(() => 1));
@@ -78,7 +85,7 @@ export default function GooHeroSwarm({ dim }: { dim: boolean }) {
     const ro = new ResizeObserver((entries) => {
       const r = entries[entries.length - 1]?.contentRect;
       if (!r) return;
-      frame.current = swarmFrame(r.width, r.height);
+      frame.current = frameFor(r.width, r.height);
       if (reduced) place(0, true);
     });
     ro.observe(el);

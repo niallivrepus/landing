@@ -9,6 +9,7 @@ import {
 import { HOME_STORIES, type HomeStory } from "../data/home-stories";
 import { type ProductId, PRODUCTS } from "../data/products";
 import { STORY_DETAILS } from "../data/stories-detail";
+import { isHiddenRoute } from "../config/hidden-routes";
 
 export type SiteArticleHit = {
   href: string;
@@ -234,7 +235,7 @@ const CURATED: SiteArticleHit[] = [
     external: false,
   },
   {
-    href: "/download",
+    href: "/?get=1",
     title: "Waitlist",
     snippet: "Request early access and regional rollout updates.",
     meta: "Page",
@@ -292,7 +293,10 @@ function buildCorpus(): CorpusEntry[] {
     seen.add(c.href);
     return [entryForHit(c)];
   });
-  return [...fromNews, ...fromStories, ...fromProducts, ...curatedFiltered];
+  // Hidden routes redirect home (`config/hidden-routes.ts`), and the newsroom's off-site posts went with it.
+  return [...fromNews, ...fromStories, ...fromProducts, ...curatedFiltered].filter(
+    (entry) => !entry.hit.external && !isHiddenRoute(entry.hit.href),
+  );
 }
 
 const CORPUS = buildCorpus();

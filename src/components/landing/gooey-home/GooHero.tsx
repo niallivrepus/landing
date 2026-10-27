@@ -1,11 +1,10 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { buildLandingHandoffUrl } from "../../../lib/landing-oo-handoff";
 import { GooCornerFrame } from "./GooCornerFrame";
 import { GooGlyphMark } from "./GooGlyphMark";
 import { GooNexus } from "./GooNexus";
 import { GooPromptBar } from "./GooPromptBar";
-import { GetJokuhButton, PlatformLinks } from "./GetJokuh";
+import { GetJokuhButton, PlatformLinks, openGetJokuh } from "./GetJokuh";
 import type { GooScheme } from "./goo-kit";
 
 /** "Watch a day": the auto-play day story, its own chunk, fetched on intent (hover / focus) or on tap. */
@@ -93,7 +92,6 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
   const [draft, setDraft] = useState("");
   const [leaving, setLeaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
   const swarmReady = useAfterFirstPaint();
   const [focused, setFocused] = useState(false);
   const [story, setStory] = useState(false);
@@ -142,7 +140,7 @@ export function GooHero({ scheme, headline, valueLine }: { scheme: GooScheme; he
           value={draft}
           onChange={setDraft}
           onSubmit={() => send(draft)}
-          onPlus={() => navigate("/download")}
+          onPlus={() => openGetJokuh()}
           placeholder="Ask OO…"
           busy={leaving}
           onWatch={() => setStory(true)}

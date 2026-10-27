@@ -64,7 +64,7 @@ export function ManifestoPage() {
             Test the claims. Demand attestations. Bring a threat model.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <PillLink href="/download" variant="primary">
+            <PillLink href="/?get=1" variant="primary">
               Download Jokuh
             </PillLink>
             <PillLink href="/contact">Talk to us</PillLink>

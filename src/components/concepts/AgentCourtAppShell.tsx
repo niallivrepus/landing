@@ -89,7 +89,7 @@ function AgentCourtAppShellInner() {
             onReplay={() => player.goTo(0)}
             sharePath="/concepts/agent-court"
             shareTitle="Agent agreements, settled by GenLayer"
-            menuLinks={[{ label: "Talk to our team", href: "/contact" }]}
+            menuLinks={[{ label: "Talk to our team", href: "/support" }]}
             title="Agent agreements"
             bodySquircleRadius={50}
           >

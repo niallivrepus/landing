@@ -1,0 +1,146 @@
+/*
+ * Site footer (`components/SiteFooter.tsx`): one centred Gooey slab, small type. Self-contained tokens so it looks
+ * the same inside the Gooey home (`.gh`) and under the download and legal pages. Slab numbers match `.gh-slab` in
+ * `gooey-home.css` (Splex: inner rim + top highlights in dark; white paper + hairline in light).
+ */
+
+.gh-sitefoot {
+  --sf-ink: #ffffff;
+  --sf-ink-2: rgba(255, 255, 255, 0.66);
+  --sf-ink-3: rgba(255, 255, 255, 0.42);
+  --sf-line: rgba(255, 255, 255, 0.12);
+  --sf-slab-bg: rgba(255, 255, 255, 0.05);
+  --sf-slab-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.16), inset 0 2px 1.5px rgba(255, 255, 255, 0.15),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.15), 0 10px 10px rgba(0, 0, 0, 0.05);
+  --sf-on-bg: #050505;
+  --sf-focus: #2c81ff;
+  padding: 0 16px max(16px, env(safe-area-inset-bottom));
+  font-family: var(--font-sans, "Satoshi"), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gh-sitefoot[data-scheme="light"] {
+  --sf-ink: #111111;
+  --sf-ink-2: rgba(17, 17, 17, 0.66);
+  --sf-ink-3: rgba(17, 17, 17, 0.45);
+  --sf-line: rgba(60, 45, 20, 0.14);
+  --sf-slab-bg: #ffffff;
+  --sf-slab-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.85), 0 0 0 1px rgba(60, 45, 20, 0.14),
+    0 8px 16px -10px rgba(91, 69, 38, 0.22), 0 1.5px 2.4px rgba(42, 32, 20, 0.08);
+  --sf-on-bg: #ffffff;
+}
+
+.gh-sitefoot__slab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: min(100%, 1080px);
+  margin: 0 auto;
+  padding: 14px 20px;
+  border-radius: 28px;
+  background: var(--sf-slab-bg);
+  box-shadow: var(--sf-slab-shadow);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--sf-ink-3);
+}
+
+.gh-sitefoot__links,
+.gh-sitefoot__base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 18px;
+}
+
+.gh-sitefoot__link {
+  display: inline-block;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--sf-ink-2);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.gh-sitefoot__link:hover {
+  color: var(--sf-ink);
+}
+
+.gh-sitefoot :focus-visible {
+  outline: 2px solid var(--sf-focus);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.gh-sitefoot__rule {
+  align-self: stretch;
+  height: 1px;
+  background: var(--sf-line);
+}
+
+.gh-sitefoot__copy {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.gh-sitefoot__theme {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--sf-line);
+}
+
+.gh-sitefoot__theme button {
+  height: 28px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sf-ink-3);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.gh-sitefoot__theme button.is-on {
+  background: var(--sf-ink);
+  color: var(--sf-on-bg);
+}
+
+/* Desktop: everything on one line, a hairline between the links and the base. */
+@media (min-width: 900px) {
+  .gh-sitefoot__slab {
+    flex-direction: row;
+    gap: 20px;
+    padding: 8px 8px 8px 26px;
+    border-radius: 999px;
+  }
+  .gh-sitefoot__rule {
+    align-self: center;
+    width: 1px;
+    height: 18px;
+  }
+  .gh-sitefoot__links {
+    flex-wrap: nowrap;
+  }
+  .gh-sitefoot__base {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gh-sitefoot__link,
+  .gh-sitefoot__theme button {
+    transition: none;
+  }
+}

@@ -1,9 +1,10 @@
 import { Suspense, lazy, type ComponentType, useEffect } from "react";
-import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { ConsentManagedScripts } from "./components/ConsentManagedScripts";
 import { CookieBanner } from "./components/CookieBanner";
 import { OPTIONAL_TRACKING_CONFIGURED } from "./lib/cookie-consent";
 import { GoogleTranslateHost } from "./components/GoogleTranslateHost";
+import { isHiddenRoute } from "./config/hidden-routes";
 import { RSS_FEED_PATH } from "./config/rss";
 import { primeGentleHoverSfx } from "./lib/gentle-hover-sfx";
 import {
@@ -36,7 +37,6 @@ const CareersRoleDetailPage = lazyNamed(
   "CareersRoleDetailPage",
 );
 const ContactSalesPage = lazyNamed(() => import("./pages/ContactSalesPage"), "ContactSalesPage");
-const DownloadPage = lazyNamed(() => import("./pages/DownloadPage"), "DownloadPage");
 const LandingDemoPage = lazy(() => import("./pages/LandingDemoPage"));
 const ManifestoPage = lazyNamed(() => import("./pages/ManifestoPage"), "ManifestoPage");
 const NewsDetailPage = lazyNamed(() => import("./pages/NewsDetailPage"), "NewsDetailPage");
@@ -68,27 +68,16 @@ const PRODUCT_ROUTES = [
   { path: "/profile", productId: "profile" },
 ] as const;
 
-/** Unpublished marketing URLs → home; do not register these paths as public stubs. */
-const REDIRECT_HOME_PATHS = [
-  "/platform/identity",
-  "/platform/gooey",
-  "/platform/wallet",
-  "/platform/galaxy-nodes",
-  "/pods",
-  "/v1llains",
-  "/ecosystem/v1llains",
-  "/developers/apps",
-  "/developers/agents",
-  "/developers/blog",
-  "/developers/documentation",
-  "/developers/docs",
-  "/developers/docs/*",
-  "/developers/forum",
-  "/developers/learn",
-  "/developers/open-models",
-  "/developers/sdk",
-  "/developers/accessibility",
-] as const;
+/**
+ * Layout route around every page: a hidden marketing route (`config/hidden-routes.ts`) goes home with a client
+ * `<Navigate replace>`; the server sends the same paths a 302 to `/`. The page routes below are kept, so deleting
+ * an entry from `HIDDEN_ROUTES` brings that page straight back.
+ */
+function HiddenRouteGate() {
+  const { pathname } = useLocation();
+  if (isHiddenRoute(pathname)) return <Navigate to="/" replace />;
+  return <Outlet />;
+}
 
 function LegacyNewsRedirect() {
   const { slug } = useParams<{ slug: string }>();
@@ -150,9 +139,10 @@ export default function App() {
       <PitchDeckChrome />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
+          <Route element={<HiddenRouteGate />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/demo" element={<LandingDemoPage />} />
-          <Route path="/download" element={<DownloadPage />} />
+          <Route path="/download" element={<Navigate to="/?get=1" replace />} />
 
           <Route path="/newsroom" element={<NewsPage />} />
           <Route path="/newsroom/:slug" element={<NewsDetailPage />} />
@@ -179,9 +169,6 @@ export default function App() {
               path={route.path}
               element={<ProductPage productId={route.productId} />}
             />
-          ))}
-          {REDIRECT_HOME_PATHS.map((path) => (
-            <Route key={path} path={path} element={<Navigate to="/" replace />} />
           ))}
 
           <Route path="/prompt" element={<Navigate to="/demo" replace />} />
@@ -212,6 +199,7 @@ export default function App() {
           <Route path="/careers/roles" element={<CareersRolesPage />} />
           <Route path="/careers/roles/:slug" element={<CareersRoleDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
+          </Route>
         </Routes>
       </Suspense>
     </>

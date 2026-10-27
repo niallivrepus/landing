@@ -9,7 +9,7 @@ const QUICK_LINKS: { label: string; href: string }[] = [
   { label: "Spine", href: "/spine" },
   { label: "Calls", href: "/calls" },
   { label: "Texts", href: "/messages" },
-  { label: "Download Jokuh", href: "/download" },
+  { label: "Download Jokuh", href: "/?get=1" },
   { label: "Newsroom", href: "/newsroom" },
   { label: "Shipped", href: "/shipped" },
   { label: "Careers", href: "/careers" },

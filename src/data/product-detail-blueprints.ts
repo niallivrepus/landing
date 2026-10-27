@@ -1273,7 +1273,7 @@ export const PRODUCT_DETAIL_BLUEPRINTS: Record<ProductId, ProductDetailBlueprint
       title: "Identity, your way.",
       body: "Compose biography, network, and pods into one sovereign surface — then share a link that still feels personal.",
       ctaLabel: "Claim yours",
-      ctaTo: "/download?intent=identity",
+      ctaTo: "/?get=1",
       items: [
         {
           id: "profile-corner-1",

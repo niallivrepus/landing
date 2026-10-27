@@ -1393,7 +1393,7 @@ const DayStoryStage = forwardRef<DayStoryHandle, { scheme: GooScheme; ext?: numb
       <I b={FINALE} a={1.6} fx="pop" x={95} y={470} w={200} className="gds-center gds-cta">
         {/* The one real control in the stage: hidden (so not focusable) until the finale. */}
         <button type="button" className="gh-go" onClick={() => openGetJokuh()} aria-haspopup="dialog">
-          Get Jokuh
+          Download Jokuh
         </button>
       </I>
     </div>

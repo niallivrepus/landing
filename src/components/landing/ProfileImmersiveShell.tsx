@@ -54,7 +54,7 @@ function ProfileImmersiveShellInner() {
             <span className="max-md:hidden"> You sign in with a passkey that never leaves your device.</span>
           </p>
           <div className="mt-4 flex justify-center md:mt-6">
-            <ClaimIdentityCta href="/download?intent=identity">Claim your identity</ClaimIdentityCta>
+            <ClaimIdentityCta href="/?get=1">Claim your identity</ClaimIdentityCta>
           </div>
         </motion.div>
       </ImmersiveCenterColumn>

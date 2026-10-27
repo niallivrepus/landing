@@ -274,7 +274,7 @@ function ConsoleHomeShellInner() {
 
       {chat.active ? null : (
         <div className="console-oo__cta">
-          <ClaimIdentityCta href="/download?intent=identity" morphLayout onActivate={() => claimFlow.openFrom("hero")}>
+          <ClaimIdentityCta href="/?get=1" morphLayout onActivate={() => claimFlow.openFrom("hero")}>
             Get started
           </ClaimIdentityCta>
         </div>

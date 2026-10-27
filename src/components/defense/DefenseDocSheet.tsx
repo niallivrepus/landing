@@ -12,7 +12,8 @@ import { SquircleBox } from "../system/squircle";
  * −135°; Close in red dismiss glass). Numbers are the Swift iOS Docs sheet's (`Sources/docs/docs-sheet.swift`,
  * `Sources/sheets/text-sheet.swift`, `wallet-liquid-chrome.swift`, `contact-row.swift`). Share copies the page link (native share sheet where there is one), More opens
  * the docs menu, Back / Close leave like the sheet would. The body (`children`) is the doc scroller.
- * **Connects to:** `pages/AgentCourtConceptPage` (the Defense page itself moved to `goo/`); styles `defense-app.css`.
+ * **Connects to:** `pages/AgentCourtConceptPage` (the Defense page itself moved to `goo/`), `components/docs/DocAppShell`
+ * (Privacy, Terms, Security, Support as Jokuh Docs); styles `defense-app.css`.
  * **Parity:** web app `components/sheets/DocsSheet.tsx`, `TextSheetHeaderFlanks.tsx`, `styles/center-sheet-paper-card.css`,
  * `styles/docs-sheet.css` (read-only source; values copied, not restyled).
  */
@@ -122,17 +123,24 @@ function FlankPill({
 /** Header menu link. Defaults to the defense doc's two hero links. */
 export type DocSheetMenuLink = { label: string; href: string };
 
+/** Header menu action (a button), e.g. "Download Jokuh" on the legal docs. */
+export type DocSheetMenuAction = { label: string; onSelect: () => void };
+
 export function DefenseDocSheet({
   children,
   onReplay,
   sharePath = "/defense",
   shareTitle = DEFENSE_DOC.name,
   menuLinks = [DEFENSE_HERO.primary, DEFENSE_HERO.secondary],
+  menuActions = [],
   title = "Docs",
   bodySquircleRadius,
 }: {
   children: ReactNode;
-  onReplay: () => void;
+  /** Adds "Play from the start" to the More menu (auto-playing docs only). */
+  onReplay?: () => void;
+  /** Buttons listed first in the More menu. */
+  menuActions?: DocSheetMenuAction[];
   /** Path the Share pill copies (other pages reuse this sheet, e.g. `/concepts/agent-court`). */
   sharePath?: string;
   shareTitle?: string;
@@ -245,22 +253,38 @@ export function DefenseDocSheet({
             <div className="docs-sheet__menu-anchor">
               {menuOpen ? (
                 <div className="docs-sheet__menu" role="menu">
+                  {menuActions.map((action) => (
+                    <button
+                      key={action.label}
+                      type="button"
+                      className="docs-sheet__menu-item"
+                      role="menuitem"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        action.onSelect();
+                      }}
+                    >
+                      {action.label}
+                    </button>
+                  ))}
                   {menuLinks.map((link) => (
                     <SiteLink key={link.href} className="docs-sheet__menu-item" role="menuitem" href={link.href}>
                       {link.label}
                     </SiteLink>
                   ))}
-                  <button
-                    type="button"
-                    className="docs-sheet__menu-item"
-                    role="menuitem"
-                    onClick={() => {
-                      setMenuOpen(false);
-                      onReplay();
-                    }}
-                  >
-                    Play from the start
-                  </button>
+                  {onReplay ? (
+                    <button
+                      type="button"
+                      className="docs-sheet__menu-item"
+                      role="menuitem"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        onReplay();
+                      }}
+                    >
+                      Play from the start
+                    </button>
+                  ) : null}
                 </div>
               ) : null}
             </div>

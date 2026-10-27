@@ -6,7 +6,7 @@ import { OPTIONAL_TRACKING_CONFIGURED } from "../../lib/cookie-consent";
 const OPEN_COOKIES_EVENT = "jokuh-open-cookies";
 
 const HOME_FOOTER_LINKS = [
-  { label: "Download", href: "/download" },
+  { label: "Download", href: "/?get=1" },
   { label: "Pricing", href: "/pricing" },
   { label: "Shipped", href: "/shipped" },
   { label: "News", href: "/newsroom" },

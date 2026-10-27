@@ -9,7 +9,7 @@ export type DownloadInterceptExtras = {
 };
 
 /**
- * **Purpose:** Routes immersive dummy UI clicks to `/download` with contextual copy via search params.
+ * **Purpose:** Routes immersive dummy UI clicks to the Download Jokuh sheet (`/?get=1`); the old `/download` page is gone.
  * **Connects to:** `DownloadPage`, product shells, `ClaimIdentityCta`.
  */
 export function useDownloadIntercept(defaultSurface?: string) {
@@ -17,12 +17,10 @@ export function useDownloadIntercept(defaultSurface?: string) {
 
   const buildHref = useCallback(
     (intent: DownloadIntentId, extras?: DownloadInterceptExtras) => {
-      const params = new URLSearchParams({ intent });
-      const surface = extras?.surface ?? defaultSurface;
-      if (surface) params.set("surface", surface);
-      if (extras?.product) params.set("product", extras.product);
-      if (extras?.ref) params.set("ref", extras.ref);
-      return `/download?${params.toString()}`;
+      void intent;
+      void extras;
+      // The old /download page is gone: every hand-off opens the Download Jokuh sheet on the homepage.
+      return "/?get=1";
     },
     [defaultSurface],
   );

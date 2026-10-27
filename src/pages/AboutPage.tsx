@@ -34,7 +34,7 @@ const ABOUT_FEATURES = [
       "We design from the moment a word is spoken through the moment it is found again. Latency, speaker identity, retention, encryption, and readable summaries all shape the same product decision.",
     cta: "Read the manifesto",
     href: "/manifesto",
-    image: "/download/mobile-preview.jpg",
+    image: "/images/mobile-preview.jpg",
     alt: "Jokuh mobile interface preview.",
     caption: "The product should make the architecture easier to understand.",
   },

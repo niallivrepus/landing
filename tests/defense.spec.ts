@@ -13,7 +13,7 @@ test('defense page renders its heading, plain answer and honest status', async (
   await expect(page.getByText(/isn't approved for classified information or CUI/)).toBeVisible();
 
   const main = page.locator('.defense-page');
-  await expect(main.getByRole('link', { name: 'Talk to our team' }).first()).toHaveAttribute('href', /\/contact$/);
+  await expect(main.getByRole('link', { name: 'Talk to our team' }).first()).toHaveAttribute('href', /\/support$/);
   await expect(main.getByRole('link', { name: 'Read our security approach' }).first()).toHaveAttribute('href', /\/security$/);
   await expect(main.getByRole('heading', { level: 2, name: 'On our roadmap' })).toBeVisible();
   await expect(main.getByRole('link', { name: 'Capability statement (PDF)' })).toHaveAttribute('href', '/defense/capability-statement.pdf');

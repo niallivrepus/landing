@@ -169,7 +169,7 @@ export function LandingBubblesSection() {
               </p>
 
               <SiteLink
-                href="/download?intent=bubbles"
+                href="/?get=1"
                 className="w-fit font-sans text-sm font-semibold text-light-space underline-offset-4 hover:underline light:text-zinc-950"
               >
                 Get Jokuh for Bubbles

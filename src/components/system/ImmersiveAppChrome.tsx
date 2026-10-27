@@ -41,6 +41,8 @@ export type ImmersiveAppChromeProps = {
   topLeadingSlot?: ReactNode;
   /** Optional node stacked under the Nexus pill in the top header (e.g. home shipped ticker). */
   topCenterBelow?: ReactNode;
+  /** Where each corner goes. Defaults to the corner's own `href`; Jokuh Docs send them to the homepage sections. */
+  cornerHref?: (corner: LandingCornerConfig) => string;
   className?: string;
   zIndex?: number;
 };
@@ -61,6 +63,7 @@ export function ImmersiveAppChrome({
   bottomCenter,
   topLeadingSlot,
   topCenterBelow,
+  cornerHref,
   className,
   zIndex = 30,
 }: ImmersiveAppChromeProps) {
@@ -202,7 +205,7 @@ export function ImmersiveAppChrome({
                   size={20}
                 />
               }
-              onClick={() => navigate(corner.href)}
+              onClick={() => navigate(cornerHref ? cornerHref(corner) : corner.href)}
             />
             </span>
             <span

@@ -135,7 +135,7 @@ function LandingDemoShellInner() {
 
           <div className="mt-6 flex flex-col items-center gap-3">
             <ClaimIdentityCta
-              href="/download?intent=identity"
+              href="/?get=1"
               onActivate={() => claimFlow.openFrom("demo")}
             />
           </div>

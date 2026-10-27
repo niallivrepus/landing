@@ -1,8 +1,10 @@
 /**
  * **Purpose:** Copy + screen sources for the Gooey homepage feature sections.
- * **Claims (keep accurate, same rules as `data/defense.ts`):** E2EE covers direct and group messages only (no claim
- * for calls, Mail or Spine); wallet copy names only coins the wallet shows; agents "ask before they act" = the
- * Agents inbox approvals.
+ * **Claims (keep accurate, same rules as `data/defense.ts`):** messages are encrypted on the device, and every
+ * encryption line says OO reads along in chats by default (opt-out in Settings); no encryption claim for group or
+ * meeting calls, Mail or Spine; OO is "intelligence", never "an AI"; wallet copy names only coins the wallet shows;
+ * agents "ask before they act" = the Agents inbox approvals. No "Learn more" links: the product pages are hidden
+ * (`config/hidden-routes.ts`).
  * **Screens:** every frame is the app's own Gooey web component rendered on demo fixtures — the jokuh-live Goo Lab
  * "Goo" views (`/gooey/labs/<lab>`, dev server, `?canvasDevUnlock=1`), captured by `scripts/capture-goo-lab.mjs`
  * into `public/gooey-home/captures/` in Gooey Dark and Gooey Light. Swap for device recordings when they exist
@@ -44,17 +46,15 @@ export const GOO_FEATURES: GooFeature[] = [
       { name: "calls-live", alt: "A group call in progress with three people and call controls" },
     ],
     todoCapture: "iOS: Jokuh Meet meeting card with Join (Gooey, dark + light).",
-    learnMore: { href: "/calls", label: "More about calls" },
   },
   {
     id: "text",
     corner: "Text",
     accent: "#ff4f9a",
-    title: "Messages, sealed.",
-    body: "Chat with one person or a whole group. Messages are end-to-end encrypted from the first one, and a live call shows up right in the chat with a Join button.",
-    points: ["End-to-end encrypted", "Voice notes and photos", "Join a call from the chat"],
+    title: "Messages, encrypted.",
+    body: "Chat with one person or a whole group. Messages are encrypted on your device before they're sent, and OO reads along to help unless you turn it off. A live call shows up right in the chat with a Join button.",
+    points: ["Encrypted on your device", "Voice notes and photos", "Join a call from the chat"],
     shots: [{ name: "text-call", alt: "A chat with Malik: three messages and a live call card with a green Join button" }],
-    learnMore: { href: "/messages", label: "More about Text" },
   },
   {
     id: "id",
@@ -64,7 +64,6 @@ export const GOO_FEATURES: GooFeature[] = [
     body: "Your photo, your music, your places and your people, in pods you arrange. Share it with one link, and connect with a tap.",
     points: ["Pods you arrange", "Your own link", "Connect in a tap"],
     shots: [{ name: "id-page", alt: "A profile page: portrait, name, Connect button and pods for gallery, music, location, Spine, bubble and contact" }],
-    learnMore: { href: "/profile", label: "More about ID" },
   },
   {
     id: "spine",
@@ -75,7 +74,6 @@ export const GOO_FEATURES: GooFeature[] = [
     points: ["Hour by hour", "Search your memories", "Birthdays and plans"],
     shots: [{ name: "spine-day", alt: "A Spine day: a short brief at the top, then voice memo, calls and plans along an hour-by-hour goo cord" }],
     todoCapture: "iOS: the Gooey Spine rib-cage overview (memory spine) — not on web yet; this slot shows the web goo day cord.",
-    learnMore: { href: "/spine", label: "More about Spine" },
   },
   {
     id: "wallet",
@@ -95,10 +93,9 @@ export const GOO_FEATURES: GooFeature[] = [
     corner: "OO",
     accent: "#9dff2a",
     title: "OO, and a city of helpers.",
-    body: "OO is your own AI. It remembers what matters across your calls, chats and files without giving that context to anyone else. In OOpolis, your agents take on tasks and ask you before they act.",
-    points: ["Your own AI", "Agents that ask first", "Works with the apps you use"],
+    body: "OO is the intelligence built into Jokuh. It remembers what matters across your calls, chats and files, so you don't have to. In OOpolis, your agents take on tasks and ask you before they act.",
+    points: ["Remembers for you", "Agents that ask first", "Works with the apps you use"],
     shots: [{ name: "agents-city", alt: "OOpolis, live: Queen OO hands out tasks and baby OOs walk to Spine, Text, Wallet, Calls, Flights and Calendar, then pop what they finished" }],
     live: "oopolis",
-    learnMore: { href: "/agents", label: "More about agents" },
   },
 ];

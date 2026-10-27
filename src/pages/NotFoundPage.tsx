@@ -42,7 +42,7 @@ export function NotFoundPage() {
           Support
         </Link>
         <Link
-          to="/download"
+          to="/?get=1"
           className={jokuhButtonClass("secondary", "lg")}
         >
           Download

@@ -1,7 +1,11 @@
 /**
  * Rigid navigation spec v1 — single source for top nav, mega footer, and search.
  * @see JOKUH_Rigid_Sitemap_Spec_v1
+ *
+ * Hidden and unlisted routes (`config/hidden-routes.ts`) are dropped from every surface here, so the top nav,
+ * footers and search never link to a page that redirects home. The entries stay so a page can come back.
  */
+import { isHiddenRoute, isUnlistedRoute } from "../config/hidden-routes";
 
 export type RigidLink = {
   label: string;
@@ -39,7 +43,9 @@ function isSurfaceVisible(surfaces: readonly RigidSurface[] | undefined, surface
 }
 
 function filterLinks(links: RigidLink[], surface: RigidSurface): RigidLink[] {
-  return links.filter((link) => isSurfaceVisible(link.surfaces, surface));
+  return links.filter(
+    (link) => isSurfaceVisible(link.surfaces, surface) && !isHiddenRoute(link.href) && !isUnlistedRoute(link.href),
+  );
 }
 
 function filterSections(sections: RigidNavSection[], surface: RigidSurface): RigidNavSection[] {
@@ -83,7 +89,7 @@ export const RIGID_NAV_COLUMNS: RigidNavColumn[] = [
       {
         heading: "Get started",
         links: [
-          { label: "Download", href: "/download", surfaces: ALL_SOURCES },
+          { label: "Download", href: "/?get=1", surfaces: ALL_SOURCES },
           { label: "Pricing", href: "/pricing", surfaces: ALL_SOURCES },
         ],
       },

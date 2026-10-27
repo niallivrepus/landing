@@ -216,15 +216,30 @@ function GooCorner({
  * pill on top, exactly where they sit in the app shell. Each corner jumps to its section below.
  * **Connects to:** `GooeyHome` hero, `GooNexus`.
  */
-export function GooCornerFrame({ scheme, nexus }: { scheme: GooScheme; nexus: ReactNode }) {
+export function GooCornerFrame({
+  scheme,
+  nexus,
+  onJump,
+  className,
+}: {
+  scheme: GooScheme;
+  nexus: ReactNode;
+  /** Replaces the scroll-to-section jump (the Docs shell sends each corner to its homepage section instead). */
+  onJump?: (target: string) => void;
+  className?: string;
+}) {
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
   const jump = (id: string) => {
+    if (onJump) {
+      onJump(id);
+      return;
+    }
     const el = document.getElementById(id);
     el?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
   };
   return (
-    <div className="gh-frame" data-ready={ready || undefined}>
+    <div className={className ? `gh-frame ${className}` : "gh-frame"} data-ready={ready || undefined}>
       <div className="gh-frame__nexus">{nexus}</div>
       {CORNER_PILLS.map((c) => (
         <GooCorner key={c.quad} quad={c.quad} label={c.label} icon={c.icon} scheme={scheme} onActivate={() => jump(c.target)} />

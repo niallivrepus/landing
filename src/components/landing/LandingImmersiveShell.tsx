@@ -139,7 +139,7 @@ function LandingImmersiveShellInner() {
             className="mt-8 flex flex-col items-center gap-3"
           >
             <ClaimIdentityCta
-              href="/download?intent=identity"
+              href="/?get=1"
               morphLayout
               onActivate={() => claimFlow.openFrom("hero")}
             >
@@ -147,7 +147,7 @@ function LandingImmersiveShellInner() {
             </ClaimIdentityCta>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
               <SiteLink
-                href="/download"
+                href="/?get=1"
                 className="font-sans text-[13px] font-semibold text-light-space/55 no-underline transition-colors hover:text-light-space/85 light:text-zinc-500 light:hover:text-zinc-800"
               >
                 Download Jokuh

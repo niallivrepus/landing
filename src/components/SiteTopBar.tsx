@@ -33,6 +33,7 @@ import { TopNavAnchor } from "./TopNavAnchor";
 import { RIGID_NAV_COLUMNS, type RigidLink } from "../data/rigid-sitemap";
 import { CONTENT_SHELL_WIDE } from "./system/shells";
 import { jokuhButtonClass } from "./system/JokuhButton";
+import { GET_JOKUH_HREF } from "./landing/gooey-home/GetJokuh";
 
 /** Sentinel `openId` value used to render the inline search panel in the same mega-menu slot. */
 const SEARCH_NAV_ID = "__search__";
@@ -194,14 +195,15 @@ export function PrimaryNavCta({
 
   return (
     <Link
-      to="/download"
+      to={GET_JOKUH_HREF}
       onClick={onNavigate}
       style={style}
       data-nav-cta="primary"
       {...hoverSoundProps}
       className={jokuhButtonClass("primary", "md", className)}
     >
-      Start
+      <span className="sm:hidden">Download</span>
+      <span className="hidden sm:inline">Download Jokuh</span>
     </Link>
   );
 }
@@ -745,18 +747,18 @@ export function SiteTopBar({
                   className="mt-8 border-t border-white/22 pt-6 light:border-black/15"
                 >
                   <TopNavAnchor
-                    href="/download"
+                    href={GET_JOKUH_HREF}
                     className="premium-soft-fade block py-1.5 font-sans text-[2rem] leading-tight font-normal tracking-[0em] text-light-space hover:text-light-space/72 focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:outline-none light:text-zinc-950 light:hover:text-zinc-600 light:focus-visible:ring-black/20 sm:text-[3.25rem]"
                     onClick={closeMobileMenu}
                   >
-                    Start
+                    Download Jokuh
                   </TopNavAnchor>
                   <TopNavAnchor
-                    href="/contact"
+                    href="/support"
                     className="premium-soft-fade block py-1.5 font-sans text-[2rem] leading-tight font-normal tracking-[0em] text-light-space/48 hover:text-light-space focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:outline-none light:text-zinc-400 light:hover:text-zinc-950 light:focus-visible:ring-black/20 sm:text-[3.25rem]"
                     onClick={closeMobileMenu}
                   >
-                    Contact sales
+                    Support
                   </TopNavAnchor>
                 </motion.div>
               </motion.nav>

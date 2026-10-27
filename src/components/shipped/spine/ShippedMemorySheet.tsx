@@ -174,7 +174,7 @@ export function ShippedMemorySheet({
                   {month ? "Read the recap" : "See the full week"}
                   <ArrowRight className="size-4" strokeWidth={2} />
                 </JokuhButton>
-                <JokuhButton href="/download" variant="secondary" size="md">
+                <JokuhButton href="/?get=1" variant="secondary" size="md">
                   <Download className="size-4" strokeWidth={2} />
                   Get Jokuh
                 </JokuhButton>

@@ -1,0 +1,885 @@
+/*
+ * Jokuh Docs pages (`components/docs/DocSheetFrame.tsx`, `DocAppShell.tsx`): Privacy, Terms, Security and Support as
+ * the app's Docs sheet, in the Gooey look of the public meeting recap (jokuh-live `components/recap/RecapAppFrame.tsx`).
+ * CSS ported from that page: `styles/recap-teaser.css` (§ App frame, § Paper, sheet rim, tokens), `center-sheet-paper-card.css`
+ * (paper fill + grain, Gooey light / dark), `docs-sheet.css` (header band, centre title), `continuous-corners.css`
+ * (exact squircle paint once bound), `goo-env/goo-frame.css` (header pebble, Nexus; corner frame comes from the landing's
+ * `gooey-home.css` `.gh-frame`). Tokens are literal values of the Gooey palette (the recap's `--rt-*`), keyed on
+ * `.da[data-scheme]`, because the landing flips `--color-*` with `:root.light`.
+ */
+
+html.da-host,
+html.da-host body {
+  overflow: hidden;
+  height: 100%;
+}
+
+.da {
+  --da-font: Satoshi, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --da-accent: #9327ff;
+  --da-accent-gradient: linear-gradient(0deg, #b200ff 0%, #7700ff 100%);
+  --da-focus: #2c81ff;
+  --da-go: #21dc11;
+
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: radial-gradient(120% 70% at 50% 0%, var(--da-bg) 0%, var(--da-bg-2) 100%);
+  color: var(--da-ink);
+  font-family: var(--da-font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Gooey Dark */
+.da[data-scheme="dark"] {
+  --da-bg: #0a0a0a;
+  --da-bg-2: #000000;
+  --da-ink: rgba(255, 255, 255, 0.94);
+  --da-ink-2: rgba(255, 255, 255, 0.68);
+  --da-ink-3: rgba(255, 255, 255, 0.46);
+  --da-hairline: rgba(255, 255, 255, 0.1);
+  --da-well: rgba(255, 255, 255, 0.05);
+  --da-raised-top: color-mix(in srgb, #fff 14%, #121212);
+  --da-raised-bottom: color-mix(in srgb, #fff 7%, #121212);
+  --da-raised-ring: rgba(255, 255, 255, 0.15);
+  --da-raised-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 2px rgba(0, 0, 0, 0.5);
+  --da-rim-outer: rgba(255, 255, 255, 0.3);
+  --da-rim-inner: rgba(255, 255, 255, 0.1);
+  --da-shade-10: rgba(0, 0, 0, 0.1);
+  --da-shade-20: rgba(0, 0, 0, 0.2);
+  --da-grain-blend: color-dodge;
+  --da-grain-opacity: 0.06;
+  --da-good: #21dc11;
+  --da-bad: #ff6b00;
+  --da-panel: rgba(16, 16, 18, 0.94);
+  --da-panel-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 18px 44px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* Gooey Light: white paper */
+.da[data-scheme="light"] {
+  --da-bg: #ffffff;
+  --da-bg-2: #f2f2f2;
+  --da-ink: #000000;
+  --da-ink-2: rgba(0, 0, 0, 0.7);
+  --da-ink-3: rgba(0, 0, 0, 0.5);
+  --da-hairline: rgba(0, 0, 0, 0.1);
+  --da-well: rgba(0, 0, 0, 0.05);
+  --da-raised-top: #ffffff;
+  --da-raised-bottom: #f2f2f2;
+  --da-raised-ring: rgba(0, 0, 0, 0.1);
+  --da-raised-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --da-rim-outer: rgba(0, 0, 0, 0.2);
+  --da-rim-inner: #ffffff;
+  --da-shade-10: rgba(0, 0, 0, 0.1);
+  --da-shade-20: rgba(0, 0, 0, 0.2);
+  --da-grain-blend: multiply;
+  --da-grain-opacity: 0.2;
+  --da-good: #0a8200;
+  --da-bad: #bc3800;
+  --da-panel: rgba(255, 255, 255, 0.97);
+  --da-panel-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1) inset, 0 12px 32px rgba(0, 0, 0, 0.1);
+  color-scheme: light;
+}
+
+.da :focus-visible {
+  outline: 2px solid var(--da-focus);
+  outline-offset: 2px;
+}
+
+/* Page grain (the recap's `html[data-recap-grain='on'] .rt::before`) and its soft vignette. */
+.da::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/paper-texture.jpg");
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: var(--da-grain-blend);
+  opacity: var(--da-grain-opacity);
+}
+
+.da::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 60% at 50% 45%, transparent 40%, var(--da-bg-2) 130%);
+  opacity: 0.55;
+}
+
+/* ── Backdrop: the landing's swarm of real baby OOs, clear zone = the sheet (`RecapOoField`) ── */
+
+.da .gh-swarm {
+  inset: 0;
+  border-radius: 0;
+  z-index: 0;
+  --gh-bg-2: var(--da-bg-2);
+  --gh-ink: var(--da-ink);
+  --gh-line: var(--da-hairline);
+  --gh-slab-bg: var(--da-raised-top);
+  --gh-slab-shadow: 0 0 0 1px var(--da-raised-ring), var(--da-raised-shadow);
+}
+
+/* ── Corner pills: the landing's goo corners (`.gh-frame`), pinned to the viewport ── */
+
+.da .gh-frame.da-frame {
+  position: fixed;
+  inset: 16px;
+  z-index: 20;
+  --gh-cinset: 40px;
+  --gh-ink: var(--da-ink);
+  color: var(--da-ink);
+}
+
+@media (max-width: 600px) {
+  .da .gh-frame.da-frame {
+    inset: 8px;
+    --gh-cinset: 36px;
+  }
+}
+
+/* The goo pebbles' ink follows the page ink; the red Close keeps white. */
+.da .gcf-hb__btn {
+  color: var(--da-ink);
+}
+.da .gcf-hb[data-danger="true"] .gcf-hb__btn {
+  color: #fff;
+}
+.da .gcf-corner__svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* ── Nexus: dot + label ── */
+
+.da-nexus {
+  position: absolute;
+  z-index: 25;
+  top: calc(max(0px, env(safe-area-inset-top)) - 12px);
+  left: 50%;
+  translate: -50% 0;
+  color: var(--da-ink);
+}
+.da-nexus .gcf-nexus__text {
+  max-width: min(320px, calc(100vw - 190px));
+}
+.da-nexus .gcf-nexus__dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--da-go);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--da-go) 70%, transparent);
+}
+.da-nexus .gcf-nexus__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 650;
+  color: var(--da-ink-2);
+}
+.da-nexus__kind {
+  color: var(--da-accent);
+}
+.da-nexus__sep {
+  white-space: pre;
+  color: var(--da-ink-3);
+}
+
+/* ── Sheet: the Docs paper card (`.center-sheet-paper-card--docs` in `.rt-sheet`) ── */
+
+.da-sheet {
+  --paper-card-top-gap: 16px;
+  --paper-card-fill-top-inset: 62px;
+  --paper-card-bottom-inset: 10px;
+  --paper-card-fill-radius-top: 56px;
+  --paper-card-fill-radius-bottom: 40px;
+  --paper-card-radius: 50px;
+  position: absolute;
+  z-index: 5;
+  top: calc(max(10px, env(safe-area-inset-top)) + 58px);
+  bottom: calc(max(8px, env(safe-area-inset-bottom)) + 70px);
+  left: 8px;
+  right: 8px;
+  width: auto;
+  max-width: min(920px, calc(100% - 16px));
+  margin-inline: auto;
+  box-sizing: border-box;
+  isolation: isolate;
+  overflow: visible;
+  border-radius: var(--paper-card-radius);
+  background: #000;
+  filter: drop-shadow(0 22px 40px var(--da-shade-20)) drop-shadow(0 2px 6px var(--da-shade-10));
+}
+
+/* Wide screens have no bottom corner pills near the sheet, so it uses the room (the recap keeps 70 px for its ask bar). */
+@media (min-width: 1100px) {
+  .da-sheet {
+    bottom: calc(max(8px, env(safe-area-inset-bottom)) + 24px);
+  }
+}
+
+.da-sheet[data-scheme="light"] {
+  background: #fff;
+}
+
+/* Paper layer: radial fill + top glow (::before), house grain (::after). */
+.da-sheet::before,
+.da-sheet::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--paper-card-fill-top-inset);
+  bottom: var(--paper-card-bottom-inset);
+  pointer-events: none;
+  border-radius: var(--paper-card-fill-radius-top) var(--paper-card-fill-radius-top) var(--paper-card-fill-radius-bottom)
+    var(--paper-card-fill-radius-bottom);
+}
+
+.da-sheet::before {
+  z-index: -2;
+  background-color: #000;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.0223) 0, rgba(255, 255, 255, 0) 28px),
+    radial-gradient(ellipse 141.77% 141.77% at 0% 0%, #0a0a0a 0%, #000 100%);
+}
+
+.da-sheet::after {
+  z-index: -1;
+  background-image: url("/paper-texture.jpg");
+  background-repeat: no-repeat;
+  background-size: 150% auto;
+  background-position: 30% 20%;
+  mix-blend-mode: color-dodge;
+  opacity: 0.12;
+  -webkit-mask-image: radial-gradient(130% 100% at 50% 38%, #000 38%, transparent 100%);
+  mask-image: radial-gradient(130% 100% at 50% 38%, #000 38%, transparent 100%);
+}
+
+.da-sheet[data-scheme="light"]::before {
+  background-color: #fff;
+  background-image: linear-gradient(to bottom, #fff 0, transparent 28px),
+    radial-gradient(ellipse 141.77% 141.77% at 0% 0%, #fff 0%, #f2f2f2 100%);
+  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px var(--da-hairline), inset 0 -22px 30px -26px var(--da-shade-20);
+}
+
+.da-sheet[data-scheme="light"]::after {
+  mix-blend-mode: multiply;
+  opacity: 0.22;
+}
+
+/* Exact continuous corners once `bindPaperCardCorners` has measured the card (`continuous-corners.css`). */
+.da-sheet[data-continuous-corners] {
+  background-color: transparent !important;
+  background-image: var(--cc-card-surface) !important;
+  background-size: 100% 100% !important;
+  background-position: 0 0 !important;
+  background-repeat: no-repeat !important;
+  background-origin: border-box !important;
+  background-clip: border-box !important;
+  border-radius: 0 !important;
+}
+
+.da-sheet[data-continuous-corners]::before,
+.da-sheet[data-continuous-corners]::after {
+  clip-path: var(--cc-fill-clip, none);
+  -webkit-clip-path: var(--cc-fill-clip, none);
+}
+
+.da-sheet[data-continuous-corners]::before {
+  box-shadow: none !important;
+}
+
+/* Chromium before the JS binding: the same fit as `center-sheet-paper-card.css`. */
+@supports (corner-shape: superellipse(2)) {
+  .da-sheet:not([data-continuous-corners]) {
+    border-radius: calc(var(--paper-card-radius) * 1.45);
+    corner-shape: superellipse(1.58);
+  }
+  .da-sheet:not([data-continuous-corners])::before,
+  .da-sheet:not([data-continuous-corners])::after,
+  .da-body:not([data-clipped]) {
+    border-radius: calc(var(--paper-card-fill-radius-top) * 1.2) calc(var(--paper-card-fill-radius-top) * 1.2)
+      calc(var(--paper-card-fill-radius-bottom) * 1.2) calc(var(--paper-card-fill-radius-bottom) * 1.2);
+    corner-shape: superellipse(1.32);
+  }
+}
+
+.da-sheet__host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  /* How far the header pills reach into the paper fill (`--docs-under-header`). */
+  --da-under-header: max(0px, calc(var(--da-header-h, 0px) - var(--paper-card-fill-top-inset)));
+}
+
+/* Rim: crisp hairline + inner highlight on the card's own squircle, above the scrolled content. */
+.da-sheet__rim {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  overflow: visible;
+}
+.da-sheet__rim path {
+  fill: none;
+}
+.da-sheet__rim-outer {
+  stroke: var(--da-rim-outer);
+  stroke-width: 1.5;
+}
+.da-sheet__rim-inner {
+  stroke: var(--da-rim-inner);
+  stroke-width: 1;
+}
+
+/* ── Header band: `docs-sheet__header` + `SheetHeaderFlanks` (16 / 28 padding, two flanks, 3 px between) ── */
+
+.da-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 6px 0;
+  pointer-events: none;
+  color: var(--da-ink);
+  font-size: 13px;
+  font-weight: 500;
+}
+.da-header :is(button, a, [role="button"]) {
+  pointer-events: auto;
+}
+.da-flanks {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 16px 28px 2px;
+  box-sizing: border-box;
+}
+.da-flanks__pair {
+  display: flex;
+  align-items: flex-start;
+  gap: 3px;
+}
+.da-flanks__center {
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.da-header__title {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--da-ink);
+}
+
+/* More menu: the Gooey panel under the header's More pill. */
+.da-menu {
+  position: absolute;
+  z-index: 12;
+  top: calc(var(--da-header-h, 76px) + 2px);
+  right: clamp(14px, 3vw, 28px);
+  min-width: 220px;
+  padding: 6px;
+  border-radius: 22px;
+  background: var(--da-panel);
+  box-shadow: var(--da-panel-shadow);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  color: var(--da-ink);
+}
+.da-menu__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.da-menu__item:hover,
+.da-menu__item:focus-visible {
+  background: var(--da-well);
+}
+.da-menu__sep {
+  height: 1px;
+  margin: 6px 10px;
+  background: var(--da-hairline);
+}
+
+.da-toast {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  bottom: 28px;
+  translate: -50% 0;
+  padding: 11px 16px;
+  border-radius: 18px;
+  background: var(--da-panel);
+  box-shadow: var(--da-panel-shadow);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--da-ink);
+  pointer-events: none;
+}
+
+/* ── Body: the inset paper fill, clipped by the same continuous path (56 top / 40 bottom, inset 2) ── */
+
+.da-body {
+  position: absolute;
+  top: var(--paper-card-fill-top-inset);
+  bottom: var(--paper-card-bottom-inset);
+  left: 0;
+  right: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.da-doc {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  /* Corner-safe insets: the paper curves 56 px (top) / 40 px (bottom), so the sides keep at least 24 px. */
+  padding: calc(var(--da-under-header, 0px) + 8px) clamp(24px, 4.5vw, 44px) 56px;
+  scroll-padding: 24px 0 56px;
+  scrollbar-width: none;
+  /* Content dissolves before the edge instead of hard-cutting at the border. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22px, #000 calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 22px, #000 calc(100% - 40px), transparent 100%);
+}
+.da-doc::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Doc type (the recap's hero, beads, label, summary) ── */
+
+.da-article {
+  width: 100%;
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+.da-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  padding: 8px 2px 18px;
+}
+.da-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--da-ink-2);
+}
+.da-kicker__dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--da-accent-gradient);
+}
+.da-h1 {
+  margin: 0;
+  font-size: clamp(30px, 6.4vw, 44px);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.da-beads {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.da-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 0 13px 0 11px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--da-raised-top), var(--da-raised-bottom));
+  box-shadow: inset 0 0 0 1px var(--da-raised-ring);
+  color: var(--da-ink-2);
+  font-size: 13.5px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+@supports (corner-shape: superellipse(2)) {
+  .da-pill {
+    border-radius: 23px;
+    corner-shape: superellipse(1.58);
+  }
+}
+a.da-pill:hover {
+  color: var(--da-ink);
+}
+.da-pill .da-icon {
+  color: var(--da-ink-3);
+}
+.da-icon {
+  display: block;
+  flex: none;
+}
+.da-toc {
+  margin: 4px 0 0;
+}
+.da-toc .da-beads {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  margin-inline: -4px;
+  padding: 2px 4px 6px;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent 100%);
+}
+.da-toc .da-beads::-webkit-scrollbar {
+  display: none;
+}
+.da-toc .da-beads > li {
+  flex: none;
+  scroll-snap-align: start;
+}
+.da-toc__label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--da-ink-2);
+}
+
+/* Legal prose: sections divided by hairlines, labels like the recap's section labels. */
+.doc-legal {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--da-ink);
+  text-wrap: pretty;
+}
+.doc-legal > section {
+  scroll-margin-top: 16px;
+  padding: 22px 2px 8px;
+  border-top: 1px solid var(--da-hairline);
+}
+.doc-legal > .doc-lede + section,
+.doc-legal > .doc-callout + section {
+  margin-top: 4px;
+}
+.doc-legal h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--da-ink-2);
+}
+.doc-legal h2::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--da-accent-gradient);
+}
+.doc-legal h3 {
+  margin: 1.4em 0 0.4em;
+  font-size: 1.04em;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+.doc-legal section > * {
+  margin: 0;
+}
+.doc-legal section > * + * {
+  margin-top: 0.78em;
+}
+.doc-legal section > h2 {
+  margin-bottom: 14px;
+}
+.doc-legal section > h2 + * {
+  margin-top: 0;
+}
+.doc-legal .doc-lede {
+  margin: 0 0 18px;
+  font-size: 17.5px;
+  line-height: 1.6;
+  color: var(--da-ink);
+}
+.doc-legal a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--da-accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+.doc-legal a:hover {
+  color: var(--da-accent);
+}
+.doc-legal ul,
+.doc-legal ol {
+  padding-left: 1.3em;
+}
+.doc-legal ul {
+  list-style: disc;
+}
+.doc-legal ol {
+  list-style: decimal;
+}
+.doc-legal ul li + li,
+.doc-legal ol li + li {
+  margin-top: 0.55em;
+}
+.doc-legal ul li::marker {
+  color: var(--da-accent);
+}
+.doc-legal strong {
+  font-weight: 750;
+}
+
+/* Callout: a quiet well on the paper (the recap's key-point rows). */
+.doc-legal .doc-callout {
+  margin: 18px 0 8px;
+  padding: 14px 18px;
+  border-radius: 20px;
+  background: var(--da-well);
+  box-shadow: inset 0 0 0 1px var(--da-hairline);
+  font-size: 16px;
+}
+@supports (corner-shape: superellipse(2)) {
+  .doc-legal .doc-callout {
+    border-radius: 29px;
+    corner-shape: superellipse(1.58);
+  }
+}
+.doc-legal .doc-callout > * {
+  margin: 0;
+}
+.doc-legal .doc-callout > * + * {
+  margin-top: 0.5em;
+}
+
+/* Q&A (Support): plain disclosure rows. */
+.doc-legal .doc-qa {
+  border-top: 1px solid var(--da-hairline);
+}
+.doc-legal .doc-qa:last-child {
+  border-bottom: 1px solid var(--da-hairline);
+}
+.doc-legal .doc-qa summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+.doc-legal .doc-qa summary::-webkit-details-marker {
+  display: none;
+}
+.doc-legal .doc-qa summary::after {
+  content: "+";
+  flex: none;
+  color: var(--da-ink-3);
+  font-weight: 500;
+}
+.doc-legal .doc-qa[open] summary::after {
+  content: "\2212";
+}
+.doc-legal .doc-qa p {
+  margin: 0 0 14px;
+  color: var(--da-ink-2);
+}
+.doc-legal section > .doc-qa {
+  margin-top: 0;
+}
+.doc-legal section > h2 + .doc-qa {
+  margin-top: 0.9em;
+}
+.doc-legal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.doc-legal th,
+.doc-legal td {
+  padding: 10px 12px 10px 0;
+  border-bottom: 1px solid var(--da-hairline);
+  text-align: left;
+  vertical-align: top;
+}
+.doc-legal th {
+  font-size: 12.5px;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--da-ink-2);
+}
+
+.da-foot {
+  margin-top: 40px;
+}
+.da-foot .gh-sitefoot {
+  padding: 0;
+}
+
+/* The Download Jokuh sheet reads the Gooey home tokens, so it sits in a `.gh` host. */
+.gh.gh--host {
+  position: static;
+  min-height: 0;
+  background: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .da-hero,
+  .doc-legal > section {
+    animation: da-rise 460ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+@keyframes da-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .da-nexus__sep,
+  .da-nexus__kind {
+    display: none;
+  }
+  .da-nexus .gcf-nexus__label {
+    color: var(--da-ink);
+  }
+  .doc-legal {
+    font-size: 16.5px;
+  }
+}
+
+/* ── Goo sheet-header pebble + Nexus (jokuh-live `goo-env/goo-frame.css`) ── */
+
+.gcf-nexus {
+  position: relative;
+  color: inherit;
+}
+.gcf-nexus__svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.gcf-nexus__link {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+.gcf-nexus__text {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* 34 x 46 layout box (the shared header geometry); the 100 px goo square bleeds out of it. */
+.gcf-hb {
+  position: relative;
+  flex: none;
+  width: 34px;
+  height: 46px;
+}
+.gcf-hb__box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -50px 0 0 -50px;
+  pointer-events: none;
+}
+.gcf-hb__btn {
+  position: absolute;
+  left: -5px;
+  top: 0;
+  width: 44px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.gcf-hb__btn:focus-visible {
+  outline: 2px solid var(--da-focus);
+  outline-offset: 0;
+}
+.gcf-hb__btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.da[data-scheme="light"] .gh-swarm {
+  opacity: 0.42;
+}

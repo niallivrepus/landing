@@ -177,6 +177,11 @@ export type BrandRoute = {
   redirectTo?: string;
 };
 
+/**
+ * Historical route inventory. Since 2026-10-27 the site is trimmed: `config/hidden-routes.ts` (`HIDDEN_ROUTES`) is
+ * the source of truth for which of these redirect home, and the live set is `/`, `/support`,
+ * `/security`, `/privacy`, `/terms` and the unlisted `/defense`.
+ */
 export const BRAND_ROUTES = [
   { path: "/", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Home" },
   { path: "/about", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Company" },
@@ -185,7 +190,7 @@ export const BRAND_ROUTES = [
   { path: "/blurbs", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Beta primitive" },
   { path: "/pods", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Beta primitive" },
   { path: "/wallet", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Beta primitive" },
-  { path: "/download", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "iOS TestFlight" },
+  { path: "/download", status: "redirect", surfaces: [], sitemap: false, note: "Old page: now the Download Jokuh sheet", redirectTo: "/?get=1" },
   { path: "/contact", status: "live", surfaces: ["top-nav", "footer", "search"], sitemap: true, note: "Sales and business contact" },
   { path: "/support", status: "live", surfaces: ["footer", "search"], sitemap: true, note: "Lean support page" },
   { path: "/security", status: "live", surfaces: ["footer"], sitemap: true, note: "E2EE explainer backing the homepage privacy claim" },

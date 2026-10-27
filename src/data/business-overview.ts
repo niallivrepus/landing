@@ -21,7 +21,7 @@ export const BUSINESS_HERO = {
   eyebrow: "The next era of work is here",
   title: "Build with private speech systems for your team",
   subtitle: "Jokuh turns conversations into structured memory your business can actually trust.",
-  primary: { label: "Try now ↗", href: "/download" },
+  primary: { label: "Try now ↗", href: "/?get=1" },
   secondary: { label: "Contact sales", href: "/contact" },
 } as const;
 

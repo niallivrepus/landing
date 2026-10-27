@@ -584,7 +584,7 @@ export function SiteSearchFullscreenOverlay({ onClose }: { onClose: () => void }
           </nav>
           <div className="flex items-center justify-end gap-2 justify-self-end overflow-hidden">
             <Link
-              to="/download"
+              to="/?get=1"
               onClick={onClose}
               {...hoverSoundProps}
               className={cn(

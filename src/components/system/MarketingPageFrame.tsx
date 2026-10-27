@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cn } from "@jokuh/gooey";
-import { MegaFooter } from "../MegaFooter";
+import { SiteFooter } from "../SiteFooter";
 import { MARKETING_ROOT_CLASS } from "./shells";
 
 export function MarketingPageFrame({
@@ -12,7 +12,7 @@ export function MarketingPageFrame({
   mainClassName,
   mainProps,
   theme = "dark",
-  footer = <MegaFooter />,
+  footer = <SiteFooter />,
   topBar = null,
   withAntialiased = false,
   withFontSans = false,

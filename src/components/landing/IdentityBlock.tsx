@@ -78,7 +78,7 @@ export function IdentityBlock() {
         </p>
         <div className="mt-10 flex w-full max-w-sm justify-center md:mt-12 md:max-w-none">
           <ClaimIdentityCta
-            href="/download?intent=identity"
+            href="/?get=1"
             onActivate={() => claimFlow.openFrom("identity-block")}
             className="justify-center"
           />

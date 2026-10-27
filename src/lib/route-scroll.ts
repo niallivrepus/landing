@@ -46,6 +46,15 @@ export function scrollToHashTargetAfterPaint(hash: string) {
       return;
     }
 
+    // Jokuh Docs pages scroll inside their sheet (`DocAppShell`), not the window.
+    const scroller = target.closest<HTMLElement>("[data-doc-scroller]");
+    if (scroller) {
+      const inner =
+        target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 16;
+      scroller.scrollTo({ top: Math.max(0, inner), left: 0, behavior: "auto" });
+      return;
+    }
+
     const top =
       target.getBoundingClientRect().top + window.scrollY - ROUTE_SCROLL_MARGIN_PX;
     window.scrollTo({ top: Math.max(0, top), left: 0, behavior: "auto" });

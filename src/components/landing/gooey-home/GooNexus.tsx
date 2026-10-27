@@ -12,7 +12,8 @@ const IDLE_H = 34;
 /**
  * **Purpose:** The Nexus pill on top of the frame: a Splex goo capsule that springs to its content (it wobbles on
  * every change, like the app's center pill). Idle it is the empty home pill; once the public build log loads
- * (`/shipped-feed.json`, fetched after first paint) it carries the newest week as a message banner, linking to it.
+ * (`/shipped-feed.json`, fetched after first paint) it carries the newest week as a message banner. The banner is
+ * text only: the `/shipped` pages are hidden (`config/hidden-routes.ts`), so it no longer links there.
  * **Parity (jokuh-live):** `frontend/src/components/gooey/goo-env/GooNexus.tsx`, `nexusLayout(0)` = 112 × 34 idle.
  */
 export function GooNexus({ scheme }: { scheme: GooScheme }) {
@@ -20,7 +21,7 @@ export function GooNexus({ scheme }: { scheme: GooScheme }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const rectRef = useRef<SVGRectElement>(null);
-  const [post, setPost] = useState<{ headline: string; href: string; week?: number } | null>(null);
+  const [post, setPost] = useState<{ headline: string; week?: number } | null>(null);
   const [box, setBox] = useState({ w: IDLE_W + PAD * 2, h: IDLE_H + PAD * 2 });
   const s = useRef<{ w: Spring; h: Spring }>({ w: { x: IDLE_W, v: 0 }, h: { x: IDLE_H, v: 0 } });
   const t = useRef({ w: IDLE_W, h: IDLE_H });
@@ -54,7 +55,7 @@ export function GooNexus({ scheme }: { scheme: GooScheme }) {
         .then((r) => (r.ok ? (r.json() as Promise<Feed>) : null))
         .then((feed) => {
           const w = feed?.weeks?.[0];
-          if (!cancelled && w?.headline && w.slug) setPost({ headline: w.headline, href: `/shipped/${w.slug}`, week: w.week });
+          if (!cancelled && w?.headline && w.slug) setPost({ headline: w.headline, week: w.week });
         })
         .catch(() => {});
     const idle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
@@ -91,12 +92,12 @@ export function GooNexus({ scheme }: { scheme: GooScheme }) {
         </g>
       </svg>
       {post ? (
-        <a className="gh-nexus__link" href={post.href} aria-label={`New on Shipped: ${post.headline}`}>
+        <p className="gh-nexus__link">
           <span ref={textRef} className="gh-nexus__text">
             <span aria-hidden className="gh-nexus__dot" />
             <span className="gh-nexus__label">New · {post.headline}</span>
           </span>
-        </a>
+        </p>
       ) : null}
     </div>
   );

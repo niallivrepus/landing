@@ -353,7 +353,7 @@ function OoDemoThread({ heroSeed }: { heroSeed: LandingDemoSeedDetail | null }) 
             {activePower?.bridgeLabel ?? "Claim to keep this context"}
           </p>
           <ClaimIdentityCta
-            href="/download?intent=identity"
+            href="/?get=1"
             onActivate={() =>
               claimFlow.openFrom("demo", { power: activePower?.id ?? revealedPowerId })
             }
@@ -501,7 +501,7 @@ function DmDemoThread({ thread }: { thread: MessagesInboxThread }) {
             Claim to keep this memory
           </p>
           <ClaimIdentityCta
-            href="/download?intent=identity"
+            href="/?get=1"
             onActivate={() => claimFlow.openFrom("demo", { power: "memory" })}
             className="justify-center sm:justify-end"
           >

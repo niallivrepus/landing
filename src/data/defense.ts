@@ -32,7 +32,7 @@ export const DEFENSE_HERO = {
   title: "Defense technology for free people",
   subtitle:
     "Jokuh is a secure communications and identity platform with a private AI workspace: end-to-end encrypted messages, voice and video calls, and phishing-resistant passkey sign-in, in one app on the devices people already carry.",
-  primary: { label: "Talk to our team", href: "/contact" },
+  primary: { label: "Talk to our team", href: "/support" },
   secondary: { label: "Read our security approach", href: "/security" },
 } as const;
 
@@ -45,7 +45,7 @@ export const DEFENSE_SOLUTION = {
   },
   solution: {
     label: "Our solution",
-    body: "One app that combines encrypted messaging and calling, an identity backed by keys on the user's device, and a private workspace with an AI assistant, all behind a single passkey sign-in. Direct and group messages are sealed end to end, so the platform in the middle can't read them.",
+    body: "One app that combines encrypted messaging and calling, an identity backed by keys on the user's device, and a private workspace with an AI assistant, all behind a single passkey sign-in. Direct and group messages are encrypted on the sender's device and opened on the devices in the chat. OO, on in chats by default, can read the chats it is in unless you turn it off.",
   },
 } as const;
 
@@ -79,7 +79,7 @@ export const DEFENSE_WORKING_WITH_US = {
   title: "Working with government",
   body: "We're at the start of the government process. We don't hold federal contracts, authorizations, or certifications yet, and Jokuh isn't approved for classified information or CUI. We're open to pilots, research partnerships, and early programs that need private communications and identity.",
   buttonLabel: "Talk to our team",
-  buttonHref: "/contact",
+  buttonHref: "/support",
 } as const;
 
 export const DEFENSE_PRINCIPLES_HEADING = {
@@ -95,16 +95,16 @@ export const DEFENSE_PRINCIPLES: DefensePrinciple[] = [
     body: "Direct and group messages are end-to-end encrypted from the first message. Privacy is the starting point, not a setting you have to find.",
   },
   {
-    id: "you-hold-the-keys",
+    id: "keys-on-device",
     icon: "key",
-    title: "You hold the keys",
-    body: "You sign in with a passkey that stays on your device, so there is no password to phish. The keys behind your identity are held by you.",
+    title: "Keys stay on your device",
+    body: "You sign in with a passkey that stays on your device, so there is no password to phish. Your identity key stays on your device.",
   },
   {
     id: "speech-not-altered",
     icon: "seal",
     title: "Speech that can't be silently altered",
-    body: "An encrypted message is sealed on the sender's device and opened on the recipient's. A platform in the middle can't quietly read or rewrite it.",
+    body: "Messages are encrypted on your device before they're sent and opened on the devices in the chat. OO can read the chats it is in unless you turn it off in Settings.",
   },
   {
     id: "built-for-the-field",
@@ -121,7 +121,7 @@ export const DEFENSE_BUILT_TODAY = {
     "End-to-end encrypted direct and group messages.",
     "Voice and video calls.",
     "Passkey sign-in. No passwords to phish, and the passkey stays on your device.",
-    "An identity you control, with keys held by you.",
+    "An identity key that stays on your device.",
     "Spine, a private timeline and workspace for you and your AI.",
     "OO, an assistant that works only with the context you choose to share. It runs on third-party cloud models today.",
     "Native apps for iPhone, iPad, Mac, Android, and the web.",
@@ -150,7 +150,7 @@ export const DEFENSE_ROADMAP = {
 export const DEFENSE_CLOSING = {
   headline: "If your work is protecting people, let's talk.",
   buttonLabel: "Talk to our team",
-  buttonHref: "/contact",
+  buttonHref: "/support",
   /** Name meaning — rendered as a quiet signature line with the initials emphasized. */
   signature: {
     wordmark: "JOKUH",
@@ -236,8 +236,8 @@ export const DEFENSE_WALKTHROUGH = {
       id: "texts",
       number: "3",
       title: "Encrypted coordination",
-      body: "Direct and group messages are end-to-end encrypted. Each one is sealed on the sender's device and opened on the recipient's, so the platform in the middle only relays ciphertext.",
-      mark: "sealed on the sender's device and opened on the recipient's",
+      body: "Direct and group messages are end-to-end encrypted. Each one is encrypted on the sender's device and opened on the devices in the chat. OO, on in chats by default, can read the chats it is in unless you turn it off.",
+      mark: "encrypted on the sender's device and opened on the devices in the chat",
       captures: ["texts"],
       path: ["identity", "messages", "bubbles"],
       node: "messages",
@@ -304,7 +304,7 @@ export const DEFENSE_CONNECTED = {
     relay: {
       label: "Messages relay",
       kind: "sealed",
-      line: "Direct and group messages are sealed on your device and opened on the recipient's. Jokuh relays ciphertext it can't read.",
+      line: "Direct and group messages are encrypted on your device and opened on the recipient's. OO can read the chats it is in unless you turn it off.",
     },
     recipient: {
       label: "Opens on device",
@@ -370,7 +370,7 @@ export const DEFENSE_CAPABILITIES = {
 export const DEFENSE_DOC_FOOTER_LINKS = [
   { label: "Security", href: "/security" },
   { label: "Privacy", href: "/privacy" },
-  { label: "Contact", href: "/contact" },
+  { label: "Support", href: "/support" },
 ] as const;
 
 /** Auto-play: the toggle's label and the replay label at the end. */
@@ -428,7 +428,7 @@ export const DEFENSE_SCENARIOS = {
       steps: [
         { id: "id", time: "06:30", title: "Everyone signs in the same way", body: "Each person signs in from one Welcome card with a passkey bound to their device. There's no shared password to phish.", surface: "signin", node: "identity" },
         { id: "space", time: "06:45", title: "One space for the team", body: "The team gets a Bubble: a living drop that grows with its members, with faces on its rim for whoever's live in voice.", surface: "drawer", node: "bubbles" },
-        { id: "text", time: "09:15", title: "Coordinate in encrypted threads", body: "Direct and group messages are sealed on the sender's device and opened on the recipient's. The platform in the middle only relays ciphertext.", surface: "texts", node: "messages" },
+        { id: "text", time: "09:15", title: "Coordinate in encrypted threads", body: "Direct and group messages are encrypted on the sender's device and opened on the devices in the chat. OO can read the chats it is in unless you turn it off.", surface: "texts", node: "messages" },
         { id: "call", time: "13:00", title: "Reach the person you need", body: "Voice and video calls start from the same roster, one tap away.", surface: "calls", node: "calls" },
       ],
     },
@@ -439,7 +439,7 @@ export const DEFENSE_SCENARIOS = {
       steps: [
         { id: "space", time: "T+0", title: "Stand up a space", body: "Create a Bubble and open a huddle for the incident. People join from the devices they already carry.", surface: "drawer", node: "bubbles" },
         { id: "call", time: "T+5 min", title: "Open a voice line", body: "Start a call from the roster. Calls connect through a real-time media provider; we make no end-to-end encryption claim for them.", surface: "calls", node: "calls" },
-        { id: "text", time: "T+10 min", title: "Keep sensitive detail in threads", body: "Direct and group messages are end-to-end encrypted, so detail can travel without the platform reading it.", surface: "texts", node: "messages" },
+        { id: "text", time: "T+10 min", title: "Keep sensitive detail in threads", body: "Direct and group messages are end-to-end encrypted on your device. OO can read the chats it is in unless you turn it off.", surface: "texts", node: "messages" },
         { id: "doc", time: "T+40 min", title: "Write the running log", body: "A log kept in Docs lives on the Spine timeline. Spine and Docs are private to the account but not end-to-end encrypted.", surface: "docs", node: "docs" },
       ],
     },
@@ -500,8 +500,8 @@ export const DEFENSE_MAP = {
   } satisfies Record<DefenseMapBoundary, string>,
   statusLabels: { built: "Built today", roadmap: "On our roadmap" } satisfies Record<DefenseMapStatus, string>,
   nodes: [
-    { id: "identity", label: "Identity", sub: "Passkey on device", status: "built", boundary: "sealed", body: "Sign in with a passkey that stays on your device. The keys behind your identity are held by you.", fit: "Phishing-resistant sign-in for teams that can't afford shared passwords.", surface: "signin", x: 50, y: 46, energy: "var(--color-purple-4, #9327ff)" },
-    { id: "messages", label: "Messages", sub: "End-to-end encrypted", status: "built", boundary: "sealed", body: "Direct and group messages are sealed on the sender's device and opened on the recipient's. Jokuh relays ciphertext it can't read.", fit: "Encrypted coordination for distributed teams.", surface: "texts", x: 50, y: 12, energy: "var(--color-red-4, #ff0700)" },
+    { id: "identity", label: "Identity", sub: "Passkey on device", status: "built", boundary: "sealed", body: "Sign in with a passkey that stays on your device. Your identity key stays on your device.", fit: "Phishing-resistant sign-in for teams that can't afford shared passwords.", surface: "signin", x: 50, y: 46, energy: "var(--color-purple-4, #9327ff)" },
+    { id: "messages", label: "Messages", sub: "End-to-end encrypted", status: "built", boundary: "sealed", body: "Direct and group messages are encrypted on the sender's device and opened on the recipient's. OO can read the chats it is in unless you turn it off.", fit: "Encrypted coordination for distributed teams.", surface: "texts", x: 50, y: 12, energy: "var(--color-red-4, #ff0700)" },
     { id: "calls", label: "Calls", sub: "Voice and video", status: "built", boundary: "neutral", body: "Voice and video calls start from the roster and connect through a real-time media provider. We make no end-to-end encryption claim for calls.", fit: "One-tap reach to the person you need.", surface: "calls", x: 14, y: 36, energy: "var(--color-green-4, #21dc11)" },
     { id: "bubbles", label: "Bubbles", sub: "Teams and huddles", status: "built", boundary: "account", body: "A space for a team, with a huddle for each part of the work and a view of who's live in voice.", fit: "A working space a team can stand up in minutes.", surface: "drawer", x: 16, y: 72, energy: "#2c81ff" },
     { id: "spine", label: "Spine", sub: "Shared memory", status: "built", boundary: "account", body: "A private timeline for the day. Spine is private to the account and stored on our servers; it is not end-to-end encrypted.", fit: "One record of what happened, in order.", surface: "spine", x: 86, y: 36, energy: "var(--color-yellow-4, #ffb800)" },

@@ -1,22 +1,21 @@
 import { useTheme } from "@jokuh/gooey";
-import { OPTIONAL_TRACKING_CONFIGURED } from "../../../lib/cookie-consent";
+import { useLocation } from "react-router-dom";
 import { Fingerprint, Lock, ShieldCheck } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { resolveRigidNavColumns } from "../../../config/site-subdomains";
 import { LANDING_HERO_HEADLINE } from "../../../data/landing-hero-copy";
-import { RIGID_NAV_COLUMNS } from "../../../data/rigid-sitemap";
-import { GetJokuhButton, GetJokuhSheet, PlatformLinks } from "./GetJokuh";
+import { GetJokuhButton, GetJokuhSheet, PlatformLinks, openGetJokuh } from "./GetJokuh";
 import { GooHero } from "./GooHero";
 import { GooScrollMerge } from "./GooScrollMerge";
 import { DayStoryScroll } from "./day-story/DayStoryScroll";
 import { GOO_FEATURES, type GooFeature } from "./gooey-home-content";
 import type { GooScheme } from "./goo-kit";
 import { JokuhOO } from "../../brand/JokuhOO";
+import { SiteFooter } from "../../SiteFooter";
 import { SiteLink } from "../../SiteLink";
 import "../../../styles/gooey-home.css";
 
 export const GOOEY_HOME_VALUE_LINE =
-  "Calls, texts, your memories and your money, in one private app. OO, your own AI, helps with all of it.";
+  "Calls, texts, your memories and your money, in one private app. OO helps with all of it.";
 
 /** Adds `is-in` to `.gh-reveal` children as they enter (one observer for the page). Reduce Motion: shown at once (CSS). */
 function useReveal(root: React.RefObject<HTMLElement | null>) {
@@ -105,11 +104,6 @@ function FeatureSection({ f, index, scheme }: { f: GooFeature; index: number; sc
             </li>
           ))}
         </ul>
-        {f.learnMore ? (
-          <SiteLink className="gh-link" href={f.learnMore.href}>
-            {f.learnMore.label} <span aria-hidden>→</span>
-          </SiteLink>
-        ) : null}
       </div>
       <div className="gh-feature__media">
         <div className={`gh-feature__shots gh-feature__shots--${f.shots.length}`}>
@@ -129,7 +123,7 @@ const TRUST = [
   {
     icon: <Lock size={20} strokeWidth={1.8} aria-hidden />,
     title: "End-to-end encrypted messages",
-    body: "Direct and group chats are sealed from the first message. Only the people in the chat can read them.",
+    body: "Messages are encrypted on your device before they're sent. OO reads along in chats to help, and you can turn that off in Settings.",
   },
   {
     icon: <Fingerprint size={20} strokeWidth={1.8} aria-hidden />,
@@ -143,86 +137,10 @@ const TRUST = [
   },
 ];
 
-const FOOTER_COLUMNS = resolveRigidNavColumns(RIGID_NAV_COLUMNS, "footer");
-
-function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const options = [
-    { value: "auto", label: "Auto" },
-    { value: "light", label: "Light" },
-    { value: "dark", label: "Dark" },
-  ] as const;
-  return (
-    <div className="gh-theme gh-slab gh-slab--pill" role="radiogroup" aria-label="Theme">
-      {options.map((o) => (
-        <button
-          key={o.value}
-          type="button"
-          role="radio"
-          aria-checked={theme === o.value}
-          className={theme === o.value ? "is-on" : undefined}
-          onClick={() => setTheme?.(o.value)}
-        >
-          {o.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function GooFooter() {
-  const seen = new Set<string>();
-  return (
-    <footer className="gh-footer" aria-label="Site">
-      <div className="gh-footer__inner gh-slab">
-        <div className="gh-footer__cols">
-          {FOOTER_COLUMNS.map((col) => (
-            <nav key={col.id} aria-label={col.heading} className="gh-footer__col">
-              <p className="gh-footer__head">{col.heading}</p>
-              <ul>
-                {col.sections
-                  .flatMap((s) => s.links)
-                  .filter((l) => {
-                    const k = `${col.id}:${l.href}`;
-                    if (seen.has(k)) return false;
-                    seen.add(k);
-                    return true;
-                  })
-                  .map((l) => (
-                    <li key={l.href + l.label}>
-                      <SiteLink href={l.href}>{l.label}</SiteLink>
-                    </li>
-                  ))}
-              </ul>
-            </nav>
-          ))}
-        </div>
-        <div className="gh-footer__base">
-          <p>© {new Date().getFullYear()} Jokuh</p>
-          <div className="gh-footer__social">
-            <a href="https://x.com/jokuh" target="_blank" rel="noopener noreferrer">
-              X
-            </a>
-            <a href="https://www.youtube.com/@jokuh" target="_blank" rel="noopener noreferrer">
-              YouTube
-            </a>
-            {OPTIONAL_TRACKING_CONFIGURED ? (
-              <button type="button" className="gh-footer__cookies" onClick={() => window.dispatchEvent(new Event("jokuh-open-cookies"))}>
-                Cookies
-              </button>
-            ) : null}
-          </div>
-          <ThemeToggle />
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 /**
  * **Purpose:** The Gooey homepage (`/`): the app's home on the web (goo corner frame, Nexus, frozen Glyph mark,
  * "Ask OO…" with the live signed-out OO chat, Get Jokuh), then one section per pillar with real Gooey screens, an
- * accurate trust strip, a closing CTA and the site footer. Mobile-first; no heavy JS on first paint (goo loops run
+ * accurate trust strip, a closing CTA and the one-line site footer (`SiteFooter`). Mobile-first; no heavy JS on first paint (goo loops run
  * only while something moves and is on screen; captures are lazy WebP).
  * **Connects to:** `pages/Home.tsx`, `gooey-home-content.ts`, `styles/gooey-home.css`, `GooHero`, `GooScrollMerge`.
  */
@@ -231,6 +149,18 @@ export function GooeyHome() {
   const scheme: GooScheme = resolvedTheme === "light" ? "light" : "dark";
   const root = useRef<HTMLDivElement>(null);
   useReveal(root);
+
+  // `/?get=1` (where `/download`, the footer's Download and pages without a sheet send people) opens Get Jokuh, on
+  // arrival and when the visitor is already home and taps the footer's Download (a new navigation, nothing remounts).
+  // The sheet is a child, so its open listener is registered before this effect runs.
+  const { key: navKey } = useLocation();
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("get") !== "1") return;
+    url.searchParams.delete("get");
+    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    openGetJokuh();
+  }, [navKey]);
 
   return (
     <div ref={root} className="gh" data-scheme={scheme}>
@@ -263,7 +193,8 @@ export function GooeyHome() {
           ))}
         </div>
         <p className="gh-trust__fine gh-reveal">
-          End-to-end encryption covers direct and group messages. See exactly what is and isn't covered on our{" "}
+          Messages are encrypted on your device. OO can read the chats it's in unless you turn it off. See exactly what is
+          and isn't covered on our{" "}
           <SiteLink href="/security">security</SiteLink> and <SiteLink href="/privacy">privacy</SiteLink> pages.
         </p>
       </section>
@@ -279,7 +210,7 @@ export function GooeyHome() {
         <PlatformLinks />
       </section>
 
-      <GooFooter />
+      <SiteFooter scheme={scheme} />
       <GetJokuhSheet />
     </div>
   );
