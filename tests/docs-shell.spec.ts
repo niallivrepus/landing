@@ -150,3 +150,24 @@ test('Support questions open and close', async ({ page }) => {
   await item.locator('summary').click();
   await expect(item).toHaveAttribute('open', '');
 });
+
+test('Wallet is described as live and consistent across Privacy, Terms and Support', async ({ page }) => {
+  await page.goto('/privacy#wallet');
+  const wallet = page.locator('#wallet');
+  await expect(wallet).toBeInViewport({ ratio: 0.1 });
+  await expect(wallet).toContainText('Balances Jokuh holds for you');
+  await expect(wallet).toContainText('Zcash on your device');
+
+  for (const path of ['/privacy', '/terms', '/support']) {
+    await page.goto(path);
+    await expect(page.locator('.doc-legal')).not.toContainText(/Wallet (is|are) not currently|not currently (offered|available)/i);
+  }
+
+  await page.goto('/terms');
+  await expect(page.locator('.doc-legal')).toContainText("It can't be sold, swapped for other coins or withdrawn.");
+
+  await page.goto('/support');
+  const qa = page.locator('details.doc-qa', { hasText: 'Where is Wallet, and what can it do?' });
+  await qa.locator('summary').click();
+  await expect(qa).toContainText('Open Wallet from your ID in the app.');
+});

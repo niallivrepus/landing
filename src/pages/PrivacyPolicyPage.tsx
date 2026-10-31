@@ -3,9 +3,14 @@ import { DocAppShell } from "../components/docs/DocAppShell";
 /**
  * Hosted Privacy Policy for the Jokuh apps and marketing site.
  * Keep this page aligned with what the product actually collects (Bond, Spine, messaging,
- * calls, AI, face-scan onboarding, location, Arcade). Jokuh Wallet is not currently offered.
+ * calls, AI, face-scan onboarding, location, Arcade, Wallet).
  * 2026-10-27: encryption scope, OO on by default in chats and model providers brought in line with `/security`
- * (jokuh-live `docs/privacy-truth-program.md`). The Wallet statements need Sean's legal call (see the trim report).
+ * (jokuh-live `docs/privacy-truth-program.md`).
+ * 2026-10-30: Wallet is live (Sean). Wallet facts checked against jokuh-live origin/main: ledger assets vs device
+ * custody (`wallet_crypto_assets.custody`, 20260908180000), Batcoin buy-only swap (20260924214805), Fuel never moves
+ * (20261015064752), tips public unless anonymous (20260909130000), PRF-wrapped seed backup (`wallet_key_vault`),
+ * Zcash data never sent to Supabase (`Sources/wallet-zcash/zcash-shielded-store.swift`), wallet rows cascade on
+ * account delete (20260606170000). Keep in step with Terms § 3 and Support.
  *
  * Renders as a Jokuh Doc in the app shell (`DocAppShell`, 2026-10-27). The legal text is unchanged by that move.
  */
@@ -14,6 +19,7 @@ const TOC_ITEMS = [
   { id: "information-we-collect", label: "Information we collect" },
   { id: "how-we-use-information", label: "How we use information" },
   { id: "ai-features", label: "AI features" },
+  { id: "wallet", label: "Wallet" },
   { id: "how-we-share-information", label: "How we share information" },
   { id: "cookies", label: "Cookies (marketing site)" },
   { id: "retention", label: "Retention" },
@@ -38,10 +44,8 @@ export function PrivacyPolicyPage() {
         <p>
           Jokuh is a communication and personal-organization product: messaging, voice and video
           calling, a personal timeline (“Spine”), built-in intelligence (“OO”, also called
-          “Cortex”), profile and social features, and optional Arcade games. Jokuh Wallet (custodial balances
-          and self-custody vault) is{" "}
-          <strong>not currently offered</strong>.
-          We will update this Policy before enabling Wallet or any paid money features.
+          “Cortex”), profile and social features, optional Arcade games, and Jokuh Wallet. How Wallet
+          handles your information is in the <a href="#wallet">Wallet</a> section.
         </p>
         <p>
           Questions:{" "}
@@ -144,8 +148,8 @@ export function PrivacyPolicyPage() {
           </li>
           <li>
             <strong>Arcade.</strong> Gameplay events
-            for optional games (including simulated prize play). Paid tickets and real-money play
-            are not currently offered.
+            for optional games. Jack the Pot tickets cost Fuel and prizes are paid in Fuel (see{" "}
+            <a href="#wallet">Wallet</a>). There is no cash play and there are no cash prizes.
           </li>
           <li>
             <strong>Technical and diagnostic data.</strong>{" "}
@@ -199,6 +203,40 @@ export function PrivacyPolicyPage() {
         </p>
       </section>
 
+      <section id="wallet">
+        <h2>Wallet</h2>
+        <p>Jokuh Wallet keeps two kinds of balance, and we handle them differently.</p>
+        <ul>
+          <li>
+            <strong>Balances Jokuh holds for you.</strong> Batcoin, Fuel, Bitcoin, Solana, Avalanche (AVAX) and USD
+            Coin (USDC) are kept as balances in your account on our servers. We store those balances, your transfers,
+            swaps, tips and payment requests, the deposit addresses we create for you, the outside addresses you
+            withdraw to, and the holds and limits on your withdrawals.
+          </li>
+          <li>
+            <strong>Zcash on your device.</strong> On iPhone and Mac, Zcash is a self-custody wallet. Its address,
+            balance and history stay on your device and are never sent to us. Your recovery phrase is kept on your
+            device; we also store a backup of it that is locked with your passkey, so you can restore it on a new
+            device, and we can&apos;t read it. To sync, the app connects to public Zcash servers from a list we recommend.
+          </li>
+          <li>
+            <strong>Who can see what.</strong> People you pay, tip or ask for money see that payment. Tips are public
+            by default: signed-in people can see the totals on a profile, blurb or stream and the names of the top
+            tippers, unless you tip anonymously. Coins sent to or from outside addresses travel on public blockchains,
+            where those addresses and amounts are visible to anyone.
+          </li>
+          <li>
+            <strong>Spine and OO.</strong> On iPhone and Mac, payments, swaps and withdrawals are added to your Spine
+            timeline. If you ask OO about your wallet, it can read your balances and activity, and a payment it
+            prepares only goes through after you confirm it.
+          </li>
+          <li>
+            <strong>Rewards.</strong> We may give you Batcoin, for example when you join, invite a friend or post on
+            consecutive days. We record these grants with your balance.
+          </li>
+        </ul>
+      </section>
+
       <section id="how-we-share-information">
         <h2>How we share information</h2>
         <p>We share information only as needed:</p>
@@ -209,7 +247,8 @@ export function PrivacyPolicyPage() {
             (Supabase), real-time media (LiveKit and similar), push delivery (Apple and Google),
             crash diagnostics (Sentry), AI model hosting and routing (Chutes, OpenRouter and the
             model vendors it uses, and OpenAI), email sending and receiving for Jokuh Mail (Resend, which uses Amazon Web
-            Services), and our hosting provider. They are limited by contract to
+            Services), blockchain and price services for Wallet (for example mempool.space, Solana and Avalanche
+            network services, CoinGecko for prices, and public Zcash servers), and our hosting provider. They are limited by contract to
             providing services to us.
           </li>
           <li>
@@ -245,8 +284,10 @@ export function PrivacyPolicyPage() {
           We keep information as long as your account is active and as needed to provide the
           Service, comply with law, resolve disputes, and enforce our agreements. You may delete
           certain content in the app and may delete your account in Settings. Deleting your
-          account removes your profile, Spine data, and your Jokuh Mail mailbox (messages and
-          attachments) we hold for you; messages and email you already sent
+          account removes your profile, Spine data, your Jokuh Mail mailbox (messages and
+          attachments) and your Wallet with the balances we hold for you, so move any coins out first (Batcoin and
+          Fuel can&apos;t be withdrawn). It also deletes the passkey-locked backup of your Zcash recovery phrase; Zcash
+          on your device can still be restored with the phrase itself. Messages and email you already sent
           may remain in other people’s inboxes; some copies may persist in backups for a limited
           period.
         </p>
@@ -311,8 +352,7 @@ export function PrivacyPolicyPage() {
         <h2>Changes</h2>
         <p>
           We may update this Policy. We will post the new date at the top and, when changes are
-          material, provide additional notice as required by law. If we enable Jokuh Wallet or
-          paid play, we will update this Policy first.
+          material, provide additional notice as required by law.
         </p>
       </section>
 

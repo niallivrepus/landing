@@ -3,7 +3,7 @@ import { SiteLink } from "../components/SiteLink";
 
 /**
  * Public support / FAQ for App Store Connect Support URL and in-app Settings → Support.
- * Wallet is not currently offered; keep copy aligned with Privacy + Terms.
+ * Wallet is live (2026-10-30); keep the Wallet answers aligned with Privacy (Wallet section) and Terms (section 3).
  * Renders as a Jokuh Doc in the app shell (`DocAppShell`, 2026-10-27).
  */
 const TOC_ITEMS = [
@@ -28,11 +28,17 @@ const FAQ = [
   {
     question: "I want to delete my account.",
     answer:
-      "Go to Settings → Account → Delete Account inside the app. This removes your profile and Spine data we hold for you. Messages you already sent may remain in other people's conversations. See the Privacy Policy for backups and retention.",
+      "Go to Settings → Account → Delete Account inside the app. This removes your profile, Spine data and your Wallet with the balances we hold for you, so move coins out first. Zcash on your device can still be restored with its recovery phrase. Messages you already sent may remain in other people's conversations. See the Privacy Policy for backups and retention.",
   },
   {
-    question: "Where is Wallet?",
-    answer: "Jokuh Wallet is not currently available. If we enable it later, Privacy and Terms will be updated first.",
+    question: "Where is Wallet, and what can it do?",
+    answer:
+      "Open Wallet from your ID in the app. You can send Batcoin to people on Jokuh, tip with it, and ask for money in a chat. You can also receive and send Bitcoin, Solana and Avalanche (AVAX), swap between coins, and use them to get Batcoin. Batcoin can be bought but not sold or withdrawn. On iPhone and Mac, Zcash is a private wallet that lives on your device; keep its recovery phrase safe.",
+  },
+  {
+    question: "I sent coins to the wrong address.",
+    answer:
+      "Withdrawals to an outside address wait before they are sent: currently 24 hours to an address you haven't used before and 30 minutes to one you have. Until then you can cancel it in Wallet. Once it has been sent on the blockchain it can't be reversed, and we can't get it back. Payments to people on Jokuh go straight to their Wallet.",
   },
   {
     question: "I found a bug or have a feature request.",
@@ -88,8 +94,9 @@ export function SupportPage() {
             can be wrong. Do not paste passwords or recovery codes into chat.
           </li>
           <li>
-            <strong>Arcade.</strong> Optional games, including simulated prize play. Paid tickets and Jokuh Wallet are
-            not currently available.
+            <strong>Arcade.</strong> Optional games. Casual games are free. Jack the Pot tickets cost Fuel, a play
+            credit you get with Batcoin, and prizes are paid in Fuel. Fuel can&apos;t be sent, swapped or withdrawn, and
+            there is no cash play.
           </li>
         </ul>
       </section>

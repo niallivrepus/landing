@@ -2,7 +2,8 @@ import { DocAppShell } from "../components/docs/DocAppShell";
 
 /**
  * Hosted Terms of Service for Jokuh apps and related sites.
- * Age floor matches the App Store 17+ rating. Wallet / paid money features are not currently offered.
+ * Age floor matches the App Store 17+ rating. Wallet is live (2026-10-30): § 3 Wallet paragraphs match what jokuh-live
+ * origin/main does (see the Privacy Policy header for the evidence list); legal wording open items are in the trim report.
  *
  * Renders as a Jokuh Doc in the app shell (`DocAppShell`, 2026-10-27). The legal text is unchanged by that move.
  */
@@ -66,10 +67,30 @@ export function TermsOfServicePage() {
           microphone, camera, photos, or notifications).
         </p>
         <p>
-          <strong>Wallet.</strong> Jokuh Wallet
-          (including custodial spending balances and any self-custody vault) is not currently
-          available. We do not currently custody cryptoassets for you, process wallet transfers,
-          or offer paid Arcade tickets through the Service.
+          <strong>Wallet.</strong> Jokuh Wallet lets you hold and move coins. Batcoin, Fuel, Bitcoin, Solana,
+          Avalanche (AVAX) and USD Coin (USDC) are balances Jokuh holds for you on our servers. Zcash on iPhone and
+          Mac is self-custody: it lives on your device and we never hold it.
+        </p>
+        <p>
+          <strong>Batcoin and Fuel.</strong> Batcoin is Jokuh&apos;s in-app coin. You can get it in the app, send it
+          to people on Jokuh and tip with it. It can&apos;t be sold, swapped for other coins or withdrawn. Fuel is a
+          play credit for the Arcade that you get with Batcoin; it can&apos;t be sent, swapped, withdrawn or turned
+          back into Batcoin or cash. We may give Batcoin as rewards and may change or end those rewards.
+        </p>
+        <p>
+          <strong>Withdrawals and fees.</strong> Withdrawals to outside addresses are held for a period before they
+          are sent and are subject to minimum and daily limits. We may hold, limit or pause withdrawals to protect
+          your account or the Service. Blockchain transfers can&apos;t be reversed once sent, so check the address.
+          Swaps and withdrawals may carry a fee.
+        </p>
+        <p>
+          <strong>Your Zcash keys.</strong> You hold the keys to your Zcash. Keep your recovery phrase safe. If you
+          lose both the phrase and access to your passkey backup, we can&apos;t recover your Zcash, and we can&apos;t
+          reverse a Zcash payment.
+        </p>
+        <p>
+          <strong>Deleting your account.</strong> Deleting your account deletes your Wallet and the balances Jokuh
+          holds for you. Move coins you can withdraw out first.
         </p>
       </section>
 
@@ -101,8 +122,9 @@ export function TermsOfServicePage() {
       <section id="arcade">
         <h2>6. Arcade</h2>
         <p>
-          Arcade games are optional entertainment. Some games may simulate prize play. We do not
-          currently offer real-money wagering, paid tickets, or cash payouts. We may change,
+          Arcade games are optional entertainment, and casual games are free. Jack the Pot tickets cost Fuel and
+          prizes are paid in Fuel, which can&apos;t be turned into cash. We do not offer real-money wagering, cash
+          tickets or cash payouts. We may change,
           pause, or remove games at any time.
         </p>
       </section>
