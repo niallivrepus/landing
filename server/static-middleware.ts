@@ -144,6 +144,7 @@ function redirect(res: ServerResponse, location: string, status = 302) {
  * Unknown paths serve `not-found.html` with HTTP 404 — never the homepage shell.
  */
 const KNOWN_SPA_PREFIXES = [
+  "/batcoin",
   "/demo",
   "/newsroom",
   "/journal",

@@ -1,0 +1,654 @@
+/*
+ * `/batcoin`: the living Batcoin city (`components/landing/batcoin/`). Rides on the Gooey homepage tokens
+ * (`.gh[data-scheme]` in `gooey-home.css`): Gooey Dark = a night city, Gooey Light = paper and ink.
+ * Layers, bottom to top: sky + hex hive (canvas), goo skyline (SVG), lit windows, district names, the bats (WebGL
+ * canvas), pop labels, the overlay (title, facts), the Gulp+ dock. Phone first; the overlay never covers the street.
+ */
+
+.bc {
+  --bc-gold: #ffc633;
+  --bc-gold-deep: #e08a00;
+  --bc-sky: radial-gradient(120% 80% at 72% -10%, #1a1233 0%, #0b0913 42%, #050505 75%);
+  --bc-win: #ffc633;
+  --bc-win-a: 0.78;
+}
+
+.bc[data-scheme="light"] {
+  --bc-sky: radial-gradient(120% 80% at 72% -10%, #fffdf8 0%, #f6f3ed 45%, #efebe3 100%);
+  --bc-win: #c98a12;
+  --bc-win-a: 0.55;
+}
+
+.bc-stage {
+  position: relative;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  background: var(--bc-sky);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ── City ── */
+
+.bc-city,
+.bc-city > * {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.bc-city {
+  inset: 0;
+}
+
+.bc-city__goo,
+.bc-city__windows {
+  overflow: visible;
+}
+
+/* Own compositor layers: the goo filter rasterises once, and twinkling windows or the moving flock never make it
+   re-run. */
+.bc-city__hive,
+.bc-city__goo,
+.bc-city__windows,
+.bc-bats {
+  will-change: transform;
+}
+
+.bc-city__moon {
+  left: 46%;
+  top: 7%;
+  width: 92px;
+  height: 92px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 38% 34%, #fffaf0 0%, #f1e6cf 55%, #d8c7a4 100%);
+  box-shadow: 0 0 60px 18px rgba(255, 236, 196, 0.12), 0 0 160px 60px rgba(147, 39, 255, 0.08);
+  opacity: 0.9;
+}
+
+.bc-win {
+  fill: var(--bc-win);
+  opacity: var(--bc-win-a);
+}
+
+.bc[data-scheme="dark"] .bc-win {
+  filter: drop-shadow(0 0 3px rgba(255, 184, 0, 0.7));
+}
+
+.bc-win--twinkle {
+  animation: bc-twinkle 5.5s ease-in-out infinite;
+}
+
+@keyframes bc-twinkle {
+  0%,
+  100% {
+    opacity: var(--bc-win-a);
+  }
+  45% {
+    opacity: 0.12;
+  }
+  60% {
+    opacity: var(--bc-win-a);
+  }
+}
+
+.bc-city__names {
+  width: 100%;
+  height: 32px;
+}
+
+.bc-name {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--gh-ink-2);
+  white-space: nowrap;
+  transition: color 0.25s ease, box-shadow 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bc-name.is-on {
+  color: var(--gh-ink);
+  transform: translateX(-50%) scale(1.08);
+  box-shadow: var(--gh-slab-shadow), 0 0 0 1.5px var(--bc-gold), 0 0 18px -2px rgba(255, 184, 0, 0.55);
+}
+
+/* ── Bats ── */
+
+.bc-bats {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Reduce Motion: one calm still frame that fades in slowly. */
+.bc-bats--calm {
+  opacity: 0;
+  transition: opacity 2.4s ease;
+}
+
+.bc-bats--calm.is-in {
+  opacity: 1;
+}
+
+.bc-pop {
+  position: absolute;
+  z-index: 3;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3a2300;
+  background: linear-gradient(180deg, #fff8e7, var(--bc-gold));
+  box-shadow: 0 0 0 1px rgba(160, 90, 0, 0.35), 0 8px 22px -6px rgba(255, 184, 0, 0.7);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: bc-pop 1.9s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+@keyframes bc-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(0.6);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -150%) scale(1.08);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -190%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -210%) scale(0.96);
+  }
+}
+
+/* ── Overlay ── */
+
+.bc-over {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 32px 0;
+  pointer-events: none;
+}
+
+.bc-head {
+  max-width: 440px;
+  pointer-events: none;
+}
+
+.bc-head > * {
+  pointer-events: auto;
+}
+
+.bc-home {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.bc-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0 10px;
+  font-size: clamp(44px, 6vw, 72px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+/* The real Batcoin mark (white art) masked onto ink, on a gold disc. */
+.bc-coin {
+  position: relative;
+  flex: none;
+  width: 0.78em;
+  height: 0.78em;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fff8e7, var(--bc-gold) 38%, var(--bc-gold-deep));
+  box-shadow: inset 0 0 0 2px rgba(120, 60, 0, 0.35), 0 0 26px -4px rgba(255, 184, 0, 0.75);
+}
+
+.bc-coin::after {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  background: #2a1700;
+  -webkit-mask: url("/batcoin-token.svg") center / contain no-repeat;
+  mask: url("/batcoin-token.svg") center / contain no-repeat;
+}
+
+.bc-line {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--gh-ink-2);
+  text-wrap: pretty;
+}
+
+.bc-cta {
+  margin-top: 18px;
+}
+
+.bc-hint {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--gh-ink-3);
+}
+
+.bc-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 300px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.bc-card {
+  padding: 13px 16px 14px;
+  border-radius: 22px;
+  pointer-events: auto;
+  transition: box-shadow 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bc[data-scheme="dark"] .bc-card {
+  /* Opaque enough to read over the bats without a backdrop blur (a blur would re-run every frame under the flock). */
+  background: rgba(10, 10, 12, 0.86);
+}
+
+.bc-card.is-on {
+  transform: scale(1.02);
+  box-shadow: var(--gh-slab-shadow), 0 0 0 1.5px var(--bc-gold), 0 0 22px -4px rgba(255, 184, 0, 0.5);
+}
+
+.bc-card__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.bc-card__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--bc-gold);
+  box-shadow: 0 0 8px rgba(255, 184, 0, 0.8);
+}
+
+.bc-card__body {
+  margin: 0;
+  text-wrap: pretty;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--gh-ink-2);
+}
+
+/* ── Dock: the Gulp+ bar on the street ── */
+
+.bc-dock {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 18px;
+  width: min(560px, calc(100% - 32px));
+  transform: translateX(-50%);
+}
+
+.bc-gulp {
+  position: relative;
+  margin: 0;
+}
+
+.bc-gulp__above {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  pointer-events: none;
+}
+
+.bc-gulp__reply {
+  margin: 0;
+  max-width: 100%;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--gh-slab-bg);
+  box-shadow: var(--gh-slab-shadow);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--gh-ink);
+}
+
+.bc[data-scheme="dark"] .bc-gulp__reply {
+  background: rgba(10, 10, 12, 0.78);
+}
+
+.bc-gulp__reply:empty {
+  display: none;
+}
+
+.bc-gulp__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.28s ease, opacity 0.2s ease;
+}
+
+.bc-gulp__chips.is-shown {
+  max-height: 96px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bc-gulp__chip {
+  height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  font: 500 13px/1 var(--font-sans, "Satoshi"), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  color: #f2f2f2;
+  cursor: pointer;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.78);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2), inset 0 2px 1.5px rgba(255, 255, 255, 0.15), 0 10px 10px -6px rgba(0, 0, 0, 0.5);
+  transform: translateY(8px) scale(0.92);
+  opacity: 0;
+  transition: transform 0.32s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.2s ease;
+}
+
+.bc[data-scheme="light"] .bc-gulp__chip {
+  color: #323232;
+  background: linear-gradient(180deg, #ffffff, #f3f0ea);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), 0 0 0 1px rgba(60, 45, 20, 0.16), 0 3px 6px -2px rgba(91, 69, 38, 0.28);
+}
+
+.bc-gulp__chips.is-shown .bc-gulp__chip {
+  transform: none;
+  opacity: 1;
+}
+
+.bc-gulp__chip:active {
+  transform: scale(1.06, 0.92) !important;
+}
+
+.bc-gulp__shell {
+  position: relative;
+  height: 60px;
+}
+
+.bc-gulp-goo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bc-gulp-goo__svg {
+  position: absolute;
+  left: -40px;
+  top: -40px;
+  overflow: visible;
+}
+
+.bc-gulp-goo__glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150px;
+  height: 46px;
+  margin: -23px 0 0 -75px;
+  border-radius: 999px;
+  background: #2c81ff;
+  filter: blur(22px);
+  opacity: 0;
+}
+
+.bc-gulp__rest {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 60px;
+  padding: 0 18px 0 10px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  font: 600 17px/1 var(--font-sans, "Satoshi"), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  letter-spacing: 0.1px;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.9);
+  transition: width 0.34s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.2s ease, transform 0.34s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.bc-gulp__rest.is-shown {
+  width: 160px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+}
+
+.bc-gulp__rest.is-shown:active {
+  transform: translate(-50%, -50%) scale(1.06, 0.9);
+}
+
+.bc-gulp__oo {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bc-gulp__field {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.bc-gulp__shell.is-open .bc-gulp__field {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bc-gulp__plus,
+.bc-gulp__send {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gh-ink);
+  cursor: pointer;
+}
+
+.bc-gulp__send {
+  color: #fff;
+}
+
+.bc-gulp__send:disabled {
+  cursor: default;
+}
+
+.bc-gulp__send svg {
+  transition: opacity 0.18s ease;
+}
+
+.bc-gulp__shell[data-typing] .bc-gulp__send svg {
+  opacity: 0;
+}
+
+.bc-gulp__input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 6px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--gh-ink);
+  font: 500 16px/1.2 var(--font-sans, "Satoshi"), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+.bc-gulp__input:focus-visible {
+  outline: none; /* the open goo bar carries focus (blue glow below) */
+}
+
+.bc-gulp__input::placeholder {
+  color: var(--gh-ink-3);
+}
+
+.bc-gulp__shell.is-open:focus-within .bc-gulp-goo__svg {
+  filter: drop-shadow(0 0 10px rgba(44, 129, 255, 0.55));
+}
+
+/* ── Phone ── */
+
+@media (max-width: 639px) {
+  .bc-over {
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px 0 0;
+  }
+
+  .bc-head {
+    padding: 0 16px;
+  }
+
+  .bc-title {
+    margin: 14px 0 6px;
+    gap: 10px;
+    font-size: 40px;
+  }
+
+  .bc-line {
+    font-size: 15px;
+  }
+
+  .bc-cta {
+    margin-top: 12px;
+  }
+
+  .bc-hint {
+    display: none;
+  }
+
+  .bc-cards {
+    flex-direction: row;
+    width: 100%;
+    padding: 2px 16px 6px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    pointer-events: auto;
+  }
+
+  .bc-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bc-card {
+    flex: 0 0 74%;
+    scroll-snap-align: start;
+    padding: 11px 14px 12px;
+    border-radius: 20px;
+  }
+
+  .bc-card__body {
+    font-size: 13px;
+  }
+
+  .bc-name {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .bc-dock {
+    bottom: 12px;
+  }
+
+  .bc-gulp__reply {
+    font-size: 12px;
+  }
+
+  .bc-city__moon {
+    left: auto;
+    width: 64px;
+    height: 64px;
+    top: 4%;
+    right: 6%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bc-win--twinkle,
+  .bc-pop {
+    animation: none;
+  }
+
+  .bc-gulp__rest,
+  .bc-gulp__chips,
+  .bc-gulp__chip,
+  .bc-gulp__field,
+  .bc-card,
+  .bc-name {
+    transition: none;
+  }
+}

@@ -59,6 +59,8 @@ const AgentCourtConceptPage = lazyNamed(() => import("./pages/AgentCourtConceptP
 const ShippedPage = lazyNamed(() => import("./pages/ShippedPage"), "ShippedPage");
 const ShippedWeekPage = lazyNamed(() => import("./pages/ShippedPage"), "ShippedWeekPage");
 const ShippedSpinePage = lazyNamed(() => import("./pages/ShippedSpinePage"), "ShippedSpinePage");
+/** The living Batcoin city; its own page, not linked from home or the footer yet. */
+const BatcoinPage = lazyNamed(() => import("./pages/BatcoinPage"), "BatcoinPage");
 
 const PRODUCT_ROUTES = [
   { path: "/blurbs", productId: "blurbs" },
@@ -143,6 +145,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/demo" element={<LandingDemoPage />} />
           <Route path="/download" element={<Navigate to="/?get=1" replace />} />
+          <Route path="/batcoin" element={<BatcoinPage />} />
 
           <Route path="/newsroom" element={<NewsPage />} />
           <Route path="/newsroom/:slug" element={<NewsDetailPage />} />
