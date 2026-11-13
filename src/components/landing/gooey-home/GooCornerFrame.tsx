@@ -20,14 +20,17 @@ import { useGooLoop } from "./use-goo-loop";
 /* Corner glyphs: the app's own SVG paths (jokuh-live `frontend/src/utils/icons.tsx`). */
 function CallIcon() {
   return (
-    <svg width="20" height="22" viewBox="0 0 14 17" fill="none" aria-hidden>
-      <path
-        d="M12.8333 8.45833V9.91667C12.8333 11.2974 11.714 12.4167 10.3333 12.4167H2.625C1.58947 12.4167 0.75 13.2561 0.75 14.2917C0.75 15.3272 1.58947 16.1667 2.625 16.1667H5.125M4.08333 4.29167H9.5M4.08333 7.625H7M2.41667 0.75H10.3333C11.714 0.75 12.8333 1.86929 12.8333 3.25V13.6667C12.8333 15.0474 11.714 16.1667 10.3333 16.1667H2.41667C1.49619 16.1667 0.75 15.4205 0.75 14.5V2.41667C0.75 1.49619 1.49619 0.75 2.41667 0.75Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden>
+      {/* Handset = app `corner-action-call.svg` (`CornerActionCallIcon`), optical scale 0.875. */}
+      <g transform="translate(8 8) scale(0.875) translate(-8 -8)">
+        <path
+          d="M6.31669 4.44157L5.27502 0.899902H3.61032H0.901594C0.900549 0.969222 0.900024 1.03867 0.900024 1.10824C0.900024 3.58095 1.56278 5.89888 2.72034 7.89406C3.90632 9.93822 5.6117 11.6436 7.65586 12.8296C9.65105 13.9871 11.969 14.6499 14.4417 14.6499H14.65V10.2749L11.1084 9.23324L9.60153 10.8028C7.50487 9.75402 5.7959 8.04505 4.74708 5.94839L6.31669 4.44157Z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
     </svg>
   );
 }
